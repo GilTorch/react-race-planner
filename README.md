@@ -68,6 +68,16 @@ We like to follow a modified version of [Nvie's widely used Git branching model
 
 There's some more to it, so please, read the article carefully so your contributions can get approved faster.
 
+### Code linting and formatting
+
+At NouKòd, we take great pride in providing quality software. To be able to do so, we start with the code formatting using Prettier. Your code will be read by other humans, so might as well keep it looking interesting, hence the Eslint linter.
+
+Your code will not be approved until it passes our automated linting tests.
+
+Therefor, it is crucial that you setup those two tools (Eslint and Prettier) on your code editor so that their rules can automatically get applied on the currently opened file.
+
+You can follow [the guide over there](https://medium.com/fullstack-with-react-native-aws-serverless-and/set-up-eslint-and-prettier-5e4131f9296f)
+
 ### Getting Started on a Task
 
 With that said, to quickly get started working on a task, follow those steps
