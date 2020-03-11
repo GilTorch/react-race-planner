@@ -2,6 +2,21 @@
 
 The iOS and Android source code of ScriptoRerum - React Native
 
+# Table of Contents
+
+- [ScriptoRerum](#scriptorerum)
+  * [Screenshots](#screenshots)
+  * [Requirements](#requirements)
+  * [Usage](#usage)
+  * [UI: Working on a specific screen](#ui--working-on-a-specific-screen)
+  * [API/Database Interaction](#api-database-interaction)
+  * [Contribution Guidelines](#contribution-guidelines)
+    + [Our Git Branching Model](#our-git-branching-model)
+    + [Code linting and formatting](#code-linting-and-formatting)
+    + [Getting Started on a Task](#getting-started-on-a-task)
+  * [Publishing for Staging/Demoing](#publishing-for-staging-demoing)
+  * [Building for Production](#building-for-production)
+
 ## Screenshots
 
 TBD
@@ -103,8 +118,9 @@ So, again, it goes like:
 5. You Make a pull request via Github (from your branch to the `develop` branch)
 6. We code review
 7. Lead maintenainers pull it into `develop`
-8. You pull from `develop` on `upstream`
-9. Repeat from step 2 until a new release
+8. You pull from `develop` on `origin`
+9. Repeat from step 2 until a new release into `master`
+10. Update your local `master` branch
 
 ## Publishing for Staging/Demoing
 
