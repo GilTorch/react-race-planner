@@ -118,8 +118,9 @@ So, again, it goes like:
 5. You Make a pull request via Github (from your branch to the `develop` branch)
 6. We code review
 7. Lead maintenainers pull it into `develop`
-8. You pull from `develop` on `upstream`
-9. Repeat from step 2 until a new release
+8. You pull from `develop` on `origin`
+9. Repeat from step 2 until a new release into `master`
+10. Update your local `master` branch
 
 ## Publishing for Staging/Demoing
 
