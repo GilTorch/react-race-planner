@@ -83,7 +83,7 @@ You can follow [the guide over there](https://medium.com/fullstack-with-react-na
 With that said, to quickly get started working on a task, follow those steps
 1. Clone the project locally
 ```
-git clone https://github.com/[YOUR-USERNAME]/sr-mobile ScriptoRerum
+git clone https://github.com/r4meau/sr-mobile ScriptoRerum
 cd ScriptoRerum
 ```
 2. Create a new branch for the feature you're working on. Always branch out from `develop` when creating a new branch
