@@ -2,6 +2,21 @@
 
 The iOS and Android source code of ScriptoRerum - React Native
 
+# Table of Contents
+
+- [ScriptoRerum](#scriptorerum)
+  * [Screenshots](#screenshots)
+  * [Requirements](#requirements)
+  * [Usage](#usage)
+  * [UI: Working on a specific screen](#ui--working-on-a-specific-screen)
+  * [API/Database Interaction](#api-database-interaction)
+  * [Contribution Guidelines](#contribution-guidelines)
+    + [Our Git Branching Model](#our-git-branching-model)
+    + [Code linting and formatting](#code-linting-and-formatting)
+    + [Getting Started on a Task](#getting-started-on-a-task)
+  * [Publishing for Staging/Demoing](#publishing-for-staging-demoing)
+  * [Building for Production](#building-for-production)
+
 ## Screenshots
 
 TBD
