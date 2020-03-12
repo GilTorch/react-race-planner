@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Tab Navigation Template",
-    "slug": "ScriptoRerum",
+    "name": "ScriptoRerum",
+    "slug": "scriptorerum",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
@@ -12,7 +12,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "sr",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
