@@ -1,9 +1,10 @@
-import * as React from "react";
-import Svg, { Image } from "react-native-svg";
+import * as React from 'react';
+// eslint-disable-next-line import/no-unresolved
+import Svg, { Image } from 'react-native-svg';
 
-function SvgComponent(props) {
+function SvgComponent() {
   return (
-    <Svg width={23} height={23} viewBox="0 0 23 23" {...props}>
+    <Svg width={23} height={23} viewBox="0 0 23 23">
       <Image
         width={23}
         height={23}
