@@ -1,32 +1,32 @@
 import React from "react";
-import {
-  View,
-  ScrollView,
-  Image,
-  TextInput,
-  Text,
-  StyleSheet
-} from "react-native";
+import { View, ScrollView, Image, TextInput, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AntDesign, EvilIcons, Entypo } from "@expo/vector-icons";
 import SRLogo from "../assets/images/scriptorerum-logo.png";
+import Text from "../components/CustomText";
 import GoogleColorfulIcon from "../components/GoogleColorfulIcon";
 
 const SignupScreen = ({ navigation }) => {
   // console.error(navigation);
   return (
-    <ScrollView contentContainerStyle={{ marginTop: 25 }}>
+    <ScrollView
+      contentContainerStyle={{ backgroundColor: "white", marginTop: 25 }}
+    >
       <View style={styles.container}>
-        <View style={styles.logoContainer}>
-          <Image source={SRLogo} resizeMode="contain" styles={styles.logo} />
-        </View>
+        {/* <View style={styles.logoContainer}> */}
+        <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
+        {/* </View> */}
         <View style={styles.headlineContainer}>
-          <Text style={styles.headline}>Create an Account</Text>
+          <Text type="medium" style={styles.headline}>
+            Create an Account
+          </Text>
         </View>
         <View style={styles.form}>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
-              <Text style={styles.label}>Username</Text>
+              <Text type="medium" style={styles.label}>
+                Username
+              </Text>
             </View>
             <View style={styles.inputContainer}>
               <TextInput style={styles.input} />
@@ -34,7 +34,9 @@ const SignupScreen = ({ navigation }) => {
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
-              <Text style={styles.label}>First Name</Text>
+              <Text type="medium" style={styles.label}>
+                First Name
+              </Text>
             </View>
             <View style={styles.inputContainer}>
               <TextInput style={styles.input} />
@@ -42,7 +44,9 @@ const SignupScreen = ({ navigation }) => {
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
-              <Text style={styles.label}>Last Name</Text>
+              <Text type="medium" style={styles.label}>
+                Last Name
+              </Text>
             </View>
             <View style={styles.inputContainer}>
               <TextInput style={styles.input} />
@@ -50,7 +54,9 @@ const SignupScreen = ({ navigation }) => {
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
-              <Text style={styles.label}>Email</Text>
+              <Text type="medium" style={styles.label}>
+                Email
+              </Text>
             </View>
             <View style={styles.inputContainer}>
               <TextInput style={styles.input} />
@@ -58,7 +64,9 @@ const SignupScreen = ({ navigation }) => {
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
-              <Text style={styles.label}>Password</Text>
+              <Text type="medium" style={styles.label}>
+                Password
+              </Text>
             </View>
             <View style={styles.inputContainer}>
               <TextInput style={styles.input} />
@@ -66,17 +74,24 @@ const SignupScreen = ({ navigation }) => {
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
-              <Text style={styles.label}>Confirm Password</Text>
+              <Text type="medium" style={styles.label}>
+                Confirm Password
+              </Text>
             </View>
             <View style={styles.inputContainer}>
               <TextInput style={styles.input} />
             </View>
           </View>
           <TouchableOpacity style={styles.submitButton}>
-            <Text style={styles.submitButtonText}>Sign Up</Text>
+            <Text type="medium" style={styles.submitButtonText}>
+              Sign Up
+            </Text>
           </TouchableOpacity>
           <View style={styles.loginWithSocialMediaTextContainer}>
-            <Text style={{ color: "#7F8FA4", fontWeight: "bold" }}>
+            <Text
+              type="medium"
+              style={{ color: "#7F8FA4", fontWeight: "bold" }}
+            >
               Or login via social networks
             </Text>
           </View>
@@ -115,7 +130,7 @@ const SignupScreen = ({ navigation }) => {
               style={styles.goToLoginPageButton}
             >
               <View>
-                <Text style={styles.goToLoginPageButtonText}>Log In</Text>
+                <Text style={styles.goToLoginPageButtonText}>Log in</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -130,7 +145,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: "100%",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: 70,
+    marginBottom: 70
   },
   logoContainer: {
     width: "70%",
@@ -139,16 +156,14 @@ const styles = StyleSheet.create({
     overflow: "hidden"
   },
   logo: {
-    flex: 1,
-    width: 265,
-    height: 149
-    // width: "100%"
+    width: "70%",
+    height: 149,
+    resizeMode: "stretch"
   },
   headlineContainer: {},
   headline: {
     color: "#38434A",
-    fontSize: 24,
-    fontWeight: "bold"
+    fontSize: 24
   },
   inputContainer: {
     backgroundColor: "#F8FAFC",
@@ -161,7 +176,6 @@ const styles = StyleSheet.create({
   },
   label: {
     color: "#7F8FA4",
-    fontWeight: "bold",
     fontSize: 11
   },
   input: {

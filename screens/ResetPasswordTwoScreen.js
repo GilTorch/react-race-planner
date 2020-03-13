@@ -1,28 +1,50 @@
 import React from "react";
 import { View, ScrollView, Image, TextInput, StyleSheet } from "react-native";
-import Text from "../components/CustomText";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Entypo } from "@expo/vector-icons";
 import SRLogo from "../assets/images/scriptorerum-logo.png";
-import GoogleColorfulIcon from "../components/GoogleColorfulIcon";
+import Text from "../components/CustomText";
 
-const LoginScreen = ({ navigation }) => {
+const ResetPasswordScreenTwo = ({ navigation }) => {
   return (
     <ScrollView
-      contentContainerStyle={{ backgroundColor: "white", marginTop: 25 }}
+      style={{ backgroundColor: "white" }}
+      contentContainerStyle={{ backgroundColor: "white" }}
     >
       <View style={styles.container}>
         <Image source={SRLogo} style={styles.logo} />
+        {/* <View style={styles.logoContainer}>
+        </View> */}
         <View style={styles.headlineContainer}>
           <Text type="medium" style={styles.headline}>
-            Login
+            Reset Your Password
+          </Text>
+        </View>
+        <View
+          style={{
+            width: "60%",
+            marginTop: 20,
+            marginBottom: 20
+          }}
+        >
+          <Text
+            type="medium"
+            style={{
+              fontSize: 11,
+              lineHeight: 16,
+              textAlign: "center",
+              color: "#7F8FA4"
+            }}
+          >
+            We’ve sent you a one-time password via email (test123@gmail.com).
+            Please, enter it below to be able to reset the password for your
+            account.
           </Text>
         </View>
         <View style={styles.form}>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
               <Text type="medium" style={styles.label}>
-                Username or Email
+                One-Time Password
               </Text>
             </View>
             <View style={styles.inputContainer}>
@@ -32,71 +54,39 @@ const LoginScreen = ({ navigation }) => {
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
               <Text type="medium" style={styles.label}>
-                Password
+                New Password
               </Text>
             </View>
             <View style={styles.inputContainer}>
               <TextInput style={styles.input} />
             </View>
           </View>
-          <View style={{ marginTop: 10, marginBottom: 10 }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("ResetPassword")}
-            >
-              <Text type="medium" style={styles.goToLoginPageButtonText}>
-                Forgot your password?
+          <View style={styles.formGroup}>
+            <View style={styles.labelContainer}>
+              <Text type="medium" style={styles.label}>
+                Confirm New Password
               </Text>
-            </TouchableOpacity>
+            </View>
+            <View style={styles.inputContainer}>
+              <TextInput style={styles.input} />
+            </View>
           </View>
           <TouchableOpacity style={styles.submitButton}>
             <Text type="medium" style={styles.submitButtonText}>
-              Log in
+              Reset Password
             </Text>
           </TouchableOpacity>
-          <View style={styles.loginWithSocialMediaTextContainer}>
-            <Text type="medium" style={{ color: "#7F8FA4" }}>
-              Or login via social networks
-            </Text>
-          </View>
-          <View style={styles.socialMediaButtonsContainer}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#3ABDFF",
-                ...styles.socialMediaButton
-              }}
-            >
-              <Entypo name="twitter-with-circle" size={24} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#1382D5",
-                ...styles.socialMediaButton
-              }}
-            >
-              <Entypo name="facebook-with-circle" size={24} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#e6e6e6",
-                ...styles.socialMediaButton
-              }}
-            >
-              <GoogleColorfulIcon />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{ marginTop: 20, marginBottom: 40, flexDirection: "row" }}
-          >
+          <View style={{ width: "100%", marginTop: 20, flexDirection: "row" }}>
             <Text style={{ color: "#7F8FA4" }}>
-              Don't have an account yet?{" "}
+              Do you wish to cancel resetting your password?{" "}
             </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("SignUp")}
+              onPress={() => navigation.navigate("Login")}
               style={styles.goToLoginPageButton}
             >
               <View>
                 <Text type="medium" style={styles.goToLoginPageButtonText}>
-                  Sign up
+                  Log in
                 </Text>
               </View>
             </TouchableOpacity>
@@ -117,10 +107,9 @@ const styles = StyleSheet.create({
     marginBottom: 70
   },
   logoContainer: {
-    backgroundColor: "red",
     width: "70%",
-    height: 149,
-    marginTop: 50,
+    height: 249,
+    backgroundColor: "green",
     overflow: "hidden"
   },
   logo: {
@@ -128,7 +117,9 @@ const styles = StyleSheet.create({
     height: 149,
     resizeMode: "stretch"
   },
-  headlineContainer: {},
+  headlineContainer: {
+    marginTop: 30
+  },
   headline: {
     color: "#38434A",
     fontSize: 24
@@ -144,6 +135,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: "#7F8FA4",
+    fontWeight: "bold",
     fontSize: 11
   },
   input: {
@@ -158,7 +150,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   submitButton: {
-    // marginTop: 30,
+    marginTop: 30,
     borderRadius: 4.87,
     backgroundColor: "#23C2C2",
     justifyContent: "center",
@@ -191,4 +183,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default LoginScreen;
+export default ResetPasswordScreenTwo;
