@@ -80,7 +80,11 @@ export default function App(props) {
       <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
         <Stack.Navigator>
           <Stack.Screen name="Root" component={BottomTabNavigator} />
-          <Stack.Screen options={{ headerShown: false }} name="Root" component={SignupScreen} />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="SignupScreen"
+            component={SignupScreen}
+          />
           <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
           <Stack.Screen
             options={{ headerShown: false }}
