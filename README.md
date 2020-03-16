@@ -85,13 +85,47 @@ There's some more to it, so please, read the article carefully so your contribut
 
 ### Code linting and formatting
 
-At NouKòd, we take great pride in providing quality software. To be able to do so, we start with the code formatting using Prettier. Your code will be read by other humans, so might as well keep it looking interesting, hence the Eslint linter.
+At NouKòd, we take great pride in providing quality software. To be able to do so, we start with the code formatting using Prettier. Your code will be read by other humans, so might as well keep it looking interesting, hence the ESLint linter.
 
 Your code will not be approved until it passes our automated linting tests.
 
-Therefor, it is crucial that you setup those two tools (Eslint and Prettier) on your code editor so that their rules can automatically get applied on the currently opened file.
+Therefor, it is crucial that you setup those two tools (ESLint and Prettier) on your preferred/current code editor so that their rules can automatically get applied on the currently opened file.
 
-You can follow [the guide over there](https://medium.com/fullstack-with-react-native-aws-serverless-and/set-up-eslint-and-prettier-5e4131f9296f)
+The following is a quick guide on how to set them up on your Visual Studio Code editor. If you don't use this editor, please, figure our alternatives for the one you do use.
+
+To get started, install those two extensions within VSCode:
+1. [ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+2. [Prettier extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+
+Then go to your user settings by going to **Code** -> **Preferences** -> **Settings** or by pressing "Ctrl/Cmd + ,".
+
+Then look at the top right and you'll notice an icon, when you hover your mouse over it, that says "Open Settings (JSON)". Press on it and in the parent JSON object, append the following:
+```json
+"eslint.alwaysShowStatus": true,
+"editor.codeActionsOnSave": {
+  "source.fixAll.eslint": true
+},
+"[javascript]": {
+  "editor.defaultFormatter": "vscode.typescript-language-features",
+  // The number of spaces a tab is equal to. This setting is overridden
+  // based on the file contents when `editor.detectIndentation` is true.
+  "editor.tabSize": 2,
+  // Insert spaces when pressing Tab. This setting is overriden
+  // based on the file contents when `editor.detectIndentation` is true.
+  "editor.insertSpaces": true,
+  // When opening a file, `editor.tabSize` and `editor.insertSpaces`
+  // will be detected based on the file contents. Set to false to keep
+  // the values you've explicitly set, above.
+  "editor.detectIndentation": false
+},
+"editor.codeActionsOnSave": {
+  "source.fixAll.eslint": true
+},
+"editor.formatOnSave": true,
+"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+```
+
+This should be enough for your editor to automatically format your code or/and point out errors in your whole codebase that you need to handle manually.
 
 ### Getting Started on a Task
 
