@@ -81,7 +81,7 @@ const LoginScreen = ({ navigation }) => {
           <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
             <Text style={{ color: '#7F8FA4' }}>Don't have an account yet? </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('SignUp')}
+              onPress={() => navigation.navigate('SignupScreen')}
               style={styles.goToLoginPageButton}>
               <View>
                 <Text type="medium" style={styles.goToLoginPageButtonText}>
