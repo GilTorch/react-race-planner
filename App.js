@@ -4,14 +4,9 @@ import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
 import PropTypes from 'prop-types';
 import useLinking from './navigation/useLinking';
-import SignupScreen from './screens/SignUpScreen';
-import LoginScreen from './screens/LoginScreen';
-import ResetPasswordScreen from './screens/ResetPasswordScreen';
-import ResetPasswordTwoScreen from './screens/ResetPasswordTwoScreen';
 import SpaceMono from './assets/fonts/SpaceMono-Regular.ttf';
 import RobotoBlack from './assets/fonts/Roboto-Black.ttf';
 import RobotoBold from './assets/fonts/Roboto-Bold.ttf';
@@ -24,8 +19,7 @@ import RobotoMediumItalic from './assets/fonts/Roboto-MediumItalic.ttf';
 import RobotoRegular from './assets/fonts/Roboto-Regular.ttf';
 import RobotoThin from './assets/fonts/Roboto-Thin.ttf';
 import RobotoThinItalic from './assets/fonts/Roboto-ThinItalic.ttf';
-
-const Stack = createStackNavigator();
+import AppNavigation from './navigation';
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
@@ -80,24 +74,7 @@ export default function App(props) {
         ref={containerRef}
         initialState={initialNavigationState}
         initialRouteName="SignupScreen">
-        <Stack.Navigator>
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="SignupScreen"
-            component={SignupScreen}
-          />
-          <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="ResetPassword"
-            component={ResetPasswordScreen}
-          />
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="ResetPasswordTwoScreen"
-            component={ResetPasswordTwoScreen}
-          />
-        </Stack.Navigator>
+        <AppNavigation />
       </NavigationContainer>
     </View>
   );
