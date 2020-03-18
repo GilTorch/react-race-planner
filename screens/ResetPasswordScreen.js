@@ -46,7 +46,9 @@ const ResetPasswordScreen = ({ navigation }) => {
               <TextInput style={styles.input} />
             </View>
           </View>
-          <TouchableOpacity style={styles.submitButton}>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={() => navigation.navigate('ResetPasswordTwoScreen')}>
             <Text style={styles.submitButtonText}>Send Password Reset Code</Text>
           </TouchableOpacity>
           <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
