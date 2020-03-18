@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import { AntDesign } from '@expo/vector-icons';
 import Text from '../components/CustomText';
+import { SCREEN_WIDTH } from '../utils/dimensions';
+import NavigationService from '../utils/NavigationService';
 
 const FilterTag = ({ label, selected, onSelect }) => {
   const backgroundStyle = selected
@@ -29,8 +33,8 @@ FilterTag.propTypes = {
 
 const tagStyle = StyleSheet.create({
   container: {
-    marginLeft: 10,
-    marginBottom: 10,
+    marginRight: 10,
+    marginBottom: 15,
     padding: 10,
     borderRadius: 4,
     backgroundColor: '#03A2A2',
@@ -44,8 +48,12 @@ const tagStyle = StyleSheet.create({
   }
 });
 
-const FilterScreen = () => {
-  const [tagData, setTagData] = useState({
+const FilterScreen = ({ navigation }) => {
+  const [multiSliderValue, setMultiSliderValue] = useState([0, 100]);
+
+  const multiSliderValuesChange = values => setMultiSliderValue(values);
+
+  const defaultTagData = {
     status: {
       allSelected: false,
       tags: [
@@ -67,36 +75,59 @@ const FilterScreen = () => {
         { selected: false, label: 'Bedtime Stories' }
       ]
     }
+  };
+
+  const [tagData, setTagData] = useState(defaultTagData);
+
+  const reset = () => {
+    setMultiSliderValue([0, 100]);
+    setTagData(defaultTagData);
+  };
+
+  navigation.setOptions({
+    headerLeft: () => (
+      <TouchableOpacity onPress={() => NavigationService.goBack()} style={{ marginLeft: 20 }}>
+        <AntDesign style={{ fontSize: 20 }} color="#03A2A2" name="arrowleft" />
+      </TouchableOpacity>
+    ),
+    headerTitleAlign: 'center',
+    title: 'Filter',
+    headerRight: () => (
+      <TouchableOpacity onPress={() => reset()} style={{ marginRight: 20 }}>
+        <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
+      </TouchableOpacity>
+    )
   });
 
   const validCategoryNames = ['status', 'genres'];
 
   const onSelect = (category, currentTag) => {
+    let chosenCategory = category;
     if (!validCategoryNames.includes(category)) {
       // eslint-disable-next-line no-console
-      console.warn('You have to pass proper category names like: [status,genres]');
+      chosenCategory = 'status';
     }
 
     const newTag = currentTag;
     newTag.selected = !currentTag.selected;
-    const tagIndex = tagData[category].tags.findIndex(tag => tag.label === currentTag.label);
+    const tagIndex = tagData[chosenCategory].tags.findIndex(tag => tag.label === currentTag.label);
     setTagData({
       ...tagData,
-      [category]: {
-        ...tagData[category],
+      [chosenCategory]: {
+        ...tagData[chosenCategory],
         tags: [
-          ...tagData[category].tags.slice(0, tagIndex),
+          ...tagData[chosenCategory].tags.slice(0, tagIndex),
           newTag,
-          ...tagData[category].tags.slice(tagIndex + 1)
+          ...tagData[chosenCategory].tags.slice(tagIndex + 1)
         ]
       }
     });
   };
 
-  const toggleSelectAll = category => {
-    const { allSelected } = tagData[category];
+  const toggleSelectAll = chosenCategory => {
+    const { allSelected } = tagData[chosenCategory];
 
-    const newTagData = tagData[category].tags.map(tag => {
+    const newTagData = tagData[chosenCategory].tags.map(tag => {
       return {
         ...tag,
         selected: !allSelected
@@ -104,7 +135,7 @@ const FilterScreen = () => {
     });
     setTagData({
       ...tagData,
-      [category]: {
+      [chosenCategory]: {
         allSelected: !allSelected,
         tags: [...newTagData]
       }
@@ -113,49 +144,71 @@ const FilterScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={styles.filterCategory}>STATUS</Text>
-          <TouchableOpacity onPress={() => toggleSelectAll('status')}>
-            <Text style={{ fontSize: 14, color: '#03A2A2' }}>
-              {tagData.status.allSelected ? 'Clear All' : 'Select All'}
-            </Text>
-          </TouchableOpacity>
+      <View style={styles.innerWrapper}>
+        <View>
+          <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.filterCategory}>STATUS</Text>
+            <TouchableOpacity onPress={() => toggleSelectAll('status')}>
+              <Text style={{ fontSize: 14, color: '#03A2A2' }}>
+                {tagData.status.allSelected ? 'Clear All' : 'Select All'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ marginTop: 20, flexDirection: 'row', flexWrap: 'wrap' }}>
+            {tagData.status.tags.map((tag, key) => (
+              <FilterTag
+                key={key.toString()}
+                selected={tag.selected}
+                onSelect={() => onSelect('status', tag)}
+                label={tag.label}
+              />
+            ))}
+          </View>
         </View>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-          {tagData.status.tags.map((tag, key) => (
-            <FilterTag
-              key={key.toString()}
-              selected={tag.selected}
-              onSelect={() => onSelect('status', tag)}
-              label={tag.label}
+        <View>
+          <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.filterCategory}>GENRES</Text>
+            <TouchableOpacity onPress={() => toggleSelectAll('genres')}>
+              <Text style={{ fontSize: 14, color: '#03A2A2' }}>
+                {tagData.genres.allSelected ? 'Clear All' : 'Select All'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ marginTop: 20, flexDirection: 'row', flexWrap: 'wrap' }}>
+            {tagData.genres.tags.map((tag, key) => (
+              <FilterTag
+                key={key.toString()}
+                selected={tag.selected}
+                onSelect={() => onSelect('genres', tag)}
+                label={tag.label}
+              />
+            ))}
+          </View>
+        </View>
+        <View>
+          <View style={{ marginTop: 20 }}>
+            <Text style={styles.filterCategory}>AUTHORS</Text>
+            <View
+              style={{
+                width: '100%',
+                marginTop: 15,
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+              }}>
+              <Text style={{ fontSize: 14, color: '#5A7582' }}>{multiSliderValue[0]}</Text>
+              <Text style={{ fontSize: 14, color: '#5A7582' }}>{multiSliderValue[1]}</Text>
+            </View>
+            <MultiSlider
+              values={[multiSliderValue[0], multiSliderValue[1]]}
+              sliderLength={SCREEN_WIDTH - 50}
+              onValuesChange={multiSliderValuesChange}
+              min={0}
+              max={100}
+              step={1}
+              allowOverlap
+              snapped
             />
-          ))}
-        </View>
-      </View>
-      <View>
-        <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={styles.filterCategory}>GENRES</Text>
-          <TouchableOpacity onPress={() => toggleSelectAll('genres')}>
-            <Text style={{ fontSize: 14, color: '#03A2A2' }}>
-              {tagData.genres.allSelected ? 'Clear All' : 'Select All'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ marginTop: 20, flexDirection: 'row', flexWrap: 'wrap' }}>
-          {tagData.genres.tags.map((tag, key) => (
-            <FilterTag
-              key={key.toString()}
-              selected={tag.selected}
-              onSelect={() => onSelect('genres', tag)}
-              label={tag.label}
-            />
-          ))}
-        </View>
-      </View>
-      <View>
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.filterCategory}>AUTHORS</Text>
+          </View>
         </View>
       </View>
     </View>
@@ -164,11 +217,20 @@ const FilterScreen = () => {
 
 export default FilterScreen;
 
+FilterScreen.propTypes = {
+  navigation: PropTypes.object.isRequired
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#eee',
-    padding: 10
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  innerWrapper: {
+    width: SCREEN_WIDTH - 50
   },
   filterCategory: {
     color: '#898989',
