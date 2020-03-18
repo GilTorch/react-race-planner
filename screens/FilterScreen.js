@@ -49,11 +49,11 @@ const tagStyle = StyleSheet.create({
 });
 
 const FilterScreen = ({ navigation }) => {
-  const [multiSliderValue, setMultiSliderValue] = useState([0, 100]);
+  const defaultAuthorRange = [5, 20];
+  const [multiSliderValue, setMultiSliderValue] = useState(defaultAuthorRange);
 
   const multiSliderValuesChange = values => setMultiSliderValue(values);
 
-  const defaultAuthorRange = [5, 20];
   const defaultTagData = {
     status: {
       allSelected: false,
