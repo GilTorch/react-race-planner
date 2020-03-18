@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import AuthStack from './AuthStack';
+import MainStack from './MainStack';
 
 export default function AppNavigation() {
-  return <AuthStack />;
+  const [currentUser] = useState(null);
+
+  if (!currentUser) {
+    return <AuthStack />;
+  }
+
+  return <MainStack />;
 }
