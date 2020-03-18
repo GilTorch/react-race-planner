@@ -53,11 +53,12 @@ const FilterScreen = ({ navigation }) => {
 
   const multiSliderValuesChange = values => setMultiSliderValue(values);
 
+  const defaultAuthorRange = [5, 20];
   const defaultTagData = {
     status: {
       allSelected: false,
       tags: [
-        { selected: false, label: 'In Progress' },
+        { selected: true, label: 'In Progress' },
         { selected: false, label: 'Waiting for players' },
         { selected: false, label: 'Completed' },
         { selected: false, label: 'Started by me' }
@@ -66,7 +67,7 @@ const FilterScreen = ({ navigation }) => {
     genres: {
       allSelected: false,
       tags: [
-        { selected: false, label: 'Mystery' },
+        { selected: true, label: 'Mystery' },
         { selected: false, label: 'Action' },
         { selected: false, label: 'Thriller' },
         { selected: false, label: 'Scifi' },
@@ -80,7 +81,7 @@ const FilterScreen = ({ navigation }) => {
   const [tagData, setTagData] = useState(defaultTagData);
 
   const reset = () => {
-    setMultiSliderValue([0, 100]);
+    setMultiSliderValue(defaultAuthorRange);
     setTagData(defaultTagData);
   };
 
@@ -104,30 +105,25 @@ const FilterScreen = ({ navigation }) => {
   const onSelect = (category, currentTag) => {
     let chosenCategory = category;
     if (!validCategoryNames.includes(category)) {
-      // eslint-disable-next-line no-console
       chosenCategory = 'status';
     }
-
+    const { tags } = tagData[chosenCategory];
     const newTag = currentTag;
     newTag.selected = !currentTag.selected;
-    const tagIndex = tagData[chosenCategory].tags.findIndex(tag => tag.label === currentTag.label);
+    const tagIndex = tags.findIndex(tag => tag.label === currentTag.label);
     setTagData({
       ...tagData,
       [chosenCategory]: {
-        ...tagData[chosenCategory],
-        tags: [
-          ...tagData[chosenCategory].tags.slice(0, tagIndex),
-          newTag,
-          ...tagData[chosenCategory].tags.slice(tagIndex + 1)
-        ]
+        allSelected: areAllSelectedIn(chosenCategory),
+        tags: [...tags.slice(0, tagIndex), newTag, ...tags.slice(tagIndex + 1)]
       }
     });
   };
 
   const toggleSelectAll = chosenCategory => {
-    const { allSelected } = tagData[chosenCategory];
+    const { allSelected, tags } = tagData[chosenCategory];
 
-    const newTagData = tagData[chosenCategory].tags.map(tag => {
+    const newTagData = tags.map(tag => {
       return {
         ...tag,
         selected: !allSelected
@@ -142,6 +138,12 @@ const FilterScreen = ({ navigation }) => {
     });
   };
 
+  const areAllSelectedIn = category => {
+    const { tags } = tagData[category];
+    const selectedTags = tags.filter(tag => tag.selected);
+    return selectedTags.length === tags.length;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.innerWrapper}>
@@ -150,7 +152,7 @@ const FilterScreen = ({ navigation }) => {
             <Text style={styles.filterCategory}>STATUS</Text>
             <TouchableOpacity onPress={() => toggleSelectAll('status')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
-                {tagData.status.allSelected ? 'Clear All' : 'Select All'}
+                {!tagData.status.allSelected && 'Select All'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -170,7 +172,7 @@ const FilterScreen = ({ navigation }) => {
             <Text style={styles.filterCategory}>GENRES</Text>
             <TouchableOpacity onPress={() => toggleSelectAll('genres')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
-                {tagData.genres.allSelected ? 'Clear All' : 'Select All'}
+                {!tagData.genres.allSelected && 'Select All'}
               </Text>
             </TouchableOpacity>
           </View>
