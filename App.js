@@ -7,7 +7,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import PropTypes from 'prop-types';
-import BottomTabNavigator from './navigation/BottomTabNavigator';
 import useLinking from './navigation/useLinking';
 import SignupScreen from './screens/SignUpScreen';
 import LoginScreen from './screens/LoginScreen';
@@ -61,7 +60,7 @@ export default function App(props) {
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
-        console.warn(e);
+        // console.warn(e);
       } finally {
         setLoadingComplete(true);
         SplashScreen.hide();
@@ -77,9 +76,11 @@ export default function App(props) {
   return (
     <View style={styles.container}>
       {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-      <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
+      <NavigationContainer
+        ref={containerRef}
+        initialState={initialNavigationState}
+        initialRouteName="SignupScreen">
         <Stack.Navigator>
-          <Stack.Screen name="Root" component={BottomTabNavigator} />
           <Stack.Screen
             options={{ headerShown: false }}
             name="SignupScreen"
@@ -103,7 +104,11 @@ export default function App(props) {
 }
 
 App.propTypes = {
-  skipLoadingScreen: PropTypes.bool.isRequired
+  skipLoadingScreen: PropTypes.bool
+};
+
+App.defaultProps = {
+  skipLoadingScreen: false
 };
 
 const styles = StyleSheet.create({
