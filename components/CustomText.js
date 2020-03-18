@@ -28,19 +28,20 @@ const CustomText = ({ children, type, style }) => {
     }
   };
 
-  const font = fontType(type || 'normal');
+  const font = fontType(type);
   const customStyle = [{ fontFamily: font }, style || {}];
   return <Text style={customStyle}>{children}</Text>;
 };
 
 CustomText.defaultProps = {
+  type: 'normal',
   style: {}
 };
 
 CustomText.propTypes = {
   children: PropTypes.node.isRequired,
-  type: PropTypes.string.isRequired,
-  style: PropTypes.string
+  type: PropTypes.string,
+  style: PropTypes.object
 };
 
 export default CustomText;
