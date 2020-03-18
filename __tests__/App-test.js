@@ -1,11 +1,13 @@
 import * as React from 'react';
+// eslint-disable-next-line import/no-unresolved
 import NavigationTestUtils from 'react-navigation/NavigationTestUtils';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import renderer from 'react-test-renderer';
 
 import App from '../App';
 
 jest.mock('expo', () => ({
-  AppLoading: 'AppLoading',
+  AppLoading: 'AppLoading'
 }));
 
 jest.mock('../navigation/AppNavigator', () => 'AppNavigator');
@@ -17,13 +19,13 @@ describe('App', () => {
     NavigationTestUtils.resetInternalState();
   });
 
-  it(`renders the loading screen`, () => {
+  it('renders the loading screen', () => {
     const tree = renderer.create(<App />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 
-  it(`renders the root without loading screen`, () => {
-    const tree = renderer.create(<App skipLoadingScreen />).toJSON();
+  it('renders the root without loading screen', () => {
+    const tree = renderer.create(<App />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });
