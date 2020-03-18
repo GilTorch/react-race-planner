@@ -1,15 +1,16 @@
-import React from "react";
-import { View, ScrollView, Image, TextInput, StyleSheet } from "react-native";
-import Text from "../components/CustomText";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import SRLogo from "../assets/images/scriptorerum-logo.png";
+import React from 'react';
+import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import PropTypes from 'prop-types';
+
+import Text from '../components/CustomText';
+import SRLogo from '../assets/images/scriptorerum-logo.png';
 
 const ResetPasswordScreen = ({ navigation }) => {
   return (
     <ScrollView
-      style={{ backgroundColor: "white" }}
-      contentContainerStyle={{ backgroundColor: "white", marginTop: 25 }}
-    >
+      style={{ backgroundColor: 'white' }}
+      contentContainerStyle={{ backgroundColor: 'white', marginTop: 25 }}>
       <View style={styles.container}>
         <View style={styles.logoContainer}>
           <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
@@ -21,22 +22,19 @@ const ResetPasswordScreen = ({ navigation }) => {
         </View>
         <View
           style={{
-            width: "60%",
+            width: '60%',
             marginTop: 20,
             marginBottom: 20
-          }}
-        >
+          }}>
           <Text
             type="medium"
             style={{
               fontSize: 11,
               lineHeight: 16,
-              textAlign: "center",
-              color: "#7F8FA4"
-            }}
-          >
-            We will send you a One Time Password via email for you to be able to
-            reset your password
+              textAlign: 'center',
+              color: '#7F8FA4'
+            }}>
+            We will send you a One Time Password via email for you to be able to reset your password
           </Text>
         </View>
         <View style={styles.form}>
@@ -49,18 +47,13 @@ const ResetPasswordScreen = ({ navigation }) => {
             </View>
           </View>
           <TouchableOpacity style={styles.submitButton}>
-            <Text style={styles.submitButtonText}>
-              Send Password Reset Code
-            </Text>
+            <Text style={styles.submitButtonText}>Send Password Reset Code</Text>
           </TouchableOpacity>
-          <View
-            style={{ marginTop: 20, marginBottom: 40, flexDirection: "row" }}
-          >
-            <Text style={{ color: "#7F8FA4" }}>Do you remember it now? </Text>
+          <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
+            <Text style={{ color: '#7F8FA4' }}>Do you remember it now? </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Login")}
-              style={styles.goToLoginPageButton}
-            >
+              onPress={() => navigation.navigate('Login')}
+              style={styles.goToLoginPageButton}>
               <View>
                 <Text style={styles.goToLoginPageButtonText}>Log in</Text>
               </View>
@@ -72,18 +65,22 @@ const ResetPasswordScreen = ({ navigation }) => {
   );
 };
 
+ResetPasswordScreen.propTypes = {
+  navigation: PropTypes.object.isRequired
+};
+
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center"
+    backgroundColor: 'white',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   logoContainer: {
-    width: "70%",
+    width: '70%',
     height: 149,
     marginTop: 50,
-    overflow: "hidden"
+    overflow: 'hidden'
   },
   logo: {
     flex: 1,
@@ -95,21 +92,21 @@ const styles = StyleSheet.create({
     marginTop: 30
   },
   headline: {
-    color: "#38434A",
+    color: '#38434A',
     fontSize: 24
   },
   inputContainer: {
-    backgroundColor: "#F8FAFC",
+    backgroundColor: '#F8FAFC',
     borderRadius: 4.87,
-    borderColor: "#DFE3E9",
+    borderColor: '#DFE3E9',
     borderWidth: 1
   },
   labelContainer: {
     marginBottom: 10
   },
   label: {
-    color: "#7F8FA4",
-    fontWeight: "bold",
+    color: '#7F8FA4',
+    fontWeight: 'bold',
     fontSize: 11
   },
   input: {
@@ -118,7 +115,7 @@ const styles = StyleSheet.create({
     height: 35.43
   },
   form: {
-    width: "75%"
+    width: '75%'
   },
   formGroup: {
     marginTop: 10
@@ -126,34 +123,34 @@ const styles = StyleSheet.create({
   submitButton: {
     marginTop: 30,
     borderRadius: 4.87,
-    backgroundColor: "#23C2C2",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#23C2C2',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 35.43
   },
   submitButtonText: {
-    color: "white"
+    color: 'white'
   },
   loginWithSocialMediaTextContainer: {
     marginTop: 20,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   socialMediaButtonsContainer: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 20
   },
   socialMediaButton: {
     width: 40,
     height: 40,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   goToLoginPageButton: {},
   goToLoginPageButtonText: {
-    color: "#23C2C2"
+    color: '#23C2C2'
   }
 });
 
