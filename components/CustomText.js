@@ -40,7 +40,7 @@ CustomText.defaultProps = {
 CustomText.propTypes = {
   children: PropTypes.node.isRequired,
   type: PropTypes.string.isRequired,
-  style: PropTypes.string
+  style: PropTypes.object
 };
 
 export default CustomText;
