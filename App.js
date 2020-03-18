@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 
 import PropTypes from 'prop-types';
+import { createStackNavigator } from '@react-navigation/stack';
 import useLinking from './navigation/useLinking';
 import SpaceMono from './assets/fonts/SpaceMono-Regular.ttf';
 import RobotoBlack from './assets/fonts/Roboto-Black.ttf';
@@ -20,6 +21,9 @@ import RobotoRegular from './assets/fonts/Roboto-Regular.ttf';
 import RobotoThin from './assets/fonts/Roboto-Thin.ttf';
 import RobotoThinItalic from './assets/fonts/Roboto-ThinItalic.ttf';
 import AppNavigation from './navigation';
+import SettingsScreen from './screens/SettingsScreen';
+
+const Stack = createStackNavigator();
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
@@ -74,6 +78,7 @@ export default function App(props) {
         ref={containerRef}
         initialState={initialNavigationState}
         initialRouteName="SignupScreen">
+        <Stack.Screen options={{ headerShown: false }} name="Settings" component={SettingsScreen} />
         <AppNavigation />
       </NavigationContainer>
     </View>
