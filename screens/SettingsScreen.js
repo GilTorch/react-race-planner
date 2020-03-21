@@ -1,7 +1,6 @@
 import React from 'react';
 import { ScrollView, Image, View, TouchableOpacity } from 'react-native';
-import PropTypes from 'prop-types';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 
@@ -31,7 +30,7 @@ const Header = () => {
   );
 };
 
-const SettingsScreen = ({ navigation }) => {
+const SettingsScreen = () => {
   return (
     <ScrollView style={{ backgroundColor: '#eee' }}>
       <View>
@@ -224,10 +223,6 @@ const SettingsScreen = ({ navigation }) => {
       </View>
     </ScrollView>
   );
-};
-
-SettingsScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
 };
 
 const styles = {
