@@ -133,6 +133,73 @@ const UserPartOfStory = () => {
             </View>
           </Surface>
         </ScrollView>
+        <Surface
+          style={{
+            height: 71,
+            backgroundColor: '#fff',
+            elevation: 5,
+            marginHorizontal: 20,
+            padding: 2
+          }}>
+          <View style={{ alignItems: 'center' }}>
+            <Title style={{ color: '#5A7582' }}>344 X 71</Title>
+            <Title style={{ color: '#5A7582' }}>Advertisement Here</Title>
+          </View>
+        </Surface>
+        <Title style={{ color: '#5A7582', marginLeft: 20, marginVertical: 20 }}>Round 1/8</Title>
+        <Surface
+          style={{
+            height: 295,
+            width: 330,
+            backgroundColor: '#fff',
+            elevation: 5,
+            alignSelf: 'center',
+            padding: 15
+          }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 8</Text>
+          </View>
+          <Paragraph>
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+            invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
+            accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos
+            et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero
+            eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea.
+          </Paragraph>
+          <View style={{ marginTop: 'auto' }}>
+            <Text style={{ fontSize: 20 }}>----</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ marginLeft: 10 }}>Comments: 3</Text>
+            </View>
+          </View>
+        </Surface>
+        <Title style={{ color: '#5A7582', marginLeft: 20, marginVertical: 20 }}>Round 2/8</Title>
+        <Surface
+          style={{
+            height: 295,
+            width: 330,
+            backgroundColor: '#fff',
+            elevation: 5,
+            alignSelf: 'center',
+            padding: 15
+          }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 2</Text>
+          </View>
+          <Paragraph>
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+            invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
+            accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos
+            et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero
+            eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea.
+          </Paragraph>
+          <View style={{ marginTop: 'auto' }}>
+            <Text style={{ fontSize: 20 }}>----</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ marginLeft: 10 }}>Comments: 0</Text>
+            </View>
+          </View>
+        </Surface>
       </ScrollView>
     </SafeAreaView>
   );
