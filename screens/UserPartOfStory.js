@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, SafeAreaView, View } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { Appbar, Paragraph, Title, Button, Surface } from 'react-native-paper';
 import Text from '../components/CustomText';
@@ -26,7 +26,7 @@ const UserPartOfStory = () => {
     <SafeAreaView style={{ backgroundColor: '#eeeeee', flex: 1 }}>
       <Appbar.Header
         style={{
-          backgroundColor: '#23c2c2',
+          backgroundColor: '#1bbaba',
           flexDirection: 'column',
           height: 300
         }}>
@@ -62,6 +62,78 @@ const UserPartOfStory = () => {
           </Surface>
         </View>
       </Appbar.Header>
+      <ScrollView>
+        <Title style={{ color: '#5a7582', marginLeft: 20 }}>All Proposed Intros (5)</Title>
+        <ScrollView horizontal style={{ flex: 1 }} contentContainerStyle={{ height: 380 }}>
+          <Surface
+            style={{
+              height: 340,
+              width: 330,
+              backgroundColor: '#fff',
+              elevation: 5,
+              marginVertical: 20,
+              marginLeft: 20,
+              padding: 10
+            }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 8</Text>
+            </View>
+            <Paragraph>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+              invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
+              accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero
+              eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At
+              vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no
+              sea.
+            </Paragraph>
+            <View style={{ marginTop: 'auto' }}>
+              <Text style={{ fontSize: 20 }}>----</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ marginLeft: 10 }}>Elected Intro</Text>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ marginLeft: 10 }}>Votes: 6/8</Text>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ marginLeft: 10 }}>Comments: 8</Text>
+              </View>
+            </View>
+          </Surface>
+          <Surface
+            style={{
+              height: 340,
+              width: 330,
+              backgroundColor: '#fff',
+              elevation: 5,
+              margin: 20,
+              padding: 10
+            }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 8</Text>
+            </View>
+            <Paragraph>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+              invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
+              accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero
+              eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At
+              vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no
+              sea.
+            </Paragraph>
+            <View style={{ marginTop: 'auto' }}>
+              <Text style={{ fontSize: 20 }}>----</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ marginLeft: 10 }}>Elected Intro</Text>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ marginLeft: 10 }}>Votes: 6/8</Text>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ marginLeft: 10 }}>Comments: 8</Text>
+              </View>
+            </View>
+          </Surface>
+        </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 };
