@@ -1,16 +1,16 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import HomeScreen from '../screens/HomeScreen';
+import MainStack from './MainStack';
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTab() {
   return (
-    <Tab.Navigator initialRouteName="HomeScreen">
+    <Tab.Navigator initialRouteName="Main">
       <Tab.Screen
-        name="HomeScreen"
-        component={HomeScreen}
+        name="Main"
+        component={MainStack}
         options={{
           tabBarLabel: 'Home'
         }}
