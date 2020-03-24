@@ -45,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.submitButton} onPress={() => navigation.navigate('Main')}>
+          <TouchableOpacity style={styles.submitButton} onPress={() => navigation.navigate('Home')}>
             <Text type="medium" style={styles.submitButtonText}>
               Log in
             </Text>
