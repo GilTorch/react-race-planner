@@ -270,6 +270,26 @@ const UserPartOfStory = () => {
         <Title style={styles.title}>All Proposed Endings</Title>
         <Text style={{ color: '#ED8A18', marginLeft: 20, marginBottom: 20 }}>Pendding</Text>
       </ScrollView>
+      <View
+        style={{
+          position: 'absolute',
+          width: 80,
+          top: 640,
+          alignSelf: 'flex-end'
+        }}>
+        <View style={styles.floatingNav}>
+          <FontAwesome name="chevron-up" size={25} color="#ed8a18" />
+          <Text type="bold" style={{ color: '#5A7582' }}>
+            FIRST
+          </Text>
+        </View>
+        <View style={styles.floatingNav}>
+          <FontAwesome name="chevron-down" size={25} color="#ed8a18" />
+          <Text type="bold" style={{ color: '#5A7582' }}>
+            LAST
+          </Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -334,6 +354,14 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignSelf: 'center',
     padding: 15
+  },
+  floatingNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    height: 35,
+    marginTop: 10
   }
 });
 
