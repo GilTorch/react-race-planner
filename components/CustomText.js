@@ -8,23 +8,23 @@ const CustomText = ({ children, type, style }) => {
       case 'black':
         return 'Roboto-Black';
       case 'black-italic':
-        return 'Roboto-BlackItalic';
+        return 'RobotoBlackItalic';
       case 'bold':
-        return 'Roboto-Bold';
+        return 'RobotoBold';
       case 'bold-italic':
-        return 'Roboto-BoldItalic';
+        return 'RobotoBoldItalic';
       case 'light':
-        return 'Roboto-Light';
+        return 'RobotoLight';
       case 'light-italic':
-        return 'Roboto-LightItalic';
+        return 'RobotoLightItalic';
       case 'medium':
-        return 'Roboto-Medium';
+        return 'RobotoMedium';
       case 'regular':
-        return 'Roboto-Regular';
+        return 'RobotoRegular';
       case 'thin':
-        return 'Roboto-Thin';
+        return 'RobotoThin';
       default:
-        return 'Roboto-Regular';
+        return 'RobotoRegular';
     }
   };
 
