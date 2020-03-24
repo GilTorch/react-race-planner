@@ -7,9 +7,9 @@ const Tab = createBottomTabNavigator();
 
 export default function BottomTab() {
   return (
-    <Tab.Navigator initialRouteName="Main">
+    <Tab.Navigator initialRouteName="Home">
       <Tab.Screen
-        name="Main"
+        name="Home"
         component={MainStack}
         options={{
           tabBarLabel: 'Home'
