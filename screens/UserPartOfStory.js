@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
 import PropTypes from 'prop-types';
+import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
 import { Appbar, Paragraph, Title, Button, Surface } from 'react-native-paper';
 import Text from '../components/CustomText';
 
@@ -77,6 +78,7 @@ const UserPartOfStory = () => {
             }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 8</Text>
+              <Feather name="more-vertical" size={18} color="#5A7582" />
             </View>
             <Paragraph>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
@@ -89,12 +91,15 @@ const UserPartOfStory = () => {
             <View style={{ marginTop: 'auto' }}>
               <Text style={{ fontSize: 20 }}>----</Text>
               <View style={{ flexDirection: 'row' }}>
+                <FontAwesome name="star" size={20} color="#ed8a18" />
                 <Text style={{ marginLeft: 10 }}>Elected Intro</Text>
               </View>
               <View style={{ flexDirection: 'row' }}>
+                <MaterialCommunityIcons name="vote" size={20} color="#911414" />
                 <Text style={{ marginLeft: 10 }}>Votes: 6/8</Text>
               </View>
               <View style={{ flexDirection: 'row' }}>
+                <FontAwesome name="commenting" size={20} color="#0277BD" />
                 <Text style={{ marginLeft: 10 }}>Comments: 8</Text>
               </View>
             </View>
@@ -110,6 +115,7 @@ const UserPartOfStory = () => {
             }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 8</Text>
+              <Feather name="more-vertical" size={18} color="#5A7582" />
             </View>
             <Paragraph>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
@@ -122,12 +128,15 @@ const UserPartOfStory = () => {
             <View style={{ marginTop: 'auto' }}>
               <Text style={{ fontSize: 20 }}>----</Text>
               <View style={{ flexDirection: 'row' }}>
+                <FontAwesome name="star" size={20} color="#ed8a18" />
                 <Text style={{ marginLeft: 10 }}>Elected Intro</Text>
               </View>
               <View style={{ flexDirection: 'row' }}>
+                <MaterialCommunityIcons name="vote" size={20} color="#911414" />
                 <Text style={{ marginLeft: 10 }}>Votes: 6/8</Text>
               </View>
               <View style={{ flexDirection: 'row' }}>
+                <FontAwesome name="commenting" size={20} color="#0277BD" />
                 <Text style={{ marginLeft: 10 }}>Comments: 8</Text>
               </View>
             </View>
@@ -158,6 +167,7 @@ const UserPartOfStory = () => {
           }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 8</Text>
+            <Feather name="more-vertical" size={18} color="#5A7582" />
           </View>
           <Paragraph>
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
@@ -169,6 +179,7 @@ const UserPartOfStory = () => {
           <View style={{ marginTop: 'auto' }}>
             <Text style={{ fontSize: 20 }}>----</Text>
             <View style={{ flexDirection: 'row' }}>
+              <FontAwesome name="commenting" size={20} color="#0277BD" />
               <Text style={{ marginLeft: 10 }}>Comments: 3</Text>
             </View>
           </View>
@@ -185,6 +196,7 @@ const UserPartOfStory = () => {
           }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 2</Text>
+            <Feather name="more-vertical" size={18} color="#5A7582" />
           </View>
           <Paragraph>
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
@@ -196,10 +208,167 @@ const UserPartOfStory = () => {
           <View style={{ marginTop: 'auto' }}>
             <Text style={{ fontSize: 20 }}>----</Text>
             <View style={{ flexDirection: 'row' }}>
+              <FontAwesome name="commenting" size={20} color="#0277BD" />
               <Text style={{ marginLeft: 10 }}>Comments: 0</Text>
             </View>
           </View>
         </Surface>
+        <Title style={{ color: '#5A7582', marginLeft: 20, marginVertical: 20 }}>
+          Round 3/8 (Your Turn)
+        </Title>
+        <Text style={{ color: '#ED8A18', marginLeft: 40, marginBottom: 15 }}>
+          45 minutes and 33 seconds left
+        </Text>
+        <Surface
+          style={{
+            height: 295,
+            width: 330,
+            backgroundColor: '#fff',
+            elevation: 5,
+            alignSelf: 'center',
+            padding: 15
+          }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By You</Text>
+            <Feather name="more-vertical" size={18} color="#5A7582" />
+          </View>
+          <Paragraph>
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
+            invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+          </Paragraph>
+          <View style={{ marginTop: 'auto' }}>
+            <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>24/50 words</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 10
+              }}>
+              <Surface style={{ ...styles.surface, marginRight: 20 }}>
+                <Button mode="contained" uppercase={false} style={{ backgroundColor: '#ED8A18' }}>
+                  Skip Turn
+                </Button>
+              </Surface>
+
+              <Surface style={styles.surface}>
+                <Button mode="contained" style={{ backgroundColor: '#f44336' }} uppercase={false}>
+                  Leave Story
+                </Button>
+              </Surface>
+            </View>
+          </View>
+        </Surface>
+        <Surface
+          style={{
+            height: 344,
+            backgroundColor: '#fff',
+            elevation: 5,
+            marginHorizontal: 20,
+            marginTop: 20,
+            padding: 2
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%'
+            }}>
+            <Title style={{ color: '#5A7582' }}>344 X 344</Title>
+            <Title style={{ color: '#5A7582' }}>Advertisement Here</Title>
+          </View>
+        </Surface>
+        <Title style={{ color: '#5A7582', marginLeft: 20, marginVertical: 20 }}>Round 4/8</Title>
+        <Surface
+          style={{
+            width: 330,
+            backgroundColor: '#fff',
+            elevation: 5,
+            alignSelf: 'center',
+            padding: 15
+          }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 4</Text>
+            <Feather name="more-vertical" size={18} color="#5A7582" />
+          </View>
+          <Text style={{ color: '#ED8A18', marginBottom: 20, marginTop: 10 }}>Pendding</Text>
+        </Surface>
+        <Title style={{ color: '#5A7582', marginLeft: 20, marginVertical: 20 }}>Round 5/8</Title>
+        <Surface
+          style={{
+            width: 330,
+            backgroundColor: '#fff',
+            elevation: 5,
+            alignSelf: 'center',
+            padding: 15
+          }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 5</Text>
+            <Feather name="more-vertical" size={18} color="#5A7582" />
+          </View>
+          <Text style={{ color: '#ED8A18', marginBottom: 20, marginTop: 10 }}>Pendding</Text>
+        </Surface>
+        <Title style={{ color: '#5A7582', marginLeft: 20, marginVertical: 20 }}>Round 6/8</Title>
+        <Surface
+          style={{
+            width: 330,
+            backgroundColor: '#fff',
+            elevation: 5,
+            alignSelf: 'center',
+            padding: 15
+          }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 6</Text>
+            <Feather name="more-vertical" size={18} color="#5A7582" />
+          </View>
+          <Text style={{ color: '#ED8A18', marginBottom: 20, marginTop: 10 }}>Pendding</Text>
+        </Surface>
+        <Surface
+          style={{
+            height: 71,
+            backgroundColor: '#fff',
+            elevation: 5,
+            marginHorizontal: 20,
+            marginTop: 20,
+            padding: 2
+          }}>
+          <View style={{ alignItems: 'center' }}>
+            <Title style={{ color: '#5A7582' }}>344 X 71</Title>
+            <Title style={{ color: '#5A7582' }}>Advertisement Here</Title>
+          </View>
+        </Surface>
+        <Title style={{ color: '#5A7582', marginLeft: 20, marginVertical: 20 }}>Round 7/8</Title>
+        <Surface
+          style={{
+            width: 330,
+            backgroundColor: '#fff',
+            elevation: 5,
+            alignSelf: 'center',
+            padding: 15
+          }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 7</Text>
+            <Feather name="more-vertical" size={18} color="#5A7582" />
+          </View>
+          <Text style={{ color: '#ED8A18', marginBottom: 20, marginTop: 10 }}>Pendding</Text>
+        </Surface>
+        <Title style={{ color: '#5A7582', marginLeft: 20, marginVertical: 20 }}>Round 8/8</Title>
+        <Surface
+          style={{
+            width: 330,
+            backgroundColor: '#fff',
+            elevation: 5,
+            alignSelf: 'center',
+            padding: 15
+          }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontWeight: 'bold', color: '#5A7582' }}>By Anonymous 8</Text>
+            <Feather name="more-vertical" size={18} color="#5A7582" />
+          </View>
+          <Text style={{ color: '#ED8A18', marginBottom: 20, marginTop: 10 }}>Pendding</Text>
+        </Surface>
+        <Title style={{ color: '#5A7582', marginLeft: 20, marginVertical: 20 }}>
+          All Proposed Endings
+        </Title>
+        <Text style={{ color: '#ED8A18', marginLeft: 20, marginBottom: 20 }}>Pendding</Text>
       </ScrollView>
     </SafeAreaView>
   );
