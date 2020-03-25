@@ -1,44 +1,17 @@
 import React from 'react';
-import { ScrollView, SafeAreaView, View } from 'react-native';
-// import PropTypes from 'prop-types';
-import { MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
+import { ScrollView, SafeAreaView, View, StyleSheet, Image } from 'react-native';
+import { AntDesign, FontAwesome, SimpleLineIcons, Feather } from '@expo/vector-icons';
+import { Surface } from 'react-native-paper';
 import PropTypes from 'prop-types';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Text from '../components/CustomText';
-import MysteryIcon from '../components/svg/icons/MysteryIcon';
-
-const genres = [
-  {
-    name: 'Mystery',
-    icon: <MysteryIcon width={28} height={28} />,
-    color: '#43A047'
-  },
-  {
-    name: 'Action',
-    icon: <MaterialCommunityIcons size={32} color="white" name="run" />,
-    color: '#13BCBC'
-  },
-  {
-    name: 'Thriller',
-    icon: <MaterialCommunityIcons size={32} color="white" name="skull" />,
-    color: '#29B6F6'
-  },
-  {
-    name: 'Sci-Fi',
-    icon: <MaterialCommunityIcons size={32} color="white" name="alien" />,
-    color: '#5E35B1'
-  },
-  { name: 'Romance', icon: <AntDesign size={32} color="white" name="heart" />, color: '#FCF42A' },
-  { name: 'Essay', icon: <AntDesign size={32} color="white" name="book" />, color: '#ED8A18' },
-  {
-    name: 'Bedtime Stories',
-    icon: <Ionicons size={32} color="white" name="ios-bed" />,
-    color: '#faf'
-  }
-];
+import { stories, genres } from '../utils/data';
 
 const Genre = ({ genre }) => (
   <View style={genreStyle.container}>
-    <View style={{ ...genreStyle.iconContainer, backgroundColor: genre.color }}>{genre.icon}</View>
+    <View style={{ ...genreStyle.iconContainer, backgroundColor: genre.color }}>
+      {genre.icon(32)}
+    </View>
     <Text type="medium" style={genreStyle.iconLabel}>
       {genre.name}
     </Text>
@@ -64,26 +37,248 @@ const genreStyle = {
   }
 };
 
+const StoryGenre = ({ name }) => {
+  const currentGenre = genres.filter(genre => genre.name === name)[0];
+  return (
+    <View style={storyGenreStyle.container}>
+      <View style={{ ...storyGenreStyle.iconContainer, backgroundColor: currentGenre.color }}>
+        {currentGenre.icon(15)}
+      </View>
+      <Text style={{ color: '#5A7582' }}>{currentGenre.name}</Text>
+    </View>
+  );
+};
+
+const storyGenreStyle = {
+  container: { flexDirection: 'row', alignItems: 'center' },
+  iconContainer: {
+    width: 30,
+    height: 30,
+    borderRadius: 40,
+    marginRight: 5,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+};
+
+StoryGenre.propTypes = {
+  name: PropTypes.string.isRequired
+};
+
+const StoryAuthors = ({ authors, storyStatus }) => {
+  const nonLeadAuthorsWithLimit = authors.filter(author => !author.storyLead).slice(0, 4);
+  const leadAuthor = authors.filter(author => author.storyLead)[0];
+  const remainingAuthorsCount = authors.length - (nonLeadAuthorsWithLimit.length + 1);
+
+  const renderSeparator = isStoryLead =>
+    isStoryLead && (
+      <View
+        style={{
+          height: 20,
+          marginLeft: 5,
+          marginRight: 5,
+          borderLeftColor: '#5A7582',
+          borderLeftWidth: 1
+        }}
+      />
+    );
+
+  const renderAuthor = author => {
+    if (storyStatus === 'In Progress' || author.anonymous) {
+      return (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View
+            style={{
+              width: 30,
+              height: 30,
+              marginLeft: 5,
+              borderRadius: 100,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#B3CFFF'
+            }}>
+            <FontAwesome color="white" size={20} name="user" />
+          </View>
+          {renderSeparator(author.storyLead)}
+        </View>
+      );
+    }
+
+    return (
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Image
+          style={{ width: 30, height: 30, borderRadius: 100, marginLeft: 5 }}
+          source={{ uri: author.profilePicture }}
+        />
+        {renderSeparator(author.storyLead)}
+      </View>
+    );
+  };
+
+  return (
+    <View style={{ marginTop: 10, marginBottom: 10, flexDirection: 'row', alignItems: 'center' }}>
+      {renderAuthor(leadAuthor)}
+      {nonLeadAuthorsWithLimit.map(author => renderAuthor(author))}
+      {remainingAuthorsCount > 0 && (
+        <View style={{ marginLeft: 10 }}>
+          <Text type="bold" style={{ fontSize: 11, color: '#5A7582' }}>
+            {remainingAuthorsCount} more people to go
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
+StoryAuthors.propTypes = {
+  authors: PropTypes.array.isRequired,
+  storyStatus: PropTypes.string.isRequired
+};
+
+const Story = ({ story }) => (
+  <Surface style={{ margin: 20, borderRadius: 4, padding: 10, elevation: 5 }}>
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+      <View>
+        <Text type="bold" style={{ color: '#03A2A2', fontSize: 18 }}>
+          {story.title}
+        </Text>
+      </View>
+      <TouchableOpacity>
+        <Feather size={20} color="#5A7582" name="more-vertical" />
+      </TouchableOpacity>
+    </View>
+    <StoryAuthors authors={story.authors} storyStatus={story.status} />
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View style={{ marginRight: 10 }}>
+        <Text style={{ color: '#5A7582' }}>{story.startTime} |</Text>
+      </View>
+      <View style={{ marginRight: 10 }}>
+        <Text style={{ color: '#5A7582' }}>{story.status} |</Text>
+      </View>
+      <View>
+        <StoryGenre name={story.genre} />
+      </View>
+      <View />
+    </View>
+    <View style={{ marginTop: 10 }}>
+      <Text type="bold" style={{ color: '#5A7582' }}>
+        Initially Proposed Intro
+      </Text>
+      <Text style={{ color: '#5A7582', lineHeight: 20 }}>{story.initialIntro}</Text>
+    </View>
+    <View style={{ marginTop: 10 }}>
+      <Text type="bold" style={{ color: '#5A7582' }}>
+        Elected Intro
+      </Text>
+      {story.electedIntro ? (
+        <Text style={{ color: '#5A7582', lineHeight: 20 }}>{story.electedIntro}</Text>
+      ) : (
+          <Text type="light-italic" style={{ color: '#ED8A18' }}>
+            Vote haven't started yet
+          </Text>
+        )}
+    </View>
+  </Surface>
+);
+
+Story.propTypes = {
+  story: PropTypes.object.isRequired
+};
+
 const HomeScreen = () => {
   return (
     <SafeAreaView>
-      <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
-        <Text>Hello</Text>
+      <ScrollView contentContainerStyle={{ backgroundColor: '#eee' }}>
+        <View style={{ height: 80, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
+          <View style={{ marginRight: 18 }}>
+            <SimpleLineIcons color="#ED8A18" name="layers" size={25} />
+          </View>
+          <TouchableOpacity>
+            <Text style={{ ...styles.headline, fontSize: 16 }} type="medium">
+              Start a New Story
+            </Text>
+          </TouchableOpacity>
+        </View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingLeft: 15 }}>
-          {genres.map(genre => (
-            <Genre genre={genre} />
+          {genres.map((genre, key) => (
+            <Genre key={key.toString()} genre={genre} />
           ))}
         </ScrollView>
+        <View style={{ paddingLeft: 15 }}>
+          <TouchableOpacity>
+            <Text type="medium" style={{ marginTop: 15, color: '#03A2A2' }}>
+              View all categories
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            paddingLeft: 20,
+            marginTop: 25,
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}>
+          <View style={{ flex: 3 }}>
+            <Text type="medium" style={{ ...styles.headline, fontSize: 18 }}>
+              All Stories
+            </Text>
+          </View>
+          <View
+            style={{
+              flex: 2,
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center'
+            }}>
+            <TouchableOpacity>
+              <Surface
+                style={{
+                  backgroundColor: 'white',
+                  elevation: 15,
+                  borderRadius: 4,
+                  flexDirection: 'row',
+                  padding: 2,
+                  alignItems: 'center'
+                }}>
+                <AntDesign color="#5A7582" size={18} name="filter" />
+                <Text type="bold" style={{ fontSize: 14, color: '#5A7582' }}>
+                  FILTER
+                </Text>
+              </Surface>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Surface
+                style={{
+                  padding: 4,
+                  marginLeft: 10,
+                  marginRight: 20,
+                  backgroundColor: 'white',
+                  elevation: 2,
+                  borderRadius: 4,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                <FontAwesome size={14} color="#5A7582" name="search" />
+              </Surface>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View>
+          {stories.map(story => (
+            <Story story={story} />
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-// const styles = StyleSheet.create({
-
-// });
+const styles = StyleSheet.create({
+  container: {},
+  headline: { color: '#5A7582' }
+});
 
 export default HomeScreen;
