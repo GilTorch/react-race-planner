@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
 import { Appbar, Paragraph, Button, Surface } from 'react-native-paper';
-import Text from '../components/CustomText';
+import Text from '../../components/CustomText';
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 
-const { height: HEIGHT, width: WIDTH } = Dimensions.get('window');
 const StorySingleMeta = ({ label, value }) => (
   <View style={{ alignSelf: 'flex-start', marginLeft: 15 }}>
     <Paragraph>
@@ -23,52 +24,89 @@ StorySingleMeta.propTypes = {
   value: PropTypes.string.isRequired
 };
 
-const UserPartOfStory = () => {
+const PenddingRoundBox = ({ title, subTitle, status, timeLeft }) => (
+  <View>
+    <Text type="medium" style={styles.title}>
+      {title}
+    </Text>
+    <Surface style={styles.penddingRound}>
+      <View style={styles.boxHeader}>
+        <Text type="bold" style={styles.subTitle}>
+          {subTitle}
+        </Text>
+        <Feather name="more-vertical" size={18} color="#5A7582" />
+      </View>
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={styles.pendding}>{status}</Text>
+        <Text type="bold" style={{ color: '#ED8A18', fontSize: 13, marginTop: 10, marginLeft: 10 }}>
+          {timeLeft}
+        </Text>
+      </View>
+    </Surface>
+  </View>
+);
+PenddingRoundBox.propTypes = {
+  title: PropTypes.string.isRequired,
+  subTitle: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
+  timeLeft: PropTypes.string
+};
+PenddingRoundBox.defaultProps = {
+  timeLeft: ''
+};
+
+const UserPartOfStory = ({ navigation }) => {
   return (
     <SafeAreaView style={{ backgroundColor: '#eee', flex: 1 }}>
-      <Appbar.Header
-        style={{
-          backgroundColor: '#1bbaba',
-          flexDirection: 'column',
-          height: HEIGHT * 0.37
-        }}>
-        <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
-          ScriptoRerum
-        </Text>
-        <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
-          Alphons, The Barber
-        </Text>
+      <Appbar.Header style={{ backgroundColor: '#03a2a2', height: 290, flexDirection: 'column' }}>
+        <LinearGradient
+          colors={['#03a2a2', '#10afaf', '#23c2c2']}
+          style={{
+            borderBottomLeftRadius: 15,
+            borderBottomRightRadius: 15,
+            alignItems: 'center',
+            height: 290,
+            width: SCREEN_WIDTH
+          }}>
+          <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
+            ScriptoRerum
+          </Text>
+          <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
+            Alphons, The Barber
+          </Text>
 
-        <StorySingleMeta label="Genre" value="Romance" />
-        <StorySingleMeta label="Status" value="In Progress" />
-        <StorySingleMeta label="Master Author" value="Anonymous 1" />
-        <StorySingleMeta label="Intro Maximunm Words" value="50" />
-        <StorySingleMeta label="Ending Maximunm Words" value="50" />
-        <StorySingleMeta label="Words per Round" value="100 max" />
-        <StorySingleMeta label="Co-Authors" value="7/11" />
+          <StorySingleMeta label="Genre" value="Romance" />
+          <StorySingleMeta label="Status" value="In Progress" />
+          <StorySingleMeta label="Master Author" value="Anonymous 1" />
+          <StorySingleMeta label="Intro Maximum Words" value="50" />
+          <StorySingleMeta label="Ending Maximum Words" value="50" />
+          <StorySingleMeta label="Words per Round" value="100 max" />
+          <StorySingleMeta label="Co-Authors" value="7/11" />
 
-        <View style={styles.headerBtn}>
-          <Surface style={styles.surface}>
-            <Button
-              mode="contained"
-              uppercase={false}
-              style={{ backgroundColor: '#f44336' }}
-              labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium' }}>
-              Leave Story
-            </Button>
-          </Surface>
+          <View style={styles.headerBtn}>
+            <Surface style={styles.surface}>
+              <Button
+                mode="contained"
+                uppercase={false}
+                style={{ backgroundColor: '#f44336' }}
+                labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium' }}>
+                Leave Story
+              </Button>
+            </Surface>
 
-          <Surface style={styles.surface}>
-            <Button
-              mode="text"
-              icon="arrow-left"
-              color="#5a7582"
-              uppercase={false}
-              labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium' }}>
-              Go Back
-            </Button>
-          </Surface>
-        </View>
+            <Surface style={styles.surface}>
+              <Button
+                mode="text"
+                icon="arrow-left"
+                color="#5a7582"
+                uppercase={false}
+                onPress={() => navigation.goBack()}
+                labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium' }}>
+                Go Back
+              </Button>
+            </Surface>
+          </View>
+        </LinearGradient>
       </Appbar.Header>
 
       <ScrollView>
@@ -235,7 +273,7 @@ const UserPartOfStory = () => {
                 <Button
                   mode="contained"
                   uppercase={false}
-                  style={{ backgroundColor: '#ED8A18', width: WIDTH * 0.25 }}
+                  style={{ backgroundColor: '#ED8A18', width: SCREEN_WIDTH * 0.25 }}
                   labelStyle={styles.boxBtnLabel}>
                   Skip Turn
                 </Button>
@@ -245,7 +283,7 @@ const UserPartOfStory = () => {
                 <Button
                   mode="contained"
                   uppercase={false}
-                  style={{ backgroundColor: '#f44336', width: WIDTH * 0.25 }}
+                  style={{ backgroundColor: '#f44336', width: SCREEN_WIDTH * 0.25 }}
                   labelStyle={styles.boxBtnLabel}>
                   Leave Story
                 </Button>
@@ -255,7 +293,7 @@ const UserPartOfStory = () => {
         </Surface>
         <Surface
           style={{
-            height: HEIGHT * 0.45,
+            height: SCREEN_HEIGHT * 0.4,
             backgroundColor: '#fff',
             elevation: 5,
             marginHorizontal: 20,
@@ -270,44 +308,12 @@ const UserPartOfStory = () => {
             Advertisement Here
           </Text>
         </Surface>
-        <Text type="medium" style={styles.title}>
-          Round 4/8
-        </Text>
-        <Surface style={styles.penddingRound}>
-          <View style={styles.boxHeader}>
-            <Text type="bold" style={styles.subTitle}>
-              By Anonymous 4
-            </Text>
-            <Feather name="more-vertical" size={18} color="#5A7582" />
-          </View>
-          <Text style={styles.pendding}>Pendding</Text>
-        </Surface>
-        <Text type="medium" style={styles.title}>
-          Round 5/8
-        </Text>
-        <Surface style={styles.penddingRound}>
-          <View style={styles.boxHeader}>
-            <Text type="bold" style={styles.subTitle}>
-              By Anonymous 5
-            </Text>
-            <Feather name="more-vertical" size={18} color="#5A7582" />
-          </View>
-          <Text type="italic" style={styles.pendding}>
-            Pendding
-          </Text>
-        </Surface>
-        <Text type="medium" style={styles.title}>
-          Round 6/8
-        </Text>
-        <Surface style={styles.penddingRound}>
-          <View style={styles.boxHeader}>
-            <Text type="bold" style={styles.subTitle}>
-              By Anonymous 6
-            </Text>
-            <Feather name="more-vertical" size={18} color="#5A7582" />
-          </View>
-          <Text style={styles.pendding}>Pendding</Text>
-        </Surface>
+
+        <PenddingRoundBox title="Round 4/8" subTitle="By Anonymous 7" status="Pendding" />
+
+        <PenddingRoundBox title="Round 5/8" subTitle="By Anonymous 3" status="Pendding" />
+
+        <PenddingRoundBox title="Round 6/8" subTitle="By Anonymous 6" status="Pendding" />
 
         <Surface style={{ ...styles.smallAdvertisement, marginTop: 20 }}>
           <Text type="bold" style={styles.smallAdvertisementTitle}>
@@ -318,30 +324,10 @@ const UserPartOfStory = () => {
           </Text>
         </Surface>
 
-        <Text type="medium" style={styles.title}>
-          Round 7/8
-        </Text>
-        <Surface style={styles.penddingRound}>
-          <View style={styles.boxHeader}>
-            <Text type="bold" style={styles.subTitle}>
-              By Anonymous 7
-            </Text>
-            <Feather name="more-vertical" size={18} color="#5A7582" />
-          </View>
-          <Text style={styles.pendding}>Pendding</Text>
-        </Surface>
-        <Text type="medium" style={styles.title}>
-          Round 8/8
-        </Text>
-        <Surface style={styles.penddingRound}>
-          <View style={styles.boxHeader}>
-            <Text type="bold" style={styles.subTitle}>
-              By Anonymous 8
-            </Text>
-            <Feather name="more-vertical" size={18} color="#5A7582" />
-          </View>
-          <Text style={styles.pendding}>Pendding</Text>
-        </Surface>
+        <PenddingRoundBox title="Round 7/8" subTitle="By Anonymous 4" status="Pendding" />
+
+        <PenddingRoundBox title="Round 8/8" subTitle="By Anonymous 5" status="Pendding" />
+
         <Text type="bold" style={styles.title}>
           All Proposed Endings
         </Text>
@@ -353,8 +339,8 @@ const UserPartOfStory = () => {
       <View
         style={{
           position: 'absolute',
-          width: WIDTH * 0.2,
-          top: HEIGHT * 0.85,
+          width: SCREEN_WIDTH * 0.2,
+          top: SCREEN_HEIGHT * 0.85,
           right: 10
         }}>
         <View style={styles.floatingNav}>
@@ -387,7 +373,7 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   intros: {
-    width: WIDTH * 0.75,
+    width: SCREEN_WIDTH * 0.75,
     elevation: 5,
     marginVertical: 20,
     marginRight: 30,
@@ -428,7 +414,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Medium'
   },
   smallAdvertisement: {
-    height: HEIGHT * 0.1,
+    height: SCREEN_HEIGHT * 0.1,
     backgroundColor: '#fff',
     elevation: 5,
     marginHorizontal: 20,
@@ -445,7 +431,7 @@ const styles = StyleSheet.create({
   },
   round: {
     marginHorizontal: 40,
-    minHeight: HEIGHT * 0.35,
+    minHeight: SCREEN_HEIGHT * 0.35,
     backgroundColor: '#fff',
     elevation: 5,
     alignSelf: 'center',
@@ -469,10 +455,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#fff',
-    height: HEIGHT * 0.05,
+    height: SCREEN_HEIGHT * 0.05,
     marginTop: 10,
     borderRadius: 5
   }
 });
+
+UserPartOfStory.propTypes = {
+  navigation: PropTypes.object.isRequired
+};
 
 export default UserPartOfStory;
