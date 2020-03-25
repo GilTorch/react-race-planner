@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, View, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
-import { Appbar, Paragraph, Title, Button, Surface } from 'react-native-paper';
+import { Appbar, Paragraph, Button, Surface } from 'react-native-paper';
 import Text from '../components/CustomText';
 
+const { height: HEIGHT, width: WIDTH } = Dimensions.get('window');
 const StorySingleMeta = ({ label, value }) => (
   <View style={{ alignSelf: 'flex-start', marginLeft: 15 }}>
     <Paragraph>
       <Text type="bold" style={{ color: 'white' }}>
         {label}:{'  '}
       </Text>
-      <Text type="medium" style={{ color: 'white' }}>
+      <Text type="regular" style={{ color: 'white' }}>
         {value}
       </Text>
     </Paragraph>
@@ -24,15 +25,19 @@ StorySingleMeta.propTypes = {
 
 const UserPartOfStory = () => {
   return (
-    <SafeAreaView style={{ backgroundColor: '#eeeeee', flex: 1 }}>
+    <SafeAreaView style={{ backgroundColor: '#eee', flex: 1 }}>
       <Appbar.Header
         style={{
           backgroundColor: '#1bbaba',
           flexDirection: 'column',
-          height: 300
+          height: HEIGHT * 0.37
         }}>
-        <Title style={{ color: 'white' }}>ScriptoRerum</Title>
-        <Title style={{ color: 'white' }}>Alphons, The Barber</Title>
+        <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
+          ScriptoRerum
+        </Text>
+        <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
+          Alphons, The Barber
+        </Text>
 
         <StorySingleMeta label="Genre" value="Romance" />
         <StorySingleMeta label="Status" value="In Progress" />
@@ -44,13 +49,22 @@ const UserPartOfStory = () => {
 
         <View style={styles.headerBtn}>
           <Surface style={styles.surface}>
-            <Button mode="contained" uppercase={false} style={{ backgroundColor: '#f44336' }}>
+            <Button
+              mode="contained"
+              uppercase={false}
+              style={{ backgroundColor: '#f44336' }}
+              labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium' }}>
               Leave Story
             </Button>
           </Surface>
 
           <Surface style={styles.surface}>
-            <Button mode="text" icon="arrow-left" color="#5a7582" uppercase={false}>
+            <Button
+              mode="text"
+              icon="arrow-left"
+              color="#5a7582"
+              uppercase={false}
+              labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium' }}>
               Go Back
             </Button>
           </Surface>
@@ -58,118 +72,147 @@ const UserPartOfStory = () => {
       </Appbar.Header>
 
       <ScrollView>
-        <Title style={{ ...styles.title, marginBottom: 0 }}>All Proposed Intros (5)</Title>
-        <ScrollView horizontal style={{ flex: 1 }} contentContainerStyle={{ height: 380 }}>
+        <Text type="medium" style={{ ...styles.title, marginBottom: 0 }}>
+          All Proposed Intros (5)
+        </Text>
+        <ScrollView horizontal style={{ flex: 1 }} contentContainerStyle={{ marginHorizontal: 20 }}>
           <Surface style={styles.intros}>
             <View style={styles.boxHeader}>
-              <Text style={styles.subTitle}>By Anonymous 8</Text>
+              <Text type="bold" style={styles.subTitle}>
+                By Anonymous 8
+              </Text>
               <Feather name="more-vertical" size={18} color="#5A7582" />
             </View>
-            <Paragraph>
+            <Text type="regular" style={styles.body}>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
               invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
               accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero
               eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At
               vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no
               sea.
-            </Paragraph>
+            </Text>
             <View style={{ marginTop: 'auto' }}>
-              <Text style={styles.separator}>----</Text>
+              <Text style={styles.separator}>---</Text>
               <View style={styles.displayRow}>
                 <FontAwesome name="star" size={20} color="#ed8a18" />
-                <Text style={{ marginLeft: 10 }}>Elected Intro</Text>
+                <Text type="bold" style={styles.boxFooter}>
+                  Elected Intro
+                </Text>
               </View>
               <View style={styles.displayRow}>
                 <MaterialCommunityIcons name="vote" size={20} color="#911414" />
-                <Text style={{ marginLeft: 10 }}>Votes: 6/8</Text>
+                <Text type="bold" style={styles.boxFooter}>
+                  Votes: 6/8
+                </Text>
               </View>
               <View style={styles.displayRow}>
                 <FontAwesome name="commenting" size={20} color="#0277BD" />
-                <Text style={{ marginLeft: 10 }}>Comments: 8</Text>
+                <Text type="bold" style={styles.boxFooter}>
+                  Comments: 8
+                </Text>
               </View>
             </View>
           </Surface>
           <Surface style={styles.intros}>
             <View style={styles.boxHeader}>
-              <Text style={styles.subTitle}>By Anonymous 8</Text>
+              <Text type="bold" style={styles.subTitle}>
+                By Anonymous 6
+              </Text>
               <Feather name="more-vertical" size={18} color="#5A7582" />
             </View>
-            <Paragraph>
+            <Text type="regular" style={styles.body}>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
               invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
               accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero
               eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At
               vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no
               sea.
-            </Paragraph>
+            </Text>
             <View style={{ marginTop: 'auto' }}>
-              <Text style={styles.separator}>----</Text>
+              <Text style={styles.separator}>---</Text>
               <View style={styles.displayRow}>
                 <FontAwesome name="star" size={20} color="#ed8a18" />
-                <Text style={{ marginLeft: 10 }}>Elected Intro</Text>
+                <Text type="bold" style={styles.boxFooter}>
+                  Elected Intro
+                </Text>
               </View>
               <View style={styles.displayRow}>
                 <MaterialCommunityIcons name="vote" size={20} color="#911414" />
-                <Text style={{ marginLeft: 10 }}>Votes: 6/8</Text>
+                <Text type="bold" style={styles.boxFooter}>
+                  Votes: 6/8
+                </Text>
               </View>
               <View style={styles.displayRow}>
                 <FontAwesome name="commenting" size={20} color="#0277BD" />
-                <Text style={{ marginLeft: 10 }}>Comments: 8</Text>
+                <Text type="bold" style={styles.boxFooter}>
+                  Comments: 8
+                </Text>
               </View>
             </View>
           </Surface>
         </ScrollView>
 
         <Surface style={styles.smallAdvertisement}>
-          <View style={{ alignItems: 'center' }}>
-            <Title style={{ color: '#5A7582' }}>344 X 71</Title>
-            <Title style={{ color: '#5A7582' }}>Advertisement Here</Title>
-          </View>
+          <Text type="bold" style={styles.smallAdvertisementTitle}>
+            344 X 71
+          </Text>
+          <Text type="bold" style={styles.smallAdvertisementTitle}>
+            Advertisement Here
+          </Text>
         </Surface>
-        <Title style={styles.title}>Round 1/8</Title>
+
+        <Text type="medium" style={styles.title}>
+          Round 1/8
+        </Text>
         <Surface style={styles.round}>
           <View style={styles.boxHeader}>
-            <Text style={styles.subTitle}>By Anonymous 8</Text>
+            <Text type="bold" style={styles.subTitle}>
+              By Anonymous 8
+            </Text>
             <Feather name="more-vertical" size={18} color="#5A7582" />
           </View>
-          <Paragraph>
+          <Text type="regular" style={styles.body}>
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
             invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
             accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos
             et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero
             eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea.
-          </Paragraph>
+          </Text>
           <View style={{ marginTop: 'auto' }}>
-            <Text style={styles.separator}>----</Text>
+            <Text style={styles.separator}>---</Text>
             <View style={styles.displayRow}>
               <FontAwesome name="commenting" size={20} color="#0277BD" />
-              <Text style={{ marginLeft: 10 }}>Comments: 3</Text>
+              <Text style={styles.boxFooter}>Comments: 3</Text>
             </View>
           </View>
         </Surface>
-        <Title style={styles.title}>Round 2/8</Title>
+        <Text type="medium" style={styles.title}>
+          Round 2/8
+        </Text>
         <Surface style={styles.round}>
           <View style={styles.boxHeader}>
             <Text style={styles.subTitle}>By Anonymous 2</Text>
             <Feather name="more-vertical" size={18} color="#5A7582" />
           </View>
-          <Paragraph>
+          <Text type="regular" style={styles.body}>
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
             invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
             accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos
             et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero
             eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea.
-          </Paragraph>
+          </Text>
           <View style={{ marginTop: 'auto' }}>
-            <Text style={styles.separator}>----</Text>
+            <Text style={styles.separator}>---</Text>
             <View style={styles.displayRow}>
               <FontAwesome name="commenting" size={20} color="#0277BD" />
-              <Text style={{ marginLeft: 10 }}>Comments: 0</Text>
+              <Text style={styles.boxFooter}>Comments: 0</Text>
             </View>
           </View>
         </Surface>
-        <Title style={styles.title}>Round 3/8 (Your Turn)</Title>
-        <Text style={{ color: '#ED8A18', marginLeft: 40, marginBottom: 15 }}>
+        <Text type="medium" style={styles.title}>
+          Round 3/8 (Your Turn)
+        </Text>
+        <Text type="bold-italic" style={{ color: '#ED8A18', marginLeft: 40, marginBottom: 15 }}>
           45 minutes and 33 seconds left
         </Text>
         <Surface style={styles.round}>
@@ -177,10 +220,10 @@ const UserPartOfStory = () => {
             <Text style={styles.subTitle}>By You</Text>
             <Feather name="more-vertical" size={18} color="#5A7582" />
           </View>
-          <Paragraph>
+          <Text type="regular" style={styles.body}>
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
             invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-          </Paragraph>
+          </Text>
           <View style={{ marginTop: 'auto' }}>
             <Text style={styles.subTitle}>24/50 words</Text>
             <View
@@ -189,13 +232,21 @@ const UserPartOfStory = () => {
                 marginTop: 10
               }}>
               <Surface style={{ ...styles.surface, marginRight: 20 }}>
-                <Button mode="contained" uppercase={false} style={{ backgroundColor: '#ED8A18' }}>
+                <Button
+                  mode="contained"
+                  uppercase={false}
+                  style={{ backgroundColor: '#ED8A18', width: WIDTH * 0.25 }}
+                  labelStyle={styles.boxBtnLabel}>
                   Skip Turn
                 </Button>
               </Surface>
 
               <Surface style={styles.surface}>
-                <Button mode="contained" style={{ backgroundColor: '#f44336' }} uppercase={false}>
+                <Button
+                  mode="contained"
+                  uppercase={false}
+                  style={{ backgroundColor: '#f44336', width: WIDTH * 0.25 }}
+                  labelStyle={styles.boxBtnLabel}>
                   Leave Story
                 </Button>
               </Surface>
@@ -204,78 +255,107 @@ const UserPartOfStory = () => {
         </Surface>
         <Surface
           style={{
-            height: 344,
+            height: HEIGHT * 0.45,
             backgroundColor: '#fff',
             elevation: 5,
             marginHorizontal: 20,
-            marginTop: 20,
-            padding: 2
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 20
           }}>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%'
-            }}>
-            <Title style={{ color: '#5A7582' }}>344 X 344</Title>
-            <Title style={{ color: '#5A7582' }}>Advertisement Here</Title>
-          </View>
+          <Text type="bold" style={styles.advertisementTitle}>
+            344 X 344
+          </Text>
+          <Text type="bold" style={styles.advertisementTitle}>
+            Advertisement Here
+          </Text>
         </Surface>
-        <Title style={styles.title}>Round 4/8</Title>
+        <Text type="medium" style={styles.title}>
+          Round 4/8
+        </Text>
         <Surface style={styles.penddingRound}>
           <View style={styles.boxHeader}>
-            <Text style={styles.subTitle}>By Anonymous 4</Text>
+            <Text type="bold" style={styles.subTitle}>
+              By Anonymous 4
+            </Text>
             <Feather name="more-vertical" size={18} color="#5A7582" />
           </View>
-          <Text style={{ color: '#ED8A18', marginBottom: 20, marginTop: 10 }}>Pendding</Text>
+          <Text style={styles.pendding}>Pendding</Text>
         </Surface>
-        <Title style={styles.title}>Round 5/8</Title>
+        <Text type="medium" style={styles.title}>
+          Round 5/8
+        </Text>
         <Surface style={styles.penddingRound}>
           <View style={styles.boxHeader}>
-            <Text style={styles.subTitle}>By Anonymous 5</Text>
+            <Text type="bold" style={styles.subTitle}>
+              By Anonymous 5
+            </Text>
             <Feather name="more-vertical" size={18} color="#5A7582" />
           </View>
-          <Text style={{ color: '#ED8A18', marginBottom: 20, marginTop: 10 }}>Pendding</Text>
+          <Text type="italic" style={styles.pendding}>
+            Pendding
+          </Text>
         </Surface>
-        <Title style={styles.title}>Round 6/8</Title>
+        <Text type="medium" style={styles.title}>
+          Round 6/8
+        </Text>
         <Surface style={styles.penddingRound}>
           <View style={styles.boxHeader}>
-            <Text style={styles.subTitle}>By Anonymous 6</Text>
+            <Text type="bold" style={styles.subTitle}>
+              By Anonymous 6
+            </Text>
             <Feather name="more-vertical" size={18} color="#5A7582" />
           </View>
-          <Text style={{ color: '#ED8A18', marginBottom: 20, marginTop: 10 }}>Pendding</Text>
+          <Text style={styles.pendding}>Pendding</Text>
         </Surface>
+
         <Surface style={{ ...styles.smallAdvertisement, marginTop: 20 }}>
-          <View style={{ alignItems: 'center' }}>
-            <Title style={{ color: '#5A7582' }}>344 X 71</Title>
-            <Title style={{ color: '#5A7582' }}>Advertisement Here</Title>
-          </View>
+          <Text type="bold" style={styles.smallAdvertisementTitle}>
+            344 X 71
+          </Text>
+          <Text type="bold" style={styles.smallAdvertisementTitle}>
+            Advertisement Here
+          </Text>
         </Surface>
-        <Title style={styles.title}>Round 7/8</Title>
+
+        <Text type="medium" style={styles.title}>
+          Round 7/8
+        </Text>
         <Surface style={styles.penddingRound}>
           <View style={styles.boxHeader}>
-            <Text style={styles.subTitle}>By Anonymous 7</Text>
+            <Text type="bold" style={styles.subTitle}>
+              By Anonymous 7
+            </Text>
             <Feather name="more-vertical" size={18} color="#5A7582" />
           </View>
-          <Text style={{ color: '#ED8A18', marginBottom: 20, marginTop: 10 }}>Pendding</Text>
+          <Text style={styles.pendding}>Pendding</Text>
         </Surface>
-        <Title style={styles.title}>Round 8/8</Title>
+        <Text type="medium" style={styles.title}>
+          Round 8/8
+        </Text>
         <Surface style={styles.penddingRound}>
           <View style={styles.boxHeader}>
-            <Text style={styles.subTitle}>By Anonymous 8</Text>
+            <Text type="bold" style={styles.subTitle}>
+              By Anonymous 8
+            </Text>
             <Feather name="more-vertical" size={18} color="#5A7582" />
           </View>
-          <Text style={{ color: '#ED8A18', marginBottom: 20, marginTop: 10 }}>Pendding</Text>
+          <Text style={styles.pendding}>Pendding</Text>
         </Surface>
-        <Title style={styles.title}>All Proposed Endings</Title>
-        <Text style={{ color: '#ED8A18', marginLeft: 20, marginBottom: 20 }}>Pendding</Text>
+        <Text type="bold" style={styles.title}>
+          All Proposed Endings
+        </Text>
+        <Text type="bold-italic" style={{ color: '#ED8A18', marginLeft: 20, marginBottom: 20 }}>
+          Pendding
+        </Text>
       </ScrollView>
+
       <View
         style={{
           position: 'absolute',
-          width: 80,
-          top: 640,
-          alignSelf: 'flex-end'
+          width: WIDTH * 0.2,
+          top: HEIGHT * 0.85,
+          right: 10
         }}>
         <View style={styles.floatingNav}>
           <FontAwesome name="chevron-up" size={25} color="#ed8a18" />
@@ -307,11 +387,10 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   intros: {
-    height: 340,
-    width: 330,
+    width: WIDTH * 0.75,
     elevation: 5,
     marginVertical: 20,
-    marginLeft: 20,
+    marginRight: 30,
     padding: 10
   },
   boxHeader: {
@@ -319,7 +398,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   title: {
-    color: '#5a7582',
+    color: '#5A7582',
+    fontSize: 20,
     marginLeft: 20,
     marginVertical: 20
   },
@@ -327,41 +407,71 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#5A7582'
   },
+  body: {
+    color: '#5A7582'
+  },
   separator: {
-    fontSize: 20
+    fontSize: 25,
+    color: '#5A7582'
   },
   displayRow: {
     flexDirection: 'row'
   },
+  boxFooter: {
+    marginLeft: 5,
+    fontSize: 12,
+    lineHeight: 20,
+    color: '#5A7582'
+  },
+  boxBtnLabel: {
+    fontSize: 11,
+    fontFamily: 'Roboto-Medium'
+  },
   smallAdvertisement: {
-    height: 71,
+    height: HEIGHT * 0.1,
     backgroundColor: '#fff',
     elevation: 5,
     marginHorizontal: 20,
-    padding: 2
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  smallAdvertisementTitle: {
+    color: '#5A7582',
+    fontSize: 20
+  },
+  advertisementTitle: {
+    color: '#5A7582',
+    fontSize: 25
   },
   round: {
-    height: 295,
-    width: 330,
+    marginHorizontal: 40,
+    minHeight: HEIGHT * 0.35,
     backgroundColor: '#fff',
     elevation: 5,
     alignSelf: 'center',
     padding: 15
   },
   penddingRound: {
-    width: 330,
+    marginHorizontal: 40,
     backgroundColor: '#fff',
     elevation: 5,
-    alignSelf: 'center',
     padding: 15
+  },
+  pendding: {
+    color: '#ED8A18',
+    marginBottom: 20,
+    marginTop: 10,
+    fontSize: 13,
+    fontFamily: 'Roboto-Italic'
   },
   floatingNav: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#fff',
-    height: 35,
-    marginTop: 10
+    height: HEIGHT * 0.05,
+    marginTop: 10,
+    borderRadius: 5
   }
 });
 
