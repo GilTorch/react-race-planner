@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, SafeAreaView, View, StyleSheet, Image } from 'react-native';
-import { AntDesign, FontAwesome, SimpleLineIcons, Feather } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, Entypo, SimpleLineIcons, Feather } from '@expo/vector-icons';
 import { Surface } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -71,33 +71,21 @@ const StoryAuthors = ({ authors, storyStatus }) => {
   const remainingAuthorsCount = authors.length - (nonLeadAuthorsWithLimit.length + 1);
 
   const renderSeparator = isStoryLead =>
-    isStoryLead && (
-      <View
-        style={{
-          height: 20,
-          marginLeft: 5,
-          marginRight: 5,
-          borderLeftColor: '#5A7582',
-          borderLeftWidth: 1
-        }}
-      />
-    );
+    isStoryLead && <View style={storyAuthorsStyle.separator} />;
 
-  const renderAuthor = author => {
-    if (storyStatus === 'In Progress' || author.anonymous) {
+  const renderAuthor = (author, key) => {
+    if (storyStatus !== 'Completed' || author.anonymous) {
       return (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View key={key.toString()} style={storyAuthorsStyle.imageContainer}>
           <View
             style={{
-              width: 30,
-              height: 30,
-              marginLeft: 5,
-              borderRadius: 100,
+              ...storyAuthorsStyle.image,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: '#B3CFFF'
+              backgroundColor: '#B3CFFF',
+              position: 'relative'
             }}>
-            <FontAwesome color="white" size={20} name="user" />
+            <Entypo color="white" size={14} name="user" />
           </View>
           {renderSeparator(author.storyLead)}
         </View>
@@ -105,30 +93,49 @@ const StoryAuthors = ({ authors, storyStatus }) => {
     }
 
     return (
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Image
-          style={{ width: 30, height: 30, borderRadius: 100, marginLeft: 5 }}
-          source={{ uri: author.profilePicture }}
-        />
+      <View key={key.toString()} style={storyAuthorsStyle.imageContainer}>
+        <Image style={storyAuthorsStyle.image} source={{ uri: author.profilePicture }} />
         {renderSeparator(author.storyLead)}
       </View>
     );
   };
 
   return (
-    <View style={{ marginTop: 10, marginBottom: 10, flexDirection: 'row', alignItems: 'center' }}>
-      {renderAuthor(leadAuthor)}
-      {nonLeadAuthorsWithLimit.map(author => renderAuthor(author))}
+    <View style={storyAuthorsStyle.container}>
+      {renderAuthor(leadAuthor, 100)}
+      {nonLeadAuthorsWithLimit.map((author, i) => renderAuthor(author, i))}
       {remainingAuthorsCount > 0 && (
         <View style={{ marginLeft: 10 }}>
           <Text type="bold" style={{ fontSize: 11, color: '#5A7582' }}>
-            {remainingAuthorsCount} more people to go
+            +{remainingAuthorsCount} more people to go
           </Text>
         </View>
       )}
     </View>
   );
 };
+
+const storyAuthorsStyle = StyleSheet.create({
+  container: { marginTop: 10, marginBottom: 10, flexDirection: 'row', alignItems: 'center' },
+  imageContainer: { flexDirection: 'row', alignItems: 'center' },
+  image: {
+    width: 30,
+    height: 30,
+    marginLeft: -5,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: 'white',
+    elevation: 2
+  },
+  separator: {
+    height: 20,
+    marginLeft: 5,
+    marginRight: 10,
+    borderLeftColor: '#5A7582',
+    borderLeftWidth: 1
+  },
+  storyLeadImageContainer: {}
+});
 
 StoryAuthors.propTypes = {
   authors: PropTypes.array.isRequired,
