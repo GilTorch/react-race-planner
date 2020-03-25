@@ -143,7 +143,7 @@ StoryAuthors.propTypes = {
 };
 
 const Story = ({ story }) => (
-  <Surface style={{ margin: 20, borderRadius: 4, padding: 10, elevation: 5 }}>
+  <Surface style={{ margin: 20, borderRadius: 4, padding: 15, elevation: 5 }}>
     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
       <View>
         <Text type="bold" style={{ color: '#03A2A2', fontSize: 18 }}>
@@ -160,7 +160,10 @@ const Story = ({ story }) => (
         <Text style={{ color: '#5A7582' }}>{story.startTime} |</Text>
       </View>
       <View style={{ marginRight: 10 }}>
-        <Text style={{ color: '#5A7582' }}>{story.status} |</Text>
+        <Text style={{ color: '#5A7582' }}>
+          {story.status}
+          {'  '} |
+        </Text>
       </View>
       <View>
         <StoryGenre name={story.genre} />
