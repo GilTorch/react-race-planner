@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, View, StatusBar, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
@@ -58,14 +58,20 @@ PenddingRoundBox.defaultProps = {
 const StartedStory = ({ navigation }) => {
   return (
     <SafeAreaView style={{ backgroundColor: '#eee', flex: 1 }}>
-      <Appbar.Header style={{ backgroundColor: '#03a2a2', height: 290, flexDirection: 'column' }}>
+      <Appbar
+        style={{
+          borderBottomLeftRadius: 15,
+          borderBottomRightRadius: 15,
+          height: Platform.OS === 'ios' ? '49%' : 330,
+          overflow: 'hidden',
+          flexDirection: 'column'
+        }}>
         <LinearGradient
           colors={['#03a2a2', '#10afaf', '#23c2c2']}
           style={{
-            borderBottomLeftRadius: 15,
-            borderBottomRightRadius: 15,
+            flex: 1,
             alignItems: 'center',
-            height: 290,
+            paddingTop: StatusBar.currentHeight,
             width: SCREEN_WIDTH
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
@@ -107,7 +113,7 @@ const StartedStory = ({ navigation }) => {
             </Surface>
           </View>
         </LinearGradient>
-      </Appbar.Header>
+      </Appbar>
 
       <ScrollView>
         <Text type="medium" style={{ ...styles.title, marginBottom: 0 }}>
@@ -304,18 +310,18 @@ const StartedStory = ({ navigation }) => {
         style={{
           position: 'absolute',
           width: SCREEN_WIDTH * 0.2,
-          top: SCREEN_HEIGHT * 0.85,
+          bottom: 25,
           right: 10
         }}>
         <View style={styles.floatingNav}>
-          <FontAwesome name="chevron-up" size={25} color="#ed8a18" />
-          <Text type="bold" style={{ color: '#5A7582' }}>
+          <FontAwesome name="chevron-up" size={20} color="#ed8a18" />
+          <Text type="bold" style={{ color: '#5A7582', lineHeight: 25 }}>
             FIRST
           </Text>
         </View>
-        <View style={styles.floatingNav}>
-          <FontAwesome name="chevron-down" size={25} color="#ed8a18" />
-          <Text type="bold" style={{ color: '#5A7582' }}>
+        <View style={{ ...styles.floatingNav, marginTop: 10 }}>
+          <FontAwesome name="chevron-down" size={20} color="#ed8a18" />
+          <Text type="bold" style={{ color: '#5A7582', lineHeight: 25 }}>
             LAST
           </Text>
         </View>
@@ -415,8 +421,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#fff',
-    height: SCREEN_HEIGHT * 0.05,
-    marginTop: 10,
+    height: '55%',
     borderRadius: 5
   }
 });

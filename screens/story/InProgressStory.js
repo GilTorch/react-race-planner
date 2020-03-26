@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, View, StatusBar, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 import { Appbar, Paragraph, Button, Surface } from 'react-native-paper';
@@ -26,14 +26,20 @@ StorySingleMeta.propTypes = {
 const InProgressStory = ({ navigation }) => {
   return (
     <SafeAreaView style={{ backgroundColor: '#eee', flex: 1 }}>
-      <Appbar.Header style={{ backgroundColor: '#03a2a2', height: 290, flexDirection: 'column' }}>
+      <Appbar
+        style={{
+          borderBottomLeftRadius: 15,
+          borderBottomRightRadius: 15,
+          height: Platform.OS === 'ios' ? '49%' : 330,
+          overflow: 'hidden',
+          flexDirection: 'column'
+        }}>
         <LinearGradient
           colors={['#03a2a2', '#10afaf', '#23c2c2']}
           style={{
-            borderBottomLeftRadius: 15,
-            borderBottomRightRadius: 15,
+            flex: 1,
             alignItems: 'center',
-            height: 290,
+            paddingTop: StatusBar.currentHeight,
             width: SCREEN_WIDTH
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
@@ -46,8 +52,8 @@ const InProgressStory = ({ navigation }) => {
           <StorySingleMeta label="Genre" value="Mystery" />
           <StorySingleMeta label="Status" value="In Progress" />
           <StorySingleMeta label="Master Author" value="Anonymous 1" />
-          <StorySingleMeta label="Intro Maximunm Words" value="50" />
-          <StorySingleMeta label="Ending Maximunm Words" value="50" />
+          <StorySingleMeta label="Intro Maximum Words" value="50" />
+          <StorySingleMeta label="Ending Maximum Words" value="50" />
           <StorySingleMeta label="Words per Round" value="100 max" />
           <StorySingleMeta label="Co-Authors" value="2 more to start" />
 
@@ -75,7 +81,7 @@ const InProgressStory = ({ navigation }) => {
             </Surface>
           </View>
         </LinearGradient>
-      </Appbar.Header>
+      </Appbar>
 
       <ScrollView>
         <Text type="medium" style={{ ...styles.title, marginBottom: 0 }}>

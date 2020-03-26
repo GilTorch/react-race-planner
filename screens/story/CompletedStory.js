@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, View, StatusBar, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
@@ -23,19 +23,20 @@ const CompletedStory = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: color, flex: 1 }}>
-      <Appbar.Header
+      <Appbar
         style={{
-          backgroundColor: '#03a2a2',
-          flexDirection: 'column',
-          height: 290
+          borderBottomLeftRadius: 15,
+          borderBottomRightRadius: 15,
+          height: Platform.OS === 'ios' ? '50%' : 330,
+          overflow: 'hidden',
+          flexDirection: 'column'
         }}>
         <LinearGradient
           colors={['#03a2a2', '#10afaf', '#23c2c2']}
           style={{
-            borderBottomLeftRadius: 15,
-            borderBottomRightRadius: 15,
+            flex: 1,
             alignItems: 'center',
-            height: 290,
+            paddingTop: StatusBar.currentHeight,
             width: SCREEN_WIDTH
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
@@ -77,18 +78,19 @@ const CompletedStory = ({ navigation }) => {
             </Surface>
 
             <Surface style={styles.surface}>
-              <TouchableRipple onPress={() => setListView(!listView)}>
-                <View style={{ width: 55, flexDirection: 'row' }}>
-                  <FontAwesome name={icon} size={25} color="#5a7582" style={{ marginLeft: 3 }} />
-                  <FontAwesome name="bars" size={25} color="#5a7582" style={{ marginTop: 13 }} />
+              <TouchableRipple onPress={() => setListView(!listView)} style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', paddingHorizontal: 5 }}>
+                  <FontAwesome name={icon} size={22} color="#5a7582" />
+                  <FontAwesome name="bars" size={22} color="#5a7582" style={{ marginTop: 10 }} />
                 </View>
               </TouchableRipple>
             </Surface>
           </View>
         </LinearGradient>
-      </Appbar.Header>
+      </Appbar>
 
       <ScrollView>
+        <View style={{ paddingTop: 10 }} />
         <ProposedSection type="Intro" proposedBlocks={INTROS} listView={listView} />
 
         <SmallAdvertisement />
@@ -116,18 +118,18 @@ const CompletedStory = ({ navigation }) => {
           style={{
             position: 'absolute',
             width: SCREEN_WIDTH * 0.2,
-            top: SCREEN_HEIGHT * 0.85,
+            bottom: 25,
             right: 10
           }}>
           <View style={styles.floatingNav}>
-            <FontAwesome name="chevron-up" size={25} color="#ed8a18" />
-            <Text type="bold" style={{ color: '#5A7582' }}>
+            <FontAwesome name="chevron-up" size={20} color="#ed8a18" />
+            <Text type="bold" style={{ color: '#5A7582', lineHeight: 25 }}>
               FIRST
             </Text>
           </View>
-          <View style={styles.floatingNav}>
-            <FontAwesome name="chevron-down" size={25} color="#ed8a18" />
-            <Text type="bold" style={{ color: '#5A7582' }}>
+          <View style={{ ...styles.floatingNav, marginTop: 10 }}>
+            <FontAwesome name="chevron-down" size={20} color="#ed8a18" />
+            <Text type="bold" style={{ color: '#5A7582', lineHeight: 25 }}>
               LAST
             </Text>
           </View>
@@ -376,8 +378,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#fff',
-    height: SCREEN_HEIGHT * 0.05,
-    marginTop: 10,
+    height: '55%',
     borderRadius: 5
   }
 });
