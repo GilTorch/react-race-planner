@@ -373,10 +373,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#5A7582'
   },
-  boxBtnLabel: {
-    fontSize: 11,
-    fontFamily: 'Roboto-Medium'
-  },
   smallAdvertisement: {
     height: SCREEN_HEIGHT * 0.1,
     backgroundColor: '#fff',
