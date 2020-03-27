@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Image, View, TouchableOpacity } from 'react-native';
+import { ScrollView, Image, View, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
@@ -7,7 +7,7 @@ import app from '../app.json';
 
 const Header = () => {
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: 'white',
         height: 50,
@@ -27,7 +27,7 @@ const Header = () => {
           <Text style={{ fontSize: 18, color: '#03A2A2' }}>Done</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
