@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
@@ -35,10 +35,10 @@ const tagStyle = StyleSheet.create({
   container: {
     marginRight: 10,
     marginBottom: 15,
-    padding: 10,
+    padding: 5,
     borderRadius: 4,
     backgroundColor: '#03A2A2',
-    height: 33,
+    // height: 33,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -119,6 +119,23 @@ const FilterScreen = ({ navigation }) => {
       }
     });
   };
+
+  useEffect(() => {
+    // check data to see if all are unselected in a specific category
+    // if so reset to default selected
+    const tagCategories = Object.keys(tagData);
+    tagCategories.forEach(category => {
+      const allNotSelectedInCategory =
+        tagData[category].tags.filter(tag => !tag.selected).length ===
+        tagData[category].tags.length;
+      if (allNotSelectedInCategory) {
+        setTagData({
+          ...tagData,
+          [category]: { ...tagData[category], tags: [...defaultTagData[category].tags] }
+        });
+      }
+    });
+  }, [tagData]);
 
   const toggleSelectAll = chosenCategory => {
     const { allSelected, tags } = tagData[chosenCategory];
@@ -201,6 +218,23 @@ const FilterScreen = ({ navigation }) => {
               <Text style={{ fontSize: 14, color: '#5A7582' }}>{multiSliderValue[1]}</Text>
             </View>
             <MultiSlider
+              trackStyle={{
+                backgroundColor: '#C8CCCD',
+                height: 10,
+                borderRadius: 5
+              }}
+              selectedStyle={{
+                backgroundColor: '#03A2A2',
+                borderRadius: 0
+              }}
+              markerStyle={{
+                width: 25,
+                height: 25,
+                marginTop: 6,
+                backgroundColor: 'white',
+                borderWidth: 2,
+                borderColor: '#03A2A2'
+              }}
               values={[multiSliderValue[0], multiSliderValue[1]]}
               sliderLength={SCREEN_WIDTH - 50}
               onValuesChange={multiSliderValuesChange}
@@ -210,6 +244,11 @@ const FilterScreen = ({ navigation }) => {
               allowOverlap
               snapped
             />
+            <View>
+              <Text style={{ color: '#5A7582' }}>
+                Authors range: {multiSliderValue[0]} - {multiSliderValue[1]}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
