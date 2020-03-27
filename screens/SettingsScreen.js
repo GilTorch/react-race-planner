@@ -3,6 +3,7 @@ import { ScrollView, Image, View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
+import app from '../app.json';
 
 const Header = () => {
   return (
@@ -31,6 +32,10 @@ const Header = () => {
 };
 
 const SettingsScreen = () => {
+  const {
+    expo: { version }
+  } = app;
+
   return (
     <ScrollView style={{ backgroundColor: '#eee' }}>
       <View>
@@ -201,7 +206,7 @@ const SettingsScreen = () => {
       </View>
       <View style={{ height: 60, justifyContent: 'center', alignItems: 'center' }}>
         <View>
-          <Text style={{ fontSize: 18 }}>Version 1.0.0</Text>
+          <Text style={{ fontSize: 18 }}>Version {version}</Text>
         </View>
       </View>
       <View
