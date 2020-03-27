@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
   "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 22628,
-  "expoServerNgrokUrl": "https://s5-2kx.anonymous.sr-mobile.exp.direct",
-  "packagerNgrokUrl": "https://packager.s5-2kx.anonymous.sr-mobile.exp.direct",
-  "ngrokPid": 11824,
+  "packagerPort": 19008,
+  "packagerPid": 40793,
+  "expoServerNgrokUrl": "https://s5-2kx.comphaiti.scriptorerum.exp.direct",
+  "packagerNgrokUrl": "https://packager.s5-2kx.comphaiti.scriptorerum.exp.direct",
+  "ngrokPid": 40805,
   "webpackServerPort": null
 }
