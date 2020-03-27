@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, SafeAreaView, View, StyleSheet, Image } from 'react-native';
+import { ScrollView, SafeAreaView, View, StyleSheet, Image, StatusBar } from 'react-native';
 import { AntDesign, FontAwesome, Entypo, SimpleLineIcons, Feather } from '@expo/vector-icons';
 import { Surface } from 'react-native-paper';
 import PropTypes from 'prop-types';
@@ -180,13 +180,15 @@ const Story = ({ story }) => (
       <Text type="bold" style={{ color: '#5A7582' }}>
         Elected Intro
       </Text>
-      {story.electedIntro ? (
+      {story.electedIntro && (
         <Text style={{ color: '#5A7582', lineHeight: 20 }}>{story.electedIntro}</Text>
-      ) : (
-          <Text type="light-italic" style={{ color: '#ED8A18' }}>
-            Vote haven't started yet
-          </Text>
-        )}
+      )}
+
+      {!story.electedIntro && (
+        <Text type="light-italic" style={{ color: '#ED8A18' }}>
+          Vote haven't started yet
+        </Text>
+      )}
     </View>
   </Surface>
 );
@@ -198,6 +200,7 @@ Story.propTypes = {
 const HomeScreen = () => {
   return (
     <SafeAreaView>
+      <StatusBar barStyle="light-content" />
       <ScrollView contentContainerStyle={{ backgroundColor: '#eee' }}>
         <View style={{ height: 80, flexDirection: 'row', paddingLeft: 15, alignItems: 'center' }}>
           <View style={{ marginRight: 18 }}>
