@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
+import { StyleSheet, ScrollView, View, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import Constants from 'expo-constants';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
 import { Paragraph, Button, Surface } from 'react-native-paper';
+
 import Text from '../../components/CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 
@@ -57,7 +59,12 @@ PenddingRoundBox.defaultProps = {
 
 const UserPartOfStory = ({ navigation }) => {
   return (
-    <SafeAreaView style={{ backgroundColor: '#eee', flex: 1 }}>
+    <View
+      style={{
+        backgroundColor: '#eee',
+        flex: 1
+      }}>
+      <StatusBar barStyle="light-content" />
       <Surface
         style={{
           borderBottomRightRadius: 13,
@@ -70,7 +77,9 @@ const UserPartOfStory = ({ navigation }) => {
           style={{
             alignItems: 'center',
             flexDirection: 'column',
-            paddingVertical: 15
+            paddingVertical: 15,
+            paddingBottom: Constants.statusBarHeight,
+            paddingTop: Constants.statusBarHeight * 1.7
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
             ScriptoRerum
@@ -169,29 +178,20 @@ const UserPartOfStory = ({ navigation }) => {
             <Text type="regular" style={styles.body}>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
               invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
-              accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero
-              eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At
-              vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no
-              sea.
+              accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea.
             </Text>
             <View style={{ marginTop: 'auto' }}>
               <Text style={styles.separator}>---</Text>
               <View style={styles.displayRow}>
-                <FontAwesome name="star" size={20} color="#ed8a18" />
-                <Text type="bold" style={styles.boxFooter}>
-                  Elected Intro
-                </Text>
-              </View>
-              <View style={styles.displayRow}>
                 <MaterialCommunityIcons name="vote" size={20} color="#911414" />
                 <Text type="bold" style={styles.boxFooter}>
-                  Votes: 6/8
+                  Votes: 2/8
                 </Text>
               </View>
               <View style={styles.displayRow}>
                 <FontAwesome name="commenting" size={20} color="#0277BD" />
                 <Text type="bold" style={styles.boxFooter}>
-                  Comments: 8
+                  Comments: 4
                 </Text>
               </View>
             </View>
@@ -364,7 +364,7 @@ const UserPartOfStory = ({ navigation }) => {
           </Text>
         </Surface>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

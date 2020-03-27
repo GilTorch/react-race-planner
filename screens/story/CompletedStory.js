@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
+import { StyleSheet, ScrollView, View, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
 import { Paragraph, Button, Surface, TouchableRipple } from 'react-native-paper';
+import Constants from 'expo-constants';
+
 import Text from '../../components/CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 
@@ -22,7 +24,12 @@ const CompletedStory = ({ navigation }) => {
   const color = listView ? '#FFF' : '#EEE';
 
   return (
-    <SafeAreaView style={{ backgroundColor: color, flex: 1 }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: color
+      }}>
+      <StatusBar barStyle="light-content" />
       <Surface
         style={{
           borderBottomLeftRadius: 13,
@@ -35,7 +42,8 @@ const CompletedStory = ({ navigation }) => {
           style={{
             alignItems: 'center',
             flexDirection: 'column',
-            paddingVertical: 15
+            paddingBottom: Constants.statusBarHeight,
+            paddingTop: Constants.statusBarHeight * 1.7
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
             ScriptoRerum
@@ -88,7 +96,6 @@ const CompletedStory = ({ navigation }) => {
       </Surface>
 
       <ScrollView>
-        <View style={{ paddingTop: 10 }} />
         <ProposedSection type="Intro" proposedBlocks={INTROS} listView={listView} />
 
         <SmallAdvertisement />
@@ -133,7 +140,7 @@ const CompletedStory = ({ navigation }) => {
           </Surface>
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -239,7 +246,7 @@ const ProposedSection = ({ type, proposedBlocks, listView }) => {
   const cardsSection = (
     <>
       <Text type="medium" style={{ ...styles.title, marginBottom: 0 }}>
-        All Proposed {type}s {proposedBlocks.length}
+        All Proposed {type}s ({proposedBlocks.length})
       </Text>
       <ScrollView
         horizontal
@@ -319,7 +326,7 @@ const styles = StyleSheet.create({
     color: '#5A7582',
     fontSize: 20,
     marginLeft: 20,
-    marginBottom: 20
+    marginVertical: 20
   },
   subTitle: {
     fontWeight: 'bold',

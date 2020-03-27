@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
+import { StyleSheet, ScrollView, View, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
 import { Paragraph, Button, Surface } from 'react-native-paper';
+import Constants from 'expo-constants';
+
 import Text from '../../components/CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 
@@ -57,7 +59,12 @@ PenddingRoundBox.defaultProps = {
 
 const StartedStory = ({ navigation }) => {
   return (
-    <SafeAreaView style={{ backgroundColor: '#eee', flex: 1 }}>
+    <View
+      style={{
+        backgroundColor: '#eee',
+        flex: 1
+      }}>
+      <StatusBar barStyle="light-content" />
       <Surface
         style={{
           borderBottomLeftRadius: 13,
@@ -70,7 +77,8 @@ const StartedStory = ({ navigation }) => {
           style={{
             alignItems: 'center',
             flexDirection: 'column',
-            paddingVertical: 15
+            paddingBottom: Constants.statusBarHeight,
+            paddingTop: Constants.statusBarHeight * 1.7
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
             ScriptoRerum
@@ -328,7 +336,7 @@ const StartedStory = ({ navigation }) => {
           </Text>
         </Surface>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
