@@ -62,13 +62,19 @@ const SettingsScreen = () => {
                 style={{
                   width: 120,
                   flexDirection: 'row',
-                  justifyContent: 'space-between'
+                  alignItems: 'center'
                 }}>
                 <View>
                   <Text style={{ fontSize: 18, color: '#898989' }}>Claim Yours</Text>
                 </View>
-                <View>
-                  <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: 1.5
+                  }}>
+                  <Ionicons style={{ color: '#C7C7CC' }} size={18} name="ios-arrow-forward" />
                 </View>
               </View>
             </TouchableOpacity>
