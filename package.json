@@ -4,7 +4,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "test": "node_modules/.bin/jest test/**/*.spec.js",
+    "test:spec": "node_modules/.bin/jest test/**/*.spec.js",
+    "test": "jest --watchAll",
     "web": "expo start --web",
     "eject": "expo eject"
   },
