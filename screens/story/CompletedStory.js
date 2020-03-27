@@ -86,8 +86,21 @@ const CompletedStory = ({ navigation }) => {
             <Surface style={styles.surface}>
               <TouchableRipple onPress={() => setListView(!listView)} style={{ flex: 1 }}>
                 <View style={{ flexDirection: 'row', paddingHorizontal: 5 }}>
-                  <FontAwesome name={icon} size={22} color="#5a7582" />
-                  <FontAwesome name="bars" size={22} color="#5a7582" style={{ marginTop: 10 }} />
+                  <FontAwesome
+                    name="bars"
+                    size={22}
+                    color="#5a7582"
+                    style={{ marginTop: 13, marginLeft: 15 }}
+                  />
+                  <FontAwesome
+                    name={icon}
+                    size={22}
+                    color="#5a7582"
+                    style={{
+                      position: 'absolute',
+                      left: 5
+                    }}
+                  />
                 </View>
               </TouchableRipple>
             </Surface>
