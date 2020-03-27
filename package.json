@@ -4,9 +4,9 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "test": "node_modules/.bin/jest test/**/*.spec.js",
     "web": "expo start --web",
-    "eject": "expo eject",
-    "test": "jest --watchAll"
+    "eject": "expo eject"
   },
   "jest": {
     "preset": "jest-expo"
@@ -30,13 +30,15 @@
     "react-native-gesture-handler": "~1.5.0",
     "react-native-safe-area-context": "0.6.0",
     "react-native-screens": "2.0.0-alpha.12",
-    "react-native-web": "~0.11.7",
-    "react-native-svg": "9.13.3"
+    "react-native-svg": "9.13.3",
+    "react-native-web": "~0.11.7"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "babel-eslint": "^10.1.0",
     "babel-preset-expo": "~8.0.0",
+    "detox": "^16.0.1",
+    "detox-expo-helpers": "^0.6.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.10.0",
@@ -44,8 +46,24 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.19.0",
+    "expo-detox-hook": "^1.0.10",
     "jest-expo": "~36.0.1",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "react-native-testing-library": "^1.13.0",
+    "react-test-renderer": "^16.13.1"
   },
-  "private": true
+  "private": true,
+  "detox": {
+    "test-runner": "jest",
+    "configurations": {
+      "ios.sim": {
+        "binaryPath": "bin/Exponent.app",
+        "type": "ios.simulator",
+        "device": {
+          "name": "iPhone Xʀ",
+          "os": "12.2"
+        }
+      }
+    }
+  }
 }
