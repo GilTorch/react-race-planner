@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View, StatusBar, Platform } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
-import { Appbar, Paragraph, Button, Surface, TouchableRipple } from 'react-native-paper';
+import { Paragraph, Button, Surface, TouchableRipple } from 'react-native-paper';
 import Text from '../../components/CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 
@@ -23,27 +23,25 @@ const CompletedStory = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: color, flex: 1 }}>
-      <Appbar
+      <Surface
         style={{
-          borderBottomLeftRadius: 15,
-          borderBottomRightRadius: 15,
-          height: Platform.OS === 'ios' ? '50%' : 330,
+          borderBottomLeftRadius: 13,
+          borderBottomRightRadius: 13,
           overflow: 'hidden',
-          flexDirection: 'column'
+          elevation: 5
         }}>
         <LinearGradient
-          colors={['#03a2a2', '#10afaf', '#23c2c2']}
+          colors={['#03a2a2', '#23c2c2']}
           style={{
-            flex: 1,
             alignItems: 'center',
-            paddingTop: StatusBar.currentHeight,
-            width: SCREEN_WIDTH
+            flexDirection: 'column',
+            paddingVertical: 15
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
             ScriptoRerum
           </Text>
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
-            Sniches
+            Snitches
           </Text>
 
           <StorySingleMeta label="Genre" value="Action" />
@@ -60,7 +58,7 @@ const CompletedStory = ({ navigation }) => {
                 mode="contained"
                 uppercase={false}
                 style={{ backgroundColor: '#A39F9F' }}
-                labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium' }}>
+                labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium', color: '#fff' }}>
                 Join Story
               </Button>
             </Surface>
@@ -87,7 +85,7 @@ const CompletedStory = ({ navigation }) => {
             </Surface>
           </View>
         </LinearGradient>
-      </Appbar>
+      </Surface>
 
       <ScrollView>
         <View style={{ paddingTop: 10 }} />
@@ -117,22 +115,22 @@ const CompletedStory = ({ navigation }) => {
         <View
           style={{
             position: 'absolute',
-            width: SCREEN_WIDTH * 0.2,
+            width: SCREEN_WIDTH * 0.25,
             bottom: 25,
             right: 10
           }}>
-          <View style={styles.floatingNav}>
-            <FontAwesome name="chevron-up" size={20} color="#ed8a18" />
-            <Text type="bold" style={{ color: '#5A7582', lineHeight: 25 }}>
+          <Surface style={styles.floatingNav}>
+            <FontAwesome name="chevron-up" size={20} color="#5A7582" />
+            <Text type="bold" style={{ color: '#5A7582' }}>
               FIRST
             </Text>
-          </View>
-          <View style={{ ...styles.floatingNav, marginTop: 10 }}>
-            <FontAwesome name="chevron-down" size={20} color="#ed8a18" />
-            <Text type="bold" style={{ color: '#5A7582', lineHeight: 25 }}>
+          </Surface>
+          <Surface style={{ ...styles.floatingNav, marginTop: 10 }}>
+            <FontAwesome name="chevron-down" size={20} color="#5A7582" />
+            <Text type="bold" style={{ color: '#5A7582' }}>
               LAST
             </Text>
-          </View>
+          </Surface>
         </View>
       )}
     </SafeAreaView>
@@ -243,7 +241,11 @@ const ProposedSection = ({ type, proposedBlocks, listView }) => {
       <Text type="medium" style={{ ...styles.title, marginBottom: 0 }}>
         All Proposed {type}s {proposedBlocks.length}
       </Text>
-      <ScrollView horizontal style={{ flex: 1 }} contentContainerStyle={{ marginHorizontal: 20 }}>
+      <ScrollView
+        horizontal
+        style={{ flex: 1 }}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ marginHorizontal: 20 }}>
         {proposedBlocks.map(proposedBlock => (
           <Surface key={proposedBlock.id} style={styles.intros}>
             <View style={styles.boxHeader}>
@@ -378,8 +380,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#fff',
-    height: '55%',
-    borderRadius: 5
+    borderRadius: 5,
+    height: 45,
+    elevation: 3
   }
 });
 

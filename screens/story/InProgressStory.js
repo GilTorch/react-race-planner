@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View, StatusBar, Platform } from 'react-native';
+import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
-import { Appbar, Paragraph, Button, Surface } from 'react-native-paper';
+import { Paragraph, Button, Surface } from 'react-native-paper';
 import Text from '../../components/CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 
@@ -26,21 +26,19 @@ StorySingleMeta.propTypes = {
 const InProgressStory = ({ navigation }) => {
   return (
     <SafeAreaView style={{ backgroundColor: '#eee', flex: 1 }}>
-      <Appbar
+      <Surface
         style={{
-          borderBottomLeftRadius: 15,
-          borderBottomRightRadius: 15,
-          height: Platform.OS === 'ios' ? '49%' : 330,
+          borderBottomLeftRadius: 13,
+          borderBottomRightRadius: 13,
           overflow: 'hidden',
-          flexDirection: 'column'
+          elevation: 5
         }}>
         <LinearGradient
-          colors={['#03a2a2', '#10afaf', '#23c2c2']}
+          colors={['#03a2a2', '#23c2c2']}
           style={{
-            flex: 1,
             alignItems: 'center',
-            paddingTop: StatusBar.currentHeight,
-            width: SCREEN_WIDTH
+            flexDirection: 'column',
+            paddingVertical: 15
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
             ScriptoRerum
@@ -63,7 +61,7 @@ const InProgressStory = ({ navigation }) => {
                 mode="contained"
                 uppercase={false}
                 style={{ backgroundColor: '#ED8A18' }}
-                labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium' }}>
+                labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium', color: '#fff' }}>
                 Join Story
               </Button>
             </Surface>
@@ -81,7 +79,7 @@ const InProgressStory = ({ navigation }) => {
             </Surface>
           </View>
         </LinearGradient>
-      </Appbar>
+      </Surface>
 
       <ScrollView>
         <Text type="medium" style={{ ...styles.title, marginBottom: 0 }}>
