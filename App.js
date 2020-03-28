@@ -4,6 +4,7 @@ import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
+import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 
 import PropTypes from 'prop-types';
 import useLinking from './navigation/useLinking';
@@ -20,6 +21,15 @@ import RobotoRegular from './assets/fonts/Roboto-Regular.ttf';
 import RobotoThin from './assets/fonts/Roboto-Thin.ttf';
 import RobotoThinItalic from './assets/fonts/Roboto-ThinItalic.ttf';
 import AppNavigation from './navigation';
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#23C2C2'
+    // accent: '#5A7582'
+  }
+};
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
@@ -68,15 +78,17 @@ export default function App(props) {
     return null;
   }
   return (
-    <View style={styles.container}>
-      {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-      <NavigationContainer
-        ref={containerRef}
-        initialState={initialNavigationState}
-        initialRouteName="SignupScreen">
-        <AppNavigation />
-      </NavigationContainer>
-    </View>
+    <PaperProvider theme={theme}>
+      <View style={styles.container}>
+        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+        <NavigationContainer
+          ref={containerRef}
+          initialState={initialNavigationState}
+          initialRouteName="SignupScreen">
+          <AppNavigation />
+        </NavigationContainer>
+      </View>
+    </PaperProvider>
   );
 }
 
