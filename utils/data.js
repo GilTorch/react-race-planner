@@ -31,22 +31,6 @@ const stories = [
         profilePicture: avatarGenerator('iambatman@gmail.com'),
         anonymous: true,
         storyLead: false
-      },
-      {
-        firstName: 'Clark',
-        lastName: 'Kent',
-        email: 'iamsuperman@gmail.com',
-        profilePicture: avatarGenerator('iamsuperman@gmail.com'),
-        anonymous: true,
-        storyLead: false
-      },
-      {
-        firstName: 'John',
-        lastName: 'Wick',
-        email: 'dontouchmydog@gmail.com',
-        profilePicture: avatarGenerator('dontouchmydog@gmail.com'),
-        anonymous: true,
-        storyLead: false
       }
     ],
     status: 'In Progress',
@@ -303,13 +287,126 @@ const stories = [
     electedIntro:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea',
     votes: []
+  },
+  {
+    title: 'The Flag and The Bucket',
+    authors: [
+      {
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john@doe.com',
+        profilePicture: avatarGenerator('john@doe.com'),
+        anonymous: true,
+        storyLead: true
+      },
+      {
+        firstName: 'Bruce',
+        lastName: 'Banner',
+        email: 'iamthehulk@gmail.com',
+        profilePicture: avatarGenerator('iamthehulk@gmail.com'),
+        anonymous: true,
+        storyLead: false
+      },
+      {
+        firstName: 'Bruce',
+        lastName: 'Wayne',
+        email: 'iambatman@gmail.com',
+        profilePicture: avatarGenerator('iambatman@gmail.com'),
+        anonymous: true,
+        storyLead: false
+      }
+    ],
+    status: 'In Progress',
+    genre: 'Mystery',
+    startTime: '18 hours ago',
+    initialIntro:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea',
+    electedIntro: null,
+    votes: []
+  },
+  {
+    title: "There's a Man in The Woods",
+    authors: [
+      {
+        firstName: 'Tony',
+        lastName: 'Stark',
+        email: 'iamironman@gmail.com',
+        profilePicture: avatarGenerator('iamironman@gmail.com'),
+        anonymous: true,
+        storyLead: false
+      },
+      {
+        firstName: 'Mohammed',
+        lastName: 'Ali',
+        email: 'bestboxer@gmail.com',
+        profilePicture: avatarGenerator('bestboxer@gmail.com'),
+        anonymous: false,
+        storyLead: false
+      },
+      {
+        firstName: 'Joe',
+        lastName: 'Frazier',
+        email: 'joe@gmail.com',
+        profilePicture: avatarGenerator('joe@gmail.com'),
+        anonymous: false,
+        storyLead: false
+      },
+      {
+        firstName: 'Mike',
+        lastName: 'Tyson',
+        email: 'ironmike@gmail.com',
+        profilePicture: avatarGenerator('ironmike@gmail.com'),
+        anonymous: false,
+        storyLead: false
+      },
+      {
+        firstName: 'Sylvester',
+        lastName: 'Stalone',
+        email: 'stalone@gmail.com',
+        profilePicture: avatarGenerator('stalone@gmail.com'),
+        anonymous: false,
+        storyLead: false
+      },
+      {
+        firstName: 'John',
+        lastName: 'Smith',
+        email: 'john@smith.com',
+        profilePicture: avatarGenerator('john@smith.com'),
+        anonymous: false,
+        storyLead: false
+      },
+      {
+        firstName: 'Toussaint',
+        lastName: 'Louverture',
+        email: 'toussaint@louverture.com',
+        profilePicture: avatarGenerator('toussaint@louverture.com'),
+        anonymous: false,
+        storyLead: false
+      },
+      {
+        firstName: 'Jean Jacques',
+        lastName: 'Dessalines',
+        email: 'empereur@gmail.com',
+        profilePicture: avatarGenerator('empereur@gmail.com'),
+        anonymous: false,
+        storyLead: true
+      }
+    ],
+    status: 'In Progress',
+    genre: 'Thriller',
+    startTime: '1 day and 13 hours ago',
+    initialIntro:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea',
+    electedIntro:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea',
+    votes: []
   }
 ];
 
 const genres = [
   {
     name: 'Mystery',
-    icon: size => <MysteryIcon width={size} height={size} />,
+    icon: size => <MysteryIcon width={size} />,
     color: '#43A047'
   },
   {
