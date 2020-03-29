@@ -6,6 +6,8 @@
     "ios": "expo start --ios",
     "test:spec": "node_modules/.bin/jest test/**/*.spec.js",
     "test": "jest --watchAll",
+    "test:e2e": "detox test --configuration ios.sim",
+    "dl_expo_bins": "./scripts/dl_expo_bins",
     "web": "expo start --web",
     "eject": "expo eject"
   },
@@ -39,7 +41,7 @@
     "babel-eslint": "^10.1.0",
     "babel-preset-expo": "~8.0.0",
     "casual": "^1.6.2",
-    "detox": "^16.0.1",
+    "detox": "~12.3.0",
     "detox-expo-helpers": "^0.6.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
