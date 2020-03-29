@@ -10,7 +10,9 @@ describe('Login', () => {
 
   describe('_login', () => {
     it('Should ensure valid credential existence', async () => {
-      await signInPage.signIn(config);
+       await expect(element(by.id('logo'))).toBeVisible();
+       await signInPage.signIn(config);
+       await expect(element(by.id('login-button'))).tap();
     });
   })
 })

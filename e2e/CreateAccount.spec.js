@@ -17,7 +17,9 @@ describe('Account', () => {
 
   describe('_createAccount', () => {
     it('Should ensure valid credential existence', async () => {
+      await expect(element(by.id("logo"))).toBeVisible();
       await SignUpPage.signUp(config);
+      await expect(element(by.id("sign-up-button"))).tap();
     });
   });
 });

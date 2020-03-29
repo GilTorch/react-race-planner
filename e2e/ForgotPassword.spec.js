@@ -1,18 +1,19 @@
-const casual = require("casual");
-const signInPage = require("./screens/PasswordForgottenPage");
+const casual = require('casual');
+const signInPage = require('./screens/PasswordForgottenPage');
 
-describe("Password Forgotten", () => {
+describe('Password Forgotten', () => {
   let firstName = casual.first_name;
   let lastName = casual.last_name;
-  let email = firstName + "." + lastName + "@gmail.com";
+  let email = firstName + '.' + lastName + '@gmail.com';
   const config = {
     email: email.toLowerCase()
   };
 
-  describe("_passwordForgotten", () => {
-    it("Should send and reset password", async () => {
+  describe('_passwordForgotten', () => {
+    it('Should send and reset password', async () => {
+      await expect(element(by.id('logo'))).toBeVisible();
       await signInPage.signIn(config);
-      await expect(element(by.id("reset-password-button"))).tap();
+      await expect(element(by.id('reset-password-button'))).tap();
     });
   });
 });
