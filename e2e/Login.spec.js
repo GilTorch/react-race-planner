@@ -1,7 +1,6 @@
 const casual = require('casual');
 const signInPage = require('./screens/SignInPage')
 
-
 describe('Login', () => {
   let userName = casual.user_name;
   const config = {
