@@ -16,6 +16,7 @@ The iOS and Android source code of ScriptoRerum - React Native
     + [Getting Started on a Task](#getting-started-on-a-task)
   * [Publishing for Staging/Demoing](#publishing-for-staging-demoing)
   * [Building for Production](#building-for-production)
+  * [e2e Testing with detox](#e2e-testing-with-detox)
 
 ## Screenshots
 
@@ -165,3 +166,12 @@ TBD
 ## Building for Production
 
 TBD
+
+## e2e Testing with detox
+ - To run tests, do:
+ 1. `npm install -g expo-cli`
+ 2. `npm run dl_expo_bins`
+ 3. `npm install`
+ 4. Open a console and run `npm run ios`
+ 5. Open a second console and run `npm run test:e2e`
+
