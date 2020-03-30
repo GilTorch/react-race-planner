@@ -3,6 +3,8 @@ import { StyleSheet, View, Image } from 'react-native';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
+import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
+
 import PropTypes from 'prop-types';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
@@ -65,6 +67,14 @@ async function loadAssetsAsync() {
 
   await Promise.all([...imageAssets, ...fontAssets]);
 }
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#23C2C2'
+    // accent: '#5A7582'
+  }
+};
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -85,14 +95,16 @@ export default function App(props) {
   }
 
   return (
-    <View style={styles.container}>
-      <NavigationContainer
-        ref={containerRef}
-        initialState={initialNavigationState}
-        initialRouteName="SignupScreen">
-        <AppNavigation />
-      </NavigationContainer>
-    </View>
+    <PaperProvider theme={theme}>
+      <View style={styles.container}>
+        <NavigationContainer
+          ref={containerRef}
+          initialState={initialNavigationState}
+          initialRouteName="SignupScreen">
+          <AppNavigation />
+        </NavigationContainer>
+      </View>
+    </PaperProvider>
   );
 }
 
