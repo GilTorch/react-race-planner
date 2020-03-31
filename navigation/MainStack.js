@@ -2,16 +2,15 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from '../screens/HomeScreen';
+import FilterScreen from '../screens/FilterScreen';
 
 const Stack = createStackNavigator();
 
 export default function MainStack() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false
-      }}>
+    <Stack.Navigator>
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="FilterScreen" component={FilterScreen} />
     </Stack.Navigator>
   );
 }
