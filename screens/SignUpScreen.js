@@ -15,9 +15,9 @@ const SignupScreen = ({ navigation }) => {
     >
       <View style={styles.container}>
         {/* <View style={styles.logoContainer}> */}
-        <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
+        <Image testID="logo" source={SRLogo} resizeMode="contain" style={styles.logo} />
         {/* </View> */}
-        <View style={styles.headlineContainer}>
+        <View testID="test" style={styles.headlineContainer}>
           <Text type="medium" style={styles.headline}>
             Create an Account
           </Text>
@@ -131,11 +131,7 @@ const SignupScreen = ({ navigation }) => {
               style={styles.goToLoginPageButton}
             >
               <View>
-                <Text
-                  style={styles.goToLoginPageButtonText}
-                >
-                  Log in
-                </Text>
+                <Text style={styles.goToLoginPageButtonText}>Log in</Text>
               </View>
             </TouchableOpacity>
           </View>

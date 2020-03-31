@@ -11,7 +11,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white', marginTop: 25 }}>
       <View style={styles.container}>
-        <Image source={SRLogo} style={styles.logo} />
+        <Image testID="logo" source={SRLogo} style={styles.logo} />
         <View style={styles.headlineContainer}>
           <Text type="medium" style={styles.headline}>
             Login

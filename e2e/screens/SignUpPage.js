@@ -1,6 +1,6 @@
 class SignUpPage {
   async signUp(config) {
-    await waitFor(element(by.id('create-account-test'))).toBeVisible();
+    await waitFor(element(by.id('create-account-text'))).toBeVisible();
     await waitFor(element(by.id('twitter-icon-btn'))).toBeVisible();
     await waitFor(element(by.id('facebook-icon-btn'))).toBeVisible();
     await waitFor(element(by.id('google-icon-btn'))).toBeVisible();

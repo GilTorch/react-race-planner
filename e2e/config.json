@@ -4,3 +4,5 @@
     "reporters": ["detox/runners/jest/streamlineReporter"],
     "verbose": true
 }
+
+
