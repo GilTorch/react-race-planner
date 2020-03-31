@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Image, StatusBar, Dimensions } from 'react-native';
+import { ScrollView, View, StyleSheet, Image, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome, Entypo, SimpleLineIcons, Feather } from '@expo/vector-icons';
 import { Surface } from 'react-native-paper';
@@ -254,10 +254,13 @@ Story.propTypes = {
   index: PropTypes.number.isRequired
 };
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
+  navigation.setOptions({
+    headerShown: false
+  });
+
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
       <Surface
         style={{
           elevation: 5
@@ -330,7 +333,11 @@ const HomeScreen = () => {
               alignSelf: 'stretch'
             }}>
             <Surface style={{ borderRadius: 5, elevation: 5, padding: 4, marginRight: 10 }}>
-              <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity
+                style={{ flexDirection: 'row', alignItems: 'center' }}
+                onPress={() => {
+                  navigation.push('FilterScreen');
+                }}>
                 <AntDesign color="#5A7582" size={18} name="filter" />
                 <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
                   FILTER
@@ -353,6 +360,10 @@ const HomeScreen = () => {
       </ScrollView>
     </View>
   );
+};
+
+HomeScreen.propTypes = {
+  navigation: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
