@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { AntDesign } from '@expo/vector-icons';
 import Text from '../components/CustomText';
 import { SCREEN_WIDTH } from '../utils/dimensions';
-import NavigationService from '../utils/NavigationService';
 
 const FilterTag = ({ label, selected, onSelect }) => {
   const backgroundStyle = selected
@@ -87,7 +86,7 @@ const FilterScreen = ({ navigation }) => {
 
   navigation.setOptions({
     headerLeft: () => (
-      <TouchableOpacity onPress={() => NavigationService.goBack()} style={{ marginLeft: 20 }}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
         <AntDesign style={{ fontSize: 20 }} color="#03A2A2" name="arrowleft" />
       </TouchableOpacity>
     ),
@@ -163,6 +162,7 @@ const FilterScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <View style={styles.innerWrapper}>
         <View>
           <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
