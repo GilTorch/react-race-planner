@@ -1,10 +1,9 @@
 {
-  "devToolsPort": 19002,
   "expoServerPort": 19000,
-  "packagerPort": 19010,
-  "packagerPid": 38087,
-  "expoServerNgrokUrl": "https://cb-c36.comphaiti.scriptorerum.exp.direct",
-  "packagerNgrokUrl": "https://packager.cb-c36.comphaiti.scriptorerum.exp.direct",
-  "ngrokPid": 38123,
-  "webpackServerPort": null
+  "packagerPort": 19012,
+  "packagerPid": 64778,
+  "expoServerNgrokUrl": "https://9u-8e5.comphaiti.scriptorerum.exp.direct",
+  "packagerNgrokUrl": "https://packager.9u-8e5.comphaiti.scriptorerum.exp.direct",
+  "ngrokPid": 64793,
+  "devToolsPort": 19002
 }
