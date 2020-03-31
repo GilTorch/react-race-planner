@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View, Image, StatusBar } from 'react-native';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -96,6 +96,7 @@ export default function App(props) {
 
   return (
     <PaperProvider theme={theme}>
+      <StatusBar barStyle="light-content" />
       <View style={styles.container}>
         <NavigationContainer
           ref={containerRef}
