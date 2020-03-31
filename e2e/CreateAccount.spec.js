@@ -24,7 +24,7 @@ describe('Account', () => {
       await expect(element(by.id('logo'))).toBeVisible();
     });
 
-    it("Should ensure ensure `Create an Account` exist", async () => {
+    it("Should ensure ensure `Create an Account`text exist", async () => {
       await expect(element(by.id('create-account-text'))).toBeVisible();
     });
 
