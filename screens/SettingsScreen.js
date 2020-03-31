@@ -1,45 +1,27 @@
 import React from 'react';
-import { ScrollView, Image, View, SafeAreaView, TouchableOpacity } from 'react-native';
+import { ScrollView, Image, View, TouchableOpacity, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import PropTypes from 'prop-types';
+
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 
-const Header = () => {
-  return (
-    <SafeAreaView
-      style={{
-        backgroundColor: 'white',
-        height: 50,
-        marginTop: 20
-      }}>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}>
-        <View style={{ flex: 1, alignSelf: 'center' }}>
-          <Text style={{ fontSize: 18, textAlign: 'center' }}>Settings</Text>
-        </View>
-        <TouchableOpacity style={{ position: 'absolute', right: 10 }}>
-          <Text style={{ fontSize: 18, color: '#03A2A2' }}>Done</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
-};
-
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation }) => {
   const {
     expo: { version }
   } = app;
 
+  navigation.setOptions({
+    headerTitleAlign: 'center',
+    title: 'Settings'
+  });
+
   return (
     <ScrollView style={{ backgroundColor: '#eee' }}>
+      <StatusBar barStyle="dark-content" />
       <View>
-        <Header />
+        {/* <Header /> */}
         <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>
           <Text style={styles.headline}>PROFILE INFO</Text>
         </View>
@@ -234,6 +216,10 @@ const SettingsScreen = () => {
       </View>
     </ScrollView>
   );
+};
+
+SettingsScreen.propTypes = {
+  navigation: PropTypes.object.isRequired
 };
 
 const styles = {
