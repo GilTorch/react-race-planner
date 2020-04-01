@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import MainStack from './MainStack';
-import SettingsScreen from '../screens/SettingsScreen';
+import SettingsStack from './SettingsStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,7 +16,13 @@ export default function BottomTab() {
           tabBarLabel: 'Home'
         }}
       />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen
+        name="Settings"
+        component={SettingsStack}
+        options={{
+          tabBarLabel: 'Settings'
+        }}
+      />
     </Tab.Navigator>
   );
 }
