@@ -1,1 +1,8 @@
-{}
+{
+  "expoServerPort": 19020,
+  "packagerPort": 19021,
+  "packagerPid": 2635,
+  "expoServerNgrokUrl": "https://mu-tmn.comphaiti.scriptorerum.exp.direct",
+  "packagerNgrokUrl": "https://packager.mu-tmn.comphaiti.scriptorerum.exp.direct",
+  "ngrokPid": 2659
+}
