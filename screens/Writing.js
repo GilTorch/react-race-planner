@@ -260,18 +260,16 @@ const Writing = () => {
       <StatusBar barStyle="light-content" />
       <Surface
         style={{
-          borderBottomLeftRadius: 13,
-          borderBottomRightRadius: 13,
-          overflow: 'hidden',
           elevation: 5
         }}>
         <LinearGradient
           colors={['#03a2a2', '#23c2c2']}
+          locations={[0.2, 1]}
           style={{
             alignItems: 'center',
             flexDirection: 'column',
             paddingBottom: Constants.statusBarHeight,
-            paddingTop: Constants.statusBarHeight * 1.7
+            paddingTop: Constants.statusBarHeight * 2
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             My Stories
