@@ -174,7 +174,7 @@ const SmallAdvertisement = () => (
   </Surface>
 );
 
-const Story = ({ story, index }) => {
+const Story = ({ story, index, navigation }) => {
   let ShowAdvertisement;
   if (index !== 0 && index % 2 === 0) {
     ShowAdvertisement = <Advertisement />;
@@ -195,9 +195,14 @@ const Story = ({ story, index }) => {
         }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View>
-            <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
-              {story.title}
-            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate(story.screenName);
+              }}>
+              <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
+                {story.title}
+              </Text>
+            </TouchableOpacity>
           </View>
           <TouchableOpacity>
             <Feather size={18} color="#5A7582" name="more-vertical" />
@@ -252,6 +257,7 @@ const Story = ({ story, index }) => {
 
 Story.propTypes = {
   story: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired
 };
 
@@ -361,7 +367,7 @@ const HomeScreen = ({ navigation }) => {
 
         <View>
           {stories.map((story, index) => (
-            <Story key={index.toString()} index={index} story={story} />
+            <Story key={index.toString()} index={index} navigation={navigation} story={story} />
           ))}
         </View>
       </ScrollView>

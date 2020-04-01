@@ -7,6 +7,7 @@ const avatarGenerator = email => `https://api.adorable.io/avatars/${email}.png`;
 const stories = [
   {
     title: 'The Flag and The Bucket',
+    screenName: 'InProgressStory',
     authors: [
       {
         firstName: 'John',
@@ -43,6 +44,7 @@ const stories = [
   },
   {
     title: "There's a Man in The Woods",
+    screenName: 'StartedStory',
     authors: [
       {
         firstName: 'Tony',
@@ -120,6 +122,7 @@ const stories = [
   },
   {
     title: 'Snitches',
+    screenName: 'CompletedStory',
     authors: [
       {
         firstName: 'Freddy',
@@ -213,6 +216,7 @@ const stories = [
   },
   {
     title: 'Alphonso, The Barber',
+    screenName: 'UserPartOfStory',
     authors: [
       {
         firstName: 'Liu',
@@ -290,6 +294,7 @@ const stories = [
   },
   {
     title: 'The Flag and The Bucket',
+    screenName: 'InProgressStory',
     authors: [
       {
         firstName: 'John',
@@ -326,6 +331,7 @@ const stories = [
   },
   {
     title: "There's a Man in The Woods",
+    screenName: 'StartedStory',
     authors: [
       {
         firstName: 'Tony',
