@@ -4,6 +4,7 @@ import Constants from 'expo-constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 import { Paragraph, Button, Surface } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../../components/CustomText';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
@@ -26,6 +27,16 @@ StorySingleMeta.propTypes = {
 };
 
 const InProgressStory = ({ navigation }) => {
+  navigation.setOptions({
+    headerShown: false
+  });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('light-content');
+    }, [])
+  );
+
   return (
     <View
       style={{
@@ -69,7 +80,7 @@ const InProgressStory = ({ navigation }) => {
                 mode="contained"
                 uppercase={false}
                 style={{ backgroundColor: '#ED8A18' }}
-                labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium', color: '#fff' }}>
+                labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
                 Join Story
               </Button>
             </Surface>
@@ -81,7 +92,7 @@ const InProgressStory = ({ navigation }) => {
                 color="#5a7582"
                 uppercase={false}
                 onPress={() => navigation.goBack()}
-                labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium' }}>
+                labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium' }}>
                 Go Back
               </Button>
             </Surface>

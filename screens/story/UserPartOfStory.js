@@ -5,6 +5,7 @@ import Constants from 'expo-constants';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
 import { Paragraph, Button, Surface } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../../components/CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
@@ -58,13 +59,22 @@ PenddingRoundBox.defaultProps = {
 };
 
 const UserPartOfStory = ({ navigation }) => {
+  navigation.setOptions({
+    headerShown: false
+  });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('light-content');
+    }, [])
+  );
+
   return (
     <View
       style={{
         backgroundColor: '#eee',
         flex: 1
       }}>
-      <StatusBar barStyle="light-content" />
       <Surface
         style={{
           borderBottomRightRadius: 13,
@@ -102,7 +112,7 @@ const UserPartOfStory = ({ navigation }) => {
                 mode="contained"
                 uppercase={false}
                 style={{ backgroundColor: '#f44336' }}
-                labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium', color: '#fff' }}>
+                labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
                 Leave Story
               </Button>
             </Surface>
@@ -114,7 +124,7 @@ const UserPartOfStory = ({ navigation }) => {
                 color="#5a7582"
                 uppercase={false}
                 onPress={() => navigation.goBack()}
-                labelStyle={{ fontSize: 15, fontFamily: 'Roboto-Medium' }}>
+                labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium' }}>
                 Go Back
               </Button>
             </Surface>
@@ -419,7 +429,7 @@ const styles = StyleSheet.create({
   },
   boxBtnLabel: {
     fontSize: 11,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'RobotoMedium',
     color: '#fff'
   },
   smallAdvertisement: {
@@ -457,7 +467,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 10,
     fontSize: 13,
-    fontFamily: 'Roboto-Italic'
+    fontFamily: 'RobotoItalic'
   },
   floatingNav: {
     flexDirection: 'row',
