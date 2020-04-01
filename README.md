@@ -171,7 +171,7 @@ TBD
 
 At the moment, we only have tests for iOS.
 
-Also note that at the moment, we target iPhone 6s for maximum compability.
+Also note that at the moment, we target iPhone 6s for maximum compatibility.
 
 Follow those instructions if you're on a Mac:
 
