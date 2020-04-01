@@ -161,7 +161,7 @@ const stories = [
         lastName: 'Bond',
         email: 'james007@mi6.com',
         profilePicture: avatarGenerator('james007@mi6.com'),
-        anonymous: false,
+        anonymous: true,
         storyLead: false
       },
       {
@@ -169,7 +169,7 @@ const stories = [
         lastName: 'Man',
         email: 'elephant@man.com',
         profilePicture: avatarGenerator('elephant@man.com'),
-        anonymous: false,
+        anonymous: true,
         storyLead: false
       },
       {
@@ -177,7 +177,7 @@ const stories = [
         lastName: 'Budden',
         email: 'joe@budden.com',
         profilePicture: avatarGenerator('joe@budden.com'),
-        anonymous: false,
+        anonymous: true,
         storyLead: false
       },
       {
@@ -185,7 +185,7 @@ const stories = [
         lastName: 'Matthers',
         email: 'eminem@gmail.com',
         profilePicture: avatarGenerator('eminem@gmail.com'),
-        anonymous: false,
+        anonymous: true,
         storyLead: false
       },
       {

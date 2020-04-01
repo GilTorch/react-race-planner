@@ -7,6 +7,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import MainStack from './MainStack';
 import WritingStack from './WritingStack';
 import SettingsStack from './SettingsStack';
+import LibraryStack from './LibraryStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -73,6 +74,37 @@ export default function BottomTab() {
                 style={{ fontSize: 20 }}
                 color={focused ? '#03A2A2' : '#707070'}
                 name="pen-fancy"
+              />
+            );
+          }
+        }}
+      />
+
+      <Tab.Screen
+        name="Library"
+        component={LibraryStack}
+        options={{
+          tabBarLabel: ({ focused }) => {
+            if (!focused) return null;
+
+            return (
+              <Text
+                style={{
+                  paddingLeft: 15,
+                  textTransform: 'uppercase',
+                  fontWeight: 'bold',
+                  color: '#03A2A2'
+                }}>
+                Library
+              </Text>
+            );
+          },
+          tabBarIcon: ({ focused }) => {
+            return (
+              <FontAwesome5
+                style={{ fontSize: 20 }}
+                color={focused ? '#03A2A2' : '#707070'}
+                name="book"
               />
             );
           }
