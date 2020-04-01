@@ -17,6 +17,7 @@ export default function BottomTab() {
           tabBarLabel: 'Home'
         }}
       />
+
       <Tab.Screen
         name="Writing"
         component={WritingStack}
@@ -24,6 +25,7 @@ export default function BottomTab() {
           tabBarLabel: 'Writing'
         }}
       />
+
       <Tab.Screen
         name="Settings"
         component={SettingsStack}
