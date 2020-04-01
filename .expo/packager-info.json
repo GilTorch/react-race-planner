@@ -1,9 +1,1 @@
-{
-  "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://dd-7sj.comphaiti.scriptorerum.exp.direct",
-  "packagerNgrokUrl": "https://packager.dd-7sj.comphaiti.scriptorerum.exp.direct",
-  "ngrokPid": 94641,
-  "devToolsPort": 19002,
-  "packagerPort": 19014,
-  "packagerPid": 94622
-}
+{}
