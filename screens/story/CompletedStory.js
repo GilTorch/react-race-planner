@@ -40,12 +40,11 @@ const CompletedStory = ({ navigation }) => {
         flex: 1,
         backgroundColor: color
       }}>
-      <StatusBar barStyle="light-content" />
       <Surface
         style={{
           borderBottomLeftRadius: 13,
           borderBottomRightRadius: 13,
-          overflow: 'hidden',
+          backgroundColor: '#03a2a2',
           elevation: 5
         }}>
         <LinearGradient
@@ -54,6 +53,7 @@ const CompletedStory = ({ navigation }) => {
           style={{
             alignItems: 'center',
             flexDirection: 'column',
+            borderRadius: 13,
             paddingBottom: Constants.statusBarHeight,
             paddingTop: Constants.statusBarHeight * 1.7
           }}>

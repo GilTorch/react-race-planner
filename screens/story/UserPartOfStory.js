@@ -79,7 +79,7 @@ const UserPartOfStory = ({ navigation }) => {
         style={{
           borderBottomRightRadius: 13,
           borderBottomLeftRadius: 13,
-          overflow: 'hidden',
+          backgroundColor: '#03a2a2',
           elevation: 5
         }}>
         <LinearGradient
@@ -89,6 +89,7 @@ const UserPartOfStory = ({ navigation }) => {
             alignItems: 'center',
             flexDirection: 'column',
             paddingVertical: 15,
+            borderRadius: 13,
             paddingBottom: Constants.statusBarHeight,
             paddingTop: Constants.statusBarHeight * 1.7
           }}>
