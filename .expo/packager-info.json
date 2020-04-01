@@ -1,9 +1,9 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 22636,
+  "packagerPid": 23064,
   "expoServerNgrokUrl": "https://du-ttc.anonymous.sr-mobile.exp.direct",
   "packagerNgrokUrl": "https://packager.du-ttc.anonymous.sr-mobile.exp.direct",
-  "ngrokPid": 14168,
+  "ngrokPid": 10384,
   "devToolsPort": 19002
 }
