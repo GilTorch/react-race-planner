@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, Image, View, TouchableOpacity, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
@@ -17,9 +18,14 @@ const SettingsScreen = ({ navigation }) => {
     title: 'Settings'
   });
 
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content');
+    }, [])
+  );
+
   return (
     <ScrollView style={{ backgroundColor: '#eee' }}>
-      <StatusBar barStyle="dark-content" />
       <View>
         {/* <Header /> */}
         <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>

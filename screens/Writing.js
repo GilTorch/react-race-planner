@@ -6,6 +6,7 @@ import { Surface } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
+import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
@@ -255,9 +256,14 @@ BadgesFilter.defaultProps = {
 };
 
 const Writing = () => {
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('light-content');
+    }, [])
+  );
+
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
       <Surface
         style={{
           elevation: 5

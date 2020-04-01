@@ -1,11 +1,12 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Image, Dimensions } from 'react-native';
+import { ScrollView, View, StyleSheet, Image, Dimensions, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome, Entypo, SimpleLineIcons, Feather } from '@expo/vector-icons';
 import { Surface } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
+import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
@@ -258,6 +259,12 @@ const HomeScreen = ({ navigation }) => {
   navigation.setOptions({
     headerShown: false
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('light-content');
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
