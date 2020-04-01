@@ -34,6 +34,19 @@ const CompletedStory = ({ navigation }) => {
     }, [])
   );
 
+  const showStorySingleMeta = (label, value) => (
+    <View style={{ alignSelf: 'flex-start', marginLeft: 15 }}>
+      <Paragraph>
+        <Text type="bold" style={{ color: 'white' }}>
+          {label}:{'  '}
+        </Text>
+        <Text type="regular" style={{ color: 'white' }}>
+          {value}
+        </Text>
+      </Paragraph>
+    </View>
+  );
+
   return (
     <View
       style={{
@@ -64,13 +77,13 @@ const CompletedStory = ({ navigation }) => {
             Snitches
           </Text>
 
-          <StorySingleMeta label="Genre" value="Action" />
-          <StorySingleMeta label="Status" value="Completed" />
-          <StorySingleMeta label="Master Author" value="Marie Clark" />
-          <StorySingleMeta label="Intro Maximum Words" value="50" />
-          <StorySingleMeta label="Ending Maximum Words" value="50" />
-          <StorySingleMeta label="Words per Round" value="100 max" />
-          <StorySingleMeta label="Co-Authors" value="+7 anonymous authors" authors={[1, 2]} />
+          {showStorySingleMeta('Genre', 'Action')}
+          {showStorySingleMeta('Status', 'Completed')}
+          {showStorySingleMeta('Master Author', 'Marie Clark')}
+          {showStorySingleMeta('Intro Maximum Words', '50')}
+          {showStorySingleMeta('Ending Maximum Words', '50')}
+          {showStorySingleMeta('Words per Round', '100 max')}
+          {showStorySingleMeta('Co-Authors', '+7 anonymous authors')}
 
           <View style={styles.headerBtn}>
             <Surface style={styles.surface}>
@@ -167,30 +180,6 @@ const CompletedStory = ({ navigation }) => {
       )}
     </View>
   );
-};
-
-const StorySingleMeta = ({ label, value, authors }) => (
-  <View style={{ alignSelf: 'flex-start', marginLeft: 15 }}>
-    <Paragraph>
-      <Text type="bold" style={{ color: 'white' }}>
-        {label}:{'  '}
-      </Text>
-      {authors.map(i => (
-        <FontAwesome key={i} name="user-circle" size={20} color="#fff" style={{ marginLeft: 3 }} />
-      ))}
-      <Text type="regular" style={{ color: 'white' }}>
-        {value}
-      </Text>
-    </Paragraph>
-  </View>
-);
-StorySingleMeta.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  authors: PropTypes.array
-};
-StorySingleMeta.defaultProps = {
-  authors: []
 };
 
 const SmallAdvertisement = () => (

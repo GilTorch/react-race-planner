@@ -9,23 +9,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import Text from '../../components/CustomText';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
 
-const StorySingleMeta = ({ label, value }) => (
-  <View style={{ alignSelf: 'flex-start', marginLeft: 15 }}>
-    <Paragraph>
-      <Text type="bold" style={{ color: 'white' }}>
-        {label}:{'  '}
-      </Text>
-      <Text type="regular" style={{ color: 'white' }}>
-        {value}
-      </Text>
-    </Paragraph>
-  </View>
-);
-StorySingleMeta.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
-};
-
 const InProgressStory = ({ navigation }) => {
   navigation.setOptions({
     headerShown: false
@@ -35,6 +18,19 @@ const InProgressStory = ({ navigation }) => {
     React.useCallback(() => {
       StatusBar.setBarStyle('light-content');
     }, [])
+  );
+
+  const showStorySingleMeta = (label, value) => (
+    <View style={{ alignSelf: 'flex-start', marginLeft: 15 }}>
+      <Paragraph>
+        <Text type="bold" style={{ color: 'white' }}>
+          {label}:{'  '}
+        </Text>
+        <Text type="regular" style={{ color: 'white' }}>
+          {value}
+        </Text>
+      </Paragraph>
+    </View>
   );
 
   return (
@@ -67,13 +63,13 @@ const InProgressStory = ({ navigation }) => {
             The Flag and The Bucket
           </Text>
 
-          <StorySingleMeta label="Genre" value="Mystery" />
-          <StorySingleMeta label="Status" value="In Progress" />
-          <StorySingleMeta label="Master Author" value="Anonymous 1" />
-          <StorySingleMeta label="Intro Maximum Words" value="50" />
-          <StorySingleMeta label="Ending Maximum Words" value="50" />
-          <StorySingleMeta label="Words per Round" value="100 max" />
-          <StorySingleMeta label="Co-Authors" value="2 more to start" />
+          {showStorySingleMeta('Genre', 'Mystery')}
+          {showStorySingleMeta('Status', 'In Progress')}
+          {showStorySingleMeta('Master Author', 'Anonymous 1')}
+          {showStorySingleMeta('Intro Maximum Words', '50')}
+          {showStorySingleMeta('Ending Maximum Words', '50')}
+          {showStorySingleMeta('Words per Round', '100 max')}
+          {showStorySingleMeta('Co-Authors', '2 more to start')}
 
           <View style={styles.headerBtn}>
             <Surface style={styles.surface}>
