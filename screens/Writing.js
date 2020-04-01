@@ -255,7 +255,11 @@ BadgesFilter.defaultProps = {
   style: {}
 };
 
-const Writing = () => {
+const Writing = ({ navigation }) => {
+  navigation.setOptions({
+    headerShown: false
+  });
+
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setBarStyle('light-content');
@@ -302,7 +306,9 @@ const Writing = () => {
               alignSelf: 'stretch'
             }}>
             <Surface style={{ borderRadius: 5, elevation: 5, padding: 4, marginRight: 10 }}>
-              <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('FilterScreen')}
+                style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <AntDesign color="#5A7582" size={18} name="filter" />
                 <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
                   FILTER
@@ -327,6 +333,10 @@ const Writing = () => {
       </ScrollView>
     </View>
   );
+};
+
+Writing.propTypes = {
+  navigation: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({

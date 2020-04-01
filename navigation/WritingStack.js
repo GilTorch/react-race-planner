@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 
 export default function WritingStack() {
   return (
-    <Stack.Navigator headerMode="none" initialRouteName="WritingScreen">
+    <Stack.Navigator initialRouteName="WritingScreen">
       <Stack.Screen name="WritingScreen" component={WritingScreen} />
       <Stack.Screen name="StoryScreen" component={StoryStack} />
       <Stack.Screen name="FilterScreen" component={FilterScreen} />
