@@ -7,7 +7,6 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import MainStack from './MainStack';
 import WritingStack from './WritingStack';
 import SettingsStack from './SettingsStack';
-import { SCREEN_HEIGHT } from '../utils/dimensions';
 
 const Tab = createBottomTabNavigator();
 

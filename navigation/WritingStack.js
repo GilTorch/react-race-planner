@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import WritingScreen from '../screens/Writing';
+import WritingScreen from '../screens/WritingScreen';
 import FilterScreen from '../screens/FilterScreen';
 import UserPartOfStory from '../screens/story/UserPartOfStory';
 import StartedStory from '../screens/story/StartedStory';
