@@ -26,6 +26,7 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "The demo of the ScriptoRerum mobile app for iOS and Android."
   }
 }
