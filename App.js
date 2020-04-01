@@ -96,7 +96,6 @@ export default function App(props) {
 
   return (
     <PaperProvider theme={theme}>
-      <StatusBar barStyle="light-content" />
       <View style={styles.container}>
         <NavigationContainer
           ref={containerRef}
