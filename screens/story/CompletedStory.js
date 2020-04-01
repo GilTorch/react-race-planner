@@ -50,6 +50,7 @@ const CompletedStory = ({ navigation }) => {
         }}>
         <LinearGradient
           colors={['#03a2a2', '#23c2c2']}
+          locations={[0.4, 1]}
           style={{
             alignItems: 'center',
             flexDirection: 'column',

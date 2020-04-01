@@ -84,6 +84,7 @@ const UserPartOfStory = ({ navigation }) => {
         }}>
         <LinearGradient
           colors={['#03A2A2', '#23C2C2']}
+          locations={[0.4, 1]}
           style={{
             alignItems: 'center',
             flexDirection: 'column',
