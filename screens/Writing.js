@@ -192,7 +192,7 @@ const Story = ({ story }) => {
         )}
 
         {!story.electedIntro && (
-          <Text style={{ color: '#ED8A18', fontFamily: 'Roboto-Italic', fontSize: 12 }}>
+          <Text style={{ color: '#ED8A18', fontFamily: 'RobotoItalic', fontSize: 12 }}>
             Vote haven't started yet
           </Text>
         )}
