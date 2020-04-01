@@ -135,7 +135,7 @@ const SmallAdvertisement = () => (
   </Surface>
 );
 
-const Story = ({ story }) => {
+const Story = ({ story, navigation }) => {
   return (
     <Surface
       style={{
@@ -147,9 +147,11 @@ const Story = ({ story }) => {
       }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View>
-          <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
-            {story.title}
-          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('UserPartOfStory')}>
+            <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
+              {story.title}
+            </Text>
+          </TouchableOpacity>
         </View>
         <TouchableOpacity>
           <Feather size={18} color="#5A7582" name="more-vertical" />
@@ -202,7 +204,8 @@ const Story = ({ story }) => {
 };
 
 Story.propTypes = {
-  story: PropTypes.object.isRequired
+  story: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired
 };
 
 const BadgesFilter = ({ labels, style }) => {
@@ -327,7 +330,7 @@ const Writing = ({ navigation }) => {
         <BadgesFilter labels={['Mystery', 'Action', 'Romance']} />
         <BadgesFilter labels={['Authors: 3 - 100']} style={{ marginBottom: 20 }} />
 
-        <Story story={stories[3]} />
+        <Story story={stories[3]} navigation={navigation} />
 
         <SmallAdvertisement />
       </ScrollView>
