@@ -1,7 +1,7 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Image, StatusBar, Dimensions } from 'react-native';
+import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign, FontAwesome, Entypo, Feather } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { Surface } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -9,204 +9,8 @@ import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
-import { stories, genres } from '../utils/data';
-
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-
-const StoryGenre = ({ name }) => {
-  const currentGenre = genres.filter(genre => genre.name === name)[0];
-  return (
-    <View style={storyGenreStyle.container}>
-      <View style={{ ...storyGenreStyle.iconContainer, backgroundColor: currentGenre.color }}>
-        {currentGenre.icon(12)}
-      </View>
-      <Text style={{ color: '#5A7582', fontSize: 12 }}>{currentGenre.name}</Text>
-    </View>
-  );
-};
-
-const storyGenreStyle = {
-  container: { flexDirection: 'row', alignItems: 'center' },
-  iconContainer: {
-    width: 22,
-    height: 22,
-    borderRadius: 40,
-    marginRight: 5,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-};
-
-StoryGenre.propTypes = {
-  name: PropTypes.string.isRequired
-};
-
-const StoryAuthors = ({ authors, storyStatus }) => {
-  const nonLeadAuthorsWithLimit = authors.filter(author => !author.storyLead).slice(0, 4);
-  const leadAuthor = authors.filter(author => author.storyLead)[0];
-  const remainingAuthorsCount = authors.length - (nonLeadAuthorsWithLimit.length + 1);
-
-  const renderAuthor = (author, key) => {
-    const margin = author.storyLead ? 0 : -8;
-    if (storyStatus !== 'Completed' || author.anonymous) {
-      return (
-        <View key={key.toString()} style={storyAuthorsStyle.imageContainer}>
-          <View
-            style={{
-              ...storyAuthorsStyle.image,
-              marginLeft: margin,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#B3CFFF'
-            }}>
-            <Entypo color="white" size={14} name="user" />
-          </View>
-          {author.storyLead && <View style={storyAuthorsStyle.separator} />}
-        </View>
-      );
-    }
-
-    return (
-      <View key={key.toString()} style={storyAuthorsStyle.imageContainer}>
-        <Image
-          style={{ ...storyAuthorsStyle.image, marginLeft: margin }}
-          source={{ uri: author.profilePicture }}
-        />
-        {author.storyLead && <View style={storyAuthorsStyle.separator} />}
-      </View>
-    );
-  };
-
-  return (
-    <View style={storyAuthorsStyle.container}>
-      {renderAuthor(leadAuthor, 100)}
-      {nonLeadAuthorsWithLimit.map((author, i) => renderAuthor(author, i))}
-      {remainingAuthorsCount === 0 && (
-        <View style={{ marginLeft: 5 }}>
-          <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
-            {4 - nonLeadAuthorsWithLimit.length} more people to go
-          </Text>
-        </View>
-      )}
-      {remainingAuthorsCount > 0 && (
-        <View style={{ marginLeft: 5 }}>
-          <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
-            +{remainingAuthorsCount} other people
-          </Text>
-        </View>
-      )}
-    </View>
-  );
-};
-
-const storyAuthorsStyle = StyleSheet.create({
-  container: { marginTop: 5, flexDirection: 'row', alignItems: 'center' },
-  imageContainer: { flexDirection: 'row', alignItems: 'center' },
-  image: {
-    width: 21,
-    height: 21,
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: 'white'
-  },
-  separator: {
-    height: 15,
-    marginLeft: 5,
-    marginRight: 15,
-    borderLeftColor: '#5A7582',
-    borderLeftWidth: 1
-  },
-  storyLeadImageContainer: {}
-});
-
-StoryAuthors.propTypes = {
-  authors: PropTypes.array.isRequired,
-  storyStatus: PropTypes.string.isRequired
-};
-
-const SmallAdvertisement = () => (
-  <Surface style={styles.smallAdvertisement}>
-    <Text type="bold" style={styles.smallAdvertisementTitle}>
-      344 X 71
-    </Text>
-    <Text type="bold" style={styles.smallAdvertisementTitle}>
-      Advertisement Here
-    </Text>
-  </Surface>
-);
-
-const Story = ({ story, navigation }) => {
-  return (
-    <Surface
-      style={{
-        marginBottom: 25,
-        marginHorizontal: 20,
-        borderRadius: 4,
-        padding: 15,
-        elevation: 5
-      }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <View>
-          <TouchableOpacity onPress={() => navigation.navigate('UserPartOfStory')}>
-            <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
-              {story.title}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity>
-          <Feather size={18} color="#5A7582" name="more-vertical" />
-        </TouchableOpacity>
-      </View>
-      <StoryAuthors authors={story.authors} storyStatus={story.status} />
-      <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
-        <Text style={{ color: '#5A7582', fontSize: 12 }}>{story.startTime}</Text>
-        <View
-          style={{
-            height: 15,
-            borderLeftColor: '#5A7582',
-            borderLeftWidth: 1,
-            marginHorizontal: 8
-          }}
-        />
-        <Text style={{ color: '#5A7582', fontSize: 12 }}>{story.status}</Text>
-        <View
-          style={{
-            height: 15,
-            borderLeftColor: '#5A7582',
-            borderLeftWidth: 1,
-            marginHorizontal: 8
-          }}
-        />
-        <StoryGenre name={story.genre} />
-      </View>
-      <View style={{ marginTop: 4 }}>
-        <Text type="bold" style={{ color: '#5A7582' }}>
-          Initially Proposed Intro
-        </Text>
-        <Text style={{ color: '#5A7582', lineHeight: 20 }}>{story.initialIntro}</Text>
-      </View>
-      <View style={{ marginTop: 10 }}>
-        <Text type="bold" style={{ color: '#5A7582' }}>
-          Elected Intro
-        </Text>
-        {story.electedIntro && (
-          <Text style={{ color: '#5A7582', lineHeight: 20 }}>{story.electedIntro}</Text>
-        )}
-
-        {!story.electedIntro && (
-          <Text style={{ color: '#ED8A18', fontFamily: 'RobotoItalic', fontSize: 12 }}>
-            Vote haven't started yet
-          </Text>
-        )}
-      </View>
-    </Surface>
-  );
-};
-
-Story.propTypes = {
-  story: PropTypes.object.isRequired,
-  navigation: PropTypes.object.isRequired
-};
+import { stories } from '../utils/data';
+import Story from '../components/Story';
 
 const BadgesFilter = ({ labels, style }) => {
   const badges = labels.map(label => (
@@ -216,13 +20,15 @@ const BadgesFilter = ({ labels, style }) => {
         backgroundColor: '#03A2A2',
         borderRadius: 50,
         flexDirection: 'row',
+        alignItems: 'center',
         paddingHorizontal: 10,
+        marginBottom: 2,
         marginRight: 5
       }}>
       <Text
         type="bold"
         style={{
-          fontSize: 10,
+          fontSize: 11,
           color: '#FFF',
           marginRight: 5,
           paddingVertical: 3
@@ -230,7 +36,7 @@ const BadgesFilter = ({ labels, style }) => {
         {label}
       </Text>
       <TouchableOpacity>
-        <Text type="bold" style={{ fontSize: 10, color: '#FFF', paddingVertical: 3 }}>
+        <Text type="bold" style={{ fontSize: 12, color: '#FFF', paddingVertical: 3 }}>
           x
         </Text>
       </TouchableOpacity>
@@ -325,14 +131,13 @@ const Writing = ({ navigation }) => {
             </Surface>
           </View>
         </View>
+        <View style={{ marginBottom: 20 }}>
+          <BadgesFilter labels={['In Progress']} />
+          <BadgesFilter labels={['Mystery', 'Action', 'Romance']} />
+          <BadgesFilter labels={['Authors: 3 - 100']} />
+        </View>
 
-        <BadgesFilter labels={['In Progress']} />
-        <BadgesFilter labels={['Mystery', 'Action', 'Romance']} />
-        <BadgesFilter labels={['Authors: 3 - 100']} style={{ marginBottom: 20 }} />
-
-        <Story story={stories[3]} navigation={navigation} />
-
-        <SmallAdvertisement />
+        <Story story={stories[3]} index={0} length={1} navigation={navigation} />
       </ScrollView>
     </View>
   );
@@ -347,20 +152,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#EEE'
   },
-  headline: { color: '#5A7582' },
-  smallAdvertisement: {
-    height: SCREEN_HEIGHT * 0.1,
-    backgroundColor: '#fff',
-    elevation: 5,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  smallAdvertisementTitle: {
-    color: '#5A7582',
-    fontSize: 20
-  }
+  headline: { color: '#5A7582' }
 });
 
 export default Writing;
