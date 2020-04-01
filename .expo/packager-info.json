@@ -1,10 +1,8 @@
 {
-  "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "webpackServerPort": null
+  "expoServerPort": 19020,
+  "packagerPort": 19023,
+  "packagerPid": 60209,
+  "expoServerNgrokUrl": "https://du-ttc.comphaiti.scriptorerum.exp.direct",
+  "packagerNgrokUrl": "https://packager.du-ttc.comphaiti.scriptorerum.exp.direct",
+  "ngrokPid": 60220
 }
