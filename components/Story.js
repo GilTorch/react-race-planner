@@ -72,26 +72,29 @@ const Story = ({ story, index, length, navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.storyAuthorsContainer}>
-          {renderAuthor(leadAuthor)}
-          {nonLeadAuthorsWithLimit.map(author => renderAuthor(author))}
-          {anonymousAuthorsCount === 0 && (
-            <View style={{ marginLeft: 5 }}>
-              {remainingAuthorsCount > 0 && (
+        {story.status === 'Completed' && (
+          <View style={styles.storyAuthorsContainer}>
+            {renderAuthor(leadAuthor)}
+            {nonLeadAuthorsWithLimit.map(author => renderAuthor(author))}
+            {anonymousAuthorsCount === 0 && (
+              <View style={{ marginLeft: 5 }}>
+                {remainingAuthorsCount > 0 && (
+                  <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
+                    +{remainingAuthorsCount} more people
+                  </Text>
+                )}
+              </View>
+            )}
+            {anonymousAuthorsCount > 0 && (
+              <View style={{ marginLeft: 5 }}>
                 <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
-                  +{remainingAuthorsCount} more people
+                  +{anonymousAuthorsCount} anonymous people
                 </Text>
-              )}
-            </View>
-          )}
-          {anonymousAuthorsCount > 0 && (
-            <View style={{ marginLeft: 5 }}>
-              <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
-                +{anonymousAuthorsCount} anonymous people
-              </Text>
-            </View>
-          )}
-        </View>
+              </View>
+            )}
+          </View>
+        )}
+
         <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
           <Text style={{ color: '#5A7582', fontSize: 12 }}>{story.startTime}</Text>
           <View
