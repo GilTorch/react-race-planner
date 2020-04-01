@@ -27,7 +27,7 @@ const SettingsScreen = ({ navigation }) => {
   );
 
   return (
-    <View>
+    <View style={{ flex: 1, backgroundColor: '#eee' }}>
       <Surface
         style={{
           elevation: 5
@@ -48,7 +48,6 @@ const SettingsScreen = ({ navigation }) => {
       </Surface>
 
       <ScrollView
-        style={{ backgroundColor: '#eee' }}
         contentContainerStyle={{
           paddingBottom: 100
         }}>
