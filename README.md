@@ -168,17 +168,26 @@ TBD
 TBD
 
 ## e2e Testing with detox
- - To run tests, do:
- 1. `npm install -g expo-cli`
- 2. `npm run dl_expo_bins`
- 3. `npm install`
- 4. Open a console and run `npm run ios`
- 5. Open a second console and run `npm run test:e2e` (this will run all the tests)
- 6. To run a specipic test in a file:
+
+At the moment, we only have tests for iOS.
+
+Also note that at the moment, we target iPhone 6s for maximum compability.
+
+Follow those instructions if you're on a Mac:
+
+ 1. Make sure you have the latest version of Xcode
+ 2. Install Expo: `npm install -g expo-cli`
+ 2. Download Expo iOS client: `npm run dl_expo_bins`
+ 3. Install dependencies: `npm install`
+ 4. Open an iPhone 6s device: `xcrun simctl boot "iPhone 6s" && open -a Simulator`
+ 5. Run the app on the device: `npm run ios`
+ 6. Make sure Expo is running on a tunneled connection, not LAN: In the terminal session of step 6, press `d` to go to the DevTools and from there, select `Tunnel` for the `Connection` option
+ 5. In a different terminal session, run `npm run test:e2e` (this will run all the tests)
+ 6. To run a specific test in a file:
     - put `.only` after the word `it` or `describe`. Example: `it.only(should show welcome text)...`
- 7. to run a specific file test, do:
+ 7. To run a specific file test, do:
     - `npm run test:e2e -c -f /filepath/`. Example: ` npm run test:e2e -c -f e2e/CreateAccount.spec.js`
     - and scroll up untill you can see the  full output of your tests
- 8. Reminder: In React Native apps, expect UI component to have `testID` instead of using `id`.
+ 8. Reminder: Expect the UI components to have `testID` instead of using `id`.
  
  
