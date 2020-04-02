@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { Surface } from 'react-native-paper';
-import { Feather } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 
 import { genres } from '../../utils/data';
 import Text from '../CustomText';
 import { HugeAdvertisement, SmallAdvertisement } from '../advertisements';
+import BoxMenu from './BoxMenu';
 
 const Story = ({ story, index, length, navigation }) => {
   let ShowAdvertisement;
@@ -53,9 +53,7 @@ const Story = ({ story, index, length, navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity>
-            <Feather size={18} color="#5A7582" name="more-vertical" />
-          </TouchableOpacity>
+          <BoxMenu parentType="story" />
         </View>
 
         {story.status === 'Completed' && (
