@@ -142,7 +142,7 @@ const SignupScreen = ({ navigation }) => {
               onPress={() => navigation.navigate("Login")}
               style={styles.goToLoginPageButton}
             >
-              <View>
+              <View testID="go-to-loggin-page">
                 <Text style={styles.goToLoginPageButtonText}>Log in</Text>
               </View>
             </TouchableOpacity>
