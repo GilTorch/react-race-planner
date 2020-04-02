@@ -177,8 +177,8 @@ TBD
  6. To run a specipic test in a file:
     - put `.only` after the word `it` or `describe`. Example: `it.only(should show welcome text)...`
  7. to run a specific file test, do:
-    - `npm run test:e2e -c -f /filepath/`. Example: ` npm run test:e2e -c -f e2e/CreateAccount.spec.js`
+    - `npm run test:e2e -c -f /filepath/`. Example: `npm run test:e2e -c -f e2e/CreateAccount.spec.js`
     - and scroll up untill you can see the  full output of your tests
- 8. Reminder: In React Native apps, expect UI component to have `testID` instead of using `id`.
+ 8. Reminder: In React Native apps (expo), expect UI component to have `testID` instead of using `id`.
  
  
