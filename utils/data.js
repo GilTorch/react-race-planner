@@ -4,6 +4,23 @@ import MysteryIcon from '../components/svg/icons/MysteryIcon';
 
 const avatarGenerator = email => `https://api.adorable.io/avatars/${email}.png`;
 
+const loremText =
+  'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea.';
+
+const intros = [
+  { subTitle: 'By Anonymouns 8', elected: true, votes: '9/11', comments: '24' },
+  { subTitle: 'By Anonymouns 4', elected: false, votes: '6/11', comments: '8' },
+  { subTitle: 'By Anonymouns 6', elected: false, votes: '2/11', comments: '22' },
+  { subTitle: 'By Anonymouns 2', elected: false, votes: '1/11', comments: '2' },
+  { subTitle: 'By Anonymouns 1', elected: false, votes: '4/11', comments: '4' },
+  { subTitle: 'By Anonymouns 3', elected: false, votes: '3/11', comments: '5' }
+];
+
+const endings = [
+  { subTitle: 'By Marie Clack', elected: true, votes: '11/11', comments: '33' },
+  { subTitle: 'By Anonymouns 6', elected: false, votes: '5/11', comments: '15' }
+];
+
 const stories = [
   {
     title: 'The Flag and The Bucket',
@@ -446,4 +463,4 @@ const genres = [
     color: '#faf'
   }
 ];
-export { stories, genres };
+export { loremText, intros, endings, stories, genres };
