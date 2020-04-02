@@ -68,7 +68,7 @@ const SignupScreen = ({ navigation }) => {
               <TextInput testID="email-address" style={styles.input} />
             </View>
           </View>
-          <View style={styles.formGroup}>
+          <View testID="scroll-to-bottom" style={styles.formGroup}>
             <View style={styles.labelContainer}>
               <Text type="medium" style={styles.label}>
                 Password
@@ -80,7 +80,11 @@ const SignupScreen = ({ navigation }) => {
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
-              <Text type="medium" style={styles.label}>
+              <Text
+                testID="password-confirmation"
+                type="medium"
+                style={styles.label}
+              >
                 Confirm Password
               </Text>
             </View>

@@ -65,7 +65,7 @@
       "ios.sim": {
         "binaryPath": "bin/Exponent.app",
         "type": "ios.simulator",
-        "name": "iPhone 6s"
+        "name": "iPhone 11"
       }
     }
   }

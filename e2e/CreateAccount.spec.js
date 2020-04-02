@@ -1,31 +1,35 @@
-const casual = require('casual');
-const SignUpPage = require('./screens/SignUpPage');
+const casual = require("casual");
+const SignUpPage = require("./screens/SignUpPage");
 
-describe('Account', () => {
-  let userName = casual.username; 
+describe("Account", () => {
+  let userName = casual.username;
   let firstName = casual.first_name;
   let lastName = casual.last_name;
-  let email = firstName + '.' + lastName + '@gmail.com';
+  let email = firstName + "." + lastName + "@gmail.com";
   const config = {
     username: userName,
     firstname: firstName,
     lastname: lastName,
     email: email.toLowerCase(),
     password: "**********",
-    password_confirmation: "**********",
+    password_confirmation: "**********"
   };
 
-  describe('_createAccount', () => {
-    it('Should render text `Create an Account`', async () => {
-       await expect(element(by.id("create-account-text"))).toBeVisible();
+  describe("_createAccount", () => {
+    it("Should render text `Create an Account`", async () => {
+      await expect(element(by.id("create-account-text"))).toBeVisible();
     });
 
     it("Should ensure logo is visible on screen", async () => {
-      await expect(element(by.id('logo'))).toBeVisible();
+      await expect(element(by.id("logo"))).toBeVisible();
+    });
+    
+    it("Should check for scrolling feature existence", async () => {
+      await expect(element(by.id("scroll-to-bottom"))).toBeVisible();
     });
 
-    it("Should ensure ensure `Create an Account`text exist", async () => {
-      await expect(element(by.id('create-account-text'))).toBeVisible();
+    it("Should ensure valid credential existence", async () => {
+      await SignUpPage.signUp(config);
     });
 
     it("Should ensure twitter icon is visible on screen", async () => {
@@ -38,11 +42,6 @@ describe('Account', () => {
 
      it("Should ensure google icon is visible on screen", async () => {
       await expect(element(by.id('google-icon-btn'))).toBeVisible();
-    });
-
-    it('Should ensure valid credential existence', async () => {
-      await SignUpPage.signUp(config);
-      // await expect(element(by.id('sign-up-button'))).tap();
     });
   });
 });
