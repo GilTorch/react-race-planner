@@ -10,7 +10,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import { stories } from '../utils/data';
-import Story from '../components/Story';
+import Story from '../components/stories/Story';
 
 const BadgesFilter = ({ labels, style }) => {
   const badges = labels.map(label => (

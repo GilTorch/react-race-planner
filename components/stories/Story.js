@@ -5,9 +5,9 @@ import { Feather } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 
-import { genres } from '../utils/data';
-import Text from './CustomText';
-import { HugeAdvertisement, SmallAdvertisement } from './advertisements';
+import { genres } from '../../utils/data';
+import Text from '../CustomText';
+import { HugeAdvertisement, SmallAdvertisement } from '../advertisements';
 
 const Story = ({ story, index, length, navigation }) => {
   let ShowAdvertisement;
@@ -30,20 +30,6 @@ const Story = ({ story, index, length, navigation }) => {
   const anonymousAuthorsCount = story.authors.filter(author => author.anonymous).length;
   const leadAuthor = story.authors.filter(author => author.storyLead)[0];
   const remainingAuthorsCount = story.authors.length - (nonLeadAuthorsWithLimit + 1);
-
-  const renderAuthor = author => {
-    const margin = author.storyLead ? 0 : -8;
-
-    return (
-      <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Image
-          style={{ ...styles.storyAuthorsImage, marginLeft: margin }}
-          source={{ uri: author.profilePicture }}
-        />
-        {author.storyLead && <View style={styles.storyAuthorsSeparator} />}
-      </View>
-    );
-  };
 
   return (
     <View key={Math.random()}>
@@ -74,8 +60,19 @@ const Story = ({ story, index, length, navigation }) => {
 
         {story.status === 'Completed' && (
           <View style={styles.storyAuthorsContainer}>
-            {renderAuthor(leadAuthor)}
-            {nonLeadAuthorsWithLimit.map(author => renderAuthor(author))}
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image style={styles.storyAuthorsImage} source={{ uri: leadAuthor.profilePicture }} />
+              {leadAuthor.storyLead && <View style={styles.storyAuthorsSeparator} />}
+            </View>
+            {nonLeadAuthorsWithLimit.map(author => (
+              <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image
+                  style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
+                  source={{ uri: author.profilePicture }}
+                />
+              </View>
+            ))}
+
             {anonymousAuthorsCount === 0 && (
               <View style={{ marginLeft: 5 }}>
                 {remainingAuthorsCount > 0 && (

@@ -10,7 +10,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
-import Story from '../components/Story';
+import Story from '../components/stories/Story';
 
 const LibraryScreen = ({ navigation }) => {
   navigation.setOptions({
