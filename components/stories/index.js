@@ -1,6 +1,7 @@
-import Round from './Round';
-import UserRound from './UserRound';
-import ProposedSection from './ProposedSection';
 import MetaData from './MetaData';
+import ProposedSection from './ProposedSection';
+import Round from './Round';
+import Story from './Story';
+import UserRound from './UserRound';
 
-export { Round, UserRound, ProposedSection, MetaData };
+export { MetaData, ProposedSection, Round, Story, UserRound };
