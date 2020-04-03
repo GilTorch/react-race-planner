@@ -24,8 +24,8 @@ describe("Account", () => {
       await expect(element(by.id("logo"))).toBeVisible();
     });
     
-    it("Should check for scrolling feature existence", async () => {
-      await expect(element(by.id("scroll-to-bottom"))).toBeVisible();
+    it("Should check screen is scrollable", async () => {
+      await expect(element(by.id("password"))).toExist();
     });
 
     it("Should ensure valid credential existence", async () => {

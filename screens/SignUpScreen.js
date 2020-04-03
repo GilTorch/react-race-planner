@@ -12,6 +12,7 @@ const SignupScreen = ({ navigation }) => {
   return (
     <ScrollView
       contentContainerStyle={{ backgroundColor: "white", marginTop: 25 }}
+
     >
       <View style={styles.container}>
         {/* <View style={styles.logoContainer}> */}
@@ -68,7 +69,7 @@ const SignupScreen = ({ navigation }) => {
               <TextInput testID="email-address" style={styles.input} />
             </View>
           </View>
-          <View testID="scroll-to-bottom" style={styles.formGroup}>
+          <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
               <Text type="medium" style={styles.label}>
                 Password
