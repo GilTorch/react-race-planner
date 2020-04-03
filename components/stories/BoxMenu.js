@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Menu } from 'react-native-paper';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import PropTYpes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import Text from '../CustomText';
 
@@ -37,7 +37,7 @@ const BoxMenu = ({ parentType }) => {
 };
 
 BoxMenu.propTypes = {
-  parentType: PropTYpes.string.isRequired
+  parentType: PropTypes.string.isRequired
 };
 
 const styles = StyleSheet.create({
