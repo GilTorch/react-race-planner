@@ -23,6 +23,8 @@ const HomeScreen = ({ navigation }) => {
     }, [])
   );
 
+  const inprogressStories = stories.filter(story => story.status === 'In Progress');
+
   return (
     <View style={styles.container}>
       <Surface
@@ -130,12 +132,12 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {stories.map((story, index) => (
+        {inprogressStories.map((story, index) => (
           <Story
             key={Math.random()}
             story={story}
             index={index}
-            length={stories.length}
+            length={inprogressStories.length}
             navigation={navigation}
           />
         ))}
