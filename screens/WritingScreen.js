@@ -10,59 +10,8 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import { stories } from '../utils/data';
-import Story from '../components/stories/Story';
-
-const BadgesFilter = ({ labels, style }) => {
-  const badges = labels.map(label => (
-    <View
-      key={Math.random()}
-      style={{
-        backgroundColor: '#03A2A2',
-        borderRadius: 50,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 10,
-        marginBottom: 2,
-        marginRight: 5
-      }}>
-      <Text
-        type="bold"
-        style={{
-          fontSize: 11,
-          color: '#FFF',
-          marginRight: 5,
-          paddingVertical: 3
-        }}>
-        {label}
-      </Text>
-      <TouchableOpacity>
-        <Text type="bold" style={{ fontSize: 12, color: '#FFF', paddingVertical: 3 }}>
-          x
-        </Text>
-      </TouchableOpacity>
-    </View>
-  ));
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        marginHorizontal: 20,
-        marginBottom: 5,
-        ...style,
-        flexWrap: 'wrap'
-      }}>
-      {badges}
-    </View>
-  );
-};
-BadgesFilter.propTypes = {
-  labels: PropTypes.array.isRequired,
-  style: PropTypes.object
-};
-
-BadgesFilter.defaultProps = {
-  style: {}
-};
+import { Story } from '../components/stories';
+import FilterBadges from '../components/FilterBadges';
 
 const Writing = ({ navigation }) => {
   navigation.setOptions({
@@ -132,19 +81,15 @@ const Writing = ({ navigation }) => {
           </View>
         </View>
         <View style={{ marginBottom: 20 }}>
-          <BadgesFilter labels={['In Progress']} />
-          <BadgesFilter labels={['Mystery', 'Action', 'Romance']} />
-          <BadgesFilter labels={['Authors: 3 - 100']} />
+          <FilterBadges labels={['In Progress']} />
+          <FilterBadges labels={['Mystery', 'Action', 'Romance']} />
+          <FilterBadges labels={['Authors: 3 - 100']} />
         </View>
 
         <Story story={stories[3]} index={0} length={1} navigation={navigation} />
       </ScrollView>
     </View>
   );
-};
-
-Writing.propTypes = {
-  navigation: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
@@ -154,5 +99,9 @@ const styles = StyleSheet.create({
   },
   headline: { color: '#5A7582' }
 });
+
+Writing.propTypes = {
+  navigation: PropTypes.object.isRequired
+};
 
 export default Writing;
