@@ -24,12 +24,10 @@ const Story = ({ story, index, length, navigation }) => {
     ShowEndAdvertisement = <SmallAdvertisement />;
   }
   const currentGenre = genres.filter(genre => genre.name === story.genre)[0];
-  const nonLeadAuthorsWithLimit = story.authors.filter(
-    author => !author.storyLead && !author.anonymous
-  );
-  const anonymousAuthorsCount = story.authors.filter(author => author.anonymous).length;
+  const nonLeadAuthors = story.authors.filter(author => !author.storyLead && !author.anonymous);
   const leadAuthor = story.authors.filter(author => author.storyLead)[0];
-  const remainingAuthorsCount = story.authors.length - (nonLeadAuthorsWithLimit + 1);
+  const authorsCount = story.authors.length;
+  const anonymousAuthorsCount = authorsCount - (nonLeadAuthors.length + 1);
 
   return (
     <View key={Math.random()}>
@@ -63,7 +61,7 @@ const Story = ({ story, index, length, navigation }) => {
               <Image style={styles.storyAuthorsImage} source={{ uri: leadAuthor.profilePicture }} />
               {leadAuthor.storyLead && <View style={styles.storyAuthorsSeparator} />}
             </View>
-            {nonLeadAuthorsWithLimit.map(author => (
+            {nonLeadAuthors.map(author => (
               <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
@@ -72,18 +70,9 @@ const Story = ({ story, index, length, navigation }) => {
               </View>
             ))}
 
-            {anonymousAuthorsCount === 0 && (
-              <View style={{ marginLeft: 5 }}>
-                {remainingAuthorsCount > 0 && (
-                  <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
-                    +{remainingAuthorsCount} more people
-                  </Text>
-                )}
-              </View>
-            )}
             {anonymousAuthorsCount > 0 && (
               <View style={{ marginLeft: 5 }}>
-                <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
+                <Text type="bold" style={{ fontSize: 12, color: textColor }}>
                   +{anonymousAuthorsCount} anonymous people
                 </Text>
               </View>
@@ -91,21 +80,33 @@ const Story = ({ story, index, length, navigation }) => {
           </View>
         )}
 
+        {story.status === 'In Progress' && authorsCount > 5 && (
+          <Text type="bold" style={{ fontSize: 12, color: textColor }}>
+            {authorsCount} people
+          </Text>
+        )}
+
+        {authorsCount < 5 && (
+          <Text type="bold" style={{ fontSize: 12, color: textColor }}>
+            {5 - authorsCount} more people to go
+          </Text>
+        )}
+
         <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Text style={{ color: '#5A7582', fontSize: 12 }}>{story.startTime}</Text>
+          <Text style={{ color: textColor, fontSize: 12 }}>{story.startTime}</Text>
           <View
             style={{
               height: 15,
-              borderLeftColor: '#5A7582',
+              borderLeftColor: textColor,
               borderLeftWidth: 1,
               marginHorizontal: 8
             }}
           />
-          <Text style={{ color: '#5A7582', fontSize: 12 }}>{story.status}</Text>
+          <Text style={{ color: textColor, fontSize: 12 }}>{story.status}</Text>
           <View
             style={{
               height: 15,
-              borderLeftColor: '#5A7582',
+              borderLeftColor: textColor,
               borderLeftWidth: 1,
               marginHorizontal: 8
             }}
@@ -119,21 +120,21 @@ const Story = ({ story, index, length, navigation }) => {
               }}>
               {currentGenre.icon(12)}
             </View>
-            <Text style={{ color: '#5A7582', fontSize: 12 }}>{currentGenre.name}</Text>
+            <Text style={{ color: textColor, fontSize: 12 }}>{currentGenre.name}</Text>
           </View>
         </View>
         <View style={{ marginTop: 4 }}>
-          <Text type="bold" style={{ color: '#5A7582' }}>
+          <Text type="bold" style={{ color: textColor }}>
             Initially Proposed Intro
           </Text>
-          <Text style={{ color: '#5A7582', lineHeight: 20 }}>{story.initialIntro}</Text>
+          <Text style={{ color: textColor, lineHeight: 20 }}>{story.initialIntro}</Text>
         </View>
         <View style={{ marginTop: 10 }}>
-          <Text type="bold" style={{ color: '#5A7582' }}>
+          <Text type="bold" style={{ color: textColor }}>
             Elected Intro
           </Text>
           {story.electedIntro && (
-            <Text style={{ color: '#5A7582', lineHeight: 20 }}>{story.electedIntro}</Text>
+            <Text style={{ color: textColor, lineHeight: 20 }}>{story.electedIntro}</Text>
           )}
 
           {!story.electedIntro && (
@@ -154,6 +155,7 @@ Story.propTypes = {
   length: PropTypes.number.isRequired,
   navigation: PropTypes.object.isRequired
 };
+const textColor = '#5A7582';
 
 const styles = StyleSheet.create({
   storyAuthorsContainer: {
@@ -173,7 +175,7 @@ const styles = StyleSheet.create({
     height: 15,
     marginLeft: 5,
     marginRight: 15,
-    borderLeftColor: '#5A7582',
+    borderLeftColor: textColor,
     borderLeftWidth: 1
   },
   storyGenreIconContainer: {
