@@ -8,12 +8,24 @@ const loremText =
   'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea.';
 
 const intros = [
-  { subTitle: 'By Anonymouns 8', elected: true, votes: '9/11', comments: '24' },
-  { subTitle: 'By Anonymouns 4', elected: false, votes: '6/11', comments: '8' },
-  { subTitle: 'By Anonymouns 6', elected: false, votes: '2/11', comments: '22' },
-  { subTitle: 'By Anonymouns 2', elected: false, votes: '1/11', comments: '2' },
-  { subTitle: 'By Anonymouns 1', elected: false, votes: '4/11', comments: '4' },
-  { subTitle: 'By Anonymouns 3', elected: false, votes: '3/11', comments: '5' }
+  [
+    { subTitle: 'By Anonymouns 1', elected: true, votes: '5/8', comments: '3' },
+    { subTitle: 'By Anonymouns 2', elected: false, votes: '2/8', comments: '8' }
+  ],
+  [
+    { subTitle: 'By Marie Clarck', elected: true, votes: '9/11', comments: '24' },
+    { subTitle: 'By Anonymouns 4', elected: false, votes: '6/11', comments: '8' },
+    { subTitle: 'By Anonymouns 6', elected: false, votes: '2/11', comments: '22' },
+    { subTitle: 'By Anonymouns 2', elected: false, votes: '1/11', comments: '2' },
+    { subTitle: 'By Anonymouns 1', elected: false, votes: '4/11', comments: '4' }
+  ],
+  [
+    { subTitle: 'By Anonymouns 8', elected: true, votes: '6/8', comments: '8' },
+    { subTitle: 'By Anonymouns 3', elected: false, votes: '1/8', comments: '18' },
+    { subTitle: 'By Anonymouns 5', elected: false, votes: '2/8', comments: '4' },
+    { subTitle: 'By Anonymouns 2', elected: false, votes: '1/8', comments: '2' },
+    { subTitle: 'By Anonymouns 1', elected: false, votes: '4/8', comments: '14' }
+  ]
 ];
 
 const endings = [
