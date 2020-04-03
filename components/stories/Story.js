@@ -42,7 +42,8 @@ const Story = ({ story, index, length, navigation }) => {
           padding: 15,
           elevation: 5
         }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View
+          style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <View>
             <TouchableOpacity
               onPress={() => {
