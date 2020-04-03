@@ -7,9 +7,10 @@ import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation, statusBarHidden }) => {
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
+      <StatusBar hidden={statusBarHidden} />
       <View style={styles.container}>
         <Image source={SRLogo} style={styles.logo} />
         <View style={styles.headlineContainer}>
@@ -180,8 +181,13 @@ const styles = StyleSheet.create({
   }
 });
 
+LoginScreen.defaultProps = {
+  statusBarHidden: true
+};
+
 LoginScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  statusBarHidden: PropTypes.bool
 };
 
 export default LoginScreen;

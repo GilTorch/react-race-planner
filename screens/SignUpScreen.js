@@ -7,10 +7,10 @@ import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
-const SignupScreen = ({ navigation }) => {
+const SignupScreen = ({ navigation, statusBarHidden }) => {
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
-      <StatusBar hidden />
+      <StatusBar hidden={statusBarHidden} />
       <View style={styles.container}>
         <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
         <View style={styles.headlineContainer}>
@@ -128,8 +128,13 @@ const SignupScreen = ({ navigation }) => {
   );
 };
 
+SignupScreen.defaultProps = {
+  statusBarHidden: true
+};
+
 SignupScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  statusBarHidden: PropTypes.bool
 };
 
 const styles = StyleSheet.create({

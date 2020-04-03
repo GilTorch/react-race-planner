@@ -1,16 +1,17 @@
 import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
+import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 
-const ResetPasswordScreen = ({ navigation }) => {
+const ResetPasswordScreen = ({ navigation, statusBarHidden }) => {
   return (
     <ScrollView
       style={{ backgroundColor: 'white' }}
-      contentContainerStyle={{ backgroundColor: 'white', marginTop: 25 }}>
+      contentContainerStyle={{ backgroundColor: 'white' }}>
+      <StatusBar hidden={statusBarHidden} />
       <View style={styles.container}>
         <View style={styles.logoContainer}>
           <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
@@ -67,8 +68,13 @@ const ResetPasswordScreen = ({ navigation }) => {
   );
 };
 
+ResetPasswordScreen.defaultProps = {
+  statusBarHidden: true
+};
+
 ResetPasswordScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  statusBarHidden: PropTypes.bool
 };
 
 const styles = StyleSheet.create({
