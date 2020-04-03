@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
+import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
@@ -9,7 +9,7 @@ import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
 const LoginScreen = ({ navigation }) => {
   return (
-    <ScrollView contentContainerStyle={{ backgroundColor: 'white', marginTop: 25 }}>
+    <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
         <Image source={SRLogo} style={styles.logo} />
         <View style={styles.headlineContainer}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
+import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
@@ -8,13 +8,11 @@ import Text from '../components/CustomText';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
 const SignupScreen = ({ navigation }) => {
-  // console.error(navigation);
   return (
-    <ScrollView contentContainerStyle={{ backgroundColor: 'white', marginTop: 25 }}>
+    <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
+      <StatusBar hidden />
       <View style={styles.container}>
-        {/* <View style={styles.logoContainer}> */}
         <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
-        {/* </View> */}
         <View style={styles.headlineContainer}>
           <Text type="medium" style={styles.headline}>
             Create an Account
