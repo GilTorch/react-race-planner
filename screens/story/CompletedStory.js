@@ -118,20 +118,53 @@ const CompletedStory = ({ navigation }) => {
         <ProposedSection type="Intro" proposedBlocks={intros[1]} listMode={listMode} />
 
         <SmallAdvertisement />
-        <Round title="Round 1/11" subTitle="By stephanyE289" comments={0} listMode={listMode} />
-        <Round title="Round 2/11" subTitle="By Anonymous 8" comments={3} listMode={listMode} />
-        <Round title="Round 3/11" subTitle="By Marie Clark" comments={3} listMode={listMode} />
-        <Round title="Round 4/11" subTitle="By Anonymous 2" comments={10} listMode={listMode} />
+        <Round
+          round={{ title: 'Round 1/11', subTitle: 'By stephanyE289', comments: 0 }}
+          listMode={listMode}
+        />
+        <Round
+          round={{ title: 'Round 2/11', subTitle: 'By Anonymous 8', comments: 3 }}
+          listMode={listMode}
+        />
+        <Round
+          round={{ title: 'Round 3/11', subTitle: 'By Marie Clark', comments: 3 }}
+          listMode={listMode}
+        />
+        <Round
+          round={{ title: 'Round 4/11', subTitle: 'By Anonymous 2', comments: 10 }}
+          listMode={listMode}
+        />
         <HugeAdvertisement />
-        <Round title="Round 5/11" subTitle="By Anonymous 6" comments={1} listMode={listMode} />
-        <Round title="Round 6/11" subTitle="By Anonymous 5" comments={0} listMode={listMode} />
+        <Round
+          round={{ title: 'Round 5/11', subTitle: 'By Anonymous 6', comments: 1 }}
+          listMode={listMode}
+        />
+        <Round
+          round={{ title: 'Round 6/11', subTitle: 'By Anonymous 5', comments: 0 }}
+          listMode={listMode}
+        />
         <SmallAdvertisement />
-        <Round title="Round 7/11" subTitle="By Jesica Eloi" comments={0} listMode={listMode} />
-        <Round title="Round 8/11" subTitle="By Anonymous 11" comments={0} listMode={listMode} />
-        <Round title="Round 9/11" subTitle="By Anonymous 3" comments={33} listMode={listMode} />
-        <Round title="Round 10/11" subTitle="By Anonymous 4" comments={2} listMode={listMode} />
+        <Round
+          round={{ title: 'Round 7/11', subTitle: 'By Jesica Eloi', comments: 0 }}
+          listMode={listMode}
+        />
+        <Round
+          round={{ title: 'Round 8/11', subTitle: 'By Anonymous 11', comments: 0 }}
+          listMode={listMode}
+        />
+        <Round
+          round={{ title: 'Round 9/11', subTitle: 'By Anonymous 3', comments: 33 }}
+          listMode={listMode}
+        />
+        <Round
+          round={{ title: 'Round 10/11', subTitle: 'By Anonymous 4', comments: 2 }}
+          listMode={listMode}
+        />
         <HugeAdvertisement />
-        <Round title="Round 11/11" subTitle="By Anonymous 9" comments={0} listMode={listMode} />
+        <Round
+          round={{ title: 'Round 11/11', subTitle: 'By Anonymous 9', comments: 0 }}
+          listMode={listMode}
+        />
 
         <ProposedSection type="Ending" proposedBlocks={endings} listMode={listMode} />
       </ScrollView>

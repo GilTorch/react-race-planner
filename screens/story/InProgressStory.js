@@ -86,7 +86,7 @@ const InProgressStory = ({ navigation }) => {
       </Surface>
 
       <ScrollView>
-        <Text type="medium" style={{ ...styles.title, marginBottom: 0 }}>
+        <Text type="medium" style={styles.title}>
           All Proposed Intros
         </Text>
         <Text type="bold-italic" style={{ color: '#ED8A18', marginLeft: 20, marginVertical: 20 }}>
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     color: '#5A7582',
     fontSize: 20,
     marginLeft: 20,
-    marginVertical: 20
+    marginTop: 20
   }
 });
 
