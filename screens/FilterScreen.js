@@ -173,20 +173,27 @@ const FilterScreen = ({ navigation }) => {
               trackStyle={{
                 backgroundColor: '#C8CCCD',
                 height: 10,
-                borderRadius: 5
+                borderRadius: 5,
+                justifyContent: 'center'
               }}
               selectedStyle={{
                 backgroundColor: '#03A2A2',
                 borderRadius: 0
               }}
-              markerStyle={{
-                width: 25,
-                height: 25,
-                marginTop: 6,
-                backgroundColor: 'white',
-                borderWidth: 2,
-                borderColor: '#03A2A2'
-              }}
+              markerOffsetY={5}
+              customMarker={() => (
+                <View
+                  style={{
+                    width: 25,
+                    height: 25,
+                    backgroundColor: 'white',
+                    borderWidth: 2,
+                    borderRadius: 50,
+                    marginTop: 0,
+                    borderColor: '#03A2A2'
+                  }}
+                />
+              )}
               values={[multiSliderValue[0], multiSliderValue[1]]}
               sliderLength={SCREEN_WIDTH - 50}
               onValuesChange={multiSliderValuesChange}
