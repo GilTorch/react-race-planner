@@ -14,8 +14,8 @@ const LoginScreen = ({ navigation }) => {
     >
       <View style={styles.container}>
         <Image testID="logo" source={SRLogo} style={styles.logo} />
-        <View testID="login-text" style={styles.headlineContainer}>
-          <Text type="medium" style={styles.headline}>
+        <View style={styles.headlineContainer}>
+          <Text testID="login-text" type="medium" style={styles.headline}>
             Login
           </Text>
         </View>
@@ -43,6 +43,7 @@ const LoginScreen = ({ navigation }) => {
           <View style={{ marginTop: 10, marginBottom: 10 }}>
             <TouchableOpacity
               onPress={() => navigation.navigate("ResetPassword")}
+              testID="forgot-password-link"
             >
               <Text type="medium" style={styles.goToLoginPageButtonText}>
                 Forgot your password?
@@ -67,7 +68,7 @@ const LoginScreen = ({ navigation }) => {
             <TouchableOpacity
               style={{
                 backgroundColor: "#3ABDFF",
-                ...styles.socialMediaButton
+                ...styles.socialMediaButton,
               }}
             >
               <Entypo name="twitter-with-circle" size={24} color="#fff" />
@@ -75,7 +76,7 @@ const LoginScreen = ({ navigation }) => {
             <TouchableOpacity
               style={{
                 backgroundColor: "#1382D5",
-                ...styles.socialMediaButton
+                ...styles.socialMediaButton,
               }}
             >
               <Entypo name="facebook-with-circle" size={24} color="#fff" />
@@ -83,7 +84,7 @@ const LoginScreen = ({ navigation }) => {
             <TouchableOpacity
               style={{
                 backgroundColor: "#e6e6e6",
-                ...styles.socialMediaButton
+                ...styles.socialMediaButton,
               }}
             >
               <GoogleColorfulIcon />
