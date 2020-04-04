@@ -2,52 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import { AntDesign } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import { SCREEN_WIDTH } from '../utils/dimensions';
-
-const FilterTag = ({ label, selected, onSelect }) => {
-  const backgroundStyle = selected
-    ? { backgroundColor: '#03A2A2' }
-    : { backgroundColor: '#C8CCCD' };
-
-  const textStyle = selected ? { color: '#fff' } : { color: '#5A7582' };
-
-  return (
-    <TouchableOpacity onPress={onSelect}>
-      <View style={{ ...tagStyle.container, ...backgroundStyle }}>
-        <Text type="bold" style={{ ...tagStyle.text, ...textStyle }}>
-          {label}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-FilterTag.propTypes = {
-  label: PropTypes.string.isRequired,
-  selected: PropTypes.bool.isRequired,
-  onSelect: PropTypes.func.isRequired
-};
-
-const tagStyle = StyleSheet.create({
-  container: {
-    marginRight: 10,
-    marginBottom: 15,
-    padding: 5,
-    borderRadius: 4,
-    backgroundColor: '#03A2A2',
-    // height: 33,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  text: {
-    color: 'white',
-    fontSize: 14
-  }
-});
 
 const FilterScreen = ({ navigation }) => {
   const defaultAuthorRange = [5, 20];
@@ -85,20 +43,22 @@ const FilterScreen = ({ navigation }) => {
     setMultiSliderValue(defaultAuthorRange);
     setTagData(defaultTagData);
   };
+  const doneBtn = (
+    <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
+      <Text style={{ color: '#03A2A2', fontSize: 18 }}>Done</Text>
+    </TouchableOpacity>
+  );
+  const resetBtn = (
+    <TouchableOpacity onPress={() => reset()} style={{ marginRight: 20 }}>
+      <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
+    </TouchableOpacity>
+  );
 
   navigation.setOptions({
-    headerLeft: () => (
-      <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
-        <AntDesign style={{ fontSize: 20 }} color="#03A2A2" name="arrowleft" />
-      </TouchableOpacity>
-    ),
+    headerLeft: () => doneBtn,
     headerTitleAlign: 'center',
     title: 'Filter',
-    headerRight: () => (
-      <TouchableOpacity onPress={() => reset()} style={{ marginRight: 20 }}>
-        <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
-      </TouchableOpacity>
-    )
+    headerRight: () => resetBtn
   });
 
   const validCategoryNames = ['status', 'genres'];
@@ -181,14 +141,23 @@ const FilterScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <View style={{ marginTop: 20, flexDirection: 'row', flexWrap: 'wrap' }}>
-            {tagData.status.tags.map((tag, key) => (
-              <FilterTag
-                key={key.toString()}
-                selected={tag.selected}
-                onSelect={() => onSelect('status', tag)}
-                label={tag.label}
-              />
-            ))}
+            {tagData.status.tags.map(tag => {
+              const backgroundStyle = tag.selected
+                ? { backgroundColor: '#03A2A2' }
+                : { backgroundColor: '#C8CCCD' };
+
+              const textStyle = tag.selected ? { color: '#fff' } : { color: '#5A7582' };
+
+              return (
+                <TouchableOpacity key={Math.random()} onPress={() => onSelect('status', tag)}>
+                  <View style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
+                    <Text type="bold" style={{ ...styles.text, ...textStyle }}>
+                      {tag.label}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
         <View>
@@ -201,14 +170,23 @@ const FilterScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <View style={{ marginTop: 20, flexDirection: 'row', flexWrap: 'wrap' }}>
-            {tagData.genres.tags.map((tag, key) => (
-              <FilterTag
-                key={key.toString()}
-                selected={tag.selected}
-                onSelect={() => onSelect('genres', tag)}
-                label={tag.label}
-              />
-            ))}
+            {tagData.genres.tags.map(tag => {
+              const backgroundStyle = tag.selected
+                ? { backgroundColor: '#03A2A2' }
+                : { backgroundColor: '#C8CCCD' };
+
+              const textStyle = tag.selected ? { color: '#fff' } : { color: '#5A7582' };
+
+              return (
+                <TouchableOpacity key={Math.random()} onPress={() => onSelect('genres', tag)}>
+                  <View style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
+                    <Text type="bold" style={{ ...styles.text, ...textStyle }}>
+                      {tag.label}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
         <View>
@@ -283,5 +261,19 @@ const styles = StyleSheet.create({
   filterCategory: {
     color: '#898989',
     fontSize: 18
+  },
+  tagStyleContainer: {
+    marginRight: 10,
+    marginBottom: 15,
+    padding: 5,
+    borderRadius: 4,
+    backgroundColor: '#03A2A2',
+    // height: 33,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  text: {
+    color: 'white',
+    fontSize: 14
   }
 });
