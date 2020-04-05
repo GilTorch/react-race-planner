@@ -186,7 +186,7 @@ Follow those instructions if you're on a Mac:
  6. To run a specific test in a file:
     - put `.only` after the word `it` or `describe`. Example: `it.only(should show welcome text)...`
  7. To run a specific file test, do:
-    - `npm run test:e2e -c -f /filepath/`. Example: ` npm run test:e2e -c -f e2e/CreateAccount.spec.js`
+    - `npm run test:e2e -c -f /filepath/`. Example: `npm run test:e2e -c -f e2e/CreateAccount.spec.js`
     - and scroll up untill you can see the  full output of your tests
  8. Reminder: Expect the UI components to have `testID` instead of using `id`.
  
