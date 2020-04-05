@@ -320,7 +320,7 @@ const HomeScreen = ({ navigation }) => {
         </ScrollView>
 
         <View style={{ paddingLeft: 23 }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.push('ViewAllCategoriesModal')}>
             <Text type="medium" style={{ fontSize: 12, marginTop: 10, color: '#03A2A2' }}>
               View all categories
             </Text>
