@@ -4,7 +4,7 @@ import AuthStack from './AuthStack';
 import BottomTab from './BottomTab';
 
 export default function AppNavigation() {
-  const [currentUser] = useState(null);
+  const [currentUser] = useState(false);
 
   if (!currentUser) {
     return <AuthStack />;

@@ -66,6 +66,7 @@
       "prefer-double"
     ],
     "camelcase": "off",
+    "react/no-multi-comp": "error",
     "no-use-before-define": "off",
     "semi": [
       "error",

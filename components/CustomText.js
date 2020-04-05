@@ -6,7 +6,7 @@ const CustomText = ({ children, type, style }) => {
   const fontType = passedType => {
     switch (passedType) {
       case 'black':
-        return 'Roboto-Black';
+        return 'RobotoBlack';
       case 'black-italic':
         return 'RobotoBlackItalic';
       case 'bold':
