@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, View, StyleSheet, Dimensions, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome, SimpleLineIcons } from '@expo/vector-icons';
-import { Surface } from 'react-native-paper';
+import { Surface, Searchbar } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
@@ -18,6 +18,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [searchBarVisible, setSearchBarVisible] = useState(false);
 
   navigation.setOptions({
     headerShown: false
@@ -85,44 +86,72 @@ const HomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <View
-          style={{
-            marginHorizontal: 20,
-            marginTop: 20,
-            marginBottom: 25,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between'
-          }}>
-          <Text type="medium" style={{ ...styles.headline, fontSize: 18 }}>
-            All Stories
-          </Text>
+        {searchBarVisible ? (
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignSelf: 'stretch'
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              marginTop: 10,
+              marginLeft: 20,
+              marginRight: 20,
+              marginBottom: 10
             }}>
-            <Surface style={{ borderRadius: 5, elevation: 5, padding: 4, marginRight: 10 }}>
-              <TouchableOpacity
-                style={{ flexDirection: 'row', alignItems: 'center' }}
-                onPress={() => {
-                  navigation.push('FilterScreen');
-                }}>
-                <AntDesign color="#5A7582" size={18} name="filter" />
-                <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
-                  FILTER
-                </Text>
+            <View style={{ flex: 8 }}>
+              <Searchbar style={{ height: 40, paddingTop: 3 }} iconColor="#03A2A2" />
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+              <TouchableOpacity onPress={() => setSearchBarVisible(false)}>
+                <AntDesign size={20} name="closecircleo" color="#03A2A2" />
               </TouchableOpacity>
-            </Surface>
-            <Surface style={{ borderRadius: 5, elevation: 5, padding: 5 }}>
-              <TouchableOpacity>
-                <FontAwesome size={14} color="#5A7582" name="search" />
-              </TouchableOpacity>
-            </Surface>
+            </View>
           </View>
-        </View>
-
+        ) : (
+            <View>
+              <View
+                style={{
+                  marginHorizontal: 20,
+                  marginTop: 20,
+                  marginBottom: 25,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                <Text type="medium" style={{ ...styles.headline, fontSize: 18 }}>
+                  All Stories
+              </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignSelf: 'stretch'
+                  }}>
+                  <Surface style={{ borderRadius: 5, elevation: 5, padding: 4, marginRight: 10 }}>
+                    <TouchableOpacity
+                      style={{ flexDirection: 'row', alignItems: 'center' }}
+                      onPress={() => {
+                        navigation.push('FilterScreen');
+                      }}>
+                      <AntDesign color="#5A7582" size={18} name="filter" />
+                      <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
+                        FILTER
+                    </Text>
+                    </TouchableOpacity>
+                  </Surface>
+                  <Surface style={{ borderRadius: 5, elevation: 5, padding: 5 }}>
+                    <TouchableOpacity onPress={() => setSearchBarVisible(true)}>
+                      <FontAwesome size={14} color="#5A7582" name="search" />
+                    </TouchableOpacity>
+                  </Surface>
+                </View>
+              </View>
+            </View>
+          )}
         <View>
           {stories.map((story, index) => (
             <Story
