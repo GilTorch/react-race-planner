@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import HomeStackScreen from './HomeStack';
+import HomeScreen from '../screens/HomeScreen';
 import FilterScreen from '../screens/FilterScreen';
 import UserPartOfStory from '../screens/story/UserPartOfStory';
 import StartedStory from '../screens/story/StartedStory';
@@ -13,11 +13,7 @@ const Stack = createStackNavigator();
 export default function MainStack() {
   return (
     <Stack.Navigator initialRouteName="HomeScreen">
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name="HomeScreen"
-        component={HomeStackScreen}
-      />
+      <Stack.Screen options={{ headerShown: false }} name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="FilterScreen" component={FilterScreen} />
       <Stack.Screen name="UserPartOfStory" component={UserPartOfStory} />
       <Stack.Screen name="InProgressStory" component={InProgressStory} />

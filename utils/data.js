@@ -411,36 +411,43 @@ const stories = [
 
 const genres = [
   {
+    id: 1,
     name: 'Mystery',
     icon: size => <MysteryIcon width={size} />,
     color: '#43A047'
   },
   {
+    id: 2,
     name: 'Action',
     icon: size => <MaterialCommunityIcons size={size} color="white" name="run" />,
     color: '#13BCBC'
   },
   {
+    id: 3,
     name: 'Thriller',
     icon: size => <MaterialCommunityIcons size={size} color="white" name="skull" />,
     color: '#29B6F6'
   },
   {
+    id: 4,
     name: 'Sci-Fi',
     icon: size => <MaterialCommunityIcons size={size} color="white" name="alien" />,
     color: '#5E35B1'
   },
   {
+    id: 5,
     name: 'Romance',
     icon: size => <AntDesign size={size} color="white" name="heart" />,
     color: '#FCF42A'
   },
   {
+    id: 6,
     name: 'Essay',
     icon: size => <AntDesign size={size} color="white" name="book" />,
     color: '#ED8A18'
   },
   {
+    id: 7,
     name: 'Bedtime Stories',
     icon: size => <Ionicons size={size} color="white" name="ios-bed" />,
     color: '#faf'
