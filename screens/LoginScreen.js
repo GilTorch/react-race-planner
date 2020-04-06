@@ -88,7 +88,7 @@ const LoginScreen = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('SignupScreen')}
               style={styles.goToLoginPageButton}>
-              <View>
+              <View testID="go-back-to-signup-page">
                 <Text type="medium" style={styles.goToLoginPageButtonText}>
                   Sign up
                 </Text>
