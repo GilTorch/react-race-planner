@@ -101,7 +101,6 @@ const SignupScreen = ({ navigation }) => {
               <Entypo name="twitter-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
-              testID="facebook-icon-btn"
               style={{
                 backgroundColor: '#1382D5',
                 ...styles.socialMediaButton
