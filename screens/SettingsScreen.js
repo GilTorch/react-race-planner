@@ -52,70 +52,248 @@ const SettingsScreen = ({ navigation }) => {
         </LinearGradient>
       </Surface>
 
-      <ScrollView
-        contentContainerStyle={{
-          paddingBottom: 100
-        }}>
+      <ScrollView>
         <View>
           <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>
             <Text style={styles.headline}>PROFILE INFO</Text>
           </View>
-          <View>
-            <View
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#fff',
+              borderColor: '#C8C7CC',
+              borderWidth: 1,
+              marginBottom: 20,
+              width: 100,
+              height: 100,
+              borderRadius: 100,
+              alignSelf: 'center'
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderWidth: 1,
+              paddingHorizontal: 20
+            }}>
+            <TouchableOpacity
+              onPress={() => ''}
               style={{
-                backgroundColor: 'white',
                 height: 50,
-                paddingLeft: 20,
-                paddingRight: 20,
-                borderColor: '#C8C7CC',
-                borderWidth: 1,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center'
               }}>
               <Text style={{ fontSize: 18 }}>Username</Text>
-              <TouchableOpacity>
-                <View
-                  style={{
-                    width: 120,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}>
-                  <Text style={{ fontSize: 18, color: '#898989' }}>Claim Yours</Text>
-                  <MaterialIcons
-                    style={{ color: '#898989' }}
-                    size={22}
-                    name="keyboard-arrow-right"
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={{ height: 70, alignItems: 'center', justifyContent: 'center' }}>
-              <View style={{ width: '80%' }}>
-                <Text style={{ color: '#B8B8BA' }}>
-                  Create a public Username. Having a username will make It easier for other authors
-                  to find you in the future.
-                </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                <Text style={{ fontSize: 18, color: '#898989' }}>Claim Yours</Text>
+                <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
               </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ height: 70, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ width: '80%' }}>
+              <Text style={{ color: '#B8B8BA' }}>
+                Create a public Username. Having a username will make It easier for other authors to
+                find you in the future.
+              </Text>
             </View>
           </View>
+          <View
+            style={{
+              paddingLeft: 20,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderWidth: 1
+            }}>
+            <TouchableOpacity onPress={() => ''} style={styles.profileField}>
+              <Text style={{ fontSize: 18 }}>First Name</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                <Text style={{ fontSize: 18, color: '#898989' }}>John</Text>
+                <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
+              </View>
+            </TouchableOpacity>
+            <Divider />
+            <TouchableOpacity onPress={() => ''} style={styles.profileField}>
+              <Text style={{ fontSize: 18 }}>Last Name</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                <Text style={{ fontSize: 18, color: '#898989' }}>Doe</Text>
+                <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
+              </View>
+            </TouchableOpacity>
+            <Divider />
+            <TouchableOpacity onPress={() => ''} style={styles.profileField}>
+              <Text style={{ fontSize: 18 }}>Gender</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                <Text style={{ fontSize: 18, color: '#898989' }}>Male</Text>
+                <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
+              </View>
+            </TouchableOpacity>
+            <Divider />
+            <TouchableOpacity onPress={() => ''} style={styles.profileField}>
+              <Text style={{ fontSize: 18 }}>Date of Birth</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                <Text style={{ fontSize: 18, color: '#898989' }}>Claim Yours</Text>
+                <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
+              </View>
+            </TouchableOpacity>
+            <Divider />
+            <TouchableOpacity onPress={() => ''} style={styles.profileField}>
+              <Text style={{ fontSize: 18 }}>Email</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                <Text style={{ fontSize: 18, color: '#898989' }}>johndoe@email.com</Text>
+                <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
+              </View>
+            </TouchableOpacity>
+            <Divider />
+            <TouchableOpacity
+              onPress={() => ''}
+              style={{ ...styles.profileField, paddingRight: 30 }}>
+              <Text style={{ fontSize: 18 }}>Phones</Text>
+              <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
+            </TouchableOpacity>
+            <Divider />
+            <TouchableOpacity
+              onPress={() => ''}
+              style={{ ...styles.profileField, paddingRight: 30 }}>
+              <Text style={{ fontSize: 18 }}>Address</Text>
+              <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
+            </TouchableOpacity>
+          </View>
         </View>
+
+        <View>
+          <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>
+            <Text style={styles.headline}>SECURITY</Text>
+          </View>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderWidth: 1,
+              paddingHorizontal: 20
+            }}>
+            <TouchableOpacity
+              onPress={() => ''}
+              style={{
+                height: 50,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingRight: 10,
+                alignItems: 'center'
+              }}>
+              <Text style={{ fontSize: 18 }}>Update Password</Text>
+              <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
+            </TouchableOpacity>
+            <Divider inset />
+            <TouchableOpacity
+              onPress={() => ''}
+              style={{
+                height: 50,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+              <Text style={{ fontSize: 18 }}>Default Privacy</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                <Text style={{ fontSize: 18, color: '#898989' }}>username</Text>
+                <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View>
+          <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>
+            <Text style={styles.headline}>SOCIAL ACCOUNT</Text>
+          </View>
+          <View style={{ backgroundColor: 'white' }}>
+            <TouchableOpacity
+              style={{
+                height: 50,
+                borderColor: '#C8C7CC',
+                borderTopWidth: 1,
+                paddingHorizontal: 20,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                <FontAwesome name="facebook" size={25} />
+                <Text style={{ fontSize: 18 }}>acebook</Text>
+              </View>
+              <Text style={{ fontSize: 18 }}>Linked</Text>
+            </TouchableOpacity>
+            <Divider style={{ marginLeft: 20 }} />
+            <TouchableOpacity
+              style={{
+                height: 50,
+                borderColor: '#C8C7CC',
+                borderBottomWidth: 1,
+                paddingLeft: 20,
+                paddingRight: 20,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+              <TouchableOpacity
+                style={{
+                  // flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                <FontAwesome name="google" size={25} />
+                <Text style={{ fontSize: 18 }}>oogle</Text>
+              </TouchableOpacity>
+              <Text style={{ fontSize: 18 }}>Not Linked</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View>
           <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>
             <Text style={styles.headline}>CONTACT US</Text>
           </View>
           <View
             style={{
-              backgroundColor: 'white',
               height: 50,
-              paddingLeft: 20,
-              paddingRight: 20,
+              backgroundColor: 'white',
               borderColor: '#C8C7CC',
-              borderWidth: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center'
+              borderWidth: 1
             }}>
             <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <Text style={{ fontSize: 18 }}>Help & Support</Text>
@@ -123,22 +301,18 @@ const SettingsScreen = ({ navigation }) => {
           </View>
           <View
             style={{
-              backgroundColor: 'white',
               height: 50,
-              paddingLeft: 20,
-              paddingRight: 20,
+              backgroundColor: 'white',
               borderColor: '#C8C7CC',
               borderWidth: 1,
-              marginTop: 30,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center'
+              marginTop: 30
             }}>
             <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <Text style={{ fontSize: 18 }}>Rate Us</Text>
             </TouchableOpacity>
           </View>
         </View>
+
         <View>
           <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>
             <Text style={styles.headline}>LEGAL</Text>
@@ -146,10 +320,9 @@ const SettingsScreen = ({ navigation }) => {
           <View
             style={{
               backgroundColor: 'white',
-              paddingLeft: 20,
-              paddingRight: 20,
               borderColor: '#C8C7CC',
-              borderWidth: 1
+              borderWidth: 1,
+              paddingHorizontal: 20
             }}>
             <TouchableOpacity>
               <View
@@ -161,9 +334,7 @@ const SettingsScreen = ({ navigation }) => {
                 }}>
                 <Text style={{ fontSize: 18 }}>Privacy Policy</Text>
                 <View>
-                  <View>
-                    <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
-                  </View>
+                  <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
                 </View>
               </View>
             </TouchableOpacity>
@@ -187,8 +358,7 @@ const SettingsScreen = ({ navigation }) => {
               <View
                 style={{
                   flexDirection: 'row',
-                  marginTop: 20,
-                  marginBottom: 20,
+                  marginVertical: 20,
                   justifyContent: 'space-between',
                   alignItems: 'center'
                 }}>
@@ -202,42 +372,36 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
+
         <View
           style={{
-            backgroundColor: 'white',
             height: 50,
-            paddingLeft: 20,
-            paddingRight: 20,
+            backgroundColor: 'white',
             borderColor: '#C8C7CC',
             borderWidth: 1,
-            marginTop: 30,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
+            marginTop: 30
           }}>
           <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontSize: 18 }}>Log Out</Text>
           </TouchableOpacity>
         </View>
+
         <View style={{ marginTop: 40 }}>
           <Image style={styles.logo} source={Logo} />
         </View>
+
         <View style={{ height: 60, justifyContent: 'center', alignItems: 'center' }}>
           <View>
             <Text style={{ fontSize: 18 }}>Version {version}</Text>
           </View>
         </View>
+
         <View
           style={{
-            backgroundColor: 'white',
             height: 50,
-            paddingLeft: 20,
-            paddingRight: 20,
+            backgroundColor: '#fff',
             borderColor: '#C8C7CC',
             borderWidth: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
             marginBottom: 40
           }}>
           <TouchableOpacity
@@ -338,6 +502,18 @@ const styles = {
     width: '100%',
     height: 200,
     resizeMode: 'stretch'
+  },
+  btnSurface: {
+    elevation: 4,
+    marginVertical: 10,
+    borderRadius: 5
+  },
+  profileField: {
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 20,
+    alignItems: 'center'
   }
 };
 
