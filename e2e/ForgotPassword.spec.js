@@ -1,5 +1,4 @@
 const casual = require("casual");
-const signInPage = require("./screens/SignUpPage");
 const passwordForgottenPage = require("./screens/PasswordForgottenPage");
 const confirmResetPasswordPage = require("./screens/ConfirmResetPasswordPage");
 

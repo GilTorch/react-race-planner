@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
-import { Text } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from "react";
+import { Text } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { FontAwesome5 } from '@expo/vector-icons';
-import MainStack from './MainStack';
-import WritingStack from './WritingStack';
-import SettingsStack from './SettingsStack';
+import { FontAwesome5 } from "@expo/vector-icons";
+import MainStack from "./MainStack";
+import WritingStack from "./WritingStack";
+import SettingsStack from "./SettingsStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,8 +15,9 @@ export default function BottomTab() {
     <Tab.Navigator
       initialRouteName="Home"
       tabBarOptions={{
-        labelPosition: 'beside-icon'
-      }}>
+        labelPosition: "beside-icon",
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={MainStack}
@@ -26,12 +27,14 @@ export default function BottomTab() {
 
             return (
               <Text
+               testID="home"
                 style={{
                   paddingLeft: 15,
-                  textTransform: 'uppercase',
-                  fontWeight: 'bold',
-                  color: '#03A2A2'
-                }}>
+                  textTransform: "uppercase",
+                  fontWeight: "bold",
+                  color: "#03A2A2",
+                }}
+              >
                 Home
               </Text>
             );
@@ -40,11 +43,11 @@ export default function BottomTab() {
             return (
               <FontAwesome5
                 style={{ fontSize: 20 }}
-                color={focused ? '#03A2A2' : '#707070'}
+                color={focused ? "#03A2A2" : "#707070"}
                 name="home"
               />
             );
-          }
+          },
         }}
       />
 
@@ -57,12 +60,14 @@ export default function BottomTab() {
 
             return (
               <Text
+                textID="writing"
                 style={{
                   paddingLeft: 15,
-                  textTransform: 'uppercase',
-                  fontWeight: 'bold',
-                  color: '#03A2A2'
-                }}>
+                  textTransform: "uppercase",
+                  fontWeight: "bold",
+                  color: "#03A2A2",
+                }}
+              >
                 Writing
               </Text>
             );
@@ -71,11 +76,11 @@ export default function BottomTab() {
             return (
               <FontAwesome5
                 style={{ fontSize: 20 }}
-                color={focused ? '#03A2A2' : '#707070'}
+                color={focused ? "#03A2A2" : "#707070"}
                 name="pen-fancy"
               />
             );
-          }
+          },
         }}
       />
 
@@ -88,12 +93,14 @@ export default function BottomTab() {
 
             return (
               <Text
+                textID="settings"
                 style={{
                   paddingLeft: 15,
-                  textTransform: 'uppercase',
-                  fontWeight: 'bold',
-                  color: '#03A2A2'
-                }}>
+                  textTransform: "uppercase",
+                  fontWeight: "bold",
+                  color: "#03A2A2",
+                }}
+              >
                 Settings
               </Text>
             );
@@ -102,11 +109,11 @@ export default function BottomTab() {
             return (
               <FontAwesome5
                 style={{ fontSize: 20 }}
-                color={focused ? '#03A2A2' : '#707070'}
+                color={focused ? "#03A2A2" : "#707070"}
                 name="cog"
               />
             );
-          }
+          },
         }}
       />
     </Tab.Navigator>
