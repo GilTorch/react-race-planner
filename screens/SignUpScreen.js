@@ -1,27 +1,19 @@
-import React from "react";
-import { View, ScrollView, Image, TextInput, StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Entypo } from "@expo/vector-icons";
-import PropTypes from "prop-types";
-import SRLogo from "../assets/images/scriptorerum-logo.png";
-import Text from "../components/CustomText";
-import GoogleColorfulIcon from "../components/GoogleColorfulIcon";
+import React from 'react';
+import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Entypo } from '@expo/vector-icons';
+import PropTypes from 'prop-types';
+import SRLogo from '../assets/images/scriptorerum-logo.png';
+import Text from '../components/CustomText';
+import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
 const SignupScreen = ({ navigation }) => {
   // console.error(navigation);
   return (
-    <ScrollView
-      contentContainerStyle={{ backgroundColor: "white", marginTop: 25 }}
-
-    >
+    <ScrollView contentContainerStyle={{ backgroundColor: 'white', marginTop: 25 }}>
       <View style={styles.container}>
         {/* <View style={styles.logoContainer}> */}
-        <Image
-          testID="logo"
-          source={SRLogo}
-          resizeMode="contain"
-          style={styles.logo}
-        />
+        <Image testID="logo" source={SRLogo} resizeMode="contain" style={styles.logo} />
         {/* </View> */}
         <View testID="create-account-text" style={styles.headlineContainer}>
           <Text type="medium" style={styles.headline}>
@@ -81,11 +73,7 @@ const SignupScreen = ({ navigation }) => {
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
-              <Text
-                testID="password-confirmation"
-                type="medium"
-                style={styles.label}
-              >
+              <Text testID="password-confirmation" type="medium" style={styles.label}>
                 Confirm Password
               </Text>
             </View>
@@ -99,10 +87,7 @@ const SignupScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
           <View style={styles.loginWithSocialMediaTextContainer}>
-            <Text
-              type="medium"
-              style={{ color: "#7F8FA4", fontWeight: "bold" }}
-            >
+            <Text type="medium" style={{ color: '#7F8FA4', fontWeight: 'bold' }}>
               Or login via social networks
             </Text>
           </View>
@@ -110,39 +95,33 @@ const SignupScreen = ({ navigation }) => {
             <TouchableOpacity
               testID="twitter-icon-btn"
               style={{
-                backgroundColor: "#3ABDFF",
+                backgroundColor: '#3ABDFF',
                 ...styles.socialMediaButton
-              }}
-            >
+              }}>
               <Entypo name="twitter-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
               testID="facebook-icon-btn"
               style={{
-                backgroundColor: "#1382D5",
+                backgroundColor: '#1382D5',
                 ...styles.socialMediaButton
-              }}
-            >
+              }}>
               <Entypo name="facebook-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
               testID="google-icon-btn"
               style={{
-                backgroundColor: "#e6e6e6",
+                backgroundColor: '#e6e6e6',
                 ...styles.socialMediaButton
-              }}
-            >
+              }}>
               <GoogleColorfulIcon />
             </TouchableOpacity>
           </View>
-          <View
-            style={{ marginTop: 20, marginBottom: 40, flexDirection: "row" }}
-          >
-            <Text style={{ color: "#7F8FA4" }}>Already a member? </Text>
+          <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
+            <Text style={{ color: '#7F8FA4' }}>Already a member? </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Login")}
-              style={styles.goToLoginPageButton}
-            >
+              onPress={() => navigation.navigate('Login')}
+              style={styles.goToLoginPageButton}>
               <View testID="go-to-loggin-page">
                 <Text style={styles.goToLoginPageButtonText}>Log in</Text>
               </View>

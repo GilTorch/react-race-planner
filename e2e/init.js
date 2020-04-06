@@ -1,8 +1,10 @@
-const detox = require("detox");
-const config = require("../package.json").detox;
-const adapter = require("detox/runners/jest/adapter");
-const specReporter = require("detox/runners/jest/specReporter");
-const { reloadApp } = require("detox-expo-helpers");
+/* eslint-disable no-undef */
+const detox = require('detox');
+// eslint-disable-next-line import/order
+const config = require('../package.json').detox;
+const adapter = require('detox/runners/jest/adapter');
+const specReporter = require('detox/runners/jest/specReporter');
+const { reloadApp } = require('detox-expo-helpers');
 
 // Set the default timeout
 jest.setTimeout(120000);
@@ -27,5 +29,3 @@ afterAll(async () => {
   await adapter.afterAll();
   await detox.cleanup();
 });
-
-

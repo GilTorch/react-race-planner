@@ -1,9 +1,9 @@
 {
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 16667,
-  "expoServerNgrokUrl": "https://fi-836.anonymous.sr-mobile.exp.direct",
-  "packagerNgrokUrl": "https://packager.fi-836.anonymous.sr-mobile.exp.direct",
-  "ngrokPid": 16684,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "devToolsPort": 19002
 }

@@ -1,23 +1,21 @@
+/* eslint-disable no-undef */
 const casual = require('casual');
-const signInPage = require('./screens/SignInPage')
+const signInPage = require('./screens/SignInPage');
 
 describe('Login', () => {
-  let userName = casual.username;
+  const userName = casual.username;
   const config = {
     username: userName,
-    password: 'password',
+    password: 'password'
   };
 
   describe('_login', () => {
-    it("Should ensure logo is visible on screen", async () => {
-      await expect(element(by.id("logo"))).toBeVisible();
+    it('Should ensure logo is visible on screen', async () => {
+      await expect(element(by.id('logo'))).toBeVisible();
     });
-    
+
     it('Should ensure valid credential existence', async () => {
-            await signInPage.signIn(config);
+      await signInPage.signIn(config);
     });
-  })
-})
-
-
-
+  });
+});
