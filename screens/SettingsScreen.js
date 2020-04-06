@@ -1,10 +1,10 @@
 import React from 'react';
 import { ScrollView, Image, View, TouchableOpacity, StatusBar } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
 import Constants from 'expo-constants';
-import { Surface } from 'react-native-paper';
+import { Surface, Portal, Modal, Divider, Button, TextInput } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import Text from '../components/CustomText';
@@ -19,6 +19,11 @@ const SettingsScreen = ({ navigation }) => {
   navigation.setOptions({
     headerShown: false
   });
+
+  const [visible, setVisible] = React.useState(false);
+
+  const showDeleteModal = () => setVisible(true);
+  const hideDeleteModal = () => setVisible(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -235,10 +240,79 @@ const SettingsScreen = ({ navigation }) => {
             alignItems: 'center',
             marginBottom: 40
           }}>
-          <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ fontSize: 18 }}>Delete Account</Text>
+          <TouchableOpacity
+            onPress={() => showDeleteModal()}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ fontSize: 18, color: '#f44336' }}>Delete Account</Text>
           </TouchableOpacity>
         </View>
+
+        <Portal>
+          <Modal
+            dismissable={false}
+            visible={visible}
+            contentContainerStyle={{
+              backgroundColor: 'white',
+              borderRadius: 10,
+              marginBottom: 20,
+              height: '30%',
+              width: '90%',
+              alignSelf: 'center'
+            }}
+            onDismiss={() => hideDeleteModal()}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                margin: 10
+              }}>
+              <FontAwesome name="trash" size={16} color="#5A7582" />
+              <Text type="bold" style={{ fontSize: 18, color: '#5A7582' }}>
+                {' '}
+                Delete Account !
+              </Text>
+              <TouchableOpacity style={{ marginLeft: 'auto' }} onPress={() => hideDeleteModal()}>
+                <Text type="bold" style={{ fontSize: 18, color: '#5A7582' }}>
+                  X
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Divider />
+            <View style={{ flex: 1, justifyContent: 'space-around' }}>
+              <TextInput
+                placeholder="Enter your username"
+                style={{
+                  height: 35,
+                  width: '90%',
+                  alignSelf: 'center',
+                  marginTop: 10,
+                  backgroundColor: 'white'
+                }}
+              />
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-evenly'
+                }}>
+                <Surface style={styles.btnSurface}>
+                  <Button onPress={() => ''} style={{ backgroundColor: '#f44336' }}>
+                    <Text type="bold" style={{ color: '#fff' }}>
+                      Delete
+                    </Text>
+                  </Button>
+                </Surface>
+                <Surface style={styles.btnSurface}>
+                  <Button onPress={() => hideDeleteModal()} style={{ backgroundColor: '#A39F9F' }}>
+                    <Text type="bold" style={{ color: '#FFF' }}>
+                      Cancel
+                    </Text>
+                  </Button>
+                </Surface>
+              </View>
+            </View>
+          </Modal>
+        </Portal>
       </ScrollView>
     </View>
   );
