@@ -26,7 +26,7 @@ class SignInPage {
   }
 
   get getBackToLoginPage() {
-    return element(by.id('get-back-to-login-page'));
+    return element(by.id('return-to-login-page'));
   }
 }
 
