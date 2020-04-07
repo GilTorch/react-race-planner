@@ -15,7 +15,8 @@ export default function BottomTab() {
     <Tab.Navigator
       initialRouteName="Home"
       tabBarOptions={{
-        labelPosition: 'beside-icon'
+        labelPosition: 'beside-icon',
+        keyboardHidesTabBar: true
       }}>
       <Tab.Screen
         name="Home"
