@@ -260,7 +260,7 @@ const SettingsScreen = ({ navigation }) => {
               backgroundColor: 'white',
               borderColor: '#C8C7CC',
               borderWidth: 1,
-              paddingHorizontal: 20
+              paddingLeft: 20
             }}>
             <TouchableOpacity
               onPress={() => navigation.navigate('EditSettingsScreen', { key: 'password' })}
@@ -268,13 +268,13 @@ const SettingsScreen = ({ navigation }) => {
                 height: 50,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                paddingRight: 10,
+                paddingRight: 30,
                 alignItems: 'center'
               }}>
               <Text style={{ fontSize: 18 }}>Update Password</Text>
               <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
             </TouchableOpacity>
-            <Divider inset />
+            <Divider />
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', { key: 'privacy', value: 'username' })
@@ -283,6 +283,7 @@ const SettingsScreen = ({ navigation }) => {
                 height: 50,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                paddingRight: 20,
                 alignItems: 'center'
               }}>
               <Text style={{ fontSize: 18 }}>Default Privacy</Text>
