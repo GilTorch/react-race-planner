@@ -317,6 +317,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
                 <FontAwesome name="check" size={18} color="#03A2A2" />
               )}
             </TouchableOpacity>
+            <Divider />
             <TouchableOpacity onPress={() => setPrivacy('anonymous')} style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Anonymous</Text>
               {privacy === 'anonymous' && <FontAwesome name="check" size={18} color="#03A2A2" />}
