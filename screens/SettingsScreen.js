@@ -1,11 +1,13 @@
 import React from 'react';
-import { ScrollView, Image, View, TouchableOpacity, StatusBar } from 'react-native';
+import { ScrollView, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import { Surface, Portal, Modal, Divider, Button, TextInput } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import * as ImagePicker from 'expo-image-picker';
 
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
@@ -21,6 +23,39 @@ const SettingsScreen = ({ navigation }) => {
   });
 
   const [visible, setVisible] = React.useState(false);
+  const [date, setDate] = React.useState(new Date(687041730000));
+  const [show, setShow] = React.useState(false);
+  const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+
+  const openImagePickerAsync = async () => {
+    const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      return;
+    }
+
+    await ImagePicker.launchImageLibraryAsync();
+  };
+
+  const onChange = selectedDate => {
+    let currentDate;
+    if (Platform.OS === 'ios') {
+      currentDate = new Date(selectedDate.nativeEvent.timestamp);
+    } else {
+      currentDate =
+        selectedDate.type === 'set' ? new Date(selectedDate.nativeEvent.timestamp) : date;
+    }
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
+
+  const showDatepicker = () => {
+    if (show === true) {
+      setShow(false);
+    } else {
+      setShow(true);
+    }
+  };
 
   const showDeleteModal = () => setVisible(true);
   const hideDeleteModal = () => setVisible(false);
@@ -58,6 +93,7 @@ const SettingsScreen = ({ navigation }) => {
             <Text style={styles.headline}>PROFILE INFO</Text>
           </View>
           <TouchableOpacity
+            onPress={openImagePickerAsync}
             style={{
               backgroundColor: '#fff',
               borderColor: '#C8C7CC',
@@ -77,7 +113,7 @@ const SettingsScreen = ({ navigation }) => {
               paddingHorizontal: 20
             }}>
             <TouchableOpacity
-              onPress={() => ''}
+              onPress={() => navigation.navigate('EditSettingsScreen', { key: 'username' })}
               style={{
                 height: 50,
                 flexDirection: 'row',
@@ -110,7 +146,11 @@ const SettingsScreen = ({ navigation }) => {
               borderColor: '#C8C7CC',
               borderWidth: 1
             }}>
-            <TouchableOpacity onPress={() => ''} style={styles.profileField}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('EditSettingsScreen', { key: 'firstname', value: 'John' })
+              }
+              style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>First Name</Text>
               <View
                 style={{
@@ -122,7 +162,11 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity onPress={() => ''} style={styles.profileField}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('EditSettingsScreen', { key: 'lastname', value: 'Doe' })
+              }
+              style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Last Name</Text>
               <View
                 style={{
@@ -134,7 +178,11 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity onPress={() => ''} style={styles.profileField}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('EditSettingsScreen', { key: 'gender', value: 'Male' })
+              }
+              style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Gender</Text>
               <View
                 style={{
@@ -146,19 +194,36 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity onPress={() => ''} style={styles.profileField}>
+            <TouchableOpacity onPress={() => showDatepicker()} style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Date of Birth</Text>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center'
                 }}>
-                <Text style={{ fontSize: 18, color: '#898989' }}>Claim Yours</Text>
+                <Text style={{ fontSize: 18, color: '#898989' }}>{birthDate}</Text>
                 <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
               </View>
             </TouchableOpacity>
+            {show && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                mode="date"
+                maximumDate={new Date(2010, 1, 1)}
+                display="default"
+                onChange={onChange}
+              />
+            )}
             <Divider />
-            <TouchableOpacity onPress={() => ''} style={styles.profileField}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'email',
+                  value: 'johndoe@email.com'
+                })
+              }
+              style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Email</Text>
               <View
                 style={{
@@ -171,14 +236,14 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
-              onPress={() => ''}
+              onPress={() => navigation.navigate('EditSettingsScreen', { key: 'phones' })}
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Phones</Text>
               <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
-              onPress={() => ''}
+              onPress={() => navigation.navigate('EditSettingsScreen', { key: 'address' })}
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Address</Text>
               <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
@@ -198,7 +263,7 @@ const SettingsScreen = ({ navigation }) => {
               paddingHorizontal: 20
             }}>
             <TouchableOpacity
-              onPress={() => ''}
+              onPress={() => navigation.navigate('EditSettingsScreen', { key: 'password' })}
               style={{
                 height: 50,
                 flexDirection: 'row',
@@ -211,7 +276,9 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider inset />
             <TouchableOpacity
-              onPress={() => ''}
+              onPress={() =>
+                navigation.navigate('EditSettingsScreen', { key: 'privacy', value: 'username' })
+              }
               style={{
                 height: 50,
                 flexDirection: 'row',
