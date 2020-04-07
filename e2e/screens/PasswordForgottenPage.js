@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 /* eslint-disable class-methods-use-this */
-
 class PasswordForgottenPage {
   async enterLoginEmail(config) {
     await element(by.id('add-email-address-to-reset')).typeText(config.email);

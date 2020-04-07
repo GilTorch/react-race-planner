@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable class-methods-use-this */
 const signUpPage = require('./SignUpPage');
-// const signInPage = require('./SignUpPage');
 
 class NavigationBar {
   async tapToGoOnLogingPage() {

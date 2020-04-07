@@ -22,10 +22,12 @@ describe('Navigation bar', () => {
   });
 
   it('_should check that `writing` icon to not be visible in bottom tab', async () => {
+    // await expect(navigationBar.writing).toExist();
     await expect(navigationBar.writing).toBeNotVisible();
   });
 
   it('_should check that `settings` icon to not be visible in bottom tab', async () => {
+    // await expect(navigationBar.settings).toExist();
     await expect(navigationBar.settings).toBeNotVisible();
   });
 });
