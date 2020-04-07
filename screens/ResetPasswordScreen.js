@@ -9,9 +9,8 @@ import SRLogo from '../assets/images/scriptorerum-logo.png';
 const ResetPasswordScreen = ({ navigation }) => {
   return (
     <ScrollView
-      style={{ backgroundColor: "white" }}
-      contentContainerStyle={{ backgroundColor: "white", marginTop: 25 }}
-    >
+      style={{ backgroundColor: 'white' }}
+      contentContainerStyle={{ backgroundColor: 'white', marginTop: 25 }}>
       <View style={styles.container}>
         <View style={styles.logoContainer}>
           <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
@@ -23,22 +22,19 @@ const ResetPasswordScreen = ({ navigation }) => {
         </View>
         <View
           style={{
-            width: "60%",
+            width: '60%',
             marginTop: 20,
-            marginBottom: 20,
-          }}
-        >
+            marginBottom: 20
+          }}>
           <Text
             type="medium"
             style={{
               fontSize: 11,
               lineHeight: 16,
-              textAlign: "center",
-              color: "#7F8FA4",
-            }}
-          >
-            We will send you a One Time Password via email for you to be able to
-            reset your password
+              textAlign: 'center',
+              color: '#7F8FA4'
+            }}>
+            We will send you a One Time Password via email for you to be able to reset your password
           </Text>
         </View>
         <View style={styles.form}>
@@ -47,30 +43,21 @@ const ResetPasswordScreen = ({ navigation }) => {
               <Text style={styles.label}>Username or Email</Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput
-                testID="add-email-address-to-reset"
-                style={styles.input}
-              />
+              <TextInput testID="add-email-address-to-reset" style={styles.input} />
             </View>
           </View>
           <TouchableOpacity
             testID="reset-password-button"
             style={styles.submitButton}
-            onPress={() => navigation.navigate("ResetPasswordTwoScreen")}
-          >
-            <Text style={styles.submitButtonText}>
-              Send Password Reset Code
-            </Text>
+            onPress={() => navigation.navigate('ResetPasswordTwoScreen')}>
+            <Text style={styles.submitButtonText}>Send Password Reset Code</Text>
           </TouchableOpacity>
-          <View
-            style={{ marginTop: 20, marginBottom: 40, flexDirection: "row" }}
-          >
-            <Text style={{ color: "#7F8FA4" }}>Do you remember it now? </Text>
+          <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
+            <Text style={{ color: '#7F8FA4' }}>Do you remember it now? </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Login")}
-              style={styles.goToLoginPageButton}
-            >
-              <View testID="get-back-to-login-page">
+              onPress={() => navigation.navigate('Login')}
+              style={styles.goToLoginPageButton}>
+              <View testID="return-to-login-page">
                 <Text style={styles.goToLoginPageButtonText}>Log in</Text>
               </View>
             </TouchableOpacity>
