@@ -23,7 +23,9 @@ const HomeScreen = ({ navigation }) => {
     }, [])
   );
 
-  const inprogressStories = stories.filter(story => story.status === 'In Progress');
+  const inprogressStories = stories.filter(
+    story => story.status === 'In Progress' || story.status === 'Waiting for players'
+  );
 
   return (
     <View style={styles.container}>

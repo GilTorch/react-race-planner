@@ -23,6 +23,8 @@ const Story = ({ story, index, length, navigation }) => {
   if (length === 1) {
     ShowEndAdvertisement = <SmallAdvertisement />;
   }
+  const inprogress = story.status === 'In Progress' || story.status === 'Waiting for players';
+  const status = inprogress ? 'In Progress' : 'Completed';
   const currentGenre = genres.filter(genre => genre.name === story.genre)[0];
   const nonLeadAuthors = story.authors.filter(author => !author.storyLead && !author.anonymous);
   const leadAuthor = story.authors.filter(author => author.storyLead)[0];
@@ -45,7 +47,7 @@ const Story = ({ story, index, length, navigation }) => {
           <View>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate(story.screenName);
+                navigation.navigate('StoryScreen', { storyId: story.id });
               }}>
               <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
                 {story.title}
@@ -55,7 +57,7 @@ const Story = ({ story, index, length, navigation }) => {
           <BoxMenu parentType="story" />
         </View>
 
-        {story.status === 'Completed' && (
+        {status === 'Completed' && (
           <View style={styles.storyAuthorsContainer}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image style={styles.storyAuthorsImage} source={{ uri: leadAuthor.profilePicture }} />
@@ -80,7 +82,7 @@ const Story = ({ story, index, length, navigation }) => {
           </View>
         )}
 
-        {story.status === 'In Progress' && authorsCount > 5 && (
+        {status === 'In Progress' && authorsCount > 5 && (
           <Text type="bold" style={{ fontSize: 12, color: textColor }}>
             {authorsCount} people
           </Text>
@@ -102,7 +104,7 @@ const Story = ({ story, index, length, navigation }) => {
               marginHorizontal: 8
             }}
           />
-          <Text style={{ color: textColor, fontSize: 12 }}>{story.status}</Text>
+          <Text style={{ color: textColor, fontSize: 12 }}>{status}</Text>
           <View
             style={{
               height: 15,
