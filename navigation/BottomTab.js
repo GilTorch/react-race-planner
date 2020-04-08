@@ -27,7 +27,8 @@ export default function BottomTab() {
             const label = (
               <Text
                 style={{
-                  paddingLeft: 15,
+                  paddingLeft: 10,
+                  fontSize: 13,
                   textTransform: 'uppercase',
                   fontWeight: 'bold',
                   color: '#03A2A2'
