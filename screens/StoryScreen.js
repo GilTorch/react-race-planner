@@ -11,11 +11,11 @@ import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
 import { SCREEN_WIDTH } from '../utils/dimensions';
-import { stories } from '../utils/data2';
+import { stories } from '../utils/data';
 
 const StoryScreen = ({ navigation, route }) => {
   const { storyId } = route.params;
-  const story = stories.filter(st => st.id === storyId)[0]; // || stories[3];
+  const story = stories.filter(st => st.id === storyId)[0] || stories[3];
   const masterAuthor = story.authors.filter(author => author.storyLead)[0];
   const authorsCount = story.authors.length;
   const missingAuthorsCount = 5 - authorsCount;
