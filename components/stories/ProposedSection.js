@@ -7,22 +7,21 @@ import PropTypes from 'prop-types';
 import Text from '../CustomText';
 import { loremText } from '../../utils/data';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
-import Round from './Round';
 import BoxMenu from './BoxMenu';
 
 const ProposedSection = ({ type, proposedBlocks, listMode }) => {
   const { length } = proposedBlocks;
   const listElected = (
-    <Round
-      round={{ title: '', subTitle: '', comments: 0 }}
-      listMode={listMode}
-      style={{ marginTop: 20 }}
-    />
+    <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
+      <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
+        {loremText}
+      </Text>
+    </View>
   );
 
   const cardsSection = (
     <>
-      <Text type="medium" style={styles.title}>
+      <Text type="medium" style={{ ...styles.title, marginTop: type === 'Ending' ? 0 : 20 }}>
         All Proposed {type}s ({length})
       </Text>
       <ScrollView horizontal style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
@@ -87,8 +86,7 @@ const styles = StyleSheet.create({
   title: {
     color: textColor,
     fontSize: 20,
-    marginLeft: 20,
-    marginTop: 20
+    marginLeft: 20
   },
   intros: {
     width: SCREEN_WIDTH * 0.75,
