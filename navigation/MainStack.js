@@ -2,9 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from '../screens/HomeScreen';
-import UserPartOfStory from '../screens/story/UserPartOfStory';
-import StartedStory from '../screens/story/StartedStory';
-import InProgressStory from '../screens/story/InProgressStory';
+import StoryScreen from '../screens/StoryScreen';
 
 const Stack = createStackNavigator();
 
@@ -12,9 +10,7 @@ export default function MainStack() {
   return (
     <Stack.Navigator initialRouteName="HomeScreen">
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="UserPartOfStory" component={UserPartOfStory} />
-      <Stack.Screen name="InProgressStory" component={InProgressStory} />
-      <Stack.Screen name="StartedStory" component={StartedStory} />
+      <Stack.Screen name="StoryScreen" component={StoryScreen} />
     </Stack.Navigator>
   );
 }
