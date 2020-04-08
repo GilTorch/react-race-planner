@@ -446,4 +446,36 @@ const genres = [
     color: '#faf'
   }
 ];
-export { stories, genres };
+
+const comments = [
+  {
+    id: 0,
+    content:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
+    startTime: '2 hours ago',
+    author: stories[0].authors[0]
+  },
+  {
+    id: 1,
+    content:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
+    startTime: '25 minutes ago',
+    author: stories[0].authors[1]
+  },
+  {
+    id: 2,
+    content:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
+    startTime: '3 hours ago',
+    author: stories[0].authors[2]
+  },
+  {
+    id: 3,
+    content:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
+    startTime: '45 minutes ago',
+    author: stories[0].authors[0]
+  }
+];
+
+export { stories, genres, comments };
