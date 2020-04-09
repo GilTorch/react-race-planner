@@ -2,6 +2,7 @@ import React from 'react';
 import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
+import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
@@ -10,7 +11,7 @@ const ResetPasswordScreen = ({ navigation }) => {
   return (
     <ScrollView
       style={{ backgroundColor: 'white' }}
-      contentContainerStyle={{ backgroundColor: 'white', marginTop: 25 }}>
+      contentContainerStyle={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
         <View style={styles.logoContainer}>
           <Image source={SRLogo} resizeMode="contain" style={styles.logo} />

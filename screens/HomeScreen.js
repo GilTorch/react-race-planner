@@ -269,6 +269,7 @@ const HomeScreen = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setBarStyle('light-content');
+      StatusBar.setHidden(false);
     }, [])
   );
 
