@@ -11,6 +11,7 @@ import BoxMenu from './BoxMenu';
 
 const ProposedSection = ({ type, proposedBlocks, listMode }) => {
   const { length } = proposedBlocks;
+  const hasElected = proposedBlocks.some(block => block.elected);
   const listElected = (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
       <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
@@ -33,7 +34,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
                 <Text type="bold" style={styles.subTitle}>
                   {proposedBlock.subTitle}
                 </Text>
-                <BoxMenu parentType="intro" />
+                <BoxMenu parentType="intro_ending" block={{ ...proposedBlock, hasElected }} />
               </View>
               <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
                 {loremText}
