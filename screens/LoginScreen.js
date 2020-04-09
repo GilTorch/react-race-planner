@@ -1,16 +1,16 @@
 import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
+import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
-const LoginScreen = ({ navigation, statusBarHidden }) => {
+const LoginScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
-      <StatusBar hidden={statusBarHidden} />
       <View style={styles.container}>
         <Image source={SRLogo} style={styles.logo} />
         <View style={styles.headlineContainer}>
@@ -181,13 +181,8 @@ const styles = StyleSheet.create({
   }
 });
 
-LoginScreen.defaultProps = {
-  statusBarHidden: true
-};
-
 LoginScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
-  statusBarHidden: PropTypes.bool
+  navigation: PropTypes.object.isRequired
 };
 
 export default LoginScreen;
