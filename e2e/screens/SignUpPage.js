@@ -7,6 +7,10 @@ class SignUpPage {
     await element(by.id('user-name')).tapReturnKey();
   }
 
+  async scrollScreenUp() {
+    await element(by.id('user-name')).swipe('up', 'slow', 0.9);
+  }
+
   async enterFirstName(config) {
     await element(by.id('first-name')).typeText(config.firstname);
     await element(by.id('first-name')).tapReturnKey();
@@ -20,10 +24,6 @@ class SignUpPage {
   async enterEmail(config) {
     await element(by.id('email-address')).typeText(config.email);
     await element(by.id('email-address')).tapReturnKey();
-  }
-
-  async scrollScreenUp() {
-    await element(by.id('password')).swipe('up', 'slow', 0.9);
   }
 
   async enterPassword(config) {
@@ -48,12 +48,8 @@ class SignUpPage {
     await element(by.id('password')).swipe('down', 'slow', 0.9);
   }
 
-  get loginAccount() {
+  get goToLoginAccount() {
     return element(by.id('go-to-loggin-page'));
-  }
-
-  get backToSignUpPage() {
-    return element(by.id('go-back-to-signup-page'));
   }
 }
 module.exports = new SignUpPage();
