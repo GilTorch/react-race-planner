@@ -3,14 +3,21 @@ import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+import { useFocusEffect } from '@react-navigation/native';
+
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
-const SignupScreen = ({ navigation, statusBarHidden }) => {
+const SignupScreen = ({ navigation }) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setHidden(true);
+    }, [])
+  );
+
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
-      <StatusBar hidden={statusBarHidden} />
       <View style={styles.container}>
         <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
         <View style={styles.headlineContainer}>
@@ -128,13 +135,8 @@ const SignupScreen = ({ navigation, statusBarHidden }) => {
   );
 };
 
-SignupScreen.defaultProps = {
-  statusBarHidden: true
-};
-
 SignupScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
-  statusBarHidden: PropTypes.bool
+  navigation: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
