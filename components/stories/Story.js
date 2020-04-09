@@ -54,7 +54,7 @@ const Story = ({ story, index, length, navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <BoxMenu parentType="story" />
+          <BoxMenu parentType="story" block={story} />
         </View>
 
         {status === 'Completed' && (

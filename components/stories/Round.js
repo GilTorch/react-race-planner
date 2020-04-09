@@ -86,7 +86,7 @@ const Round = ({ round, totalRound, listMode, style }) => {
           <Text type="bold" style={styles.subTitle}>
             By {round.author || ''}
           </Text>
-          <BoxMenu parentType="round" />
+          <BoxMenu parentType="round" block={round} />
         </View>
         {inprogressRound && userTurn && userRound}
 
