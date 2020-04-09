@@ -1,53 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import { AntDesign } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import { SCREEN_WIDTH } from '../utils/dimensions';
-
-const FilterTag = ({ label, selected, onSelect }) => {
-  const backgroundStyle = selected
-    ? { backgroundColor: '#03A2A2' }
-    : { backgroundColor: '#C8CCCD' };
-
-  const textStyle = selected ? { color: '#fff' } : { color: '#5A7582' };
-
-  return (
-    <TouchableOpacity onPress={onSelect}>
-      <View style={{ ...tagStyle.container, ...backgroundStyle }}>
-        <Text type="bold" style={{ ...tagStyle.text, ...textStyle }}>
-          {label}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-FilterTag.propTypes = {
-  label: PropTypes.string.isRequired,
-  selected: PropTypes.bool.isRequired,
-  onSelect: PropTypes.func.isRequired
-};
-
-const tagStyle = StyleSheet.create({
-  container: {
-    marginRight: 10,
-    marginBottom: 15,
-    padding: 5,
-    borderRadius: 4,
-    backgroundColor: '#03A2A2',
-    // height: 33,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  text: {
-    color: 'white',
-    fontSize: 14
-  }
-});
+import FilterTag from '../components/FilterTag';
+import FilterHeaderLeft from '../components/FilterHeaderLeft';
+import FilterHeaderRight from '../components/FilterHeaderRight';
 
 const FilterScreen = ({ navigation }) => {
   const defaultAuthorRange = [5, 20];
@@ -87,18 +48,11 @@ const FilterScreen = ({ navigation }) => {
   };
 
   navigation.setOptions({
-    headerLeft: () => (
-      <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
-        <AntDesign style={{ fontSize: 20 }} color="#03A2A2" name="arrowleft" />
-      </TouchableOpacity>
-    ),
+    headerLeft: FilterHeaderLeft,
     headerTitleAlign: 'center',
     title: 'Filter',
-    headerRight: () => (
-      <TouchableOpacity onPress={() => reset()} style={{ marginRight: 20 }}>
-        <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
-      </TouchableOpacity>
-    )
+    // eslint-disable-next-line react/no-multi-comp
+    headerRight: () => <FilterHeaderRight onReset={() => reset()} />
   });
 
   const validCategoryNames = ['status', 'genres'];
@@ -110,8 +64,16 @@ const FilterScreen = ({ navigation }) => {
     }
     const { tags } = tagData[chosenCategory];
     const newTag = currentTag;
+
     newTag.selected = !currentTag.selected;
     const tagIndex = tags.findIndex(tag => tag.label === currentTag.label);
+
+    const allNotSelectedInCategory = tags.filter(tag => !tag.selected).length === tags.length;
+
+    if (allNotSelectedInCategory && !newTag.selected) {
+      newTag.selected = true;
+    }
+
     setTagData({
       ...tagData,
       [chosenCategory]: {
@@ -120,23 +82,6 @@ const FilterScreen = ({ navigation }) => {
       }
     });
   };
-
-  useEffect(() => {
-    // check data to see if all are unselected in a specific category
-    // if so reset to default selected
-    const tagCategories = Object.keys(tagData);
-    tagCategories.forEach(category => {
-      const allNotSelectedInCategory =
-        tagData[category].tags.filter(tag => !tag.selected).length ===
-        tagData[category].tags.length;
-      if (allNotSelectedInCategory) {
-        setTagData({
-          ...tagData,
-          [category]: { ...tagData[category], tags: [...defaultTagData[category].tags] }
-        });
-      }
-    });
-  }, [tagData]);
 
   const toggleSelectAll = chosenCategory => {
     const { allSelected, tags } = tagData[chosenCategory];
@@ -228,20 +173,27 @@ const FilterScreen = ({ navigation }) => {
               trackStyle={{
                 backgroundColor: '#C8CCCD',
                 height: 10,
-                borderRadius: 5
+                borderRadius: 5,
+                justifyContent: 'center'
               }}
               selectedStyle={{
                 backgroundColor: '#03A2A2',
                 borderRadius: 0
               }}
-              markerStyle={{
-                width: 25,
-                height: 25,
-                marginTop: 6,
-                backgroundColor: 'white',
-                borderWidth: 2,
-                borderColor: '#03A2A2'
-              }}
+              markerOffsetY={5}
+              customMarker={() => (
+                <View
+                  style={{
+                    width: 25,
+                    height: 25,
+                    backgroundColor: 'white',
+                    borderWidth: 2,
+                    borderRadius: 50,
+                    marginTop: 0,
+                    borderColor: '#03A2A2'
+                  }}
+                />
+              )}
               values={[multiSliderValue[0], multiSliderValue[1]]}
               sliderLength={SCREEN_WIDTH - 50}
               onValuesChange={multiSliderValuesChange}
