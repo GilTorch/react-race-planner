@@ -13,37 +13,32 @@ describe('Password Forgotten', () => {
     email: email.toLowerCase()
   };
 
-  describe('_passwordForgotten', () => {
-    it('Should ensure that logo is visible on screen', async () => {
-      await expect(element(by.id('logo'))).toBeVisible();
-    });
+  it('Should ensure that logo is visible on screen', async () => {
+    await expect(element(by.id('logo'))).toBeVisible();
+    await signUpPage.scrollScreenUp();
+  });
 
-    it('Should ensure that screen is scrolled upwards', async () => {
-      await signUpPage.scrollScreenUp();
-    });
+  it('Should ensure that login link can navigate to signin page', async () => {
+    await signUpPage.goToLoginAccount.tap();
+  });
 
-    it('Should ensure that login link can navigate to signin page', async () => {
-      await signUpPage.loginAccount.tap();
-    });
+  it('Should navigate to forgot password page on click', async () => {
+    await signInPage.passwordForgottenLink.tap();
+  });
 
-    it('Should navigate to forgot password page on click', async () => {
-      await signInPage.passwordForgottenLink.tap();
-    });
+  it('Should ensure that login link can navigate to signin page on click', async () => {
+    await passwordForgottenPage.returnToLoginPage.tap();
+  });
 
-    it('Should ensure that login link can navigate to signin page on click', async () => {
-      await passwordForgottenPage.returnToLoginPage.tap();
-    });
+  it('Should navigate back to forgot password page on click', async () => {
+    await signInPage.passwordForgottenLink.tap();
+  });
 
-    it('Should navigate back to forgot password page on click', async () => {
-      await signInPage.passwordForgottenLink.tap();
-    });
+  it('Should send and reset password', async () => {
+    await passwordForgottenPage.enterLoginEmail(config);
+  });
 
-    it('Should send and reset password', async () => {
-      await passwordForgottenPage.enterLoginEmail(config);
-    });
-
-    it('Should ensure that ssend passord button exists & is clicked & navigate to reset password page', async () => {
-      await passwordForgottenPage.submitLoginCredentials.tap();
-    });
+  it('Should ensure that ssend passord button exists & is clicked & navigate to reset password page', async () => {
+    await passwordForgottenPage.submitLoginCredentials.tap();
   });
 });

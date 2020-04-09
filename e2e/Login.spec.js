@@ -2,6 +2,7 @@
 const casual = require('casual');
 const signUpPage = require('./screens/SignUpPage');
 const signInPage = require('./screens/SignInPage');
+const passwordForgottenPage = require("./screens/PasswordForgottenPage");
 
 describe('Login', () => {
   const userName = casual.username;
@@ -12,14 +13,11 @@ describe('Login', () => {
 
   it('Should ensure logo is visible on screen', async () => {
     await expect(element(by.id('logo'))).toBeVisible();
-  });
-
-  it('Should ensure screen is scrolled upwards', async () => {
     await signUpPage.scrollScreenUp();
   });
 
   it('Should ensure that login link can navigate to sign page on click', async () => {
-    await signUpPage.loginAccount.tap();
+    await signUpPage.goToLoginAccount.tap();
   });
 
   it('Should ensure that signup link can navigate back to sign up page on click', async () => {
@@ -27,7 +25,7 @@ describe('Login', () => {
   });
 
   it('Should navigate back to sign page to login', async () => {
-    await signUpPage.loginAccount.tap();
+    await signUpPage.goToLoginAccount.tap();
   });
 
   it('Should navigate to forgot password page on click', async () => {
@@ -35,7 +33,7 @@ describe('Login', () => {
   });
 
   it('Should redirect back to login page on click', async () => {
-    await signUpPage.getBackToLoginPage.tap();
+    await passwordForgottenPage.returnToLoginPage.tap();
   });
 
   it('Should ensure a valid login username existence', async () => {
