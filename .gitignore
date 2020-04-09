@@ -113,3 +113,4 @@ web-build
 .env.test.local
 .env.production.local
 .expo
+bin
