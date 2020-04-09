@@ -4,12 +4,12 @@ const casual = require('casual');
 const signUpPage = require('./screens/SignUpPage');
 
 describe('Account', () => {
-  const userName = casual.username;
   const firstName = casual.first_name;
   const lastName = casual.last_name;
+  const userName = `${firstName}_${lastName}`;
   const email = `${firstName}.${lastName}@gmail.com`;
   const config = {
-    username: userName,
+    username: userName.toLowerCase(),
     firstname: firstName,
     lastname: lastName,
     email: email.toLowerCase(),
@@ -18,7 +18,7 @@ describe('Account', () => {
   };
 
   describe('_createAccount', () => {
-    it('Should ensure that lofgo is visible on screen', async () => {
+    it('Should ensure that logo is visible on screen', async () => {
       await expect(element(by.id('logo'))).toBeVisible();
     });
 
@@ -42,19 +42,19 @@ describe('Account', () => {
       await expect(element(by.id('create-account-text'))).toBeVisible();
     });
 
-    it('Should ensure a valid ursername existence', async () => {
+    it('Should ensure a valid username input existence', async () => {
       await signUpPage.enterUsername(config);
     });
 
-    it('Should ensure a valid firstname existence', async () => {
+    it('Should ensure a valid first name input existence', async () => {
       await signUpPage.enterFirstName(config);
     });
 
-    it('Should ensure a valid lastname existence', async () => {
+    it('Should ensure a valid last name input existence', async () => {
       await signUpPage.enterLastName(config);
     });
 
-    it('Should ensure a valid email address existence', async () => {
+    it('Should ensure a valid email address input existence', async () => {
       await signUpPage.enterEmail(config);
     });
 
@@ -62,11 +62,11 @@ describe('Account', () => {
       await signUpPage.scrollScreenUp();
     });
 
-    it('Should ensure a valid password existence', async () => {
+    it('Should ensure a valid password input existence', async () => {
       await signUpPage.enterPassword(config);
     });
 
-    it('Should ensure a valid password confirmation existence', async () => {
+    it('Should ensure a valid password confirmation input existence', async () => {
       await signUpPage.enterPasswordConfirmation(config);
     });
 
@@ -82,7 +82,7 @@ describe('Account', () => {
       await expect(element(by.id('google-icon-btn'))).toBeVisible();
     });
 
-    it('Should ensure that submit button is clicked', async () => {
+    it('Should ensure that submit button exists and is clickable', async () => {
       await signUpPage.submitCredentials();
     });
   });
