@@ -1,62 +1,15 @@
-import * as React from 'react';
-import { StyleSheet, ScrollView, View, StatusBar } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, ScrollView, View, Animated, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
-import { Paragraph, Button, Surface } from 'react-native-paper';
+import { Button, Surface } from 'react-native-paper';
 import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
-
 import Text from '../../components/CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
-
-const StorySingleMeta = ({ label, value }) => (
-  <View style={{ alignSelf: 'flex-start', marginLeft: 15 }}>
-    <Paragraph>
-      <Text type="bold" style={{ color: 'white' }}>
-        {label}:{'  '}
-      </Text>
-      <Text type="regular" style={{ color: 'white' }}>
-        {value}
-      </Text>
-    </Paragraph>
-  </View>
-);
-StorySingleMeta.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
-};
-
-const PenddingRoundBox = ({ title, subTitle, status, timeLeft }) => (
-  <View>
-    <Text type="medium" style={styles.title}>
-      {title}
-    </Text>
-    <Surface style={styles.penddingRound}>
-      <View style={styles.boxHeader}>
-        <Text type="bold" style={styles.subTitle}>
-          {subTitle}
-        </Text>
-        <Feather name="more-vertical" size={18} color="#5A7582" />
-      </View>
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.pendding}>{status}</Text>
-        <Text type="bold" style={{ color: '#ED8A18', fontSize: 13, marginTop: 10, marginLeft: 10 }}>
-          {timeLeft}
-        </Text>
-      </View>
-    </Surface>
-  </View>
-);
-PenddingRoundBox.propTypes = {
-  title: PropTypes.string.isRequired,
-  subTitle: PropTypes.string.isRequired,
-  status: PropTypes.string.isRequired,
-  timeLeft: PropTypes.string
-};
-PenddingRoundBox.defaultProps = {
-  timeLeft: ''
-};
+import StorySingleMeta from '../../components/SingleStoryMeta';
+import PendingRoundBox from '../../components/PendingRoundBox';
 
 const StartedStory = ({ navigation }) => {
   navigation.setOptions({
@@ -69,6 +22,22 @@ const StartedStory = ({ navigation }) => {
     }, [])
   );
 
+  const [scrollY] = useState(new Animated.Value(0));
+
+  const HEADER_MINIMUM_HEIGHT = 130;
+  const HEADER_MAXIMUM_HEIGHT = 270;
+
+  const headerY = scrollY.interpolate({
+    inputRange: [0, SCREEN_HEIGHT],
+    outputRange: [HEADER_MAXIMUM_HEIGHT, HEADER_MINIMUM_HEIGHT],
+    extrapolate: 'clamp'
+  });
+
+  const opacity = scrollY.interpolate({
+    inputRange: [0, SCREEN_HEIGHT],
+    outputRange: [1, 0]
+  });
+
   return (
     <View
       style={{
@@ -76,37 +45,97 @@ const StartedStory = ({ navigation }) => {
         flex: 1
       }}>
       <StatusBar barStyle="light-content" />
-      <Surface
-        style={{
-          borderBottomLeftRadius: 13,
-          borderBottomRightRadius: 13,
-          overflow: 'hidden',
-          elevation: 5
-        }}>
-        <LinearGradient
-          colors={['#03a2a2', '#23c2c2']}
-          style={{
-            alignItems: 'center',
-            flexDirection: 'column',
-            paddingBottom: Constants.statusBarHeight,
-            paddingTop: Constants.statusBarHeight * 1.7
-          }}>
-          <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
-            ScriptoRerum
-          </Text>
-          <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
-            There’s a Man in the Woods
-          </Text>
+      <View style={{ position: 'absolute', width: '100%', top: 0, left: 0, zIndex: 1000 }}>
+        <Surface>
+          <Animated.View
+            style={{
+              backgroundColor: 'red',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1000,
+              height: headerY,
+              overflow: 'hidden'
+            }}>
+            <Surface
+              style={{
+                borderBottomLeftRadius: 13,
+                borderBottomRightRadius: 13,
+                overflow: 'hidden',
+                elevation: 5
+              }}>
+              <LinearGradient
+                colors={['#03a2a2', '#23c2c2']}
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  paddingBottom: Constants.statusBarHeight,
+                  paddingTop: Constants.statusBarHeight * 1.7
+                }}>
+                <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
+                  ScriptoRerum
+                </Text>
+                <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
+                  There’s a Man in the Woods
+                </Text>
 
-          <StorySingleMeta label="Genre" value="Thriller" />
-          <StorySingleMeta label="Status" value="In Progress" />
-          <StorySingleMeta label="Master Author" value="Anonymous 1" />
-          <StorySingleMeta label="Intro Maximum Words" value="50" />
-          <StorySingleMeta label="Ending Maximum Words" value="50" />
-          <StorySingleMeta label="Words per Round" value="100 max" />
-          <StorySingleMeta label="Co-Authors" value="7/11" />
-
-          <View style={styles.headerBtn}>
+                <StorySingleMeta
+                  containerStyle={{
+                    opacity
+                  }}
+                  label="Genre"
+                  value="Thriller"
+                />
+                <StorySingleMeta
+                  containerStyle={{
+                    opacity
+                  }}
+                  label="Status"
+                  value="In Progress"
+                />
+                <StorySingleMeta
+                  containerStyle={{
+                    opacity
+                  }}
+                  label="Master Author"
+                  value="Anonymous 1"
+                />
+                <StorySingleMeta
+                  containerStyle={{
+                    opacity
+                  }}
+                  label="Intro Maximum Words"
+                  value="50"
+                />
+                <StorySingleMeta
+                  containerStyle={{
+                    opacity
+                  }}
+                  label="Ending Maximum Words"
+                  value="50"
+                />
+                <StorySingleMeta
+                  containerStyle={{ opacity }}
+                  label="Words per Round"
+                  value="100 max"
+                />
+                <StorySingleMeta containerStyle={{ opacity }} label="Co-Authors" value="7/11" />
+              </LinearGradient>
+            </Surface>
+          </Animated.View>
+          <Animated.View
+            style={{
+              position: 'absolute',
+              backgroundColor: 'hsl(180, 69%, 43%)',
+              ...styles.headerBtn,
+              width: SCREEN_WIDTH + 50,
+              left: -40,
+              top: Animated.subtract(headerY, 10),
+              paddingTop: 10,
+              paddingBottom: 10,
+              zIndex: 1000
+            }}>
             <Surface style={styles.surface}>
               <Button
                 mode="contained"
@@ -128,11 +157,12 @@ const StartedStory = ({ navigation }) => {
                 Go Back
               </Button>
             </Surface>
-          </View>
-        </LinearGradient>
-      </Surface>
-
-      <ScrollView>
+          </Animated.View>
+        </Surface>
+      </View>
+      <ScrollView
+        scrollEventThrottle={16}
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }])}>
         <Text type="medium" style={{ ...styles.title, marginBottom: 0 }}>
           All Proposed Intros (2)
         </Text>
@@ -275,7 +305,7 @@ const StartedStory = ({ navigation }) => {
           </View>
         </Surface>
 
-        <PenddingRoundBox
+        <PendingRoundBox
           title="Round 3/8"
           subTitle="By Anonymous 2"
           status="In Progress"
@@ -300,11 +330,11 @@ const StartedStory = ({ navigation }) => {
           </Text>
         </Surface>
 
-        <PenddingRoundBox title="Round 4/8" subTitle="By Anonymous 7" status="Pendding" />
+        <PendingRoundBox title="Round 4/8" subTitle="By Anonymous 7" status="Pending" />
 
-        <PenddingRoundBox title="Round 5/8" subTitle="By Anonymous 3" status="Pendding" />
+        <PendingRoundBox title="Round 5/8" subTitle="By Anonymous 3" status="Pending" />
 
-        <PenddingRoundBox title="Round 6/8" subTitle="By Anonymous 6" status="Pendding" />
+        <PendingRoundBox title="Round 6/8" subTitle="By Anonymous 6" status="Pending" />
 
         <Surface style={{ ...styles.smallAdvertisement, marginTop: 20 }}>
           <Text type="bold" style={styles.smallAdvertisementTitle}>
@@ -315,15 +345,15 @@ const StartedStory = ({ navigation }) => {
           </Text>
         </Surface>
 
-        <PenddingRoundBox title="Round 7/8" subTitle="By Anonymous 4" status="Pendding" />
+        <PendingRoundBox title="Round 7/8" subTitle="By Anonymous 4" status="Pending" />
 
-        <PenddingRoundBox title="Round 8/8" subTitle="By Anonymous 5" status="Pendding" />
+        <PendingRoundBox title="Round 8/8" subTitle="By Anonymous 5" status="Pending" />
 
         <Text type="bold" style={styles.title}>
           All Proposed Endings
         </Text>
         <Text type="bold-italic" style={{ color: '#ED8A18', marginLeft: 20, marginBottom: 20 }}>
-          Pendding
+          Pending
         </Text>
       </ScrollView>
 
@@ -423,19 +453,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignSelf: 'center',
     padding: 15
-  },
-  penddingRound: {
-    marginHorizontal: 40,
-    backgroundColor: '#fff',
-    elevation: 5,
-    padding: 15
-  },
-  pendding: {
-    color: '#ED8A18',
-    marginBottom: 20,
-    marginTop: 10,
-    fontSize: 13,
-    fontFamily: 'RobotoItalic'
   },
   floatingNav: {
     flexDirection: 'row',
