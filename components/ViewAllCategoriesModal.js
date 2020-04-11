@@ -3,6 +3,8 @@ import { FlatList, TouchableOpacity, View } from 'react-native';
 import { Modal, Portal } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { FontAwesome } from '@expo/vector-icons';
+
+import { SCREEN_HEIGHT } from '../utils/dimensions';
 import { genres } from '../utils/data';
 import CategoryGenre from './CategoryGenre';
 import Text from './CustomText';
@@ -13,10 +15,11 @@ const ViewAllCategoriesModal = ({ visible, dismiss }) => {
       <Modal style={{ overflow: 'hidden' }} visible={visible}>
         <View
           style={{
+            height: SCREEN_HEIGHT * .7,
             backgroundColor: 'white',
-            margin: 20,
+            marginHorizontal: 20,
             borderRadius: 6,
-            shadowColor: '#000'
+            paddingBottom: 4
           }}>
           <View
             style={{
@@ -41,21 +44,20 @@ const ViewAllCategoriesModal = ({ visible, dismiss }) => {
                 borderRadius: 4,
                 justifyContent: 'center',
                 alignItems: 'center',
-                justifySelf: 'flex-start',
-                elevation: 10
               }}>
               <FontAwesome color="#fff" size={25} name="close" />
             </TouchableOpacity>
           </View>
           <View
             style={{
-              flexDirection: 'row',
+              flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
               paddingBottom: 10
             }}>
+            <Text style={{ color: '#5A7582' }}>Start a New Story</Text>
             <Text type="bold" style={{ fontSize: 30, color: '#5A7582' }}>
-              All Categories
+              Pick a Category
             </Text>
           </View>
           <FlatList
