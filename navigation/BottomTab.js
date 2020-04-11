@@ -74,10 +74,10 @@ export default function BottomTab() {
           tabBarIcon: ({ focused }) => {
             return (
               <FontAwesome5
-                testID="writing-icon"
                 style={{ fontSize: 20 }}
                 color={focused ? '#03A2A2' : '#707070'}
                 name="pen-fancy"
+                testID="writing-icon"
               />
             );
           }
@@ -106,10 +106,10 @@ export default function BottomTab() {
           tabBarIcon: ({ focused }) => {
             return (
               <FontAwesome5
-                testID="settings-icon"
                 style={{ fontSize: 20 }}
                 color={focused ? '#03A2A2' : '#707070'}
                 name="cog"
+                testID="settings-icon"
               />
             );
           }
