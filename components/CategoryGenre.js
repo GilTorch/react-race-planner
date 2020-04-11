@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import PropTypes from 'prop-types';
+import { Button } from 'react-native-paper';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const CategoryGenre = ({ genre }) => {
   return (
@@ -8,13 +10,18 @@ const CategoryGenre = ({ genre }) => {
       style={{
         backgroundColor: 'white',
         flexDirection: 'row',
-        justifyContent: 'space-around',
         alignItems: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        padding: 5
+        marginVertical: 7,
+        padding: 5,
+        paddingHorizontal: 20
       }}>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        style={{
+          flex: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginRight: 15
+        }}>
         <View
           style={{
             backgroundColor: genre.color,
@@ -27,10 +34,30 @@ const CategoryGenre = ({ genre }) => {
           {genre.icon(25)}
         </View>
       </View>
-      <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
-        <Text type="bold" style={{ color: '#03A2A2', fontSize: 15 }}>
-          {genre.name}
-        </Text>
+      <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <Text
+            type="bold"
+            style={{ color: '#03A2A2', fontSize: 15, fontWeight: 'bold', marginBottom: 5 }}>
+            {genre.name}
+          </Text>
+          <Text type="bold" style={{ color: '#5A7582', fontSize: 12, textAlign: 'left', paddingRight: 10 }}>
+            {genre.description}
+          </Text>
+        </View>
+        <Button
+          mode="contained"
+          style={{ height: 35, alignItems: 'center', justifyContent: 'center' }}
+          icon={({ size, color }) => (
+            <FontAwesome5
+              size={size}
+              color={'#fff'}
+              name="pen-fancy"
+            />
+          )}
+          labelStyle={{ color: '#fff', fontWeight: 'bold' }}>
+          Go
+        </Button>
       </View>
     </View>
   );
