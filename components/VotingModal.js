@@ -92,16 +92,16 @@ const styles = {
     textAlign: 'justify'
   },
   buttonContainer: {
-    paddingTop: 20,
-    paddingBottom: 10,
-    paddingRight: 20,
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    marginTop: 14,
+    marginBottom: 7
   },
   button: {
     width: 120,
     backgroundColor: '#03A2A2',
-    height: 50,
+    height: 35,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 20,
