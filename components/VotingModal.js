@@ -3,7 +3,6 @@ import { TouchableOpacity, View } from 'react-native';
 import { Modal, Portal } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import Text from './CustomText';
-import { SCREEN_HEIGHT } from '../utils/dimensions';
 
 const VotingModal = ({ visible, dismiss }) => {
   return (
@@ -12,9 +11,8 @@ const VotingModal = ({ visible, dismiss }) => {
         <View
           style={{
             backgroundColor: 'white',
-            margin: 20,
-            borderRadius: 6,
-            height: SCREEN_HEIGHT - 400
+            marginHorizontal: 20,
+            borderRadius: 6
           }}>
           <View
             style={{
