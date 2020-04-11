@@ -49,11 +49,10 @@ const ViewAllCategoriesModal = ({ visible, dismiss }) => {
           </View>
           <View
             style={{
-              height: 35,
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              marginBottom: 10
+              paddingBottom: 10
             }}>
             <Text type="bold" style={{ fontSize: 30, color: '#5A7582' }}>
               All Categories
