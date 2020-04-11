@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -40,6 +41,7 @@ export default function BottomTab() {
           tabBarIcon: ({ focused }) => {
             return (
               <FontAwesome5
+                testID="home-icon"
                 style={{ fontSize: 20 }}
                 color={focused ? '#03A2A2' : '#707070'}
                 name="home"
@@ -58,7 +60,7 @@ export default function BottomTab() {
 
             return (
               <Text
-                textID="writing"
+                testID="writing"
                 style={{
                   paddingLeft: 15,
                   textTransform: 'uppercase',
@@ -72,6 +74,7 @@ export default function BottomTab() {
           tabBarIcon: ({ focused }) => {
             return (
               <FontAwesome5
+                testID="writing-icon"
                 style={{ fontSize: 20 }}
                 color={focused ? '#03A2A2' : '#707070'}
                 name="pen-fancy"
@@ -87,10 +90,9 @@ export default function BottomTab() {
         options={{
           tabBarLabel: ({ focused }) => {
             if (!focused) return null;
-
             return (
               <Text
-                textID="settings"
+                testID="settings"
                 style={{
                   paddingLeft: 15,
                   textTransform: 'uppercase',
@@ -104,6 +106,7 @@ export default function BottomTab() {
           tabBarIcon: ({ focused }) => {
             return (
               <FontAwesome5
+                testID="settings-icon"
                 style={{ fontSize: 20 }}
                 color={focused ? '#03A2A2' : '#707070'}
                 name="cog"

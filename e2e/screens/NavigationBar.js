@@ -1,13 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable class-methods-use-this */
-const signUpPage = require('./SignUpPage');
 
 class NavigationBar {
-  async tapToGoOnLogingPage() {
-    await element(by.id('password')).swipe('up', 'slow', 0.9);
-    await signUpPage.loginAccount.tap();
-  }
-  // eslint-disable-next-line lines-between-class-members
   async enterLoginCredential(config) {
     await element(by.id('login-user-name')).typeText(config.username);
     await element(by.id('login-user-name')).tapReturnKey();
@@ -21,12 +15,24 @@ class NavigationBar {
     return element(by.id('home'));
   }
 
+  get homeIcon() {
+    return element(by.id('home-icon'));
+  }
+
   get writing() {
     return element(by.id('writing'));
   }
 
+  get writingIcon() {
+    return element(by.id('writing-icon'));
+  }
+
   get settings() {
     return element(by.id('settings'));
+  }
+
+  get settingsIcon() {
+    return element(by.id('settings-icon'));
   }
 }
 

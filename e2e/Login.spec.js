@@ -5,7 +5,9 @@ const signInPage = require('./screens/SignInPage');
 const passwordForgottenPage = require("./screens/PasswordForgottenPage");
 
 describe('Login', () => {
-  const userName = casual.username;
+  const firstName = casual.first_name;
+  const lastName = casual.last_name;
+  const userName = `${firstName}_${lastName}`;
   const config = {
     username: userName,
     password: '**********'

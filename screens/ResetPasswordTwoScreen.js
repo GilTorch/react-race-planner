@@ -81,7 +81,7 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('Login')}
               style={styles.goToLoginPageButton}>
-              <View testID="return-to-login-page-">
+              <View testID="shrink-to-login-page">
                 <Text type="medium" style={styles.goToLoginPageButtonText}>
                   Log in
                 </Text>

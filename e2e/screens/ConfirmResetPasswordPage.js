@@ -22,7 +22,7 @@ class ConfirmResetPasswordPage {
   }
 
   get returnToLoginPage() {
-    return element(by.id('return-to-login-page-'));
+    return element(by.id('shrink-to-login-page'));
   }
 
   get submitResetPassword() {
