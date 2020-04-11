@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
 import MysteryIcon from '../components/svg/icons/MysteryIcon';
@@ -413,42 +414,42 @@ const genres = [
   {
     id: 1,
     name: 'Mystery',
+    description: 'For those stories that keep you questioning everything',
     icon: size => <MysteryIcon width={size} />,
     color: '#43A047'
   },
   {
     id: 2,
     name: 'Action',
+    description: 'Stories that keep your adrenaline high!',
     icon: size => <MaterialCommunityIcons size={size} color="white" name="run" />,
     color: '#13BCBC'
   },
   {
     id: 3,
     name: 'Thriller',
+    description: "Stories that won't let you sleep at night",
     icon: size => <MaterialCommunityIcons size={size} color="white" name="skull" />,
     color: '#29B6F6'
   },
   {
     id: 4,
     name: 'Sci-Fi',
+    description: 'Stories that keep your imagination pumping',
     icon: size => <MaterialCommunityIcons size={size} color="white" name="alien" />,
     color: '#5E35B1'
   },
   {
     id: 5,
     name: 'Romance',
+    description: 'For those stories that bring more love into the air',
     icon: size => <AntDesign size={size} color="white" name="heart" />,
     color: '#FCF42A'
   },
   {
-    id: 6,
-    name: 'Essay',
-    icon: size => <AntDesign size={size} color="white" name="book" />,
-    color: '#ED8A18'
-  },
-  {
     id: 7,
     name: 'Bedtime Stories',
+    description: "Kid's stories to help the little ones sleep peacefully",
     icon: size => <Ionicons size={size} color="white" name="ios-bed" />,
     color: '#faf'
   }
