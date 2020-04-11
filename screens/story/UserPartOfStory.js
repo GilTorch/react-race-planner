@@ -4,61 +4,19 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Constants from 'expo-constants';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
-import { Paragraph, Button, Surface } from 'react-native-paper';
+import { Button, Surface } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import VotingModal from '../../components/VotingModal';
 
 import Text from '../../components/CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
-
-const StorySingleMeta = ({ label, value }) => (
-  <View style={{ alignSelf: 'flex-start', marginLeft: 15 }}>
-    <Paragraph>
-      <Text type="bold" style={{ color: 'white' }}>
-        {label}:{'  '}
-      </Text>
-      <Text type="regular" style={{ color: 'white' }}>
-        {value}
-      </Text>
-    </Paragraph>
-  </View>
-);
-StorySingleMeta.propTypes = {
-  label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
-};
-
-const PenddingRoundBox = ({ title, subTitle, status, timeLeft }) => (
-  <View>
-    <Text type="medium" style={styles.title}>
-      {title}
-    </Text>
-    <Surface style={styles.penddingRound}>
-      <View style={styles.boxHeader}>
-        <Text type="bold" style={styles.subTitle}>
-          {subTitle}
-        </Text>
-        <Feather name="more-vertical" size={18} color="#5A7582" />
-      </View>
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.pendding}>{status}</Text>
-        <Text type="bold" style={{ color: '#ED8A18', fontSize: 13, marginTop: 10, marginLeft: 10 }}>
-          {timeLeft}
-        </Text>
-      </View>
-    </Surface>
-  </View>
-);
-PenddingRoundBox.propTypes = {
-  title: PropTypes.string.isRequired,
-  subTitle: PropTypes.string.isRequired,
-  status: PropTypes.string.isRequired,
-  timeLeft: PropTypes.string
-};
-PenddingRoundBox.defaultProps = {
-  timeLeft: ''
-};
+import StorySingleMeta from '../../components/StorySingleData';
+import PendingRoundBox from '../../components/PendingRoundBox';
 
 const UserPartOfStory = ({ navigation }) => {
+  const [modalVisible, setModalVisible] = React.useState(false);
+
   navigation.setOptions({
     headerShown: false
   });
@@ -97,7 +55,7 @@ const UserPartOfStory = ({ navigation }) => {
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             Alphonso, The Barber
           </Text>
-
+          <VotingModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
           <StorySingleMeta label="Genre" value="Romance" />
           <StorySingleMeta label="Status" value="In Progress" />
           <StorySingleMeta label="Master Author" value="Anonymous 1" />
@@ -164,12 +122,12 @@ const UserPartOfStory = ({ navigation }) => {
                   Elected Intro
                 </Text>
               </View>
-              <View style={styles.displayRow}>
+              <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.displayRow}>
                 <MaterialCommunityIcons name="vote" size={20} color="#911414" />
                 <Text type="bold" style={styles.boxFooter}>
                   Votes: 6/8
                 </Text>
-              </View>
+              </TouchableOpacity>
               <View style={styles.displayRow}>
                 <FontAwesome name="commenting" size={20} color="#0277BD" />
                 <Text type="bold" style={styles.boxFooter}>
@@ -327,11 +285,11 @@ const UserPartOfStory = ({ navigation }) => {
           </Text>
         </Surface>
 
-        <PenddingRoundBox title="Round 4/8" subTitle="By Anonymous 7" status="Pendding" />
+        <PendingRoundBox title="Round 4/8" subTitle="By Anonymous 7" status="Pending" />
 
-        <PenddingRoundBox title="Round 5/8" subTitle="By Anonymous 3" status="Pendding" />
+        <PendingRoundBox title="Round 5/8" subTitle="By Anonymous 3" status="Pending" />
 
-        <PenddingRoundBox title="Round 6/8" subTitle="By Anonymous 6" status="Pendding" />
+        <PendingRoundBox title="Round 6/8" subTitle="By Anonymous 6" status="Pending" />
 
         <Surface style={{ ...styles.smallAdvertisement, marginTop: 20 }}>
           <Text type="bold" style={styles.smallAdvertisementTitle}>
@@ -342,15 +300,15 @@ const UserPartOfStory = ({ navigation }) => {
           </Text>
         </Surface>
 
-        <PenddingRoundBox title="Round 7/8" subTitle="By Anonymous 4" status="Pendding" />
+        <PendingRoundBox title="Round 7/8" subTitle="By Anonymous 4" status="Pending" />
 
-        <PenddingRoundBox title="Round 8/8" subTitle="By Anonymous 5" status="Pendding" />
+        <PendingRoundBox title="Round 8/8" subTitle="By Anonymous 5" status="Pending" />
 
         <Text type="bold" style={styles.title}>
           All Proposed Endings
         </Text>
         <Text type="bold-italic" style={{ color: '#ED8A18', marginLeft: 20, marginBottom: 20 }}>
-          Pendding
+          Pending
         </Text>
       </ScrollView>
 
@@ -455,19 +413,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignSelf: 'center',
     padding: 15
-  },
-  penddingRound: {
-    marginHorizontal: 40,
-    backgroundColor: '#fff',
-    elevation: 5,
-    padding: 15
-  },
-  pendding: {
-    color: '#ED8A18',
-    marginBottom: 20,
-    marginTop: 10,
-    fontSize: 13,
-    fontFamily: 'RobotoItalic'
   },
   floatingNav: {
     flexDirection: 'row',
