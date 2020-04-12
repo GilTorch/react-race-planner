@@ -23,11 +23,11 @@ describe('Create Account', () => {
     await signUpPage.scrollScreenUp();
   });
 
-  it('Should ensure that login link can redirect to sign page', async () => {
+  it('Should ensure login link can redirect to `Log in` page', async () => {
     await signUpPage.goToLoginAccount.tap();
   });
 
-  it('Should go back to sign up page', async () => {
+  it('Should go back to `Create an Account` page', async () => {
     await signInPage.backToSignUpPage.tap();
     await signUpPage.scrollScreenDown();
   });
@@ -73,7 +73,7 @@ describe('Create Account', () => {
     await expect(element(by.id('google-icon-btn'))).toBeVisible();
   });
 
-  it('Should ensure that submit button exists and is clickable', async () => {
+  it('Should ensure submit button exists and is clickable', async () => {
     await signUpPage.submitCredentials();
   });
 });

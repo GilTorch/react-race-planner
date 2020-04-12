@@ -2,7 +2,7 @@
 const casual = require('casual');
 const signUpPage = require('./screens/SignUpPage');
 const signInPage = require('./screens/SignInPage');
-const passwordForgottenPage = require("./screens/PasswordForgottenPage");
+const passwordForgottenPage = require('./screens/PasswordForgottenPage');
 
 describe('Login', () => {
   const firstName = casual.first_name;
@@ -18,31 +18,31 @@ describe('Login', () => {
     await signUpPage.scrollScreenUp();
   });
 
-  it('Should ensure that login link can navigate to sign page on click', async () => {
+  it('Should ensure login link is clickable and can navigate to `Log in` page', async () => {
     await signUpPage.goToLoginAccount.tap();
   });
 
-  it('Should ensure that signup link can navigate back to sign up page on click', async () => {
+  it('Should ensure signup link is clickable and can navigate back to `Create an Account` page', async () => {
     await signInPage.backToSignUpPage.tap();
   });
 
-  it('Should navigate back to sign page to login', async () => {
+  it('Should ensure signup link is clickable and can navigate back to `Log in` page', async () => {
     await signUpPage.goToLoginAccount.tap();
   });
 
-  it('Should navigate to forgot password page on click', async () => {
+  it('Should ensure `Forgot your password?` link is clickable and can navigate `Reset Your Password` page', async () => {
     await signInPage.passwordForgottenLink.tap();
   });
 
-  it('Should redirect back to login page on click', async () => {
+  it('Should redirect back to `Log in` page', async () => {
     await passwordForgottenPage.returnToLoginPage.tap();
   });
 
-  it('Should ensure a valid login username existence', async () => {
+  it('Should ensure a valid username input existence', async () => {
     await signInPage.enterLoginUsername(config);
   });
 
-  it('Should ensure a valid login password existence', async () => {
+  it('Should ensure a valid password input existence', async () => {
     await signInPage.enterLoginPassword(config);
   });
 
@@ -58,7 +58,7 @@ describe('Login', () => {
     await expect(element(by.id('google-icon-button'))).toBeVisible();
   });
 
-  it('Should ensure that login submition button exists & is clicked', async () => {
+  it('Should ensure submit button exists and is clickable', async () => {
     await signInPage.submitLoginCredentials();
   });
 });
