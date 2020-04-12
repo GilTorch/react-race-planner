@@ -27,35 +27,29 @@ describe('Confirm Reset Password', () => {
     await confirmResetPasswordPage.scrollScreenUp();
   });
 
-  it('Should ensure that login link can navigate to signin page on click', async () => {
+  it('Should ensure login link is clickable and can navigate to `Log in` page', async () => {
     await confirmResetPasswordPage.returnToLoginPage.tap();
   });
 
-  it('Should navigate back to forgot password page on click', async () => {
+  it('Should redirect back to `Reset Your Password` page', async () => {
     await signInPage.passwordForgottenLink.tap();
-  });
-
-  it('Should send and reset password', async () => {
     await passwordForgottenPage.enterLoginEmail(config);
-  });
-
-  it('Should ensure that `send password` button exists & is clicked & navigate to reset password page', async () => {
     await passwordForgottenPage.submitLoginCredentials.tap();
   });
 
-  it('Should ensure one time generated password existence', async () => {
+  it('Should ensure one-time password input existence', async () => {
     await confirmResetPasswordPage.enterOneTimePassword(config);
   });
 
-  it('Should ensure new password existence', async () => {
+  it('Should ensure new password input existence', async () => {
     await confirmResetPasswordPage.enterNewPassword(config);
   });
 
-  it('Should ensure confirmed new password existence', async () => {
+  it('Should ensure confirmed new password input existence', async () => {
     await confirmResetPasswordPage.enterConfirmedNewPassword(config);
   });
 
-  it('Should ensure `reset Password` button exists & is clicked', async () => {
+  it('Should ensure `Reset Password` button exists and is clickable', async () => {
     await confirmResetPasswordPage.submitResetPassword.tap();
   });
 });
