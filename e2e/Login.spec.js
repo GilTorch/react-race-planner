@@ -58,7 +58,7 @@ describe('Login', () => {
     await expect(element(by.id('google-icon-button'))).toBeVisible();
   });
 
-  it('Should ensure submit button exists and is clickable', async () => {
+  it('Should ensure `Login` submit button exists and is clickable', async () => {
     await signInPage.submitLoginCredentials();
   });
 });

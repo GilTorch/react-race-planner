@@ -13,7 +13,7 @@ const ResetPasswordScreen = ({ navigation }) => {
       contentContainerStyle={{ backgroundColor: 'white', marginTop: 25 }}>
       <View style={styles.container}>
         <View style={styles.logoContainer}>
-          <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
+          <Image testID="logo--" source={SRLogo} resizeMode="contain" style={styles.logo} />
         </View>
         <View style={styles.headlineContainer}>
           <Text type="medium" style={styles.headline}>

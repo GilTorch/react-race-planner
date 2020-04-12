@@ -14,16 +14,10 @@ describe('Password Forgotten', () => {
   };
 
   it('Should ensure that logo is visible on screen', async () => {
-    await expect(element(by.id('logo'))).toBeVisible();
     await signUpPage.scrollScreenUp();
-  });
-
-  it('Should Should ensure login link is clickable and can navigate to `Log in` page', async () => {
     await signUpPage.goToLoginAccount.tap();
-  });
-
-  it('Should ensure `Forgot your password?` link is clickable and can navigate `Reset Your Password` page', async () => {
     await signInPage.passwordForgottenLink.tap();
+    await expect(element(by.id('logo--'))).toBeVisible();
   });
 
   it('Should ensure login link is clickable and can navigate to `Log in` page', async () => {
