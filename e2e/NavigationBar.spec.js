@@ -18,17 +18,17 @@ describe('Navigation bar', () => {
     await navigationBar.enterLoginCredential(config);
   });
 
-  it('Should check that `home` text exits and is visible in bottom tab', async () => {
+  it('Should check that `HOME` text exits and is visible in bottom tab', async () => {
     await expect(navigationBar.home).toExist();
     await expect(navigationBar.home).toBeVisible();
   });
 
-  it('Should check that home icon exists & is visible', async () => {
+  it('Should check that home icon exists and is visible', async () => {
     await expect(navigationBar.homeIcon.atIndex(1)).toExist();
     await expect(navigationBar.homeIcon.atIndex(1)).toBeVisible();
   });
 
-  it('Should check that `writing` text is not be visible in bottom tab', async () => {
+  it('Should check that `WRITING` text is not be visible in bottom tab', async () => {
     await expect(navigationBar.writing).toBeNotVisible();
   });
 
@@ -36,7 +36,7 @@ describe('Navigation bar', () => {
     await expect(navigationBar.writingIcon.atIndex(1)).toExist();
   });
 
-  it('Should check that `settings` text is not be visible in bottom tab', async () => {
+  it('Should check that `SETTINGS` text is not be visible in bottom tab', async () => {
     await expect(navigationBar.settings).toBeNotVisible();
   });
 
