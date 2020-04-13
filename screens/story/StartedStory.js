@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, Animated, StatusBar } from 'react-native';
+import { StyleSheet, ScrollView, View, Animated, StatusBar, SafeAreaView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, FontAwesome, Feather } from '@expo/vector-icons';
 import { Button, Surface } from 'react-native-paper';
-import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
+
 import Text from '../../components/CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 import StorySingleMeta from '../../components/SingleStoryMeta';
@@ -24,17 +24,29 @@ const StartedStory = ({ navigation }) => {
 
   const [scrollY] = useState(new Animated.Value(0));
 
-  const HEADER_MINIMUM_HEIGHT = 130;
-  const HEADER_MAXIMUM_HEIGHT = 270;
+  const HEADER_MINIMUM_HEIGHT = 0;
+  const HEADER_MAXIMUM_HEIGHT = 170;
 
-  const headerY = scrollY.interpolate({
-    inputRange: [0, SCREEN_HEIGHT],
+  const titleHeight = scrollY.interpolate({
+    inputRange: [0, 25],
+    outputRange: [25, 0],
+    extrapolate: 'clamp'
+  });
+
+  const subtitlemgBottom = scrollY.interpolate({
+    inputRange: [0, 10],
+    outputRange: [10, 0],
+    extrapolate: 'clamp'
+  });
+
+  const metaHeaderHeight = scrollY.interpolate({
+    inputRange: [0, HEADER_MAXIMUM_HEIGHT],
     outputRange: [HEADER_MAXIMUM_HEIGHT, HEADER_MINIMUM_HEIGHT],
     extrapolate: 'clamp'
   });
 
   const opacity = scrollY.interpolate({
-    inputRange: [0, SCREEN_HEIGHT],
+    inputRange: [0, HEADER_MAXIMUM_HEIGHT],
     outputRange: [1, 0]
   });
 
@@ -44,99 +56,92 @@ const StartedStory = ({ navigation }) => {
         backgroundColor: '#eee',
         flex: 1
       }}>
-      <StatusBar barStyle="light-content" />
-      <View style={{ position: 'absolute', width: '100%', top: 0, left: 0, zIndex: 1000 }}>
-        <Surface>
-          <Animated.View
-            style={{
-              backgroundColor: 'red',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              zIndex: 1000,
-              height: headerY,
-              overflow: 'hidden'
-            }}>
-            <Surface
+      <Surface style={{ elevation: 5, backgroundColor: 'transparent' }}>
+        <LinearGradient
+          colors={['#03a2a2', '#23c2c2']}
+          style={{
+            borderBottomLeftRadius: 15,
+            borderBottomRightRadius: 15,
+            paddingBottom: 15
+          }}>
+          <SafeAreaView>
+            <Animated.View
               style={{
-                borderBottomLeftRadius: 13,
-                borderBottomRightRadius: 13,
-                overflow: 'hidden',
-                elevation: 5
+                height: titleHeight
               }}>
-              <LinearGradient
-                colors={['#03a2a2', '#23c2c2']}
-                style={{
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  paddingBottom: Constants.statusBarHeight,
-                  paddingTop: Constants.statusBarHeight * 1.7
-                }}>
-                <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
-                  ScriptoRerum
-                </Text>
-                <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
-                  There’s a Man in the Woods
-                </Text>
+              <Text
+                type="bold"
+                style={{ color: 'white', textAlign: 'center', fontSize: 18, marginBottom: 5 }}>
+                ScriptoRerum
+              </Text>
+            </Animated.View>
+            <Animated.Text
+              type="bold"
+              style={{
+                color: 'white',
+                marginBottom: subtitlemgBottom,
+                textAlign: 'center',
+                fontSize: 18
+              }}>
+              There’s a Man in the Woods
+            </Animated.Text>
 
-                <StorySingleMeta
-                  containerStyle={{
-                    opacity
-                  }}
-                  label="Genre"
-                  value="Thriller"
-                />
-                <StorySingleMeta
-                  containerStyle={{
-                    opacity
-                  }}
-                  label="Status"
-                  value="In Progress"
-                />
-                <StorySingleMeta
-                  containerStyle={{
-                    opacity
-                  }}
-                  label="Master Author"
-                  value="Anonymous 1"
-                />
-                <StorySingleMeta
-                  containerStyle={{
-                    opacity
-                  }}
-                  label="Intro Maximum Words"
-                  value="50"
-                />
-                <StorySingleMeta
-                  containerStyle={{
-                    opacity
-                  }}
-                  label="Ending Maximum Words"
-                  value="50"
-                />
-                <StorySingleMeta
-                  containerStyle={{ opacity }}
-                  label="Words per Round"
-                  value="100 max"
-                />
-                <StorySingleMeta containerStyle={{ opacity }} label="Co-Authors" value="7/11" />
-              </LinearGradient>
-            </Surface>
-          </Animated.View>
-          <Animated.View
-            style={{
-              position: 'absolute',
-              backgroundColor: 'hsl(180, 69%, 43%)',
-              ...styles.headerBtn,
-              width: SCREEN_WIDTH + 50,
-              left: -40,
-              top: Animated.subtract(headerY, 10),
-              paddingTop: 10,
-              paddingBottom: 10,
-              zIndex: 1000
-            }}>
-            <Surface style={styles.surface}>
+            <Animated.View
+              style={{
+                left: 0,
+                right: 0,
+                height: metaHeaderHeight,
+                marginBottom: 10
+              }}>
+              <StorySingleMeta
+                containerStyle={{
+                  opacity
+                }}
+                label="Genre"
+                value="Thriller"
+              />
+              <StorySingleMeta
+                containerStyle={{
+                  opacity
+                }}
+                label="Status"
+                value="In Progress"
+              />
+              <StorySingleMeta
+                containerStyle={{
+                  opacity
+                }}
+                label="Master Author"
+                value="Anonymous 1"
+              />
+              <StorySingleMeta
+                containerStyle={{
+                  opacity
+                }}
+                label="Intro Maximum Words"
+                value="50"
+              />
+              <StorySingleMeta
+                containerStyle={{
+                  opacity
+                }}
+                label="Ending Maximum Words"
+                value="50"
+              />
+              <StorySingleMeta
+                containerStyle={{ opacity }}
+                label="Words per Round"
+                value="100 max"
+              />
+
+              <StorySingleMeta containerStyle={{ opacity }} label="Co-Authors" value="7/11" />
+            </Animated.View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around'
+              }}>
               <Button
                 mode="contained"
                 uppercase={false}
@@ -144,22 +149,21 @@ const StartedStory = ({ navigation }) => {
                 labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
                 Join Story
               </Button>
-            </Surface>
-
-            <Surface style={styles.surface}>
               <Button
                 mode="text"
                 icon="arrow-left"
                 color="#5a7582"
                 uppercase={false}
                 onPress={() => navigation.goBack()}
+                style={{ backgroundColor: '#fff' }}
                 labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium' }}>
                 Go Back
               </Button>
-            </Surface>
-          </Animated.View>
-        </Surface>
-      </View>
+            </View>
+          </SafeAreaView>
+        </LinearGradient>
+      </Surface>
+
       <ScrollView
         scrollEventThrottle={16}
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }])}>
@@ -387,11 +391,6 @@ const styles = StyleSheet.create({
     marginHorizontal: '5%',
     justifyContent: 'space-around',
     marginTop: 10
-  },
-  surface: {
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    elevation: 5
   },
   intros: {
     width: SCREEN_WIDTH * 0.75,
