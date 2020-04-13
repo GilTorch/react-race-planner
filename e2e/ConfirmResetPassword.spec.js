@@ -9,7 +9,7 @@ const confirmResetPasswordPage = require('./screens/ConfirmResetPasswordPage');
 describe('Confirm Reset Password', () => {
   const firstName = casual.first_name;
   const lastName = casual.last_name;
-  const email = firstName + '.' + lastName + '@gmail.com';
+  const email = `${firstName}.${lastName}@gmail.com`;
   const config = {
     email: email.toLowerCase(),
     oneTimePassword: '2134567',
