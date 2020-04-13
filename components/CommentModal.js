@@ -189,7 +189,6 @@ CommentModal.propTypes = {
 
 const styles = {
   label: {
-    // fontSize: 15,
     color: '#5A7582'
   },
   text: {
