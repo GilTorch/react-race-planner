@@ -8,6 +8,7 @@ import { Button, Surface } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import VotingModal from '../../components/VotingModal';
+import CommentModal from '../../components/CommentModal';
 
 import Text from '../../components/CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
@@ -15,7 +16,8 @@ import StorySingleMeta from '../../components/StorySingleData';
 import PendingRoundBox from '../../components/PendingRoundBox';
 
 const UserPartOfStory = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [votingModalVisible, setVotingModalVisible] = React.useState(false);
+  const [commentModalVisible, setCommentModalVisible] = React.useState(false);
 
   navigation.setOptions({
     headerShown: false
@@ -55,7 +57,11 @@ const UserPartOfStory = ({ navigation }) => {
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             Alphonso, The Barber
           </Text>
-          <VotingModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
+          <VotingModal dismiss={() => setVotingModalVisible(false)} visible={votingModalVisible} />
+          <CommentModal
+            dismiss={() => setCommentModalVisible(false)}
+            visible={commentModalVisible}
+          />
           <StorySingleMeta label="Genre" value="Romance" />
           <StorySingleMeta label="Status" value="In Progress" />
           <StorySingleMeta label="Master Author" value="Anonymous 1" />
@@ -122,18 +128,22 @@ const UserPartOfStory = ({ navigation }) => {
                   Elected Intro
                 </Text>
               </View>
-              <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.displayRow}>
+              <TouchableOpacity
+                onPress={() => setVotingModalVisible(true)}
+                style={styles.displayRow}>
                 <MaterialCommunityIcons name="vote" size={20} color="#911414" />
                 <Text type="bold" style={styles.boxFooter}>
                   Votes: 6/8
                 </Text>
               </TouchableOpacity>
-              <View style={styles.displayRow}>
+              <TouchableOpacity
+                onPress={() => setCommentModalVisible(true)}
+                style={styles.displayRow}>
                 <FontAwesome name="commenting" size={20} color="#0277BD" />
                 <Text type="bold" style={styles.boxFooter}>
                   Comments: 8
                 </Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </Surface>
           <Surface style={styles.intros}>
