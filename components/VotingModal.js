@@ -22,17 +22,16 @@ const VotingModal = ({ visible, dismiss }) => {
             <View
               style={{
                 height: 35,
-                marginTop: 20,
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginBottom: 10
+                marginVertical: 15
               }}>
               <Text type="bold" style={{ fontSize: 30, color: '#5A7582' }}>
                 Vote For This Intro
               </Text>
             </View>
-            <View style={{ paddingLeft: 20, marginTop: 20, flexDirection: 'row' }}>
+            <View style={{ paddingLeft: 20, flexDirection: 'row' }}>
               <Text style={styles.label}>Author: </Text>
               <Text type="bold" style={styles.label}>
                 Anonymous 8
@@ -83,11 +82,10 @@ VotingModal.propTypes = {
 
 const styles = {
   label: {
-    fontSize: 18,
     color: '#5A7582'
   },
   text: {
-    fontSize: 15,
+    fontSize: 13,
     color: '#5A7582',
     textAlign: 'justify'
   },
@@ -95,8 +93,7 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
-    marginTop: 14,
-    marginBottom: 7
+    marginVertical: 20
   },
   button: {
     width: 120,
