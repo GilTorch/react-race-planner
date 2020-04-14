@@ -83,13 +83,13 @@ const Story = ({ story, index, length, navigation }) => {
         )}
 
         {status === 'In Progress' && authorsCount > 5 && (
-          <Text type="bold" style={{ fontSize: 12, color: textColor }}>
-            {authorsCount} people
+          <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
+            {authorsCount} authors
           </Text>
         )}
 
         {authorsCount < 5 && (
-          <Text type="bold" style={{ fontSize: 12, color: textColor }}>
+          <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
             {5 - authorsCount} more people to go
           </Text>
         )}
@@ -141,7 +141,7 @@ const Story = ({ story, index, length, navigation }) => {
 
           {!story.electedIntro && (
             <Text style={{ color: '#ED8A18', fontFamily: 'RobotoItalic', fontSize: 12 }}>
-              Vote haven't started yet
+              Votes haven't started yet
             </Text>
           )}
         </View>
