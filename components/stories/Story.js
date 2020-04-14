@@ -25,9 +25,9 @@ const Story = ({ story, index, length, navigation }) => {
   }
   const inprogress = story.status === 'In Progress' || story.status === 'Waiting for players';
   const status = inprogress ? 'In Progress' : 'Completed';
-  const currentGenre = genres.filter(genre => genre.name === story.genre)[0];
+  const currentGenre = genres.find(genre => genre.name === story.genre);
   const nonLeadAuthors = story.authors.filter(author => !author.storyLead && !author.anonymous);
-  const leadAuthor = story.authors.filter(author => author.storyLead)[0];
+  const leadAuthor = story.authors.find(author => author.storyLead);
   const authorsCount = story.authors.length;
   const anonymousAuthorsCount = authorsCount - (nonLeadAuthors.length + 1);
 

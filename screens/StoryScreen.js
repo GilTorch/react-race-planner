@@ -15,11 +15,11 @@ import { stories } from '../utils/data';
 
 const StoryScreen = ({ navigation, route }) => {
   const { storyId } = route.params;
-  const story = stories.filter(st => st.id === storyId)[0] || stories[3];
-  const masterAuthor = story.authors.filter(author => author.storyLead)[0];
+  const story = stories.find(st => st.id === storyId) || stories[3];
+  const masterAuthor = story.authors.find(author => author.storyLead);
   const authorsCount = story.authors.length;
   const missingAuthorsCount = 5 - authorsCount;
-  const user = story.authors.filter(author => author.username === 'johndoe')[0];
+  const user = story.authors.find(author => author.username === 'johndoe');
   const inprogressStory = story.status === 'In Progress';
   const waitingStory = story.status === 'Waiting for players';
   const completedStory = story.status === 'Completed';
