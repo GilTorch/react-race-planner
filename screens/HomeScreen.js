@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, View, StyleSheet, Dimensions, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome, SimpleLineIcons } from '@expo/vector-icons';
 import { Surface, Searchbar } from 'react-native-paper';
+import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
@@ -10,13 +10,10 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
-import ViewAllCategoriesModal from '../components/ViewAllCategoriesModal';
-import Genre from '../components/Genre';
-import Story from '../components/Story';
+import ViewAllCategoriesModal from '../components/modals/ViewAllCategoriesModal';
+import Story from '../components/stories/Story';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
 
@@ -26,9 +23,13 @@ const HomeScreen = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setBarStyle('light-content');
       StatusBar.setHidden(false);
+      StatusBar.setBarStyle('light-content');
     }, [])
+  );
+
+  const inprogressStories = stories.filter(
+    story => story.status === 'In Progress' || story.status === 'Waiting for players'
   );
 
   return (
@@ -36,7 +37,8 @@ const HomeScreen = ({ navigation }) => {
       <ViewAllCategoriesModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
       <Surface
         style={{
-          elevation: 5
+          elevation: 5,
+          zIndex: 1
         }}>
         <LinearGradient
           colors={['#03a2a2', '#23c2c2']}
@@ -74,8 +76,22 @@ const HomeScreen = ({ navigation }) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingLeft: 23 }}>
-          {genres.map((genre, key) => (
-            <Genre key={key.toString()} genre={genre} />
+          {genres.map(genre => (
+            <View
+              key={Math.random()}
+              style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+              <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
+                {genre.icon(32)}
+              </View>
+              <Text
+                type="medium"
+                style={{
+                  color: '#5A7582',
+                  fontSize: 14
+                }}>
+                {genre.name}
+              </Text>
+            </View>
           ))}
         </ScrollView>
 
@@ -87,7 +103,7 @@ const HomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {searchBarVisible ? (
+        {searchBarVisible && (
           <View
             style={{
               flexDirection: 'row',
@@ -112,65 +128,80 @@ const HomeScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        ) : (
-            <View>
+        )}
+
+        {!searchBarVisible && (
+          <View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginTop: 20,
+                marginBottom: 25,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+              <Text type="medium" style={{ ...styles.headline, fontSize: 18 }}>
+                All Stories
+              </Text>
               <View
                 style={{
-                  marginHorizontal: 20,
-                  marginTop: 20,
-                  marginBottom: 25,
                   flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
+                  justifyContent: 'space-between',
+                  alignSelf: 'stretch'
                 }}>
-                <Text type="medium" style={{ ...styles.headline, fontSize: 18 }}>
-                  All Stories
-              </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignSelf: 'stretch'
-                  }}>
-                  <Surface style={{ borderRadius: 5, elevation: 5, padding: 4, marginRight: 10 }}>
-                    <TouchableOpacity
-                      style={{ flexDirection: 'row', alignItems: 'center' }}
-                      onPress={() => {
-                        navigation.push('FilterScreen');
-                      }}>
-                      <AntDesign color="#5A7582" size={18} name="filter" />
-                      <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
-                        FILTER
+                <Surface style={{ borderRadius: 5, elevation: 5, padding: 4, marginRight: 10 }}>
+                  <TouchableOpacity
+                    style={{ flexDirection: 'row', alignItems: 'center' }}
+                    onPress={() => {
+                      navigation.push('FilterScreen');
+                    }}>
+                    <AntDesign color="#5A7582" size={18} name="filter" />
+                    <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
+                      FILTER
                     </Text>
-                    </TouchableOpacity>
-                  </Surface>
-                  <Surface style={{ borderRadius: 5, elevation: 5, padding: 5 }}>
-                    <TouchableOpacity onPress={() => setSearchBarVisible(true)}>
-                      <FontAwesome size={14} color="#5A7582" name="search" />
-                    </TouchableOpacity>
-                  </Surface>
-                </View>
+                  </TouchableOpacity>
+                </Surface>
+                <Surface style={{ borderRadius: 5, elevation: 5, padding: 5 }}>
+                  <TouchableOpacity onPress={() => setSearchBarVisible(true)}>
+                    <FontAwesome size={14} color="#5A7582" name="search" />
+                  </TouchableOpacity>
+                </Surface>
               </View>
             </View>
-          )}
+          </View>
+        )}
         <View>
           {stories.map((story, index) => (
             <Story
-              genres={genres}
-              key={index.toString()}
-              index={index}
-              navigation={navigation}
+              key={Math.random()}
               story={story}
+              index={index}
+              length={stories.length}
+              navigation={navigation}
             />
           ))}
         </View>
+
+        {inprogressStories.map((story, index) => (
+          <Story
+            route={route}
+            genres={genres}
+            key={Math.random()}
+            story={story}
+            index={index}
+            length={inprogressStories.length}
+            navigation={navigation}
+          />
+        ))}
       </ScrollView>
     </View>
   );
 };
 
 HomeScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  route: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
@@ -179,31 +210,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#EEE'
   },
   headline: { color: '#5A7582' },
-  advertisement: {
-    height: SCREEN_HEIGHT * 0.4,
-    backgroundColor: '#fff',
-    elevation: 5,
-    marginHorizontal: 20,
-    alignItems: 'center',
+  genreIconContainer: {
+    width: 60,
+    height: 60,
     justifyContent: 'center',
-    marginBottom: 20
-  },
-  smallAdvertisement: {
-    height: SCREEN_HEIGHT * 0.1,
-    backgroundColor: '#fff',
-    elevation: 5,
-    marginHorizontal: 20,
-    marginBottom: 20,
     alignItems: 'center',
-    justifyContent: 'center'
-  },
-  smallAdvertisementTitle: {
-    color: '#5A7582',
-    fontSize: 20
-  },
-  advertisementTitle: {
-    color: '#5A7582',
-    fontSize: 25
+    borderRadius: 100
   }
 });
 

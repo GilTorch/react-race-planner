@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import { FontAwesome } from '@expo/vector-icons';
 import Dash from 'react-native-dash';
 import { AllHtmlEntities } from 'html-entities';
-import Text from './CustomText';
-import { SCREEN_HEIGHT } from '../utils/dimensions';
-import { comments } from '../utils/data';
+import Text from '../CustomText';
+import { SCREEN_HEIGHT } from '../../utils/dimensions';
+import { comments } from '../../utils/data';
 
 const CommentModal = ({ visible, dismiss }) => {
   return (

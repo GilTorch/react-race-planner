@@ -67,7 +67,7 @@
     ],
     "camelcase": "off",
     "react/no-multi-comp": [
-      "enabled",
+      2,
       {
         "ignoreStateless": true
       }

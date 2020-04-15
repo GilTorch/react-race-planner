@@ -3,10 +3,10 @@ import { FlatList, TouchableOpacity, View } from 'react-native';
 import { Modal, Portal } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
-import { SCREEN_HEIGHT } from '../utils/dimensions';
-import { genres } from '../utils/data';
-import CategoryGenre from './CategoryGenre';
-import Text from './CustomText';
+import { SCREEN_HEIGHT } from '../../utils/dimensions';
+import { genres } from '../../utils/data';
+import CategoryGenre from '../CategoryGenre';
+import Text from '../CustomText';
 
 const ViewAllCategoriesModal = ({ visible, dismiss }) => {
   return (

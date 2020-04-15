@@ -5,16 +5,101 @@ import MysteryIcon from '../components/svg/icons/MysteryIcon';
 
 const avatarGenerator = email => `https://api.adorable.io/avatars/${email}.png`;
 
+const loremText =
+  'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea.';
+const storyTex =
+  'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea...';
+
+const intros = [
+  [
+    { subTitle: 'By Anonymouns 1', elected: true, votes: '5/8', comments: '3' },
+    { subTitle: 'By Anonymouns 2', elected: false, votes: '2/8', comments: '8' }
+  ],
+  [
+    { subTitle: 'By Marie Clarck', elected: true, votes: '9/11', comments: '24' },
+    { subTitle: 'By Anonymouns 4', elected: false, votes: '6/11', comments: '8' },
+    { subTitle: 'By Anonymouns 6', elected: false, votes: '2/11', comments: '22' },
+    { subTitle: 'By Anonymouns 2', elected: false, votes: '1/11', comments: '2' },
+    { subTitle: 'By Anonymouns 1', elected: false, votes: '4/11', comments: '4' }
+  ],
+  [
+    { subTitle: 'By Anonymouns 8', elected: true, votes: '6/8', comments: '8' },
+    { subTitle: 'By Anonymouns 3', elected: false, votes: '1/8', comments: '18' },
+    { subTitle: 'By Anonymouns 5', elected: false, votes: '2/8', comments: '4' },
+    { subTitle: 'By Anonymouns 2', elected: false, votes: '1/8', comments: '2' },
+    { subTitle: 'By Anonymouns 1', elected: false, votes: '4/8', comments: '14' }
+  ],
+  [
+    { subTitle: 'By Anonymouns 8', elected: false, votes: '6/8', comments: '8' },
+    { subTitle: 'By Anonymouns 3', elected: false, votes: '1/8', comments: '18' },
+    { subTitle: 'By Anonymouns 5', elected: false, votes: '2/8', comments: '4' },
+    { subTitle: 'By Anonymouns 2', elected: false, votes: '1/8', comments: '2' },
+    { subTitle: 'By Anonymouns 1', elected: false, votes: '4/8', comments: '14' }
+  ]
+];
+
+const endings = [
+  { subTitle: 'By Marie Clack', elected: true, votes: '11/11', comments: '33' },
+  { subTitle: 'By Anonymouns 6', elected: false, votes: '5/11', comments: '15' }
+];
+
+const rounds = [
+  [
+    { author: 'Anonymouns 1', body: loremText, comments: 3, status: 'completed', order: 1 },
+    { author: 'Anonymouns 8', body: loremText, comments: 0, status: 'completed', order: 2 },
+    {
+      author: 'Anonymouns 2',
+      status: 'In Progress',
+      timeLeft: '38 minutes and 3 seconds left.',
+      order: 3
+    },
+    { author: 'Anonymous 7', status: 'Pendding', order: 4 },
+    { author: 'Anonymous 3', status: 'Pendding', order: 5 },
+    { author: 'Anonymous 6', status: 'Pendding', order: 6 },
+    { author: 'Anonymous 4', status: 'Pendding', order: 7 },
+    { author: 'Anonymous 5', status: 'Pendding', order: 8 }
+  ],
+  [
+    { author: 'stephanyE289', body: loremText, comments: 0, status: 'completed', order: 1 },
+    { author: 'Anonymouns 8', body: loremText, comments: 3, status: 'completed', order: 2 },
+    { author: 'Marie Clarck', body: loremText, comments: 3, status: 'completed', order: 3 },
+    { author: 'Anonymous 2', body: loremText, comments: 10, status: 'completed', order: 4 },
+    { author: 'Anonymous 6', body: loremText, comments: 1, status: 'completed', order: 5 },
+    { author: 'Anonymous 5', body: loremText, comments: 0, status: 'completed', order: 6 },
+    { author: 'Jessica Eloi', body: loremText, comments: 0, status: 'completed', order: 7 },
+    { author: 'Anonymous 11', body: loremText, comments: 0, status: 'completed', order: 8 },
+    { author: 'Anonymous 3', body: loremText, comments: 33, status: 'completed', order: 9 },
+    { author: 'Anonymous 4', body: loremText, comments: 2, status: 'completed', order: 10 },
+    { author: 'Anonymous 9', body: loremText, comments: 0, status: 'completed', order: 11 }
+  ],
+  [
+    { author: 'Anonymouns 1', body: loremText, comments: 3, status: 'completed', order: 1 },
+    { author: 'Anonymouns 8', body: loremText, comments: 0, status: 'completed', order: 2 },
+    {
+      author: 'You',
+      body: loremText.slice(0, 200),
+      status: 'In Progress',
+      order: 3,
+      timeLeft: '45 minutes and 33 seconds left'
+    },
+    { author: 'Anonymous 7', status: 'Pendding', order: 4 },
+    { author: 'Anonymous 3', status: 'Pendding', order: 5 },
+    { author: 'Anonymous 6', status: 'Pendding', order: 6 },
+    { author: 'Anonymous 4', status: 'Pendding', order: 7 },
+    { author: 'Anonymous 5', status: 'Pendding', order: 8 }
+  ]
+];
+
 const stories = [
   {
+    id: 1,
     title: 'The Flag and The Bucket',
-    screenName: 'InProgressStory',
+    totalRound: 11,
     authors: [
       {
         firstName: 'John',
         lastName: 'Doe',
         email: 'john@doe.com',
-        profilePicture: avatarGenerator('john@doe.com'),
         anonymous: true,
         storyLead: true
       },
@@ -22,7 +107,6 @@ const stories = [
         firstName: 'Bruce',
         lastName: 'Banner',
         email: 'iamthehulk@gmail.com',
-        profilePicture: avatarGenerator('iamthehulk@gmail.com'),
         anonymous: true,
         storyLead: false
       },
@@ -30,22 +114,23 @@ const stories = [
         firstName: 'Bruce',
         lastName: 'Wayne',
         email: 'iambatman@gmail.com',
-        profilePicture: avatarGenerator('iambatman@gmail.com'),
         anonymous: true,
         storyLead: false
       }
     ],
-    status: 'In Progress',
+    status: 'Waiting for players',
     genre: 'Mystery',
     startTime: '18 hours ago',
-    initialIntro:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea...',
+    initialIntro: storyTex,
     electedIntro: null,
-    votes: []
+    rounds: [],
+    intros: [],
+    endings: []
   },
   {
+    id: 2,
     title: "There's a Man in The Woods",
-    screenName: 'StartedStory',
+    totalRound: 8,
     authors: [
       {
         firstName: 'Tony',
@@ -115,15 +200,16 @@ const stories = [
     status: 'In Progress',
     genre: 'Thriller',
     startTime: '1 day and 13 hours ago',
-    initialIntro:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea...',
-    electedIntro:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea...',
-    votes: []
+    initialIntro: storyTex,
+    electedIntro: storyTex,
+    rounds: rounds[0],
+    intros: intros[0],
+    endings: []
   },
   {
+    id: 3,
     title: 'Snitches',
-    screenName: 'CompletedStory',
+    totalRound: 11,
     authors: [
       {
         firstName: 'Freddy',
@@ -162,7 +248,7 @@ const stories = [
         lastName: 'Bond',
         email: 'james007@mi6.com',
         profilePicture: avatarGenerator('james007@mi6.com'),
-        anonymous: false,
+        anonymous: true,
         storyLead: false
       },
       {
@@ -170,7 +256,7 @@ const stories = [
         lastName: 'Man',
         email: 'elephant@man.com',
         profilePicture: avatarGenerator('elephant@man.com'),
-        anonymous: false,
+        anonymous: true,
         storyLead: false
       },
       {
@@ -178,7 +264,7 @@ const stories = [
         lastName: 'Budden',
         email: 'joe@budden.com',
         profilePicture: avatarGenerator('joe@budden.com'),
-        anonymous: false,
+        anonymous: true,
         storyLead: false
       },
       {
@@ -186,12 +272,13 @@ const stories = [
         lastName: 'Matthers',
         email: 'eminem@gmail.com',
         profilePicture: avatarGenerator('eminem@gmail.com'),
-        anonymous: false,
+        anonymous: true,
         storyLead: false
       },
       {
-        firstName: 'Busta',
-        lastName: 'Rhymes',
+        firstName: 'Marie',
+        lastName: 'Clark',
+        fullName: 'Marie Clark',
         email: 'busta@gmail.com',
         profilePicture: avatarGenerator('busta@gmail.com'),
         anonymous: false,
@@ -209,20 +296,23 @@ const stories = [
     status: 'Completed',
     genre: 'Action',
     startTime: '2 days and 7 hours ago',
-    initialIntro:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea...',
-    electedIntro:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea...',
-    votes: []
+    initialIntro: storyTex,
+    electedIntro: storyTex,
+    rounds: rounds[1],
+    intros: intros[1],
+    endings
   },
   {
+    id: 4,
     title: 'Alphonso, The Barber',
-    screenName: 'UserPartOfStory',
+    totalRound: 11,
     authors: [
       {
-        firstName: 'Liu',
-        lastName: 'Kang',
-        email: 'liu@gmail.com',
+        firstName: 'John',
+        lastName: 'Doe',
+        fullName: 'John Doe',
+        username: 'johndoe',
+        email: 'johndoe@email.com',
         profilePicture: avatarGenerator('liu@gmail.com'),
         anonymous: false,
         storyLead: false
@@ -287,126 +377,11 @@ const stories = [
     status: 'In Progress',
     genre: 'Romance',
     startTime: '1 day and 13 hours ago',
-    initialIntro:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea...',
-    electedIntro:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea...',
-    votes: []
-  },
-  {
-    title: 'The Flag and The Bucket',
-    screenName: 'InProgressStory',
-    authors: [
-      {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@doe.com',
-        profilePicture: avatarGenerator('john@doe.com'),
-        anonymous: true,
-        storyLead: true
-      },
-      {
-        firstName: 'Bruce',
-        lastName: 'Banner',
-        email: 'iamthehulk@gmail.com',
-        profilePicture: avatarGenerator('iamthehulk@gmail.com'),
-        anonymous: true,
-        storyLead: false
-      },
-      {
-        firstName: 'Bruce',
-        lastName: 'Wayne',
-        email: 'iambatman@gmail.com',
-        profilePicture: avatarGenerator('iambatman@gmail.com'),
-        anonymous: true,
-        storyLead: false
-      }
-    ],
-    status: 'In Progress',
-    genre: 'Mystery',
-    startTime: '18 hours ago',
-    initialIntro:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea...',
-    electedIntro: null,
-    votes: []
-  },
-  {
-    title: "There's a Man in The Woods",
-    screenName: 'StartedStory',
-    authors: [
-      {
-        firstName: 'Tony',
-        lastName: 'Stark',
-        email: 'iamironman@gmail.com',
-        profilePicture: avatarGenerator('iamironman@gmail.com'),
-        anonymous: true,
-        storyLead: false
-      },
-      {
-        firstName: 'Mohammed',
-        lastName: 'Ali',
-        email: 'bestboxer@gmail.com',
-        profilePicture: avatarGenerator('bestboxer@gmail.com'),
-        anonymous: false,
-        storyLead: false
-      },
-      {
-        firstName: 'Joe',
-        lastName: 'Frazier',
-        email: 'joe@gmail.com',
-        profilePicture: avatarGenerator('joe@gmail.com'),
-        anonymous: false,
-        storyLead: false
-      },
-      {
-        firstName: 'Mike',
-        lastName: 'Tyson',
-        email: 'ironmike@gmail.com',
-        profilePicture: avatarGenerator('ironmike@gmail.com'),
-        anonymous: false,
-        storyLead: false
-      },
-      {
-        firstName: 'Sylvester',
-        lastName: 'Stalone',
-        email: 'stalone@gmail.com',
-        profilePicture: avatarGenerator('stalone@gmail.com'),
-        anonymous: false,
-        storyLead: false
-      },
-      {
-        firstName: 'John',
-        lastName: 'Smith',
-        email: 'john@smith.com',
-        profilePicture: avatarGenerator('john@smith.com'),
-        anonymous: false,
-        storyLead: false
-      },
-      {
-        firstName: 'Toussaint',
-        lastName: 'Louverture',
-        email: 'toussaint@louverture.com',
-        profilePicture: avatarGenerator('toussaint@louverture.com'),
-        anonymous: false,
-        storyLead: false
-      },
-      {
-        firstName: 'Jean Jacques',
-        lastName: 'Dessalines',
-        email: 'empereur@gmail.com',
-        profilePicture: avatarGenerator('empereur@gmail.com'),
-        anonymous: false,
-        storyLead: true
-      }
-    ],
-    status: 'In Progress',
-    genre: 'Thriller',
-    startTime: '1 day and 13 hours ago',
-    initialIntro:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea...',
-    electedIntro:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea...',
-    votes: []
+    initialIntro: storyTex,
+    electedIntro: storyTex,
+    rounds: rounds[2],
+    intros: intros[2],
+    endings: []
   }
 ];
 
@@ -486,4 +461,4 @@ const comments = [
   }
 ];
 
-export { stories, genres, comments };
+export { loremText, intros, endings, stories, comments, genres };

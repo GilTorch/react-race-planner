@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Modal, Portal } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import Text from './CustomText';
+import Text from '../CustomText';
 
 const VotingModal = ({ visible, dismiss }) => {
   return (
