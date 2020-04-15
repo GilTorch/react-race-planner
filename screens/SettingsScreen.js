@@ -12,6 +12,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
+import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
 const SettingsScreen = ({ navigation }) => {
   const {
@@ -102,9 +103,12 @@ const SettingsScreen = ({ navigation }) => {
               width: 100,
               height: 100,
               borderRadius: 100,
+              alignItems: 'center',
+              justifyContent: 'center',
               alignSelf: 'center'
-            }}
-          />
+            }}>
+            <FontAwesome name="user" color="#898989" size={70} />
+          </TouchableOpacity>
           <View
             style={{
               backgroundColor: 'white',
@@ -320,8 +324,13 @@ const SettingsScreen = ({ navigation }) => {
                   justifyContent: 'center',
                   alignItems: 'center'
                 }}>
-                <FontAwesome name="facebook" size={25} />
-                <Text style={{ fontSize: 18 }}>acebook</Text>
+                <FontAwesome
+                  name="facebook-square"
+                  size={30}
+                  color="#1382D5"
+                  style={{ marginRight: 10 }}
+                />
+                <Text style={{ fontSize: 18 }}>Facebook</Text>
               </View>
               <Text style={{ fontSize: 18 }}>Linked</Text>
             </TouchableOpacity>
@@ -339,13 +348,14 @@ const SettingsScreen = ({ navigation }) => {
               }}>
               <TouchableOpacity
                 style={{
-                  // flex: 1,
                   flexDirection: 'row',
                   justifyContent: 'center',
                   alignItems: 'center'
                 }}>
-                <FontAwesome name="google" size={25} />
-                <Text style={{ fontSize: 18 }}>oogle</Text>
+                <View style={{ marginRight: 10 }}>
+                  <GoogleColorfulIcon />
+                </View>
+                <Text style={{ fontSize: 18 }}>Google</Text>
               </TouchableOpacity>
               <Text style={{ fontSize: 18 }}>Not Linked</Text>
             </TouchableOpacity>
@@ -485,8 +495,7 @@ const SettingsScreen = ({ navigation }) => {
             visible={visible}
             contentContainerStyle={{
               backgroundColor: 'white',
-              borderRadius: 10,
-              marginBottom: 20,
+              borderRadius: 6,
               height: '30%',
               width: '90%',
               alignSelf: 'center'
@@ -496,7 +505,8 @@ const SettingsScreen = ({ navigation }) => {
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                margin: 10
+                margin: 20,
+                marginBottom: 10
               }}>
               <FontAwesome name="trash" size={16} color="#5A7582" />
               <Text type="bold" style={{ fontSize: 18, color: '#5A7582' }}>
@@ -557,7 +567,7 @@ SettingsScreen.propTypes = {
 const styles = {
   headline: {
     color: '#898989',
-    fontSize: 15
+    fontSize: 18
   },
   logoContainer: {
     backgroundColor: 'red',
