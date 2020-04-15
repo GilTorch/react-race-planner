@@ -78,7 +78,6 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </Text>
           <View
             style={{
-              height: Constants.statusBarHeight,
               width: '95%',
               flexDirection: 'row',
               justifyContent: 'space-between'
@@ -96,12 +95,19 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <TextInput
             placeholder="username"
+            underlineColor="white"
             value={username}
             onChangeText={val => {
               setUsername(val);
               setDisableCheck(!val);
             }}
-            style={{ height: 45, backgroundColor: 'white' }}
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderTopWidth: 1,
+              borderBottomWidth: 1
+            }}
           />
         </>
       )}
@@ -112,12 +118,19 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <TextInput
             placeholder="first-name"
+            underlineColor="white"
             value={firstName}
             onChangeText={val => {
               setFirstName(val);
               setDisableCheck(!val);
             }}
-            style={{ height: 45, backgroundColor: 'white' }}
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderTopWidth: 1,
+              borderBottomWidth: 1
+            }}
           />
         </>
       )}
@@ -128,12 +141,19 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <TextInput
             placeholder="last-name"
+            underlineColor="white"
             value={lastName}
             onChangeText={val => {
               setLastName(val);
               setDisableCheck(!val);
             }}
-            style={{ height: 45, backgroundColor: 'white' }}
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderTopWidth: 1,
+              borderBottomWidth: 1
+            }}
           />
         </>
       )}
@@ -144,12 +164,19 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <TextInput
             placeholder="email"
+            underlineColor="white"
             value={email}
             onChangeText={val => {
               setEmail(val);
               setDisableCheck(!val);
             }}
-            style={{ height: 45, backgroundColor: 'white' }}
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderTopWidth: 1,
+              borderBottomWidth: 1
+            }}
           />
         </>
       )}
@@ -160,21 +187,34 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <TextInput
             placeholder="phone 1"
+            underlineColor="white"
             value={phone1}
             onChangeText={val => {
               setPhone1(val);
               setDisableCheck(!val);
             }}
-            style={{ height: 45, backgroundColor: 'white' }}
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderTopWidth: 1
+            }}
           />
           <TextInput
             placeholder="phone 2"
+            underlineColor="white"
             value={phone2}
             onChangeText={val => {
               setPhone2(val);
               setDisableCheck(!val);
             }}
-            style={{ height: 45, backgroundColor: 'white' }}
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderTopWidth: 1,
+              borderBottomWidth: 1
+            }}
           />
         </>
       )}
@@ -188,6 +228,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={{ fontSize: 18, color: '#898989' }}>Address</Text>
           </View>
           <TextInput
+            underlineColor="white"
             value={address1}
             onChangeText={val => {
               setAddress1(val);
@@ -196,9 +237,16 @@ const EditSettingsScreen = ({ navigation, route }) => {
             returnKeyType="next"
             onSubmitEditing={() => address2Ref.current.focus()}
             placeholder="address 1"
-            style={{ height: 45, backgroundColor: 'white' }}
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderTopWidth: 1,
+              borderBottomWidth: 1
+            }}
           />
           <TextInput
+            underlineColor="white"
             value={address2}
             onChangeText={val => {
               setAddress2(val);
@@ -208,9 +256,15 @@ const EditSettingsScreen = ({ navigation, route }) => {
             returnKeyType="next"
             onSubmitEditing={() => cityRef.current.focus()}
             placeholder="address 2"
-            style={{ height: 45, backgroundColor: 'white' }}
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderBottomWidth: 1
+            }}
           />
           <TextInput
+            underlineColor="white"
             value={city}
             onChangeText={val => {
               setCity(val);
@@ -223,9 +277,15 @@ const EditSettingsScreen = ({ navigation, route }) => {
               scroll.current.scrollToEnd();
             }}
             placeholder="city"
-            style={{ height: 45, backgroundColor: 'white' }}
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderBottomWidth: 1
+            }}
           />
           <TextInput
+            underlineColor="white"
             value={country}
             onChangeText={val => {
               setCountry(val);
@@ -237,7 +297,12 @@ const EditSettingsScreen = ({ navigation, route }) => {
               scroll.current.scrollToEnd();
             }}
             placeholder="country"
-            style={{ height: 45, backgroundColor: 'white' }}
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderBottomWidth: 1
+            }}
           />
         </ScrollView>
       )}
@@ -246,7 +311,13 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <View style={{ marginBottom: 10, marginLeft: 10, paddingTop: 30 }}>
             <Text style={{ fontSize: 18, color: '#898989' }}>Gender</Text>
           </View>
-          <View style={{ backgroundColor: 'white' }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderTopWidth: 1,
+              borderBottomWidth: 1
+            }}>
             <TouchableOpacity onPress={() => selectMale()} style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Male</Text>
               {gender === 'Male' && <FontAwesome name="check" size={18} color="#03A2A2" />}
@@ -268,16 +339,33 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <View style={{ marginBottom: 10, marginLeft: 10 }}>
             <Text style={{ fontSize: 18, color: '#898989' }}>Current Password</Text>
           </View>
-          <TextInput placeholder="required" style={{ height: 45, backgroundColor: 'white' }} />
+          <TextInput
+            underlineColor="white"
+            placeholder="required"
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderTopWidth: 1,
+              borderBottomWidth: 1
+            }}
+          />
           <View style={{ marginVertical: 10, marginLeft: 10 }}>
             <Text style={{ fontSize: 18, color: '#898989' }}>New Password</Text>
           </View>
           <TextInput
+            underlineColor="white"
             onFocus={() => {
               scroll.current.scrollToEnd();
             }}
             placeholder="required"
-            style={{ height: 45, backgroundColor: 'white' }}
+            style={{
+              height: 45,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderTopWidth: 1,
+              borderBottomWidth: 1
+            }}
           />
           <View
             style={{
@@ -303,7 +391,13 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <View style={{ marginBottom: 10, marginLeft: 10, paddingTop: 30 }}>
             <Text style={{ fontSize: 18, color: '#898989' }}>Default Privacy</Text>
           </View>
-          <View style={{ backgroundColor: 'white' }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderTopWidth: 1,
+              borderBottomWidth: 1
+            }}>
             <TouchableOpacity onPress={() => setPrivacy('username')} style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Username</Text>
               {privacy === 'username' && <FontAwesome name="check" size={18} color="#03A2A2" />}
