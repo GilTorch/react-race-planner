@@ -30,7 +30,8 @@ const SettingsScreen = ({ navigation }) => {
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
       <Surface
         style={{
-          elevation: 5
+          elevation: 5,
+          zIndex: 1
         }}>
         <LinearGradient
           colors={['#03a2a2', '#23c2c2']}

@@ -66,6 +66,12 @@
       "prefer-double"
     ],
     "camelcase": "off",
+    "react/no-multi-comp": [
+      2,
+      {
+        "ignoreStateless": true
+      }
+    ],
     "no-use-before-define": "off",
     "semi": [
       "error",

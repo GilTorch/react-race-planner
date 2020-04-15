@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import AuthStack from './AuthStack';
-import BottomTab from './BottomTab';
+import RootStack from './RootStack';
 
 export default function AppNavigation() {
   const [currentUser] = useState(false);
@@ -10,5 +10,5 @@ export default function AppNavigation() {
     return <AuthStack />;
   }
 
-  return <BottomTab />;
+  return <RootStack />;
 }

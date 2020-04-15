@@ -3,10 +3,11 @@ import React from 'react';
 import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import MainStack from './MainStack';
 import WritingStack from './WritingStack';
 import SettingsStack from './SettingsStack';
+import LibraryStack from './LibraryStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,8 +16,44 @@ export default function BottomTab() {
     <Tab.Navigator
       initialRouteName="Home"
       tabBarOptions={{
-        labelPosition: 'beside-icon'
+        labelPosition: 'beside-icon',
+        style: {
+          paddingHorizontal: 15
+        }
       }}>
+      <Tab.Screen
+        name="Library"
+        component={LibraryStack}
+        options={{
+          tabBarLabel: ({ focused }) => {
+            if (!focused) return null;
+            const label = (
+              <Text
+                style={{
+                  paddingLeft: 15,
+                  fontSize: 13,
+                  textTransform: 'uppercase',
+                  fontWeight: 'bold',
+                  color: '#03A2A2'
+                }}>
+                Library
+              </Text>
+            );
+            return label;
+          },
+          tabBarIcon: ({ focused }) => {
+            const icon = (
+              <MaterialCommunityIcons
+                style={{ fontSize: 20 }}
+                color={focused ? '#03A2A2' : '#707070'}
+                name="library"
+              />
+            );
+            return icon;
+          }
+        }}
+      />
+
       <Tab.Screen
         name="Home"
         component={MainStack}

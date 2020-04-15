@@ -3,13 +3,14 @@ import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
 const LoginScreen = ({ navigation }) => {
   return (
-    <ScrollView contentContainerStyle={{ backgroundColor: 'white', marginTop: 25 }}>
+    <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
         <Image source={SRLogo} style={styles.logo} />
         <View style={styles.headlineContainer}>
