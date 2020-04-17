@@ -333,7 +333,7 @@ const SettingsScreen = ({ navigation }) => {
                 />
                 <Text style={{ fontSize: 18 }}>Facebook</Text>
               </View>
-              <Text style={{ fontSize: 18 }}>Linked</Text>
+              <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} />
             <TouchableOpacity
@@ -358,7 +358,7 @@ const SettingsScreen = ({ navigation }) => {
                 </View>
                 <Text style={{ fontSize: 18 }}>Google</Text>
               </TouchableOpacity>
-              <Text style={{ fontSize: 18 }}>Not Linked</Text>
+              <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>
             </TouchableOpacity>
           </View>
         </View>
