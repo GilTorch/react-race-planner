@@ -281,13 +281,7 @@ const SettingsScreen = ({ navigation }) => {
             }}>
             <TouchableOpacity
               onPress={() => navigation.navigate('EditSettingsScreen', { key: 'password' })}
-              style={{
-                height: 50,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingRight: 30,
-                alignItems: 'center'
-              }}>
+              style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Update Password</Text>
               <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
             </TouchableOpacity>
@@ -296,13 +290,7 @@ const SettingsScreen = ({ navigation }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', { key: 'privacy', value: 'username' })
               }
-              style={{
-                height: 50,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingRight: 20,
-                alignItems: 'center'
-              }}>
+              style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Default Privacy</Text>
               <View
                 style={{
@@ -413,30 +401,19 @@ const SettingsScreen = ({ navigation }) => {
               backgroundColor: 'white',
               borderColor: '#C8C7CC',
               borderWidth: 1,
-              paddingHorizontal: 20
+              paddingLeft: 20
             }}>
             <TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginTop: 20,
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
+              <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Privacy Policy</Text>
                 <View>
                   <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
                 </View>
               </View>
             </TouchableOpacity>
+            <Divider />
             <TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginTop: 20,
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
+              <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Terms of Service</Text>
                 <View>
                   <View>
@@ -445,14 +422,9 @@ const SettingsScreen = ({ navigation }) => {
                 </View>
               </View>
             </TouchableOpacity>
+            <Divider />
             <TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginVertical: 20,
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
+              <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Licenses</Text>
                 <View>
                   <View>
