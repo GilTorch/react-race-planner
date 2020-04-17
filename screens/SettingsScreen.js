@@ -503,23 +503,14 @@ const SettingsScreen = ({ navigation }) => {
             onDismiss={() => hideDeleteModal()}>
             <View
               style={{
-                flexDirection: 'row',
                 alignItems: 'center',
                 margin: 20,
                 marginBottom: 10
               }}>
-              <FontAwesome name="trash" size={16} color="#5A7582" />
-              <Text type="bold" style={{ fontSize: 18, color: '#5A7582' }}>
-                {' '}
+              <Text type="bold" style={{ fontSize: 24, color: '#5A7582' }}>
                 Delete Account !
               </Text>
-              <TouchableOpacity style={{ marginLeft: 'auto' }} onPress={() => hideDeleteModal()}>
-                <Text type="bold" style={{ fontSize: 18, color: '#5A7582' }}>
-                  X
-                </Text>
-              </TouchableOpacity>
             </View>
-            <Divider />
             <View style={{ flex: 1, justifyContent: 'space-around' }}>
               <TextInput
                 placeholder="Enter your username"
@@ -545,7 +536,7 @@ const SettingsScreen = ({ navigation }) => {
                   </Button>
                 </Surface>
                 <Surface style={styles.btnSurface}>
-                  <Button onPress={() => hideDeleteModal()} style={{ backgroundColor: '#A39F9F' }}>
+                  <Button onPress={() => hideDeleteModal()} style={{ backgroundColor: '#03A2A2' }}>
                     <Text type="bold" style={{ color: '#FFF' }}>
                       Cancel
                     </Text>
