@@ -28,11 +28,11 @@ describe('Navigation bar', () => {
     await expect(navigationBar.homeIcon.atIndex(1)).toBeVisible();
   });
 
-  it('Should check that `WRITING` text is not be visible in bottom tab', async () => {
+  it('Should check that `WRITING` text is not visible in bottom tab', async () => {
     await expect(navigationBar.writing).toBeNotVisible();
   });
 
-  it('Should check that `writing` icon exists', async () => {
+  it('Should check that writing icon exists', async () => {
     await expect(navigationBar.writingIcon.atIndex(1)).toExist();
   });
 
@@ -40,7 +40,7 @@ describe('Navigation bar', () => {
     await expect(navigationBar.settings).toBeNotVisible();
   });
 
-  it('Should check that `settings` icon exists', async () => {
+  it('Should check that settings icon exists', async () => {
     await expect(navigationBar.settingsIcon.atIndex(1)).toExist();
   });
 });
