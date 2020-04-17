@@ -12,10 +12,10 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
       style={{ backgroundColor: 'white' }}
       contentContainerStyle={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
-        <Image source={SRLogo} style={styles.logo} />
+        <Image testID="logo-" source={SRLogo} style={styles.logo} />
         {/* <View style={styles.logoContainer}>
         </View> */}
-        <View style={styles.headlineContainer}>
+        <View testID="reset-your-password-text" style={styles.headlineContainer}>
           <Text type="medium" style={styles.headline}>
             Reset Your Password
           </Text>
@@ -46,7 +46,7 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="password-field-1" style={styles.input} />
             </View>
           </View>
           <View style={styles.formGroup}>
@@ -56,7 +56,7 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="new-password-field" style={styles.input} />
             </View>
           </View>
           <View style={styles.formGroup}>
@@ -66,10 +66,10 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="confirm-new-password-field" style={styles.input} />
             </View>
           </View>
-          <TouchableOpacity style={styles.submitButton}>
+          <TouchableOpacity testID="reset-password-button-2" style={styles.submitButton}>
             <Text type="medium" style={styles.submitButtonText}>
               Reset Password
             </Text>
@@ -81,7 +81,7 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('Login')}
               style={styles.goToLoginPageButton}>
-              <View>
+              <View testID="shrink-to-login-page">
                 <Text type="medium" style={styles.goToLoginPageButtonText}>
                   Log in
                 </Text>

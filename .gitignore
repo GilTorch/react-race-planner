@@ -38,6 +38,7 @@ bower_components
 build/Release
 
 # Dependency directories
+bin/
 node_modules/
 jspm_packages/
 
@@ -112,3 +113,4 @@ web-build
 .env.test.local
 .env.production.local
 .expo
+bin
