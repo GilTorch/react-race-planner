@@ -178,7 +178,7 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity onPress={() => showDatepicker()} style={styles.profileField}>
+            <TouchableOpacity onPress={showDatepicker} style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Date of Birth</Text>
               <View
                 style={{
@@ -190,14 +190,27 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             {show && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode="date"
-                maximumDate={new Date(2010, 1, 1)}
-                display="default"
-                onChange={onChange}
-              />
+              <>
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode="date"
+                  maximumDate={new Date(2010, 1, 1)}
+                  display="default"
+                  onChange={onChange}
+                />
+                {Platform.OS === 'ios' && (
+                  <TouchableOpacity
+                    onPress={() => setShow(false)}
+                    style={{
+                      alignSelf: 'flex-end',
+                      paddingRight: 27,
+                      marginBottom: 10
+                    }}>
+                    <Text style={{ fontSize: 14, color: '#03A2A2' }}>Done</Text>
+                  </TouchableOpacity>
+                )}
+              </>
             )}
           </View>
 
