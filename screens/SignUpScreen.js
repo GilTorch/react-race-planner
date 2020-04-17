@@ -18,6 +18,7 @@ import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 import { signupSchema } from '../utils/validators';
+import PageSpinner from '../components/PageSpinner';
 
 const SignupScreen = ({ navigation }) => {
   useFocusEffect(
@@ -30,9 +31,11 @@ const SignupScreen = ({ navigation }) => {
   let scrollRef = React.useRef();
   const [form, setState] = React.useState({});
   const [errors, setErrors] = React.useState({});
+  const [showSpinner, setLoading] = React.useState(false);
   const focusNextField = name => inputs[name].focus();
 
   const handleSubmit = () => {
+    setLoading(true);
     scrollRef.scrollTo({ y: 230, animated: true });
     setErrors({});
 
@@ -40,6 +43,7 @@ const SignupScreen = ({ navigation }) => {
       .validate(form, { abortEarly: false })
       .then(value => console.log(value))
       .catch(err => {
+        setLoading(false);
         err.errors.map(e => {
           const [inputName, msg] = e.split(':');
           setErrors(prev => ({ ...prev, [inputName]: msg }));
@@ -244,6 +248,7 @@ const SignupScreen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+      <PageSpinner visible={showSpinner} />
     </KeyboardAvoidingView>
   );
 };
