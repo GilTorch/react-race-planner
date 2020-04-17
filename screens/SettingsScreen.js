@@ -90,7 +90,7 @@ const SettingsScreen = ({ navigation }) => {
 
       <ScrollView>
         <View>
-          <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>
+          <View style={{ justifyContent: 'center', marginLeft: 20, marginVertical: 20 }}>
             <Text style={styles.headline}>PROFILE INFO</Text>
           </View>
           <TouchableOpacity
@@ -111,45 +111,25 @@ const SettingsScreen = ({ navigation }) => {
           </TouchableOpacity>
           <View
             style={{
+              paddingLeft: 20,
               backgroundColor: 'white',
               borderColor: '#C8C7CC',
-              borderWidth: 1,
-              paddingHorizontal: 20
+              borderWidth: 1
             }}>
             <TouchableOpacity
               onPress={() => navigation.navigate('EditSettingsScreen', { key: 'username' })}
-              style={{
-                height: 50,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}>
+              style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Username</Text>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center'
                 }}>
-                <Text style={{ fontSize: 18, color: '#898989' }}>Claim Yours</Text>
+                <Text style={{ fontSize: 18, color: '#898989' }}>john.doe</Text>
                 <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
               </View>
             </TouchableOpacity>
-          </View>
-          <View style={{ height: 70, alignItems: 'center', justifyContent: 'center' }}>
-            <View style={{ width: '80%' }}>
-              <Text style={{ color: '#B8B8BA' }}>
-                Create a public Username. Having a username will make It easier for other authors to
-                find you in the future.
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              paddingLeft: 20,
-              backgroundColor: 'white',
-              borderColor: '#C8C7CC',
-              borderWidth: 1
-            }}>
+            <Divider />
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', { key: 'firstname', value: 'John' })
@@ -219,7 +199,27 @@ const SettingsScreen = ({ navigation }) => {
                 onChange={onChange}
               />
             )}
-            <Divider />
+          </View>
+
+          <View
+            style={{
+              marginTop: 10,
+              marginBottom: 20,
+              paddingHorizontal: 20,
+              justifyContent: 'center'
+            }}>
+            <Text style={{ color: '#898989' }}>
+              We ask for your date of birth so we can better personalize your content
+            </Text>
+          </View>
+
+          <View
+            style={{
+              paddingLeft: 20,
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderWidth: 1
+            }}>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
@@ -256,7 +256,7 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View>
-          <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>
+          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
             <Text style={styles.headline}>SECURITY</Text>
           </View>
           <View
@@ -304,7 +304,7 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View>
-          <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>
+          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
             <Text style={styles.headline}>SOCIAL ACCOUNT</Text>
           </View>
           <View style={{ backgroundColor: 'white' }}>
@@ -363,7 +363,7 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View>
-          <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>
+          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
             <Text style={styles.headline}>CONTACT US</Text>
           </View>
           <View
@@ -392,7 +392,7 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View>
-          <View style={{ height: 50, justifyContent: 'center', marginLeft: 20 }}>
+          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
             <Text style={styles.headline}>LEGAL</Text>
           </View>
           <View
