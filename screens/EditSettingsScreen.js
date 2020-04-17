@@ -417,6 +417,18 @@ const EditSettingsScreen = ({ navigation, route }) => {
               {privacy === 'anonymous' && <FontAwesome name="check" size={18} color="#03A2A2" />}
             </TouchableOpacity>
           </View>
+          <View
+            style={{
+              marginTop: 10,
+              marginBottom: 20,
+              paddingHorizontal: 20,
+              justifyContent: 'center'
+            }}>
+            <Text style={{ color: '#898989' }}>
+              This determines what people will see as your name (for rounds and comments) at the end
+              of the story. You'll still be asked to confirm it at the end of each story
+            </Text>
+          </View>
         </>
       )}
     </View>
