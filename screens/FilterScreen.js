@@ -127,7 +127,7 @@ const FilterScreen = ({ navigation }) => {
             <Text style={styles.filterCategory}>STATUS</Text>
             <TouchableOpacity onPress={() => toggleSelectAll('status')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
-                {!tagData.status.allSelected && 'Select All'}
+                {tagData.status.allSelected ? 'Select All' : 'Clear All'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -156,7 +156,7 @@ const FilterScreen = ({ navigation }) => {
             <Text style={styles.filterCategory}>GENRES</Text>
             <TouchableOpacity onPress={() => toggleSelectAll('genres')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
-                {!tagData.genres.allSelected && 'Select All'}
+                {tagData.genres.allSelected ? 'Select All' : 'Clear All'}
               </Text>
             </TouchableOpacity>
           </View>
