@@ -8,6 +8,7 @@ import { Surface, Portal, Modal, Divider, Button, TextInput } from 'react-native
 import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
+import { ImageManipulator } from 'expo-image-crop';
 
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
@@ -26,6 +27,9 @@ const SettingsScreen = ({ navigation }) => {
   const [visible, setVisible] = React.useState(false);
   const [date, setDate] = React.useState(new Date(687041730000));
   const [show, setShow] = React.useState(false);
+  const [showImageManipulator, setShowImageManipulator] = React.useState(false);
+  const [selectedImage, setSelectedImage] = React.useState(null);
+
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
   const openImagePickerAsync = async () => {
@@ -35,7 +39,15 @@ const SettingsScreen = ({ navigation }) => {
       return;
     }
 
-    await ImagePicker.launchImageLibraryAsync();
+    const pickerResult = await ImagePicker.launchImageLibraryAsync();
+
+    if (pickerResult.cancelled === true) {
+      setSelectedImage(null);
+      return;
+    }
+
+    setSelectedImage(pickerResult.uri);
+    setShowImageManipulator(true);
   };
 
   const onChange = selectedDate => {
@@ -69,6 +81,14 @@ const SettingsScreen = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
+      {selectedImage && (
+        <ImageManipulator
+          photo={{ uri: selectedImage }}
+          isVisible={showImageManipulator}
+          onPictureChoosed={({ uri: uriM }) => setSelectedImage(uriM)}
+          onToggleModal={() => setShowImageManipulator(false)}
+        />
+      )}
       <Surface
         style={{
           elevation: 5
@@ -103,11 +123,17 @@ const SettingsScreen = ({ navigation }) => {
               width: 100,
               height: 100,
               borderRadius: 100,
+              overflow: 'hidden',
               alignItems: 'center',
               justifyContent: 'center',
               alignSelf: 'center'
             }}>
-            <FontAwesome name="user" color="#898989" size={70} />
+            {selectedImage === null && <FontAwesome name="user" color="#898989" size={70} />}
+            {selectedImage !== null && (
+              <View style={{ flex: 1 }}>
+                <Image source={{ uri: selectedImage }} style={styles.thumbnail} />
+              </View>
+            )}
           </TouchableOpacity>
           <View
             style={{
@@ -117,7 +143,9 @@ const SettingsScreen = ({ navigation }) => {
               borderWidth: 1
             }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('EditSettingsScreen', { key: 'username' })}
+              onPress={() =>
+                navigation.navigate('EditSettingsScreen', { key: 'username', value: 'john.doe' })
+              }
               style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Username</Text>
               <View
@@ -568,6 +596,11 @@ const styles = {
     justifyContent: 'space-between',
     paddingRight: 20,
     alignItems: 'center'
+  },
+  thumbnail: {
+    width: 120,
+    height: 100,
+    resizeMode: 'contain'
   }
 };
 
