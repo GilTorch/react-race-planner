@@ -4,9 +4,12 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "test:spec": "node_modules/.bin/jest test/**/*.spec.js",
+    "test": "jest --watchAll",
+    "test:e2e": "detox test --configuration ios.sim",
+    "dl_expo_bins": "./scripts/dl_expo_bins",
     "web": "expo start --web",
-    "eject": "expo eject",
-    "test": "jest --watchAll"
+    "eject": "expo eject"
   },
   "jest": {
     "preset": "jest-expo"
@@ -47,6 +50,9 @@
     "@babel/core": "^7.0.0",
     "babel-eslint": "^10.1.0",
     "babel-preset-expo": "~8.0.0",
+    "casual": "^1.6.2",
+    "detox": "^16.0.2",
+    "detox-expo-helpers": "^0.6.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.10.0",
@@ -54,8 +60,23 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.19.0",
-    "jest-expo": "~36.0.1",
-    "prettier": "^1.19.1"
+    "expo-detox-hook": "^1.0.10",
+    "jest-expo": "^36.0.1",
+    "prettier": "^1.19.1",
+    "react-native-testing-library": "^1.13.0",
+    "react-native-test-renderer": "0.0.1",
+    "react-test-renderer": "^16.13.1"
   },
-  "private": true
+  "private": true,
+  "detox": {
+    "test-runner": "jest",
+    "specs": "e2e",
+    "configurations": {
+      "ios.sim": {
+        "binaryPath": "bin/Exponent.app",
+        "type": "ios.simulator",
+        "name": "iPhone 6s"
+      }
+    }
+  }
 }

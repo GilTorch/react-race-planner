@@ -1,8 +1,8 @@
 import * as React from 'react';
 // eslint-disable-next-line import/no-unresolved
-import NavigationTestUtils from 'react-navigation/NavigationTestUtils';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import renderer from 'react-test-renderer';
+// import NavigationTestUtils from 'react-navigation/NavigationTestUtils';
+// // eslint-disable-next-line import/no-extraneous-dependencies
+// import renderer from 'react-test-renderer';
 
 import App from '../App';
 
@@ -10,7 +10,7 @@ jest.mock('expo', () => ({
   AppLoading: 'AppLoading'
 }));
 
-jest.mock('../navigation/AppNavigator', () => 'AppNavigator');
+// jest.mock('../navigation/AppNavigator', () => 'AppNavigator');
 
 describe('App', () => {
   jest.useFakeTimers();

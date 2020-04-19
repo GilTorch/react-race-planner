@@ -12,9 +12,9 @@ const LoginScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
-        <Image source={SRLogo} style={styles.logo} />
+        <Image testID="logo" source={SRLogo} style={styles.logo} />
         <View style={styles.headlineContainer}>
-          <Text type="medium" style={styles.headline}>
+          <Text testID="login-text" type="medium" style={styles.headline}>
             Login
           </Text>
         </View>
@@ -26,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="login-user-name" style={styles.input} />
             </View>
           </View>
           <View style={styles.formGroup}>
@@ -36,17 +36,22 @@ const LoginScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="login-password" style={styles.input} />
             </View>
           </View>
           <View style={{ marginTop: 10, marginBottom: 10 }}>
-            <TouchableOpacity onPress={() => navigation.navigate('ResetPassword')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ResetPassword')}
+              testID="forgot-password-link">
               <Text type="medium" style={styles.goToLoginPageButtonText}>
                 Forgot your password?
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.submitButton} onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity
+            testID="login-button"
+            style={styles.submitButton}
+            onPress={() => navigation.navigate('Home')}>
             <Text type="medium" style={styles.submitButtonText}>
               Log in
             </Text>
@@ -58,6 +63,7 @@ const LoginScreen = ({ navigation }) => {
           </View>
           <View style={styles.socialMediaButtonsContainer}>
             <TouchableOpacity
+              testID="twitter-icon-button"
               style={{
                 backgroundColor: '#3ABDFF',
                 ...styles.socialMediaButton
@@ -65,6 +71,7 @@ const LoginScreen = ({ navigation }) => {
               <Entypo name="twitter-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
+              testID="facebook-icon-button"
               style={{
                 backgroundColor: '#1382D5',
                 ...styles.socialMediaButton
@@ -72,6 +79,7 @@ const LoginScreen = ({ navigation }) => {
               <Entypo name="facebook-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
+              testID="google-icon-button"
               style={{
                 backgroundColor: '#e6e6e6',
                 ...styles.socialMediaButton
@@ -84,7 +92,7 @@ const LoginScreen = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('SignupScreen')}
               style={styles.goToLoginPageButton}>
-              <View>
+              <View testID="go-back-to-signup-page">
                 <Text type="medium" style={styles.goToLoginPageButtonText}>
                   Sign up
                 </Text>

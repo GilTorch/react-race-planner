@@ -19,8 +19,8 @@ const SignupScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
-        <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
-        <View style={styles.headlineContainer}>
+        <Image testID="logo" source={SRLogo} resizeMode="contain" style={styles.logo} />
+        <View testID="create-account-text" style={styles.headlineContainer}>
           <Text type="medium" style={styles.headline}>
             Create an Account
           </Text>
@@ -33,7 +33,7 @@ const SignupScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="user-name" style={styles.input} />
             </View>
           </View>
           <View style={styles.formGroup}>
@@ -43,7 +43,7 @@ const SignupScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="first-name" style={styles.input} />
             </View>
           </View>
           <View style={styles.formGroup}>
@@ -53,7 +53,7 @@ const SignupScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="last-name" style={styles.input} />
             </View>
           </View>
           <View style={styles.formGroup}>
@@ -63,7 +63,7 @@ const SignupScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="email-address" style={styles.input} />
             </View>
           </View>
           <View style={styles.formGroup}>
@@ -73,20 +73,20 @@ const SignupScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="password" style={styles.input} />
             </View>
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
-              <Text type="medium" style={styles.label}>
+              <Text testID="password-confirmation" type="medium" style={styles.label}>
                 Confirm Password
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="password-confirmation" style={styles.input} />
             </View>
           </View>
-          <TouchableOpacity style={styles.submitButton}>
+          <TouchableOpacity testID="sign-up-button" style={styles.submitButton}>
             <Text type="medium" style={styles.submitButtonText}>
               Sign Up
             </Text>
@@ -98,6 +98,7 @@ const SignupScreen = ({ navigation }) => {
           </View>
           <View style={styles.socialMediaButtonsContainer}>
             <TouchableOpacity
+              testID="twitter-icon-btn"
               style={{
                 backgroundColor: '#3ABDFF',
                 ...styles.socialMediaButton
@@ -105,6 +106,7 @@ const SignupScreen = ({ navigation }) => {
               <Entypo name="twitter-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
+              testID="facebook-icon-btn"
               style={{
                 backgroundColor: '#1382D5',
                 ...styles.socialMediaButton
@@ -112,6 +114,7 @@ const SignupScreen = ({ navigation }) => {
               <Entypo name="facebook-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
+              testID="google-icon-btn"
               style={{
                 backgroundColor: '#e6e6e6',
                 ...styles.socialMediaButton
@@ -124,7 +127,7 @@ const SignupScreen = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('Login')}
               style={styles.goToLoginPageButton}>
-              <View>
+              <View testID="go-to-loggin-page">
                 <Text style={styles.goToLoginPageButtonText}>Log in</Text>
               </View>
             </TouchableOpacity>
