@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import { FontAwesome } from '@expo/vector-icons';
 import { Button, Surface, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
+import Constants from 'expo-constants';
 
 import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
@@ -128,12 +129,14 @@ const StoryScreen = ({ navigation, route }) => {
           }}>
           <SafeAreaView
             style={{
+              paddingTop: Constants.statusBarHeight * 1.7,
               alignItems: 'center',
               flexDirection: 'column'
             }}>
             <Animated.View
               style={{
-                height: titleHeight
+                height: titleHeight,
+                overflow: 'hidden'
               }}>
               <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
                 ScriptoRerum
@@ -301,6 +304,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#5A7582',
     fontSize: 20,
+    marginTop: 20,
     marginLeft: 20
   },
   headerBtn: {
