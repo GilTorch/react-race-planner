@@ -123,9 +123,16 @@ const FilterScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.innerWrapper}>
         <View>
-          <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View
+            style={{
+              marginTop: 10,
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}>
             <Text style={styles.filterCategory}>STATUS</Text>
-            <TouchableOpacity onPress={() => toggleSelectAll('status')}>
+            <TouchableOpacity
+              testID="select-all-part-one"
+              onPress={() => toggleSelectAll('status')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
                 {!tagData.status.allSelected && 'Select All'}
               </Text>
@@ -152,9 +159,16 @@ const FilterScreen = ({ navigation }) => {
           </View>
         </View>
         <View>
-          <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View
+            style={{
+              marginTop: 20,
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}>
             <Text style={styles.filterCategory}>GENRES</Text>
-            <TouchableOpacity onPress={() => toggleSelectAll('genres')}>
+            <TouchableOpacity
+              testID="select-all-part-two"
+              onPress={() => toggleSelectAll('genres')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
                 {!tagData.genres.allSelected && 'Select All'}
               </Text>
