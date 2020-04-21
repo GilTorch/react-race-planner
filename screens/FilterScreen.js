@@ -151,8 +151,10 @@ const FilterScreen = ({ navigation }) => {
                   testID="selected-status"
                   key={Math.random()}
                   onPress={() => onSelect('status', tag)}>
-                  <View style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
-                    <Text testID="status" type="bold" style={{ ...styles.text, ...textStyle }}>
+                  <View
+                    testID="statuses"
+                    style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
+                    <Text type="bold" style={{ ...styles.text, ...textStyle }}>
                       {tag.label}
                     </Text>
                   </View>
@@ -190,7 +192,7 @@ const FilterScreen = ({ navigation }) => {
                   testID="selected-genres"
                   key={Math.random()}
                   onPress={() => onSelect('genres', tag)}>
-                  <View style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
+                  <View testID="genres" style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
                     <Text type="bold" style={{ ...styles.text, ...textStyle }}>
                       {tag.label}
                     </Text>

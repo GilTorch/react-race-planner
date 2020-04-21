@@ -18,8 +18,12 @@ class FilterPage {
     await element(by.id('filter-button')).tap();
   }
 
-  get status() {
-    return element(by.id('status'));
+  get statuses() {
+    return element(by.id('statuses'));
+  }
+
+  get genres() {
+    return element(by.id('genres'));
   }
 
   async resetLink() {

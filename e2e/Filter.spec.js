@@ -30,10 +30,15 @@ describe('Filter Page', () => {
     await expect(filterPage.selectAllOne).toBeVisible();
   });
 
-  // it("Should ensure status `Completed` exists", async () => {
-  //   await expect(filterPage.status).toExist();
-  //   await expect(filterPage.status).toBeVisible();
-  // });
+  it('Should ensure all the statuses exist', async () => {
+    await expect(filterPage.statuses.atIndex(1)).toExist();
+    await expect(filterPage.statuses.atIndex(1)).toBeVisible();
+  });
+
+  it('Should ensure all the genres exist', async () => {
+    await expect(filterPage.genres.atIndex(1)).toExist();
+    await expect(filterPage.genres.atIndex(1)).toBeVisible();
+  });
 
   it('Should check that `Select All` link1 is clickable and can select all status', async () => {
     await filterPage.selectAllOne.tap();
