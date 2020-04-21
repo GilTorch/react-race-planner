@@ -13,7 +13,7 @@ describe('Filter Page', () => {
     password: '**********'
   };
 
-  it('Should ensure `FILTER` button exists is clickable, and can navigate to `Filter` page', async () => {
+  it('Should ensure `FILTER` button exists and is visible', async () => {
     await signUpPage.scrollScreenUp();
     await signUpPage.goToLoginAccount.tap();
     await navigationBar.enterLoginCredential(config);
@@ -21,7 +21,7 @@ describe('Filter Page', () => {
     await expect(navigationBar.homeIcon.atIndex(1)).toBeVisible();
   });
 
-  it('Should check  Page', async () => {
+  it('Should ensre `FILTER` button is clickable and can navigate to `Filter` page', async () => {
     await filterPage.filterButton();
   });
 
