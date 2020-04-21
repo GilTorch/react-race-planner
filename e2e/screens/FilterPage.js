@@ -25,6 +25,10 @@ class FilterPage {
   get selectAllTwo() {
     return element(by.id('select-all-part-two'));
   }
+
+  get authorsSlider() {
+    return element(by.id('authors-slider'));
+  }
 }
 
 module.exports = new FilterPage();

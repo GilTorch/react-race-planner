@@ -221,6 +221,7 @@ const FilterScreen = ({ navigation }) => {
               markerOffsetY={5}
               customMarker={() => (
                 <View
+                  testID="authors-slider"
                   style={{
                     width: 25,
                     height: 25,

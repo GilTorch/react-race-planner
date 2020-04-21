@@ -27,7 +27,6 @@ describe('Filter Page', () => {
   it('Should check  Page', async () => {
     await filterPage.filterButton();
   });
-  
 
   it('Should check that `Select All` link1 exists and is visible in Filter Page', async () => {
     await expect(filterPage.selectAllOne).toExist();
@@ -38,7 +37,7 @@ describe('Filter Page', () => {
     await filterPage.selectAllOne.tap();
   });
 
-  it("Should check that `Select All` link1 is be hidden", async () => {
+  it('Should check that `Select All` link1 is be hidden', async () => {
     await expect(filterPage.selectAllOne).toBeNotVisible();
   });
 
@@ -51,7 +50,11 @@ describe('Filter Page', () => {
     await filterPage.selectAllTwo.tap();
   });
 
-   it("Should check that `Select All` link2 is be hidden", async () => {
-     await expect(filterPage.selectAllTwo).toBeNotVisible();
-   });
+  it('Should check that `Select All` link2 is be hidden', async () => {
+    await expect(filterPage.selectAllTwo).toBeNotVisible();
+  });
+
+  it('Should select authors by slider', async () => {
+    await filterPage.authorsSlider.atIndex(1).tapAtPoint({ x: 5, y: 10 });
+  });
 });
