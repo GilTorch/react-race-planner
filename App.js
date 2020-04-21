@@ -8,7 +8,8 @@ import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
-
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import useLinking from './navigation/useLinking';
 import SpaceMono from './assets/fonts/SpaceMono-Regular.ttf';
 import RobotoBlack from './assets/fonts/Roboto-Black.ttf';
@@ -26,6 +27,8 @@ import RobotoThinItalic from './assets/fonts/Roboto-ThinItalic.ttf';
 
 import ScriptoRerumLogo from './assets/images/scriptorerum-logo.png';
 import AppNavigation from './navigation';
+import store from './redux/store';
+import persistor from './redux/store/persistor';
 
 function cacheImages(images) {
   return images.map(image => {
@@ -95,16 +98,20 @@ export default function App(props) {
   }
 
   return (
-    <PaperProvider theme={theme}>
-      <View style={styles.container}>
-        <NavigationContainer
-          ref={containerRef}
-          initialState={initialNavigationState}
-          initialRouteName="SignupScreen">
-          <AppNavigation />
-        </NavigationContainer>
-      </View>
-    </PaperProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <PaperProvider theme={theme}>
+          <View style={styles.container}>
+            <NavigationContainer
+              ref={containerRef}
+              initialState={initialNavigationState}
+              initialRouteName="SignupScreen">
+              <AppNavigation />
+            </NavigationContainer>
+          </View>
+        </PaperProvider>
+      </PersistGate>
+    </Provider>
   );
 }
 
