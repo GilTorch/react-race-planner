@@ -147,9 +147,12 @@ const FilterScreen = ({ navigation }) => {
               const textStyle = tag.selected ? { color: '#fff' } : { color: '#5A7582' };
 
               return (
-                <TouchableOpacity key={Math.random()} onPress={() => onSelect('status', tag)}>
+                <TouchableOpacity
+                  testID="selected-status"
+                  key={Math.random()}
+                  onPress={() => onSelect('status', tag)}>
                   <View style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
-                    <Text type="bold" style={{ ...styles.text, ...textStyle }}>
+                    <Text testID="status" type="bold" style={{ ...styles.text, ...textStyle }}>
                       {tag.label}
                     </Text>
                   </View>
@@ -183,7 +186,10 @@ const FilterScreen = ({ navigation }) => {
               const textStyle = tag.selected ? { color: '#fff' } : { color: '#5A7582' };
 
               return (
-                <TouchableOpacity key={Math.random()} onPress={() => onSelect('genres', tag)}>
+                <TouchableOpacity
+                  testID="selected-genres"
+                  key={Math.random()}
+                  onPress={() => onSelect('genres', tag)}>
                   <View style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
                     <Text type="bold" style={{ ...styles.text, ...textStyle }}>
                       {tag.label}

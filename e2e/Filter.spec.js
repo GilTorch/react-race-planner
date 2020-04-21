@@ -17,9 +17,6 @@ describe('Filter Page', () => {
     await signUpPage.scrollScreenUp();
     await signUpPage.goToLoginAccount.tap();
     await navigationBar.enterLoginCredential(config);
-
-    // await expect(navigationBar.home).toExist();
-    // await expect(navigationBar.home).toBeVisible();
     await expect(navigationBar.homeIcon.atIndex(1)).toExist();
     await expect(navigationBar.homeIcon.atIndex(1)).toBeVisible();
   });
@@ -32,6 +29,11 @@ describe('Filter Page', () => {
     await expect(filterPage.selectAllOne).toExist();
     await expect(filterPage.selectAllOne).toBeVisible();
   });
+
+  // it("Should ensure status `Completed` exists", async () => {
+  //   await expect(filterPage.status).toExist();
+  //   await expect(filterPage.status).toBeVisible();
+  // });
 
   it('Should check that `Select All` link1 is clickable and can select all status', async () => {
     await filterPage.selectAllOne.tap();
@@ -70,6 +72,16 @@ describe('Filter Page', () => {
   it('Should show back `Select All` link2  on screen', async () => {
     await expect(filterPage.selectAllTwo).toExist();
     await expect(filterPage.selectAllTwo).toBeVisible();
+  });
+
+  it('Should ensure `completed` is  selected', async () => {
+    await expect(filterPage.selectStatus.atIndex(1)).toExist();
+    await filterPage.selectStatus.atIndex(1).tap();
+  });
+
+  it('Should ensure `Waiting for players` is  selected', async () => {
+    await expect(filterPage.selectGenres.atIndex(1)).toExist();
+    await filterPage.selectGenres.atIndex(1).tap();
   });
 
   it('Should ensure `Done` link exists and can close `Filter` page', async () => {
