@@ -14,7 +14,7 @@ const ResetPasswordScreen = ({ navigation }) => {
       contentContainerStyle={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
         <View style={styles.logoContainer}>
-          <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
+          <Image testID="logo--" source={SRLogo} resizeMode="contain" style={styles.logo} />
         </View>
         <View style={styles.headlineContainer}>
           <Text type="medium" style={styles.headline}>
@@ -44,10 +44,11 @@ const ResetPasswordScreen = ({ navigation }) => {
               <Text style={styles.label}>Username or Email</Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput style={styles.input} />
+              <TextInput testID="add-email-address-to-reset" style={styles.input} />
             </View>
           </View>
           <TouchableOpacity
+            testID="reset-password-button"
             style={styles.submitButton}
             onPress={() => navigation.navigate('ResetPasswordTwoScreen')}>
             <Text style={styles.submitButtonText}>Send Password Reset Code</Text>
@@ -57,7 +58,7 @@ const ResetPasswordScreen = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('Login')}
               style={styles.goToLoginPageButton}>
-              <View>
+              <View testID="return-to-login-page">
                 <Text style={styles.goToLoginPageButtonText}>Log in</Text>
               </View>
             </TouchableOpacity>

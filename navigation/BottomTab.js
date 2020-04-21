@@ -63,6 +63,7 @@ export default function BottomTab() {
 
             return (
               <Text
+                testID="home"
                 style={{
                   paddingLeft: 15,
                   textTransform: 'uppercase',
@@ -76,6 +77,7 @@ export default function BottomTab() {
           tabBarIcon: ({ focused }) => {
             return (
               <FontAwesome5
+                testID="home-icon"
                 style={{ fontSize: 20 }}
                 color={focused ? '#03A2A2' : '#707070'}
                 name="home"
@@ -94,6 +96,7 @@ export default function BottomTab() {
 
             return (
               <Text
+                testID="writing"
                 style={{
                   paddingLeft: 15,
                   textTransform: 'uppercase',
@@ -110,6 +113,7 @@ export default function BottomTab() {
                 style={{ fontSize: 20 }}
                 color={focused ? '#03A2A2' : '#707070'}
                 name="pen-fancy"
+                testID="writing-icon"
               />
             );
           }
@@ -122,9 +126,9 @@ export default function BottomTab() {
         options={{
           tabBarLabel: ({ focused }) => {
             if (!focused) return null;
-
             return (
               <Text
+                testID="settings"
                 style={{
                   paddingLeft: 15,
                   textTransform: 'uppercase',
@@ -141,6 +145,7 @@ export default function BottomTab() {
                 style={{ fontSize: 20 }}
                 color={focused ? '#03A2A2' : '#707070'}
                 name="cog"
+                testID="settings-icon"
               />
             );
           }
