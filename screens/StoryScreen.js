@@ -34,7 +34,7 @@ const StoryScreen = ({ navigation, route }) => {
   const inprogress = inprogressStory || waitingStory;
   const status = inprogress ? 'In Progress' : 'Completed';
   const masterAuthorName = inprogress ? 'Anonymous 1' : masterAuthor.fullName;
-  const [headerDimensions, setHeaderDimensions] = React.useState({ height: 330 });
+  const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
 
   let coAuthors;
   if (inprogressStory) {
@@ -67,7 +67,7 @@ const StoryScreen = ({ navigation, route }) => {
     }, [])
   );
 
-  const [scrollY] = React.useState(new Animated.Value(0));
+  const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const HEADER_MINIMUM_HEIGHT = 0;
   const HEADER_MAXIMUM_HEIGHT = SCREEN_HEIGHT * 0.25;
@@ -222,11 +222,10 @@ const StoryScreen = ({ navigation, route }) => {
       </Surface>
       {headerDimensions && headerDimensions.height && (
         <ScrollView
-          scrollEventThrottle={16}
+          scrollEventThrottle={1}
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }])}
           contentContainerStyle={{
-            marginTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40),
-            paddingBottom: 350
+            paddingTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40)
           }}>
           {waitingStory && (
             <>
