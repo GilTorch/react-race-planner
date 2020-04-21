@@ -18,6 +18,16 @@ class FilterPage {
     await element(by.id('filter-button')).tap();
   }
 
+  async resetLink() {
+    waitFor(element(by.id('reset'))).toBeVisible();
+    await element(by.id('reset')).tap();
+  }
+
+  async doneLink() {
+    waitFor(element(by.id('done'))).toBeVisible();
+    await element(by.id('done')).tap();
+  }
+
   get selectAllOne() {
     return element(by.id('select-all-part-one'));
   }

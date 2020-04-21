@@ -57,4 +57,22 @@ describe('Filter Page', () => {
   it('Should select authors by slider', async () => {
     await filterPage.authorsSlider.atIndex(1).tapAtPoint({ x: 5, y: 10 });
   });
+
+  it('Should check `Reset` link exist and is clickable', async () => {
+    await filterPage.resetLink();
+  });
+
+  it('Should show back `Select All` link1  on screen', async () => {
+    await expect(filterPage.selectAllOne).toExist();
+    await expect(filterPage.selectAllOne).toBeVisible();
+  });
+
+  it('Should show back `Select All` link2  on screen', async () => {
+    await expect(filterPage.selectAllTwo).toExist();
+    await expect(filterPage.selectAllTwo).toBeVisible();
+  });
+
+  it('Should ensure `Done` link exists and can close `Filter` page', async () => {
+    await filterPage.doneLink();
+  });
 });

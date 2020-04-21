@@ -44,12 +44,12 @@ const FilterScreen = ({ navigation }) => {
     setTagData(defaultTagData);
   };
   const doneBtn = (
-    <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
+    <TouchableOpacity testID="done" onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
       <Text style={{ color: '#03A2A2', fontSize: 18 }}>Done</Text>
     </TouchableOpacity>
   );
   const resetBtn = (
-    <TouchableOpacity onPress={() => reset()} style={{ marginRight: 20 }}>
+    <TouchableOpacity testID="reset" onPress={() => reset()} style={{ marginRight: 20 }}>
       <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
     </TouchableOpacity>
   );
