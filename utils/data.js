@@ -12,35 +12,35 @@ const storyTex =
 
 const intros = [
   [
-    { subTitle: 'By Anonymouns 1', elected: true, votes: '5/8', comments: '3' },
-    { subTitle: 'By Anonymouns 2', elected: false, votes: '2/8', comments: '8' }
+    { author: 'Anonymouns 1', elected: true, votes: '5/8', comments: '3', body: loremText },
+    { author: 'Anonymouns 2', elected: false, votes: '2/8', comments: '8', body: loremText }
   ],
   [
-    { subTitle: 'By Marie Clarck', elected: true, votes: '9/11', comments: '24' },
-    { subTitle: 'By Anonymouns 4', elected: false, votes: '6/11', comments: '8' },
-    { subTitle: 'By Anonymouns 6', elected: false, votes: '2/11', comments: '22' },
-    { subTitle: 'By Anonymouns 2', elected: false, votes: '1/11', comments: '2' },
-    { subTitle: 'By Anonymouns 1', elected: false, votes: '4/11', comments: '4' }
+    { author: 'Marie Clarck', elected: true, votes: '9/11', comments: '24', body: loremText },
+    { author: 'Anonymouns 4', elected: false, votes: '6/11', comments: '8', body: loremText },
+    { author: 'Anonymouns 6', elected: false, votes: '2/11', comments: '22', body: loremText },
+    { author: 'Anonymouns 2', elected: false, votes: '1/11', comments: '2', body: loremText },
+    { author: 'Anonymouns 1', elected: false, votes: '4/11', comments: '4', body: loremText }
   ],
   [
-    { subTitle: 'By Anonymouns 8', elected: true, votes: '6/8', comments: '8' },
-    { subTitle: 'By Anonymouns 3', elected: false, votes: '1/8', comments: '18' },
-    { subTitle: 'By Anonymouns 5', elected: false, votes: '2/8', comments: '4' },
-    { subTitle: 'By Anonymouns 2', elected: false, votes: '1/8', comments: '2' },
-    { subTitle: 'By Anonymouns 1', elected: false, votes: '4/8', comments: '14' }
+    { author: 'Anonymouns 8', elected: true, votes: '6/8', comments: '8', body: loremText },
+    { author: 'Anonymouns 3', elected: false, votes: '1/8', comments: '18', body: loremText },
+    { author: 'Anonymouns 5', elected: false, votes: '2/8', comments: '4', body: loremText },
+    { author: 'Anonymouns 2', elected: false, votes: '1/8', comments: '2', body: loremText },
+    { author: 'Anonymouns 1', elected: false, votes: '4/8', comments: '14', body: loremText }
   ],
   [
-    { subTitle: 'By Anonymouns 8', elected: false, votes: '6/8', comments: '8' },
-    { subTitle: 'By Anonymouns 3', elected: false, votes: '1/8', comments: '18' },
-    { subTitle: 'By Anonymouns 5', elected: false, votes: '2/8', comments: '4' },
-    { subTitle: 'By Anonymouns 2', elected: false, votes: '1/8', comments: '2' },
-    { subTitle: 'By Anonymouns 1', elected: false, votes: '4/8', comments: '14' }
+    { author: 'Anonymouns 8', elected: false, votes: '6/8', comments: '8', body: loremText },
+    { author: 'Anonymouns 3', elected: false, votes: '1/8', comments: '18', body: loremText },
+    { author: 'Anonymouns 5', elected: false, votes: '2/8', comments: '4', body: loremText },
+    { author: 'Anonymouns 2', elected: false, votes: '1/8', comments: '2', body: loremText },
+    { author: 'Anonymouns 1', elected: false, votes: '4/8', comments: '14', body: loremText }
   ]
 ];
 
 const endings = [
-  { subTitle: 'By Marie Clack', elected: true, votes: '11/11', comments: '33' },
-  { subTitle: 'By Anonymouns 6', elected: false, votes: '5/11', comments: '15' }
+  { author: 'Marie Clack', elected: true, votes: '11/11', comments: '33' },
+  { author: 'Anonymouns 6', elected: false, votes: '5/11', comments: '15' }
 ];
 
 const rounds = [
@@ -457,6 +457,34 @@ const comments = [
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '45 minutes ago',
+    author: stories[0].authors[0]
+  },
+  {
+    id: 4,
+    content:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
+    startTime: '2 minutes ago',
+    author: stories[0].authors[0]
+  },
+  {
+    id: 5,
+    content:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
+    startTime: '5 minutes ago',
+    author: stories[0].authors[1]
+  },
+  {
+    id: 6,
+    content:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
+    startTime: '5 hours ago',
+    author: stories[0].authors[2]
+  },
+  {
+    id: 7,
+    content:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
+    startTime: '35 minutes ago',
     author: stories[0].authors[0]
   }
 ];
