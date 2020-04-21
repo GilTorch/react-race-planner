@@ -64,9 +64,10 @@
     "expo-detox-hook": "^1.0.10",
     "jest-expo": "^36.0.1",
     "prettier": "^1.19.1",
-    "react-native-testing-library": "^1.13.0",
     "react-native-test-renderer": "0.0.1",
-    "react-test-renderer": "^16.13.1"
+    "react-native-testing-library": "^1.13.0",
+    "react-test-renderer": "^16.13.1",
+    "redux-devtools-extension": "^2.13.8"
   },
   "private": true,
   "detox": {
