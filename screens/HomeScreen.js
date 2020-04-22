@@ -37,12 +37,12 @@ const HomeScreen = ({ navigation, route }) => {
       <ViewAllCategoriesModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
       <Surface
         style={{
-          elevation: 5,
+          elevation: 3,
           zIndex: 1
         }}>
         <LinearGradient
           colors={['#03a2a2', '#23c2c2']}
-          locations={[0.2, 1]}
+          locations={[0.5, 1]}
           style={{
             alignItems: 'center',
             flexDirection: 'column',
@@ -56,7 +56,7 @@ const HomeScreen = ({ navigation, route }) => {
       </Surface>
 
       <ScrollView>
-        <Surface style={{ paddingBottom: 10 }}>
+        <Surface style={{ paddingBottom: 20, elevation: 2 }}>
           <View
             style={{
               marginTop: 20,
@@ -96,13 +96,6 @@ const HomeScreen = ({ navigation, route }) => {
             ))}
           </ScrollView>
         </Surface>
-        <View style={{ paddingLeft: 23 }}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Text type="medium" style={{ fontSize: 12, marginTop: 10, color: '#03A2A2' }}>
-              View all categories
-            </Text>
-          </TouchableOpacity>
-        </View>
 
         {searchBarVisible && (
           <View
@@ -116,7 +109,7 @@ const HomeScreen = ({ navigation, route }) => {
               marginBottom: 10
             }}>
             <View style={{ flex: 8 }}>
-              <Searchbar style={{ height: 40, paddingTop: 3 }} iconColor="#03A2A2" />
+              <Searchbar style={{ height: 40, paddingTop: 3, elevation: 2 }} iconColor="#03A2A2" />
             </View>
             <View
               style={{
@@ -151,7 +144,7 @@ const HomeScreen = ({ navigation, route }) => {
                   justifyContent: 'space-between',
                   alignSelf: 'stretch'
                 }}>
-                <Surface style={{ borderRadius: 5, elevation: 5, padding: 4, marginRight: 10 }}>
+                <Surface style={{ borderRadius: 5, elevation: 2, padding: 4, marginRight: 10 }}>
                   <TouchableOpacity
                     style={{ flexDirection: 'row', alignItems: 'center' }}
                     onPress={() => {
@@ -163,7 +156,7 @@ const HomeScreen = ({ navigation, route }) => {
                     </Text>
                   </TouchableOpacity>
                 </Surface>
-                <Surface style={{ borderRadius: 5, elevation: 5, padding: 5 }}>
+                <Surface style={{ borderRadius: 5, elevation: 2, padding: 5 }}>
                   <TouchableOpacity onPress={() => setSearchBarVisible(true)}>
                     <FontAwesome size={14} color="#5A7582" name="search" />
                   </TouchableOpacity>

@@ -74,7 +74,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
       <Surface
         style={{
-          elevation: 5
+          elevation: 3
         }}>
         <LinearGradient
           colors={['#03a2a2', '#23c2c2']}

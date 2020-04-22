@@ -29,7 +29,7 @@ const LibraryScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Surface
         style={{
-          elevation: 5,
+          elevation: 3,
           zIndex: 1
         }}>
         <LinearGradient
@@ -113,7 +113,7 @@ const LibraryScreen = ({ navigation }) => {
               justifyContent: 'space-between',
               alignSelf: 'stretch'
             }}>
-            <Surface style={{ borderRadius: 5, elevation: 5, padding: 4, marginRight: 10 }}>
+            <Surface style={{ borderRadius: 5, elevation: 2, padding: 4, marginRight: 10 }}>
               <TouchableOpacity
                 style={{ flexDirection: 'row', alignItems: 'center' }}
                 onPress={() => {
@@ -125,7 +125,7 @@ const LibraryScreen = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
             </Surface>
-            <Surface style={{ borderRadius: 5, elevation: 5, padding: 5 }}>
+            <Surface style={{ borderRadius: 5, elevation: 2, padding: 5 }}>
               <TouchableOpacity>
                 <FontAwesome size={14} color="#5A7582" name="search" />
               </TouchableOpacity>

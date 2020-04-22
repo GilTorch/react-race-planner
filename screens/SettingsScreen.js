@@ -91,7 +91,7 @@ const SettingsScreen = ({ navigation }) => {
       )}
       <Surface
         style={{
-          elevation: 5,
+          elevation: 3,
           zIndex: 1
         }}>
         <LinearGradient

@@ -111,7 +111,7 @@ const StoryScreen = ({ navigation, route }) => {
           borderBottomLeftRadius: 13,
           borderBottomRightRadius: 13,
           backgroundColor: '#03a2a2',
-          elevation: 5,
+          elevation: 2,
           position: 'absolute',
           top: 0,
           left: 0,
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
   surface: {
     backgroundColor: '#fff',
     borderRadius: 5,
-    elevation: 5
+    elevation: 2
   },
   penddingText: {
     color: '#ED8A18',

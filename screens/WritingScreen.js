@@ -28,7 +28,7 @@ const Writing = ({ navigation }) => {
     <View style={styles.container}>
       <Surface
         style={{
-          elevation: 5,
+          elevation: 3,
           zIndex: 1
         }}>
         <LinearGradient
@@ -64,7 +64,7 @@ const Writing = ({ navigation }) => {
               justifyContent: 'space-between',
               alignSelf: 'stretch'
             }}>
-            <Surface style={{ borderRadius: 5, elevation: 5, padding: 4, marginRight: 10 }}>
+            <Surface style={{ borderRadius: 5, elevation: 2, padding: 4, marginRight: 10 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('FilterScreen')}
                 style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -74,7 +74,7 @@ const Writing = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
             </Surface>
-            <Surface style={{ borderRadius: 5, elevation: 5, padding: 5 }}>
+            <Surface style={{ borderRadius: 5, elevation: 2, padding: 5 }}>
               <TouchableOpacity>
                 <FontAwesome size={14} color="#5A7582" name="search" />
               </TouchableOpacity>
@@ -87,8 +87,7 @@ const Writing = ({ navigation }) => {
           <FilterBadges labels={['Authors: 3 - 100']} />
         </View>
 
-        <Story
-          story={stories[3]} index={0} length={1} navigation={navigation} />
+        <Story story={stories[3]} index={0} length={1} navigation={navigation} />
       </ScrollView>
     </View>
   );
