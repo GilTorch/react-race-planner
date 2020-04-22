@@ -1,9 +1,9 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 7897,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "packagerPid": 15702,
+  "expoServerNgrokUrl": "https://wa-uah.anonymous.sr-mobile.exp.direct",
+  "packagerNgrokUrl": "https://packager.wa-uah.anonymous.sr-mobile.exp.direct",
+  "ngrokPid": 15716,
   "devToolsPort": 19002
 }
