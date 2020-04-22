@@ -95,7 +95,7 @@ const SettingsScreen = ({ navigation }) => {
         }}>
         <LinearGradient
           colors={['#03a2a2', '#23c2c2']}
-          locations={[0.2, 1]}
+          locations={[0.5, 1]}
           style={{
             alignItems: 'center',
             flexDirection: 'column',
@@ -334,7 +334,7 @@ const SettingsScreen = ({ navigation }) => {
 
         <View>
           <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
-            <Text style={styles.headline}>SOCIAL ACCOUNT</Text>
+            <Text style={styles.headline}>SOCIAL ACCOUNTS</Text>
           </View>
           <View style={{ backgroundColor: 'white' }}>
             <TouchableOpacity
