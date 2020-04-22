@@ -31,24 +31,25 @@ const SignupScreen = ({ navigation }) => {
   let scrollRef = React.useRef();
   const [form, setState] = React.useState({});
   const [errors, setErrors] = React.useState({});
-  const [showSpinner, setLoading] = React.useState(false);
+
   const focusNextField = name => inputs[name].focus();
 
+  const formatFormError = e => {
+    const [inputName, msg] = e.split(':');
+    setErrors(prev => ({ ...prev, [inputName]: msg }));
+  };
+
   const handleSubmit = () => {
-    setLoading(true);
     scrollRef.scrollTo({ y: 230, animated: true });
     setErrors({});
 
     signupSchema
       .validate(form, { abortEarly: false })
-      .then(value => console.log(value))
+      .then(value => {
+        console.log(value);
+      })
       .catch(err => {
-        setLoading(false);
-        err.errors.map(e => {
-          const [inputName, msg] = e.split(':');
-          setErrors(prev => ({ ...prev, [inputName]: msg }));
-          return e;
-        });
+        err.errors.map(formatFormError);
       });
   };
 
@@ -248,7 +249,7 @@ const SignupScreen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-      <PageSpinner visible={showSpinner} />
+      <PageSpinner visible={false} />
     </KeyboardAvoidingView>
   );
 };
