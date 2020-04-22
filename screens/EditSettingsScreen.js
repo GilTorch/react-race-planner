@@ -366,11 +366,11 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <View
             style={{
-              backgroundColor: '#C8C7CC',
+              backgroundColor: 'white',
               borderColor: '#C8C7CC',
               paddingLeft: 20,
-              borderTopWidth: 1,
-              borderBottomWidth: 1
+              borderTopWidth: 0.5,
+              borderBottomWidth: 0.5
             }}>
             <TouchableOpacity onPress={() => setPrivacy('username')} style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Username</Text>
