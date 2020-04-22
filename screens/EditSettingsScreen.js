@@ -81,9 +81,9 @@ const EditSettingsScreen = ({ navigation, route }) => {
           locations={[0.5, 1]}
           style={{
             alignItems: 'center',
-            justifyContent: 'space-between',
             flexDirection: 'row',
-            paddingBottom: Constants.statusBarHeight * 0.3,
+            justifyContent: 'space-between',
+            paddingBottom: Constants.statusBarHeight,
             paddingTop: Constants.statusBarHeight * 2
           }}>
           <IconButton onPress={() => navigation.goBack()} icon="arrow-left" color="white" />
@@ -101,7 +101,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <TextInput
             placeholder="username"
-            underlineColor="white"
+            underlineColor="#C8C7CC"
             value={username}
             onChangeText={val => {
               setUsername(val);
@@ -118,7 +118,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <TextInput
             placeholder="first-name"
-            underlineColor="white"
+            underlineColor="#C8C7CC"
             value={firstName}
             onChangeText={val => {
               setFirstName(val);
@@ -135,7 +135,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <TextInput
             placeholder="last-name"
-            underlineColor="white"
+            underlineColor="#C8C7CC"
             value={lastName}
             onChangeText={val => {
               setLastName(val);
@@ -152,7 +152,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <TextInput
             placeholder="email"
-            underlineColor="white"
+            underlineColor="#C8C7CC"
             value={email}
             onChangeText={val => {
               setEmail(val);
@@ -169,7 +169,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <TextInput
             placeholder="phone 1"
-            underlineColor="white"
+            underlineColor="transparent"
             onSubmitEditing={() => focusNextField('phone2')}
             blurOnSubmit={false}
             returnKeyType="next"
@@ -183,7 +183,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
             placeholder="phone 2"
-            underlineColor="white"
+            underlineColor="#C8C7CC"
             returnKeyType="done"
             ref={input => {
               inputs.phone2 = input;
@@ -207,7 +207,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Address</Text>
           </View>
           <TextInput
-            underlineColor="white"
+            underlineColor="transparent"
             value={address1}
             onChangeText={val => {
               setAddress1(val);
@@ -220,7 +220,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
-            underlineColor="white"
+            underlineColor="transparent"
             value={address2}
             onChangeText={val => {
               setAddress2(val);
@@ -234,7 +234,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
-            underlineColor="white"
+            underlineColor="transparent"
             value={city}
             onChangeText={val => {
               setCity(val);
@@ -251,7 +251,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
-            underlineColor="white"
+            underlineColor="#C8C7CC"
             value={country}
             onChangeText={val => {
               setCountry(val);
@@ -277,8 +277,8 @@ const EditSettingsScreen = ({ navigation, route }) => {
               backgroundColor: 'white',
               borderColor: '#C8C7CC',
               paddingLeft: 20,
-              borderTopWidth: 1,
-              borderBottomWidth: 1
+              borderTopWidth: 0.5,
+              borderBottomWidth: 0.5
             }}>
             <TouchableOpacity onPress={() => selectMale()} style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Male</Text>
@@ -298,7 +298,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Current Password</Text>
           </View>
           <TextInput
-            underlineColor="white"
+            underlineColor="#C8C7CC"
             placeholder="required"
             secureTextEntry={secure}
             onSubmitEditing={() => focusNextField('password')}
@@ -310,7 +310,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>New Password</Text>
           </View>
           <TextInput
-            underlineColor="white"
+            underlineColor="#C8C7CC"
             onFocus={() => Platform.OS === 'ios' && scroll.current.scrollTo({ y: 80 })}
             placeholder="required"
             secureTextEntry={secure}
@@ -327,7 +327,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
 
           <TextInput
-            underlineColor="white"
+            underlineColor="#C8C7CC"
             onFocus={() => Platform.OS === 'ios' && scroll.current.scrollToEnd()}
             placeholder="required"
             secureTextEntry={secure}
@@ -366,7 +366,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: '#C8C7CC',
               borderColor: '#C8C7CC',
               paddingLeft: 20,
               borderTopWidth: 1,
@@ -441,8 +441,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     backgroundColor: 'white',
     borderColor: '#C8C7CC',
-    borderTopWidth: 1,
-    borderBottomWidth: 1
+    borderTopWidth: 0.5
   }
 });
 
