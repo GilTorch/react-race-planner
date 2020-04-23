@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   round: {
     marginHorizontal: 40,
     backgroundColor: '#fff',
-    elevation: 5,
+    elevation: 2,
     alignSelf: 'center',
     padding: 15
   },
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   surface: {
     backgroundColor: '#fff',
     borderRadius: 5,
-    elevation: 5
+    elevation: 2
   },
   separator: {
     fontSize: 25,

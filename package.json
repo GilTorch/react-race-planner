@@ -4,9 +4,12 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "test:spec": "node_modules/.bin/jest test/**/*.spec.js",
+    "test": "jest --watchAll",
+    "test:e2e": "detox test --configuration ios.sim",
+    "dl_expo_bins": "./scripts/dl_expo_bins",
     "web": "expo start --web",
-    "eject": "expo eject",
-    "test": "jest --watchAll"
+    "eject": "expo eject"
   },
   "jest": {
     "preset": "jest-expo"
@@ -14,6 +17,7 @@
   "dependencies": {
     "@expo/vector-icons": "~10.0.0",
     "@ptomasroos/react-native-multi-slider": "^2.2.0",
+    "@react-native-community/datetimepicker": "2.1.0",
     "@react-native-community/masked-view": "0.1.5",
     "@react-navigation/bottom-tabs": "^5.0.0",
     "@react-navigation/native": "^5.0.0",
@@ -23,6 +27,9 @@
     "expo-asset": "~8.0.0",
     "expo-constants": "~8.0.0",
     "expo-font": "~8.0.0",
+    "expo-image-crop": "^1.0.4",
+    "expo-image-manipulator": "~8.0.0",
+    "expo-image-picker": "~8.0.1",
     "expo-linear-gradient": "~8.0.0",
     "expo-web-browser": "~8.0.0",
     "html-entities": "^1.2.1",
@@ -36,12 +43,20 @@
     "react-native-safe-area-context": "0.6.0",
     "react-native-screens": "2.0.0-alpha.12",
     "react-native-svg": "9.13.3",
-    "react-native-web": "~0.11.7"
+    "react-native-web": "~0.11.7",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "babel-eslint": "^10.1.0",
     "babel-preset-expo": "~8.0.0",
+    "casual": "^1.6.2",
+    "detox": "^16.0.2",
+    "detox-expo-helpers": "^0.6.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.10.0",
@@ -49,8 +64,23 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.19.0",
-    "jest-expo": "~36.0.1",
-    "prettier": "^1.19.1"
+    "expo-detox-hook": "^1.0.10",
+    "jest-expo": "^36.0.1",
+    "prettier": "^1.19.1",
+    "react-native-testing-library": "^1.13.0",
+    "react-native-test-renderer": "0.0.1",
+    "react-test-renderer": "^16.13.1"
   },
-  "private": true
+  "private": true,
+  "detox": {
+    "test-runner": "jest",
+    "specs": "e2e",
+    "configurations": {
+      "ios.sim": {
+        "binaryPath": "bin/Exponent.app",
+        "type": "ios.simulator",
+        "name": "iPhone 6s"
+      }
+    }
+  }
 }

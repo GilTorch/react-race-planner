@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ScriptoRerum",
-    "slug": "scriptorerum",
+    "slug": "sr-mobile",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
@@ -9,7 +9,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.1-rc",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "sr",
