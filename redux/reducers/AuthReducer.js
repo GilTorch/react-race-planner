@@ -1,32 +1,36 @@
 import { Auth } from '../actions/types';
 
 const INITIAL_STATE = {
-  signUpIsLoading: false,
-  signUpError: null,
+  loading: false,
+  requestError: null,
   token: null,
+  currentUser: null,
   tokenExpiration: null
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    // SIGNUP
     case Auth.SIGN_UP_ATTEMPT:
-      return { ...state, signUpIsLoading: true };
-
+      return { ...state, loading: true };
     case Auth.SIGN_UP_FAIL:
       return {
         ...state,
-        signUpIsLoading: false,
-        signUpError: action.payload
+        loading: false,
+        requestError: action.payload
       };
-
     case Auth.SIGN_UP_SUCCESS:
       return {
         ...state,
         token: action.payload.token,
-        tokenExpiration: action.payload.expiration,
-        signUpIsLoading: false,
-        signUpError: null
+        currentUser: action.payload.user,
+        tokenExpiration: action.payload.user?.exp || null,
+        loading: false,
+        requestError: null
+      };
+    case Auth.CLEAR_REQUEST_ERROR:
+      return {
+        ...state,
+        requestError: null
       };
     default:
       return state;

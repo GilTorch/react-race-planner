@@ -7,13 +7,16 @@ import {
   StyleSheet,
   StatusBar,
   Platform,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  ToastAndroid
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { signUpUser, clearRequestError } from '../redux/actions/AuthActions';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
@@ -32,6 +35,10 @@ const SignupScreen = ({ navigation }) => {
   const [form, setState] = React.useState({});
   const [errors, setErrors] = React.useState({});
 
+  const loading = useSelector(state => state.auth.loading);
+  const requestError = useSelector(state => state.auth.requestError);
+  const dispatch = useDispatch();
+
   const focusNextField = name => inputs[name].focus();
 
   const formatFormError = e => {
@@ -46,12 +53,20 @@ const SignupScreen = ({ navigation }) => {
     signupSchema
       .validate(form, { abortEarly: false })
       .then(value => {
-        console.log(value);
+        const user = dispatch(signUpUser(value));
+        if (user) {
+          navigation.navigate('Home');
+        }
       })
       .catch(err => {
         err.errors.map(formatFormError);
       });
   };
+
+  if (requestError) {
+    ToastAndroid.show(requestError.message, ToastAndroid.LONG);
+    dispatch(clearRequestError());
+  }
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' && 'padding'}>
@@ -249,7 +264,7 @@ const SignupScreen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-      <PageSpinner visible={false} />
+      <PageSpinner visible={loading} />
     </KeyboardAvoidingView>
   );
 };
