@@ -103,10 +103,10 @@ const HomeScreen = ({ navigation, route }) => {
               flexDirection: 'row',
               justifyContent: 'space-around',
               alignItems: 'center',
-              marginTop: 10,
+              marginTop: 20,
               marginLeft: 20,
               marginRight: 20,
-              marginBottom: 10
+              marginBottom: 15
             }}>
             <View style={{ flex: 8 }}>
               <Searchbar style={{ height: 40, paddingTop: 3, elevation: 2 }} iconColor="#03A2A2" />
@@ -125,46 +125,64 @@ const HomeScreen = ({ navigation, route }) => {
         )}
 
         {!searchBarVisible && (
-          <View>
+          <View
+            style={{
+              marginLeft: 20,
+              marginRight: 15,
+              marginTop: 20,
+              marginBottom: 15,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+            <Text type="medium" style={{ ...styles.headline, fontSize: 18 }}>
+              All Stories
+            </Text>
             <View
               style={{
-                marginHorizontal: 20,
-                marginTop: 20,
-                marginBottom: 25,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
+                flexDirection: 'row'
               }}>
-              <Text type="medium" style={{ ...styles.headline, fontSize: 18 }}>
-                All Stories
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignSelf: 'stretch'
+              <TouchableOpacity
+                style={{ borderRadius: 5, padding: 5, flex: 1 }}
+                onPress={() => {
+                  navigation.push('FilterScreen');
                 }}>
-                <Surface style={{ borderRadius: 5, elevation: 2, padding: 4, marginRight: 10 }}>
-                  <TouchableOpacity
-                    style={{ flexDirection: 'row', alignItems: 'center' }}
-                    onPress={() => {
-                      navigation.push('FilterScreen');
-                    }}>
-                    <AntDesign color="#5A7582" size={18} name="filter" />
-                    <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
-                      FILTER
-                    </Text>
-                  </TouchableOpacity>
+                <Surface
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderRadius: 5,
+                    elevation: 2,
+                    padding: 5
+                  }}>
+                  <AntDesign color="#5A7582" size={18} name="filter" />
+                  <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
+                    FILTER
+                  </Text>
                 </Surface>
-                <Surface style={{ borderRadius: 5, elevation: 2, padding: 5 }}>
-                  <TouchableOpacity onPress={() => setSearchBarVisible(true)}>
-                    <FontAwesome size={14} color="#5A7582" name="search" />
-                  </TouchableOpacity>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ borderRadius: 5, flex: 1, padding: 5 }}
+                onPress={() => setSearchBarVisible(true)}>
+                <Surface
+                  style={{
+                    borderRadius: 5,
+                    elevation: 2,
+                    paddingHorizontal: 9,
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 5
+                  }}>
+                  <FontAwesome size={14} color="#5A7582" name="search" />
                 </Surface>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         )}
+
         <View>
           {stories.map((story, index) => (
             <Story
