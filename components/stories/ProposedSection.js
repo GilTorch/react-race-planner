@@ -32,7 +32,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
             <Surface key={Math.random()} style={{ ...styles.intros, marginLeft: margin }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text type="bold" style={styles.subTitle}>
-                  {proposedBlock.subTitle}
+                  By {proposedBlock.author}
                 </Text>
                 <BoxMenu parentType="intro_ending" block={{ ...proposedBlock, hasElected }} />
               </View>

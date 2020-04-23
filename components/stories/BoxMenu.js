@@ -13,6 +13,7 @@ const BoxMenu = ({ parentType, block }) => {
   const [showReport, setShowReport] = useState(false);
   const [showVoting, setShowVoting] = React.useState(false);
   const [showComment, setShowComment] = React.useState(false);
+  const penddingStatus = block.status === 'In Progress' || block.status === 'Pendding';
 
   const showReportModal = () => {
     setshowMenu(false);
@@ -44,7 +45,7 @@ const BoxMenu = ({ parentType, block }) => {
         onDismiss={dismissReport}
       />
       <VotingModal dismiss={dismissVoting} visible={showVoting} />
-      <CommentModal dismiss={dismissComment} visible={showComment} />
+      <CommentModal dismiss={dismissComment} visible={showComment} parent={block} />
       <TouchableOpacity onPress={() => setshowMenu(true)}>
         <Menu
           contentStyle={{ flexDirection: 'column', justifyContent: 'space-between', elevation: 3 }}
@@ -59,7 +60,11 @@ const BoxMenu = ({ parentType, block }) => {
           </TouchableOpacity>
           {parentType === 'round' && (
             <TouchableOpacity
-              onPress={showCommentModal}
+              onPress={() => {
+                if (!penddingStatus) {
+                  showCommentModal();
+                }
+              }}
               style={{ ...styles.menuItem, marginTop: 10 }}>
               <FontAwesome
                 name="commenting"
