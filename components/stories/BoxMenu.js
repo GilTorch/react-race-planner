@@ -48,7 +48,7 @@ const BoxMenu = ({ parentType, block }) => {
       <CommentModal dismiss={dismissComment} visible={showComment} parent={block} />
       <TouchableOpacity onPress={() => setshowMenu(true)}>
         <Menu
-          contentStyle={{ flexDirection: 'column', justifyContent: 'space-between' }}
+          contentStyle={{ flexDirection: 'column', justifyContent: 'space-between', elevation: 3 }}
           visible={showMenu}
           anchor={<Feather name="more-vertical" size={18} color="#5A7582" />}
           onDismiss={() => setshowMenu(false)}>

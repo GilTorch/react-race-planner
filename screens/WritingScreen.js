@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import { Surface } from 'react-native-paper';
+import { Surface, Searchbar } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
@@ -14,6 +14,8 @@ import { Story } from '../components/stories';
 import FilterBadges from '../components/FilterBadges';
 
 const Writing = ({ navigation }) => {
+  const [searchBarVisible, setSearchBarVisible] = useState(false);
+
   navigation.setOptions({
     headerShown: false
   });
@@ -28,7 +30,7 @@ const Writing = ({ navigation }) => {
     <View style={styles.container}>
       <Surface
         style={{
-          elevation: 5,
+          elevation: 3,
           zIndex: 1
         }}>
         <LinearGradient
@@ -46,49 +48,101 @@ const Writing = ({ navigation }) => {
         </LinearGradient>
       </Surface>
       <ScrollView>
-        <View
-          style={{
-            marginHorizontal: 20,
-            marginTop: 20,
-            marginBottom: 8,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between'
-          }}>
-          <Text type="medium" style={{ ...styles.headline, fontSize: 20 }}>
-            Filtered Stories
-          </Text>
+        {searchBarVisible && (
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignSelf: 'stretch'
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              marginTop: 20,
+              marginLeft: 20,
+              marginRight: 20,
+              marginBottom: 15
             }}>
-            <Surface style={{ borderRadius: 5, elevation: 5, padding: 4, marginRight: 10 }}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('FilterScreen')}
-                style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <AntDesign color="#5A7582" size={18} name="filter" />
-                <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
-                  FILTER
-                </Text>
+            <View style={{ flex: 8 }}>
+              <Searchbar style={{ height: 40, paddingTop: 3, elevation: 2 }} iconColor="#03A2A2" />
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+              <TouchableOpacity onPress={() => setSearchBarVisible(false)}>
+                <AntDesign size={20} name="closecircleo" color="#03A2A2" />
               </TouchableOpacity>
-            </Surface>
-            <Surface style={{ borderRadius: 5, elevation: 5, padding: 5 }}>
-              <TouchableOpacity>
-                <FontAwesome size={14} color="#5A7582" name="search" />
-              </TouchableOpacity>
-            </Surface>
+            </View>
           </View>
-        </View>
-        <View style={{ marginBottom: 20 }}>
-          <FilterBadges labels={['In Progress']} />
-          <FilterBadges labels={['Mystery', 'Action', 'Romance']} />
-          <FilterBadges labels={['Authors: 3 - 100']} />
-        </View>
+        )}
 
-        <Story
-          story={stories[3]} index={0} length={1} navigation={navigation} />
+        {!searchBarVisible && (
+          <>
+            <View
+              style={{
+                marginLeft: 20,
+                marginRight: 15,
+                marginTop: 20,
+                marginBottom: 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+              <Text type="medium" style={{ ...styles.headline, fontSize: 18 }}>
+                All Stories
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row'
+                }}>
+                <TouchableOpacity
+                  style={{ borderRadius: 5, padding: 5, flex: 1 }}
+                  onPress={() => {
+                    navigation.push('FilterScreen');
+                  }}>
+                  <Surface
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      borderRadius: 5,
+                      elevation: 2,
+                      padding: 5
+                    }}>
+                    <AntDesign color="#5A7582" size={18} name="filter" />
+                    <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
+                      FILTER
+                    </Text>
+                  </Surface>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{ borderRadius: 5, flex: 1, padding: 5 }}
+                  onPress={() => setSearchBarVisible(true)}>
+                  <Surface
+                    style={{
+                      borderRadius: 5,
+                      elevation: 2,
+                      paddingHorizontal: 9,
+                      flex: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: 5
+                    }}>
+                    <FontAwesome size={14} color="#5A7582" name="search" />
+                  </Surface>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={{ marginBottom: 20 }}>
+              <FilterBadges labels={['In Progress']} />
+              <FilterBadges labels={['Mystery', 'Action', 'Romance']} />
+              <FilterBadges labels={['Authors: 3 - 100']} />
+            </View>
+          </>
+        )}
+
+        <Story story={stories[3]} index={0} length={1} navigation={navigation} />
       </ScrollView>
     </View>
   );

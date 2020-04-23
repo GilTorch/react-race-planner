@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   intros: {
     width: SCREEN_WIDTH * 0.75,
-    elevation: 5,
+    elevation: 2,
     marginVertical: 20,
     marginRight: 20,
     padding: 10
