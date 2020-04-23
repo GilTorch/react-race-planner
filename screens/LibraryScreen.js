@@ -48,52 +48,46 @@ const LibraryScreen = ({ navigation }) => {
       </Surface>
 
       <ScrollView>
-        <View
-          style={{
-            marginTop: 20,
-            marginBottom: 10,
-            flexDirection: 'row',
-            paddingLeft: 23,
-            alignItems: 'center'
-          }}>
-          <SimpleLineIcons color="#ED8A18" name="layers" size={25} />
-          <TouchableOpacity style={{ marginLeft: 15 }}>
-            <Text style={{ ...styles.headline, fontSize: 16 }} type="medium">
-              Start a New Story
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingLeft: 23 }}>
-          {genres.map(genre => (
-            <View
-              key={Math.random()}
-              style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
-              <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
-                {genre.icon(32)}
-              </View>
-              <Text
-                type="medium"
-                style={{
-                  color: '#5A7582',
-                  fontSize: 14
-                }}>
-                {genre.name}
+        <Surface style={{ paddingBottom: 20, elevation: 2 }}>
+          <View
+            style={{
+              marginTop: 20,
+              marginBottom: 10,
+              flexDirection: 'row',
+              paddingLeft: 23,
+              alignItems: 'center'
+            }}>
+            <SimpleLineIcons color="#ED8A18" name="layers" size={25} />
+            <TouchableOpacity style={{ marginLeft: 15 }}>
+              <Text style={{ ...styles.headline, fontSize: 16 }} type="medium">
+                Start a New Story
               </Text>
-            </View>
-          ))}
-        </ScrollView>
+            </TouchableOpacity>
+          </View>
 
-        <View style={{ paddingLeft: 23 }}>
-          <TouchableOpacity>
-            <Text type="medium" style={{ fontSize: 12, marginTop: 10, color: '#03A2A2' }}>
-              View all categories
-            </Text>
-          </TouchableOpacity>
-        </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingLeft: 23 }}>
+            {genres.map(genre => (
+              <View
+                key={Math.random()}
+                style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+                <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
+                  {genre.icon(32)}
+                </View>
+                <Text
+                  type="medium"
+                  style={{
+                    color: '#5A7582',
+                    fontSize: 14
+                  }}>
+                  {genre.name}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        </Surface>
 
         <View
           style={{
