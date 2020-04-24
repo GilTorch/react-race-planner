@@ -24,7 +24,7 @@ install:
  
 
 script:
-  - yarn dl_expo_bins
+  - yarn run dl_expo_bins
   - yarn run test:e2e
   
   # - yarn run lint
