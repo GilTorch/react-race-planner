@@ -4,7 +4,7 @@ import { Modal, Portal } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import Text from '../CustomText';
 
-const VotingModal = ({ visible, dismiss }) => {
+const VotingModal = ({ visible, dismiss, parent }) => {
   return (
     <Portal>
       <Modal visible={visible}>
@@ -34,21 +34,14 @@ const VotingModal = ({ visible, dismiss }) => {
             <View style={{ paddingLeft: 20, flexDirection: 'row' }}>
               <Text style={styles.label}>Author: </Text>
               <Text type="bold" style={styles.label}>
-                Anonymous 8
+                {parent.author || ''}
               </Text>
             </View>
             <View style={{ marginLeft: 20, marginTop: 10 }}>
               <Text style={styles.label}>Content:</Text>
             </View>
             <View style={{ marginTop: 10, paddingLeft: 20, paddingRight: 20 }}>
-              <Text style={styles.text}>
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-                tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero
-                eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea.
-                At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-                no sea. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
-                gubergren, no sea.
-              </Text>
+              <Text style={styles.text}>{parent.body || ''}</Text>
             </View>
             <View style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 20 }}>
               <Text type="bold" style={styles.label}>
@@ -77,7 +70,8 @@ const VotingModal = ({ visible, dismiss }) => {
 
 VotingModal.propTypes = {
   visible: PropTypes.bool.isRequired,
-  dismiss: PropTypes.func.isRequired
+  dismiss: PropTypes.func.isRequired,
+  parent: PropTypes.object.isRequired
 };
 
 const styles = {

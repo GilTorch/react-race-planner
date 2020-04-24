@@ -44,7 +44,7 @@ const BoxMenu = ({ parentType, block }) => {
         parent={block}
         onDismiss={dismissReport}
       />
-      <VotingModal dismiss={dismissVoting} visible={showVoting} />
+      <VotingModal dismiss={dismissVoting} visible={showVoting} parent={block} />
       <CommentModal dismiss={dismissComment} visible={showComment} parent={block} />
       <TouchableOpacity onPress={() => setshowMenu(true)}>
         <Menu
