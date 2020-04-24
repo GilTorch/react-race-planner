@@ -18,14 +18,14 @@ install:
   - nvm use $NODE_VERSION
   - nvm alias default $NODE_VERSION
   - npm install -g react-native-cli
-  - yarn install
+  - npm install
   - npm i -g detox-cli
-  - yarn install detox
+  - npm install detox
  
 
 script:
-  - yarn run dl_expo_bins
-  - yarn run test:e2e
+  - npm run dl_expo_bins
+  - npm run test:e2e
   
   # - yarn run lint
   # - yarn run detox:test:ios:release
