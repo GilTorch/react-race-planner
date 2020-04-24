@@ -19,6 +19,8 @@ install:
   - nvm alias default $NODE_VERSION
   - npm install -g react-native-cli
   - yarn install
+  - npm i -g detox-cli
+  - yarn run test:e2e
  
 
 # script:
