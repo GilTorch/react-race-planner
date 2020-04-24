@@ -1,10 +1,6 @@
 language: node_js
 osx_image: xcode11.3
 
-# branches:
-#   only:
-#   - setup-travis-ci
-
 env:
   global:
   - NODE_VERSION=stable
