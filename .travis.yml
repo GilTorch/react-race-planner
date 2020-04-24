@@ -24,8 +24,9 @@ install:
  
 
 script:
-  - yarn run test:e2e
   - yarn dl_expo_bins
+  - yarn run test:e2e
+  
   # - yarn run lint
   # - yarn run detox:test:ios:release
   # - detox build --configuration ios.sim
