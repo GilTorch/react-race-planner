@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Blank Template",
-    "slug": "sr-mobile",
+    "name": "ScriptoRerum",
+    "slug": "scriptorerum",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
@@ -9,7 +9,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "sr",
@@ -26,6 +26,8 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "The demo of the ScriptoRerum mobile app for iOS and Android.",
+    "githubUrl": "https://github.com/NouKod-Haiti/sr-mobile"
   }
 }

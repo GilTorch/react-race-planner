@@ -19,7 +19,8 @@ export default function BottomTab() {
         labelPosition: 'beside-icon',
         style: {
           paddingHorizontal: 15
-        }
+        },
+        keyboardHidesTabBar: true
       }}>
       <Tab.Screen
         name="Library"
