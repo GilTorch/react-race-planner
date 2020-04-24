@@ -156,6 +156,7 @@ const StoryScreen = ({ navigation, route }) => {
             <Animated.View
               style={{
                 height: metaHeaderHeight,
+                marginBottom: 10,
                 opacity,
                 marginLeft: 20,
                 alignSelf: 'flex-start',
