@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
 import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign, FontAwesome, SimpleLineIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
 import { Surface, Searchbar } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
-
+import Menu from 'react-native-material-menu';
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
 import Story from '../components/stories/Story';
 
 const LibraryScreen = ({ navigation }) => {
   const [searchBarVisible, setSearchBarVisible] = useState(false);
+
+  let menu = null;
+
+  const [currentGenre, setCurrentGenre] = useState(genres[0]);
+
+  const setMenuRef = ref => {
+    menu = ref;
+  };
+
+  const showMenu = async genreIndex => {
+    setCurrentGenre(genres[genreIndex]);
+    // setMenuPosition({ top: 125, left: 35 + genreIndex * 50 });
+    menu.show();
+  };
 
   navigation.setOptions({
     headerShown: false
@@ -71,26 +85,65 @@ const LibraryScreen = ({ navigation }) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingLeft: 23 }}>
-            {genres.map(genre => (
-              <View
-                key={Math.random()}
-                style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
-                <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
-                  {genre.icon(32)}
+            {genres.map((genre, index) => (
+              <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+                  <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
+                    {genre.icon(32)}
+                  </View>
+                  <Text
+                    type="medium"
+                    style={{
+                      color: '#5A7582',
+                      fontSize: 14
+                    }}>
+                    {genre.name}
+                  </Text>
                 </View>
-                <Text
-                  type="medium"
-                  style={{
-                    color: '#5A7582',
-                    fontSize: 14
-                  }}>
-                  {genre.name}
-                </Text>
-              </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </Surface>
-
+        <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              marginTop: 10,
+              marginRight: 10
+            }}>
+            <TouchableOpacity
+              onPress={() => menu.hide()}
+              style={{
+                width: 25,
+                height: 25,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#F44336',
+                borderRadius: 5
+              }}>
+              <MaterialIcons name="close" style={{ color: '#fff' }} size={24} />
+            </TouchableOpacity>
+          </View>
+          <View style={{ paddingLeft: 10, paddingRight: 10, marginBottom: 20 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+              <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
+                {currentGenre.name}{' '}
+              </Text>
+              <TouchableOpacity>
+                <MaterialIcons name="open-in-new" style={{ color: '#ED8A18' }} size={18} />
+              </TouchableOpacity>
+            </View>
+            <Text>
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+              has been the industry's standard dummy text ever since the 1500s, when an unknown
+              printer took a galley of type and scrambled it to make a type specimen book. It has
+              survived not only five centuries, but also the leap into electronic typesetting,
+              remaining essentially unchanged. It was popularised in the 1960s with the release of
+              Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+            </Text>
+          </View>
+        </Menu>
         {searchBarVisible && (
           <View
             style={{
