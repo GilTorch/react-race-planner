@@ -21,12 +21,13 @@ install:
   - npm install
   - npm i -g detox-cli
   - npm install detox
+  - sudo apt install linuxbrew-wrapper
   - brew tap wix/brew
   - brew install applesimutils
  
 
-script:
-  - npm run dl_expo_bins
+# script:
+#   - npm run dl_expo_bins
   # - npm run ios
   # - npm run test:e2e
   
