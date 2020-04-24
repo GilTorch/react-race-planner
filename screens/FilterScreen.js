@@ -134,7 +134,7 @@ const FilterScreen = ({ navigation }) => {
               testID="select-all-part-one"
               onPress={() => toggleSelectAll('status')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
-                {!tagData.status.allSelected && 'Select All'}
+                {tagData.status.allSelected ? 'Clear All' : 'Select All'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -175,7 +175,7 @@ const FilterScreen = ({ navigation }) => {
               testID="select-all-part-two"
               onPress={() => toggleSelectAll('genres')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
-                {!tagData.genres.allSelected && 'Select All'}
+                {tagData.genres.allSelected ? 'Clear All' : 'Select All'}
               </Text>
             </TouchableOpacity>
           </View>

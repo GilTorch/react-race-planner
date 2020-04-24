@@ -32,7 +32,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
             <Surface key={Math.random()} style={{ ...styles.intros, marginLeft: margin }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text type="bold" style={styles.subTitle}>
-                  {proposedBlock.subTitle}
+                  By {proposedBlock.author}
                 </Text>
                 <BoxMenu parentType="intro_ending" block={{ ...proposedBlock, hasElected }} />
               </View>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   intros: {
     width: SCREEN_WIDTH * 0.75,
-    elevation: 5,
+    elevation: 2,
     marginVertical: 20,
     marginRight: 20,
     padding: 10
