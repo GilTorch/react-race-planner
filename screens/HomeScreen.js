@@ -20,8 +20,6 @@ const HomeScreen = ({ navigation, route }) => {
 
   let menu = null;
 
-  const [menuPosition, setMenuPosition] = useState({ top: 125, left: 100 });
-
   const [currentGenre, setCurrentGenre] = useState(genres[0]);
 
   const setMenuRef = ref => {
@@ -139,7 +137,9 @@ const HomeScreen = ({ navigation, route }) => {
               <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
                 {currentGenre.name}{' '}
               </Text>
-              <MaterialIcons name="open-in-new" style={{ color: '#ED8A18' }} size={18} />
+              <TouchableOpacity>
+                <MaterialIcons name="open-in-new" style={{ color: '#ED8A18' }} size={18} />
+              </TouchableOpacity>
             </View>
             <Text>
               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
