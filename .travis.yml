@@ -20,10 +20,12 @@ install:
   - npm install -g react-native-cli
   - yarn install
   - npm i -g detox-cli
-  - yarn run test:e2e
+  - yarn install detox
  
 
-# script:
+script:
+  - yarn run test:e2e
+  - yarn dl_expo_bins
   # - yarn run lint
   # - yarn run detox:test:ios:release
   # - detox build --configuration ios.sim
