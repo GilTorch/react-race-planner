@@ -4,14 +4,17 @@ import PropTypes from 'prop-types';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { useFocusEffect } from '@react-navigation/native';
 
+import { useDispatch, useSelector } from 'react-redux';
 import Text from '../components/CustomText';
 import { SCREEN_WIDTH } from '../utils/dimensions';
+import {
+  setHomeStoryFilters,
+  setLibraryStoryFilters,
+  setWritingStoryFilters
+} from '../redux/actions/actionCreators';
 
-const FilterScreen = ({ navigation }) => {
-  const defaultAuthorRange = [5, 20];
-  const [multiSliderValue, setMultiSliderValue] = useState(defaultAuthorRange);
-
-  const multiSliderValuesChange = values => setMultiSliderValue(values);
+const FilterScreen = ({ navigation, route }) => {
+  const { previousScreen } = route.params;
 
   const defaultTagData = {
     status: {
@@ -37,7 +40,46 @@ const FilterScreen = ({ navigation }) => {
     }
   };
 
-  const [tagData, setTagData] = useState(defaultTagData);
+  const tagDataHome = useSelector(state => state.home.homeStoryFilters);
+  const tagDataLibrary = useSelector(state => state.library.libraryStoryFilters);
+  const tagDataWriting = useSelector(state => state.writing.writingStoryFilters);
+
+  let tagData = defaultTagData;
+
+  switch (previousScreen) {
+    case 'home':
+      tagData = tagDataHome;
+      break;
+    case 'library':
+      tagData = tagDataLibrary;
+      break;
+    case 'writing':
+      tagData = tagDataWriting;
+      break;
+    default:
+      tagData = tagDataHome;
+      break;
+  }
+
+  const dispatch = useDispatch();
+
+  const setTagData = data => {
+    switch (previousScreen) {
+      case 'home':
+        return dispatch(setHomeStoryFilters(data));
+      case 'library':
+        return dispatch(setLibraryStoryFilters(data));
+      case 'writing':
+        return dispatch(setWritingStoryFilters(data));
+      default:
+        return dispatch(setHomeStoryFilters(data));
+    }
+  };
+
+  const defaultAuthorRange = [5, 20];
+  const [multiSliderValue, setMultiSliderValue] = useState(defaultAuthorRange);
+
+  const multiSliderValuesChange = values => setMultiSliderValue(values);
 
   const reset = () => {
     setMultiSliderValue(defaultAuthorRange);
@@ -252,7 +294,12 @@ const FilterScreen = ({ navigation }) => {
 export default FilterScreen;
 
 FilterScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  route: PropTypes.shape({
+    params: PropTypes.shape({
+      previousScreen: PropTypes.string.isRequired
+    })
+  }).isRequired
 };
 
 const styles = StyleSheet.create({
