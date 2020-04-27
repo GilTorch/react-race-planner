@@ -12,7 +12,7 @@
     "eject": "expo eject",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "lint:dryfix": "eslint --fix-dry-run .",
+    "lint:dryfix": "eslint --fix-dry-run ."
   },
   "jest": {
     "preset": "jest-expo"
