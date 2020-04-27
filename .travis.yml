@@ -21,7 +21,7 @@ install:
   - npm install
   - npm i -g detox-cli
   - npm install detox
-  - npm install jest
+  # - npm install jest
   # - sudo apt install linuxbrew-wrapper
   # - brew tap wix/brew
   # - brew install applesimutils
