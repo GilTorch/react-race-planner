@@ -41,20 +41,17 @@ const CategoryGenre = ({ genre }) => {
             style={{ color: '#03A2A2', fontSize: 15, fontWeight: 'bold', marginBottom: 5 }}>
             {genre.name}
           </Text>
-          <Text type="bold" style={{ color: '#5A7582', fontSize: 12, textAlign: 'left', paddingRight: 10 }}>
+          <Text
+            type="bold"
+            style={{ color: '#5A7582', fontSize: 12, textAlign: 'left', paddingRight: 10 }}>
             {genre.description}
           </Text>
         </View>
         <Button
           mode="contained"
           style={{ height: 35, alignItems: 'center', justifyContent: 'center' }}
-          icon={({ size, color }) => (
-            <FontAwesome5
-              size={size}
-              color={'#fff'}
-              name="pen-fancy"
-            />
-          )}
+          // eslint-disable-next-line no-unused-vars
+          icon={({ size, color }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
           labelStyle={{ color: '#fff', fontWeight: 'bold' }}>
           Go
         </Button>
