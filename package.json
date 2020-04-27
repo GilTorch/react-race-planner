@@ -9,7 +9,10 @@
     "test:e2e": "detox test --configuration ios.sim",
     "dl_expo_bins": "./scripts/dl_expo_bins",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "lint:dryfix": "eslint --fix-dry-run .",
   },
   "jest": {
     "preset": "jest-expo"
