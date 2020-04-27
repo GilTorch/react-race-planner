@@ -29,7 +29,7 @@ install:
 # script:
   - npm run dl_expo_bins
   # - npm run ios
-  # - npm run test:e2e
+  - npm run test:e2e
   
   # - yarn run lint
   # - yarn run detox:test:ios:release
