@@ -40,7 +40,7 @@ const Story = ({ story, index, length, navigation }) => {
           marginHorizontal: 20,
           borderRadius: 4,
           padding: 15,
-          elevation: 5
+          elevation: 2
         }}>
         <View
           style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>

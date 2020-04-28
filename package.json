@@ -17,6 +17,7 @@
   "dependencies": {
     "@expo/vector-icons": "~10.0.0",
     "@ptomasroos/react-native-multi-slider": "^2.2.0",
+    "@react-native-community/datetimepicker": "2.1.0",
     "@react-native-community/masked-view": "0.1.5",
     "@react-navigation/bottom-tabs": "^5.0.0",
     "@react-navigation/native": "^5.0.0",
@@ -28,6 +29,9 @@
     "expo-constants": "~8.0.0",
     "expo-font": "~8.0.0",
     "expo-jwt": "^1.2.0",
+    "expo-image-crop": "^1.0.4",
+    "expo-image-manipulator": "~8.0.0",
+    "expo-image-picker": "~8.0.1",
     "expo-linear-gradient": "~8.0.0",
     "expo-web-browser": "~8.0.0",
     "html-entities": "^1.2.1",
@@ -69,7 +73,8 @@
     "react-native-test-renderer": "0.0.1",
     "react-native-testing-library": "^1.13.0",
     "react-test-renderer": "^16.13.1",
-    "redux-devtools-extension": "^2.13.8"
+    "redux-devtools-extension": "^2.13.8",
+    "shortid": "^2.2.15"
   },
   "private": true,
   "detox": {
