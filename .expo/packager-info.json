@@ -1,10 +1,10 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 2348,
-  "expoServerNgrokUrl": "https://pd-vcc.anonymous.sr-mobile.exp.direct",
-  "packagerNgrokUrl": "https://packager.pd-vcc.anonymous.sr-mobile.exp.direct",
-  "ngrokPid": 2396,
+  "packagerPid": 9393,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "devToolsPort": 19002,
   "webpackServerPort": null
 }

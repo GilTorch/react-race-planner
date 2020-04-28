@@ -119,6 +119,27 @@ const FilterScreen = ({ navigation }) => {
     }, [])
   );
 
+  const filterSelector = [
+    'select-all-part-one',
+    'clear-all-part-one',
+    'select-all-part-two',
+    'clear-all-part-two'
+  ];
+
+  let selector = [];
+  if (!tagData.status.allSelected) {
+    selector.push(filterSelector[0]);
+  } else if (tagData.status.allSelected) {
+    selector = [];
+    selector.push(filterSelector[1]);
+  } else if (!tagData.genres.allSelected) {
+    // selector = [];
+    selector.push(filterSelector[2]);
+  } else {
+    selector = [];
+    selector.push(filterSelector[3]);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.innerWrapper}>
@@ -130,9 +151,7 @@ const FilterScreen = ({ navigation }) => {
               justifyContent: 'space-between'
             }}>
             <Text style={styles.filterCategory}>STATUS</Text>
-            <TouchableOpacity
-              testID="select-all-part-one"
-              onPress={() => toggleSelectAll('status')}>
+            <TouchableOpacity testID={selector.join('')} onPress={() => toggleSelectAll('status')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
                 {tagData.status.allSelected ? 'Clear All' : 'Select All'}
               </Text>
@@ -171,9 +190,7 @@ const FilterScreen = ({ navigation }) => {
               justifyContent: 'space-between'
             }}>
             <Text style={styles.filterCategory}>GENRES</Text>
-            <TouchableOpacity
-              testID="select-all-part-two"
-              onPress={() => toggleSelectAll('genres')}>
+            <TouchableOpacity testID={selector.join('')} onPress={() => toggleSelectAll('genres')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
                 {tagData.genres.allSelected ? 'Clear All' : 'Select All'}
               </Text>

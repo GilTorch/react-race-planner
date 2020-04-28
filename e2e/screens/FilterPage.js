@@ -40,8 +40,16 @@ class FilterPage {
     return element(by.id('select-all-part-one'));
   }
 
+  get clearAllOne() {
+    return element(by.id('clear-all-part-one'));
+  }
+
   get selectAllTwo() {
     return element(by.id('select-all-part-two'));
+  }
+
+  get clearAllTwo() {
+    return element(by.id('clear-all-part-two'));
   }
 
   get authorsSlider() {
