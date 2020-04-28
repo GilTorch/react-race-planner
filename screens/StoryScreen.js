@@ -6,14 +6,14 @@ import {
   StatusBar,
   Animated,
   SafeAreaView,
-  PixelRatio
+  PixelRatio,
+  TouchableOpacity
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { Button, Surface, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
-
 import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
@@ -34,6 +34,8 @@ const StoryScreen = ({ navigation, route }) => {
   const status = inprogress ? 'In Progress' : 'Completed';
   const masterAuthorName = inprogress ? 'Anonymous 1' : masterAuthor.fullName;
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: 330 });
+
+  const scrollView = React.useRef(null);
 
   let coAuthors;
   if (inprogressStory) {
@@ -66,10 +68,12 @@ const StoryScreen = ({ navigation, route }) => {
     }, [])
   );
 
-  const [scrollY] = React.useState(new Animated.Value(0));
+  const [scrollY, setScrollY] = React.useState(new Animated.Value(0));
 
   const HEADER_MINIMUM_HEIGHT = 0;
   const HEADER_MAXIMUM_HEIGHT = SCREEN_HEIGHT * 0.25;
+
+  let paginationScrollPosition = scrollY;
 
   const titleHeight = scrollY.interpolate({
     inputRange: [0, 25],
@@ -92,6 +96,17 @@ const StoryScreen = ({ navigation, route }) => {
   const opacity = scrollY.interpolate({
     inputRange: [0, HEADER_MAXIMUM_HEIGHT],
     outputRange: [1, 0]
+  });
+
+  const paginationOpacity = scrollY.interpolate({
+    inputRange: [0, HEADER_MAXIMUM_HEIGHT],
+    outputRange: [0, 1]
+  });
+
+  const paginationHeight = scrollY.interpolate({
+    inputRange: [0, HEADER_MAXIMUM_HEIGHT],
+    outputRange: [0, 50],
+    extrapolate: 'clamp'
   });
 
   const onHeaderLayout = event => {
@@ -123,7 +138,6 @@ const StoryScreen = ({ navigation, route }) => {
           locations={[0.4, 1]}
           onLayout={onHeaderLayout}
           style={{
-            paddingBottom: 20,
             borderRadius: 13
           }}>
           <SafeAreaView
@@ -214,12 +228,114 @@ const StoryScreen = ({ navigation, route }) => {
                 </Surface>
               )}
             </View>
+            <Animated.View
+              style={{
+                width: '100%',
+                opacity: paginationOpacity,
+                borderTopWidth: 1,
+                borderTopColor: 'rgba(255,255,255,0.5)',
+                height: paginationHeight,
+                marginTop: 10,
+                flexDirection: 'row'
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  paginationScrollPosition = 0;
+
+                  scrollView.current.scrollTo({
+                    x: 0,
+                    y: paginationScrollPosition,
+                    animated: true
+                  });
+                }}
+                style={{ flex: 1 }}>
+                <View
+                  style={{
+                    flex: 1,
+                    borderRightWidth: 1,
+                    borderRightColor: 'rgba(255,255,255,0.5)',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <AntDesign name="stepbackward" size={14} color="white" />
+                  {/* <Text style={{ color: 'white', fontSize: 14 }}>First</Text> */}
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  paginationScrollPosition =
+                    paginationScrollPosition >= 300
+                      ? paginationScrollPosition - 300
+                      : paginationScrollPosition;
+
+                  scrollView.current.scrollTo({
+                    x: 0,
+                    y: paginationScrollPosition,
+                    animated: true
+                  });
+                }}
+                style={{ flex: 1 }}>
+                <View
+                  style={{
+                    flex: 1,
+                    borderRightWidth: 1,
+                    borderRightColor: 'rgba(255,255,255,0.5)',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <AntDesign name="banckward" size={14} color="white" />
+                  {/* <Text style={{ color: 'white', fontSize: 14 }}>Previous</Text> */}
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ flex: 1 }}
+                onPress={() => {
+                  paginationScrollPosition -= new Animated.Value(300);
+                  scrollView.current.scrollTo({
+                    x: 0,
+                    y: paginationScrollPosition,
+                    animated: true
+                  });
+                }}>
+                <View
+                  style={{
+                    flex: 1,
+                    borderRightWidth: 1,
+                    borderRightColor: 'rgba(255,255,255,0.5)',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <AntDesign name="forward" size={14} color="white" />
+                  {/* <Text style={{ color: 'white', fontSize: 14 }}>Next</Text> */}
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  scrollView.current.scrollToEnd();
+                }}
+                style={{ flex: 1 }}>
+                <View
+                  style={{
+                    flex: 1,
+                    borderRightWidth: 1,
+                    borderRightColor: 'rgba(255,255,255,0.5)',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <AntDesign name="stepforward" size={16} color="white" />
+                  {/* <Text style={{ color: 'white', fontSize: 14 }}>Last</Text> */}
+                </View>
+              </TouchableOpacity>
+            </Animated.View>
           </SafeAreaView>
         </LinearGradient>
       </Surface>
       {headerDimensions && headerDimensions.height && (
         <ScrollView
           scrollEventThrottle={16}
+          ref={scrollView}
+          snapToInterval
+          decelerationRate="fast"
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }])}
           contentContainerStyle={{
             marginTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40),
