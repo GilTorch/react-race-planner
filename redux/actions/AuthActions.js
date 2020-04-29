@@ -1,5 +1,4 @@
-import jwt from 'expo-jwt';
-import axios from 'axios';
+import axios from '../../services/axiosService';
 import { Auth } from './types';
 import { NEW_SESSION_URL } from '../../api/urls';
 
@@ -14,31 +13,17 @@ export const signUpUser = ({ username, firstName, lastName, email, password }) =
       email,
       password
     })
-    .then(async response => {
-      const decodedUser = await jwt.decode(response.data.token, '&^GF^%D^Y&^*G(H9gs', {
-        timeSkew: 30
-      });
-
-      dispatch({
-        type: Auth.SIGN_UP_SUCCESS,
-        payload: { user: decodedUser, token: response.data.token }
-      });
-      return decodedUser;
-    })
     .catch(error => {
+      // TODO: handle server error, right now got an error status 500 for duplicated
+      // username/email
       // console.log(error);
       dispatch({
         type: Auth.SIGN_UP_FAIL,
-        payload: error.response ? error.response.data : { message: 'Unexpected Error' }
+        payload: error.response?.data || { message: 'Unexpected Error from the app' }
       });
     });
 };
 
 export const clearRequestError = () => dispatch => {
   dispatch({ type: Auth.CLEAR_REQUEST_ERROR });
-};
-
-export const logOutUser = redirectToLogin => dispatch => {
-  redirectToLogin();
-  dispatch({ type: Auth.LOGOUT });
 };
