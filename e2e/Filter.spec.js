@@ -49,8 +49,8 @@ describe('Filter Page', () => {
   });
 
   it('Should check that `Select All` link2 exists and is visible in Filter Page', async () => {
-    await expect(filterPage.selectAllTwo).toExist();
-    await expect(filterPage.selectAllTwo).toBeVisible();
+    await expect(filterPage.selectAllTwo.atIndex(1)).toExist();
+    await expect(filterPage.selectAllTwo.atIndex(1)).toBeVisible();
   });
 
   it('Should check that `Select All` link2 is clickable and can select all status', async () => {
