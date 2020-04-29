@@ -32,14 +32,7 @@ const SignupScreen = ({ navigation }) => {
 
   const inputs = {};
   let scrollRef = React.useRef();
-  const [form, setState] = React.useState({
-    username: 'dowpm',
-    firstName: 'Mac',
-    lastName: 'Prosper',
-    email: 'mc@gmail.com',
-    password: 'P@ssword1',
-    password2: 'P@ssword1'
-  });
+  const [form, setState] = React.useState({});
   const [errors, setErrors] = React.useState({});
 
   const loading = useSelector(state => state.auth.loading);
@@ -68,10 +61,6 @@ const SignupScreen = ({ navigation }) => {
       .validate(form, { abortEarly: false })
       .then(value => {
         dispatch(signUpUser(value));
-        // console.log('logged user', user);
-        // if (user.id) {
-        //   navigation.navigate('Home');
-        // }
       })
       .catch(err => {
         err.errors.map(formatFormErrors);
