@@ -32,34 +32,49 @@ const SignupScreen = ({ navigation }) => {
 
   const inputs = {};
   let scrollRef = React.useRef();
-  const [form, setState] = React.useState({});
+  const [form, setState] = React.useState({
+    username: 'dowpm',
+    firstName: 'Mac',
+    lastName: 'Prosper',
+    email: 'mc@gmail.com',
+    password: 'P@ssword1',
+    password2: 'P@ssword1'
+  });
   const [errors, setErrors] = React.useState({});
 
   const loading = useSelector(state => state.auth.loading);
   const requestError = useSelector(state => state.auth.requestError);
+  const user = useSelector(state => state.auth.currentUser);
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (user) {
+      navigation.navigate('Home');
+    }
+  });
 
   const focusNextField = name => inputs[name].focus();
 
-  const formatFormError = e => {
+  const formatFormErrors = e => {
     const [inputName, msg] = e.split(':');
     setErrors(prev => ({ ...prev, [inputName]: msg }));
   };
 
-  const handleSubmit = () => {
+  const signup = () => {
     scrollRef.scrollTo({ y: 230, animated: true });
     setErrors({});
 
     signupSchema
       .validate(form, { abortEarly: false })
       .then(value => {
-        const user = dispatch(signUpUser(value));
-        if (user) {
-          navigation.navigate('Home');
-        }
+        dispatch(signUpUser(value));
+        // console.log('logged user', user);
+        // if (user.id) {
+        //   navigation.navigate('Home');
+        // }
       })
       .catch(err => {
-        err.errors.map(formatFormError);
+        err.errors.map(formatFormErrors);
       });
   };
 
@@ -205,7 +220,7 @@ const SignupScreen = ({ navigation }) => {
                 <TextInput
                   onChangeText={text => setState({ ...form, password2: text })}
                   value={form.password2}
-                  onSubmitEditing={handleSubmit}
+                  onSubmitEditing={signup}
                   ref={input => {
                     inputs.password2 = input;
                   }}
@@ -218,7 +233,7 @@ const SignupScreen = ({ navigation }) => {
                 <Text style={{ fontSize: 11, color: 'red' }}>{errors.password2}</Text>
               )}
             </View>
-            <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+            <TouchableOpacity onPress={signup} style={styles.submitButton}>
               <Text type="medium" style={styles.submitButtonText}>
                 Sign Up
               </Text>
