@@ -1,16 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToast } from 'react-native-styled-toast';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import { login } from '../redux/actions/actionCreators';
+
+const validationSchema = yup.object().shape({
+  usernameOrEmail: yup.string().required('Enter your username or your email'),
+  password: yup.string().required('Enter your password')
+});
 
 const LoginScreen = ({ navigation }) => {
+  const { register, handleSubmit, errors, setValue } = useForm({
+    validationSchema
+  });
+
+  const dispatch = useDispatch();
+  const loading = useSelector(state => state.user.loadingLogin);
+  const message = useSelector(state => state.user.message);
+  const toast = useToast();
+
+  useEffect(() => {
+    register('usernameOrEmail');
+    register('password');
+    console.log(toast.toast({ message }));
+  }, [register]);
+
+  const submit = data => {
+    dispatch(login(data));
+  };
+
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
+      <Text>{message}</Text>
       <View style={styles.container}>
         <Image testID="logo" source={SRLogo} style={styles.logo} />
         <View style={styles.headlineContainer}>
@@ -25,9 +55,21 @@ const LoginScreen = ({ navigation }) => {
                 Username or Email
               </Text>
             </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="login-user-name" style={styles.input} />
+            <View
+              style={{
+                ...styles.inputContainer,
+                borderBottomColor: errors.usernameOrEmail ? 'red' : '#DFE3E9'
+              }}>
+              <TextInput
+                editable={!loading}
+                onChangeText={text => setValue('usernameOrEmail', text)}
+                testID="login-user-name"
+                style={styles.input}
+              />
             </View>
+            {errors.usernameOrEmail && (
+              <Text style={{ marginTop: 10, color: 'red' }}>{errors.usernameOrEmail.message}</Text>
+            )}
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
@@ -35,9 +77,22 @@ const LoginScreen = ({ navigation }) => {
                 Password
               </Text>
             </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="login-password" style={styles.input} />
+            <View
+              style={{
+                ...styles.inputContainer,
+                borderBottomColor: errors.password ? 'red' : '#DFE3E9'
+              }}>
+              <TextInput
+                editable={!loading}
+                secureTextEntry
+                onChangeText={text => setValue('password', text)}
+                testID="login-password"
+                style={styles.input}
+              />
             </View>
+            {errors.password && (
+              <Text style={{ marginTop: 10, color: 'red' }}>{errors.password.message}</Text>
+            )}
           </View>
           <View style={{ marginTop: 10, marginBottom: 10 }}>
             <TouchableOpacity
@@ -49,11 +104,12 @@ const LoginScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity
+            disabled={loading}
             testID="login-button"
             style={styles.submitButton}
-            onPress={() => navigation.navigate('Home')}>
+            onPress={handleSubmit(submit)}>
             <Text type="medium" style={styles.submitButtonText}>
-              Log in
+              {loading ? 'Logging in...' : 'Log in'}
             </Text>
           </TouchableOpacity>
           <View style={styles.loginWithSocialMediaTextContainer}>
