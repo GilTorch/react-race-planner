@@ -1,10 +1,10 @@
 {
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 3360,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
   "expoServerNgrokUrl": "https://7e-wsd.anonymous.sr-mobile.exp.direct",
   "packagerNgrokUrl": "https://packager.7e-wsd.anonymous.sr-mobile.exp.direct",
-  "ngrokPid": 3398,
+  "ngrokPid": 9929,
   "devToolsPort": 19002,
   "webpackServerPort": null
 }

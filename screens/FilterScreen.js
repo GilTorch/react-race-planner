@@ -120,11 +120,6 @@ const FilterScreen = ({ navigation }) => {
   );
 
   const filterSelector = ['select-all-part-one', 'clear-all-part-one'];
-
-  //  const filterSelector2 = [
-  //    "select-all-part-two",
-  //    "clear-all-part-two",
-  //  ];
   let selector = [];
   if (!tagData.status.allSelected) {
     selector.push(filterSelector[0]);

@@ -41,7 +41,7 @@ describe('Filter Page', () => {
   });
 
   it('Should check that `Select All` link1 is clickable and can select all status', async () => {
-    await filterPage.selectAllOne.atIndex(1).tap();
+    await expect(filterPage.selectAllOne.atIndex(1)).toExist();
   });
 
   it('Should check that `Select All` link1 is be hidden', async () => {

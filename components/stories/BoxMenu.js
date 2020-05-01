@@ -48,11 +48,18 @@ const BoxMenu = ({ parentType, block }) => {
       <CommentModal dismiss={dismissComment} visible={showComment} parent={block} />
       <TouchableOpacity onPress={() => setshowMenu(true)}>
         <Menu
-          contentStyle={{ flexDirection: 'column', justifyContent: 'space-between', elevation: 3 }}
+          contentStyle={{
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            elevation: 3
+          }}
           visible={showMenu}
           anchor={<Feather name="more-vertical" size={18} color="#5A7582" />}
           onDismiss={() => setshowMenu(false)}>
-          <TouchableOpacity onPress={showReportModal} style={styles.menuItem}>
+          <TouchableOpacity
+            // testID="three-dot-menu-button"
+            onPress={showReportModal}
+            style={styles.menuItem}>
             <FontAwesome name="flag" size={16} color="#F44336" style={{ marginRight: 10 }} />
             <Text type="regular" style={{ color: '#5A7582' }}>
               Report
