@@ -2,8 +2,9 @@
 const casual = require('casual');
 const signUpPage = require('./screens/SignUpPage');
 const navigationBar = require('./screens/NavigationBar');
-const homepage = require("./screens/HomePage");
-// const boxMenu = require('./stories/BoxMenu');
+const homepage = require('./screens/HomePage');
+const story = require('./stories/Story');
+const boxMenu = require('./stories/BoxMenu');
 // const reportModal = require("./modals/ReportModal");
 
 describe('Filter Page', () => {
@@ -24,16 +25,10 @@ describe('Filter Page', () => {
     await expect(homepage.story).toExist();
   });
 
-  // it('Should ensure the 3-dot menu exist and can show the `Report` button', async () => {
-  //   // await story.threeDotMenuButton.atIndex(1).toBeVisible();
-  //   // await expect(boxMenu.threeDotMenuButton.atIndex(1)).toExist();
-  //   // await expect(boxMenu.threeDotMenuButton.atIndex(1)).toBeVisible();
-  //   // await story.threeDotMenuButton.atIndex(1).tap();
-     
-  //   // waitFor(element(by.id("three-dot-menu-button"))).toBeVisible();
-  //   //  await expect(element(by.id("three-dot-menu-button")).atIndex(1).atIndex(1)).toBeVisible();
-  //   // await expect(element(by.id("three-dot-menu-button")).atIndex(1)).toExist();
-  //   // await element(by.id("three-dot-menu-button")).atIndex(1).tap();
-  //   // await story.threeDotMenuButton.tap();
-  // });
+  it('Should check that story title is clickable', async () => {
+     waitFor(boxMenu.threeDotMenuButton).toBeVisible();
+    await boxMenu.threeDotMenuButton.tap();
+  });
+
+
 });

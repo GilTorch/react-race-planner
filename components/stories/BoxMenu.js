@@ -46,7 +46,8 @@ const BoxMenu = ({ parentType, block }) => {
       />
       <VotingModal dismiss={dismissVoting} visible={showVoting} />
       <CommentModal dismiss={dismissComment} visible={showComment} parent={block} />
-      <TouchableOpacity onPress={() => setshowMenu(true)}>
+
+      <TouchableOpacity testID="three-dot-menu-button" onPress={() => setshowMenu(true)}>
         <Menu
           contentStyle={{
             flexDirection: 'column',
@@ -56,10 +57,7 @@ const BoxMenu = ({ parentType, block }) => {
           visible={showMenu}
           anchor={<Feather name="more-vertical" size={18} color="#5A7582" />}
           onDismiss={() => setshowMenu(false)}>
-          <TouchableOpacity
-            // testID="three-dot-menu-button"
-            onPress={showReportModal}
-            style={styles.menuItem}>
+          <TouchableOpacity onPress={showReportModal} style={styles.menuItem}>
             <FontAwesome name="flag" size={16} color="#F44336" style={{ marginRight: 10 }} />
             <Text type="regular" style={{ color: '#5A7582' }}>
               Report

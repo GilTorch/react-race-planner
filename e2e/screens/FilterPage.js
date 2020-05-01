@@ -63,9 +63,6 @@ class FilterPage {
   get selectGenres() {
     return element(by.id("selected-genres"));
   }
-  get storyTitle() {
-    return element(by.id("story-title"));
-  }
 }
 
 module.exports = new FilterPage();

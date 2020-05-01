@@ -21,6 +21,7 @@ describe('Filter Page', () => {
     await expect(navigationBar.homeIcon.atIndex(1)).toBeVisible();
   });
 
+  
   it('Should ensre `FILTER` button is clickable and can navigate to `Filter` page', async () => {
     await filterPage.filterButton();
   });

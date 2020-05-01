@@ -50,7 +50,6 @@ const Story = ({ story, index, length, navigation }) => {
           }}>
           <View>
             <TouchableOpacity
-             
               onPress={() => {
                 navigation.navigate('StoryScreen', { storyId: story.id });
               }}>
@@ -59,9 +58,7 @@ const Story = ({ story, index, length, navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          {/* <View testID="three-dot-menu-button"> */}
           <BoxMenu parentType="story" block={story} />
-          {/* </View> */}
         </View>
 
         {status === 'Completed' && (
