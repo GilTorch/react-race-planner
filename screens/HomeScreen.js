@@ -192,7 +192,7 @@ const HomeScreen = ({ navigation, route }) => {
           </View>
         )}
 
-        <View>
+        <View testID="story">
           {stories.map((story, index) => (
             <Story
               key={Math.random()}

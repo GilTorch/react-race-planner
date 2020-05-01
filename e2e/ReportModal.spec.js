@@ -2,8 +2,8 @@
 const casual = require('casual');
 const signUpPage = require('./screens/SignUpPage');
 const navigationBar = require('./screens/NavigationBar');
-const story = require('./stories/Story');
-const boxMenu = require('./stories/BoxMenu');
+const homepage = require("./screens/HomePage");
+// const boxMenu = require('./stories/BoxMenu');
 // const reportModal = require("./modals/ReportModal");
 
 describe('Filter Page', () => {
@@ -21,8 +21,7 @@ describe('Filter Page', () => {
     await navigationBar.enterLoginCredential(config);
     await expect(navigationBar.homeIcon.atIndex(1)).toExist();
     await expect(navigationBar.homeIcon.atIndex(1)).toBeVisible();
-    await expect(story.storyTitle.atIndex(1)).toExist();
-    // await story.storyTitle();
+    await expect(homepage.story).toExist();
   });
 
   // it('Should ensure the 3-dot menu exist and can show the `Report` button', async () => {

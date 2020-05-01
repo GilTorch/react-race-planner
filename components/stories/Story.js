@@ -50,7 +50,7 @@ const Story = ({ story, index, length, navigation }) => {
           }}>
           <View>
             <TouchableOpacity
-              testID="story-title"
+             
               onPress={() => {
                 navigation.navigate('StoryScreen', { storyId: story.id });
               }}>
@@ -60,7 +60,7 @@ const Story = ({ story, index, length, navigation }) => {
             </TouchableOpacity>
           </View>
           {/* <View testID="three-dot-menu-button"> */}
-            <BoxMenu parentType="story" block={story} />
+          <BoxMenu parentType="story" block={story} />
           {/* </View> */}
         </View>
 
