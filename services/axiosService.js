@@ -15,8 +15,11 @@ axiosService.interceptors.request.use(
   config => {
     const { token } = store.getState().auth;
     const mutableConfig = { ...config };
+    // TODO: get the token from the ENV variable
+    mutableConfig.headers['X-RERUM-KEY'] =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0RldiI6dHJ1ZSwiaWF0IjoxNTg4Mjc3OTQ2fQ.J-5O1kUdIgnbJAkVRmikS66WUqUBlzbSlNvCtLtK1t0';
+
     if (token) {
-      // TODO: add the app token to the header too
       mutableConfig.headers.common.Authorization = `Bearer ${token}`;
     }
 
@@ -37,7 +40,7 @@ axiosService.interceptors.response.use(
 
       // 2. save the user and the token to the state
       store.dispatch({
-        type: Auth.SIGN_UP_SUCCESS,
+        type: Auth.ADD_SESSION,
         payload: { user: decodedUser, token: response.data.token }
       });
     }

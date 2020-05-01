@@ -6,7 +6,7 @@ export const signUpUser = ({ username, firstName, lastName, email, password }) =
   dispatch({ type: Auth.SIGN_UP_ATTEMPT });
 
   return axios
-    .post(`http://10.0.2.2:3000/api/v1${NEW_SESSION_URL}`, {
+    .post(NEW_SESSION_URL, {
       username,
       firstName,
       lastName,

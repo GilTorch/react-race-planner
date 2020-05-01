@@ -4,8 +4,7 @@ const INITIAL_STATE = {
   loading: false,
   requestError: null,
   token: null,
-  currentUser: null,
-  tokenExpiration: null
+  currentUser: null
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -18,12 +17,11 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         requestError: action.payload
       };
-    case Auth.SIGN_UP_SUCCESS:
+    case Auth.ADD_SESSION:
       return {
         ...state,
         token: action.payload.token,
         currentUser: action.payload.user,
-        tokenExpiration: action.payload.user?.exp || null,
         loading: false,
         requestError: null
       };
