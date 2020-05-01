@@ -2,7 +2,7 @@
 /* eslint-disable class-methods-use-this */
 class BoxMenu {
   get threeDotMenuButton() {
-    return element(by.id("three-dot-menu-button")).atIndex(0);
+    return element(by.id('three-dot-menu-button')).atIndex(0);
   }
 }
 

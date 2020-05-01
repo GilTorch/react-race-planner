@@ -2,7 +2,7 @@
 /* eslint-disable class-methods-use-this */
 class Story {
   get storyTitle() {
-    return element(by.id("story-title"));
+    return element(by.id('story-title'));
   }
 }
 
