@@ -1,10 +1,13 @@
+import { Platform } from 'react-native';
 import axios from 'axios';
 import jwt from 'expo-jwt';
 import { Auth } from '../redux/actions/types';
 import store from '../redux/store';
 
 const axiosOptions = {
-  baseURL: 'http://10.0.2.2:3000/api/v1' // TODO: get the vaseURL from the ENV
+  // TODO: get the baseURL from the ENV
+  baseURL:
+    Platform.OS === 'android' ? 'http://10.0.2.2:3000/api/v1' : 'http://localhost:3000/api/v1'
 };
 
 const axiosService = axios.create(axiosOptions);
