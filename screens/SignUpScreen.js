@@ -15,6 +15,7 @@ import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
 
 import { signUpUser, clearRequestError } from '../redux/actions/AuthActions';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
@@ -31,9 +32,10 @@ const SignupScreen = ({ navigation }) => {
   );
 
   const inputs = {};
-  let scrollRef = React.useRef();
-  const [form, setState] = React.useState({});
-  const [errors, setErrors] = React.useState({});
+  const { register, handleSubmit, errors, setValue } = useForm({
+    validationSchema: signupSchema,
+    validateCriteriaMode: 'all'
+  });
 
   const loading = useSelector(state => state.auth.loading);
   const requestError = useSelector(state => state.auth.requestError);
@@ -42,29 +44,24 @@ const SignupScreen = ({ navigation }) => {
 
   React.useEffect(() => {
     if (user) {
+      // TODO: navigate to OTP screen
       navigation.navigate('Home');
     }
   });
 
+  React.useEffect(() => {
+    register('username');
+    register('firstName');
+    register('lastName');
+    register('email');
+    register('password');
+    register('password2');
+  }, [register]);
+
   const focusNextField = name => inputs[name].focus();
 
-  const formatFormErrors = e => {
-    const [inputName, msg] = e.split(':');
-    setErrors(prev => ({ ...prev, [inputName]: msg }));
-  };
-
-  const signup = () => {
-    scrollRef.scrollTo({ y: 230, animated: true });
-    setErrors({});
-
-    signupSchema
-      .validate(form, { abortEarly: false })
-      .then(value => {
-        dispatch(signUpUser(value));
-      })
-      .catch(err => {
-        err.errors.map(formatFormErrors);
-      });
+  const signup = data => {
+    dispatch(signUpUser(data));
   };
 
   if (requestError) {
@@ -74,11 +71,7 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' && 'padding'}>
-      <ScrollView
-        ref={scroll => {
-          scrollRef = scroll;
-        }}
-        contentContainerStyle={{ backgroundColor: 'white' }}>
+      <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
         <View style={styles.container}>
           <Image source={SRLogo} resizeMode="contain" style={styles.logo} />
           <View style={styles.headlineContainer}>
@@ -95,8 +88,7 @@ const SignupScreen = ({ navigation }) => {
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
-                  onChangeText={text => setState({ ...form, username: text })}
-                  value={form.username}
+                  onChangeText={text => setValue('username', text)}
                   onSubmitEditing={() => focusNextField('firstName')}
                   blurOnSubmit={false}
                   returnKeyType="next"
@@ -104,7 +96,7 @@ const SignupScreen = ({ navigation }) => {
                 />
               </View>
               {errors.username && (
-                <Text style={{ fontSize: 11, color: 'red' }}>{errors.username}</Text>
+                <Text style={{ fontSize: 11, color: 'red' }}>{errors.username.message}</Text>
               )}
             </View>
             <View style={styles.formGroup}>
@@ -115,8 +107,7 @@ const SignupScreen = ({ navigation }) => {
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
-                  onChangeText={text => setState({ ...form, firstName: text })}
-                  value={form.firstName}
+                  onChangeText={text => setValue('firstName', text)}
                   onSubmitEditing={() => focusNextField('lastName')}
                   blurOnSubmit={false}
                   ref={input => {
@@ -127,7 +118,7 @@ const SignupScreen = ({ navigation }) => {
                 />
               </View>
               {errors.firstName && (
-                <Text style={{ fontSize: 11, color: 'red' }}>{errors.firstName}</Text>
+                <Text style={{ fontSize: 11, color: 'red' }}>{errors.firstName.message}</Text>
               )}
             </View>
             <View style={styles.formGroup}>
@@ -138,8 +129,7 @@ const SignupScreen = ({ navigation }) => {
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
-                  onChangeText={text => setState({ ...form, lastName: text })}
-                  value={form.lastName}
+                  onChangeText={text => setValue('lastName', text)}
                   onSubmitEditing={() => focusNextField('email')}
                   blurOnSubmit={false}
                   ref={input => {
@@ -150,7 +140,7 @@ const SignupScreen = ({ navigation }) => {
                 />
               </View>
               {errors.lastName && (
-                <Text style={{ fontSize: 11, color: 'red' }}>{errors.lastName}</Text>
+                <Text style={{ fontSize: 11, color: 'red' }}>{errors.lastName.message}</Text>
               )}
             </View>
             <View style={styles.formGroup}>
@@ -161,8 +151,7 @@ const SignupScreen = ({ navigation }) => {
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
-                  onChangeText={text => setState({ ...form, email: text })}
-                  value={form.email}
+                  onChangeText={text => setValue('email', text)}
                   onSubmitEditing={() => focusNextField('password')}
                   blurOnSubmit={false}
                   ref={input => {
@@ -173,7 +162,9 @@ const SignupScreen = ({ navigation }) => {
                   style={[styles.input, errors.email && styles.errorInput]}
                 />
               </View>
-              {errors.email && <Text style={{ fontSize: 11, color: 'red' }}>{errors.email}</Text>}
+              {errors.email && (
+                <Text style={{ fontSize: 11, color: 'red' }}>{errors.email.message}</Text>
+              )}
             </View>
             <View style={styles.formGroup}>
               <View style={styles.labelContainer}>
@@ -183,8 +174,7 @@ const SignupScreen = ({ navigation }) => {
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
-                  onChangeText={text => setState({ ...form, password: text })}
-                  value={form.password}
+                  onChangeText={text => setValue('password', text)}
                   onSubmitEditing={() => focusNextField('password2')}
                   blurOnSubmit={false}
                   ref={input => {
@@ -196,7 +186,7 @@ const SignupScreen = ({ navigation }) => {
                 />
               </View>
               {errors.password && (
-                <Text style={{ fontSize: 11, color: 'red' }}>{errors.password}</Text>
+                <Text style={{ fontSize: 11, color: 'red' }}>{errors.password.message}</Text>
               )}
             </View>
             <View style={styles.formGroup}>
@@ -207,9 +197,8 @@ const SignupScreen = ({ navigation }) => {
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
-                  onChangeText={text => setState({ ...form, password2: text })}
-                  value={form.password2}
-                  onSubmitEditing={signup}
+                  onChangeText={text => setValue('password2', text)}
+                  onSubmitEditing={handleSubmit(signup)}
                   ref={input => {
                     inputs.password2 = input;
                   }}
@@ -219,10 +208,10 @@ const SignupScreen = ({ navigation }) => {
                 />
               </View>
               {errors.password2 && (
-                <Text style={{ fontSize: 11, color: 'red' }}>{errors.password2}</Text>
+                <Text style={{ fontSize: 11, color: 'red' }}>{errors.password2.message}</Text>
               )}
             </View>
-            <TouchableOpacity onPress={signup} style={styles.submitButton}>
+            <TouchableOpacity onPress={handleSubmit(signup)} style={styles.submitButton}>
               <Text type="medium" style={styles.submitButtonText}>
                 Sign Up
               </Text>
