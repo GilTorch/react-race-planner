@@ -1,7 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons';
+import {
+  Ionicons,
+  FontAwesome,
+  FontAwesome5,
+  AntDesign,
+  MaterialCommunityIcons,
+  SimpleLineIcons,
+  Entypo,
+  Feather,
+  MaterialIcons
+} from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 
@@ -49,6 +59,14 @@ async function loadAssetsAsync() {
   const fonts = [
     {
       ...Ionicons.font,
+      ...FontAwesome5.font,
+      ...FontAwesome.font,
+      ...MaterialCommunityIcons.font,
+      ...AntDesign.font,
+      ...SimpleLineIcons.font,
+      ...Entypo.font,
+      ...Feather.font,
+      ...MaterialIcons.font,
       SpaceMono,
       RobotoBlack,
       RobotoBlackItalic,
