@@ -7,9 +7,9 @@ import {
   StyleSheet,
   StatusBar,
   Platform,
-  KeyboardAvoidingView,
-  ToastAndroid
+  KeyboardAvoidingView
 } from 'react-native';
+import Toast from 'react-native-root-toast';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
@@ -43,6 +43,7 @@ const SignupScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
+    // dispatch({ type: 'SIGN_UP_ATTEMPT' });
     if (user) {
       // TODO: navigate to OTP screen
       navigation.navigate('Home');
@@ -65,7 +66,10 @@ const SignupScreen = ({ navigation }) => {
   };
 
   if (requestError) {
-    ToastAndroid.show(requestError.message, ToastAndroid.LONG);
+    Toast.show(requestError.message, {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.BOTTOM
+    });
     dispatch(clearRequestError());
   }
 
