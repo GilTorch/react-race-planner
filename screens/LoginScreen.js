@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
 import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { useToast } from 'react-native-styled-toast';
+import { ActivityIndicator } from 'react-native-paper';
+import Toast from '../components/Toast';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
@@ -15,32 +16,47 @@ import { login } from '../redux/actions/actionCreators';
 
 const validationSchema = yup.object().shape({
   usernameOrEmail: yup.string().required('Enter your username or your email'),
-  password: yup.string().required('Enter your password')
+  password: yup
+    .string()
+    .min(8)
+    .required('Enter your password')
 });
 
 const LoginScreen = ({ navigation }) => {
-  const { register, handleSubmit, errors, setValue } = useForm({
+  const { handleSubmit, errors, control } = useForm({
     validationSchema
   });
 
   const dispatch = useDispatch();
   const loading = useSelector(state => state.user.loadingLogin);
   const message = useSelector(state => state.user.message);
-  const toast = useToast();
+  const code = useSelector(state => state.user.code);
+  const currentUser = useSelector(state => state.user.currentUser);
 
-  useEffect(() => {
-    register('usernameOrEmail');
-    register('password');
-    console.log(toast.toast({ message }));
-  }, [register]);
+  if (code === 'InactiveAccount') {
+    navigation.push('OTPVerification');
+  }
 
-  const submit = data => {
+  if (currentUser) {
+    navigation.push('Home');
+  }
+
+  const submit = async data => {
     dispatch(login(data));
   };
 
+  let submitText = (
+    <Text type="medium" style={styles.submitButtonText}>
+      Log in
+    </Text>
+  );
+
+  if (loading) {
+    submitText = <ActivityIndicator animated color="#fff" />;
+  }
+
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
-      <Text>{message}</Text>
       <View style={styles.container}>
         <Image testID="logo" source={SRLogo} style={styles.logo} />
         <View style={styles.headlineContainer}>
@@ -58,13 +74,19 @@ const LoginScreen = ({ navigation }) => {
             <View
               style={{
                 ...styles.inputContainer,
+                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
                 borderBottomColor: errors.usernameOrEmail ? 'red' : '#DFE3E9'
               }}>
-              <TextInput
-                editable={!loading}
-                onChangeText={text => setValue('usernameOrEmail', text)}
-                testID="login-user-name"
+              <Controller
+                as={TextInput}
+                control={control}
+                name="usernameOrEmail"
+                onChange={args => args[0].nativeEvent.text}
+                rules={{ required: true }}
+                defaultValue=""
                 style={styles.input}
+                testID="login-user-name"
+                editable={!loading}
               />
             </View>
             {errors.usernameOrEmail && (
@@ -80,14 +102,19 @@ const LoginScreen = ({ navigation }) => {
             <View
               style={{
                 ...styles.inputContainer,
+                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
                 borderBottomColor: errors.password ? 'red' : '#DFE3E9'
               }}>
-              <TextInput
+              <Controller
+                as={TextInput}
+                control={control}
+                name="password"
+                onChange={args => args[0].nativeEvent.text}
+                defaultValue=""
+                style={styles.input}
+                testID="login-password"
                 editable={!loading}
                 secureTextEntry
-                onChangeText={text => setValue('password', text)}
-                testID="login-password"
-                style={styles.input}
               />
             </View>
             {errors.password && (
@@ -108,9 +135,7 @@ const LoginScreen = ({ navigation }) => {
             testID="login-button"
             style={styles.submitButton}
             onPress={handleSubmit(submit)}>
-            <Text type="medium" style={styles.submitButtonText}>
-              {loading ? 'Logging in...' : 'Log in'}
-            </Text>
+            {submitText}
           </TouchableOpacity>
           <View style={styles.loginWithSocialMediaTextContainer}>
             <Text type="medium" style={{ color: '#7F8FA4' }}>
@@ -157,6 +182,7 @@ const LoginScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
+      <Toast message={message} />
     </ScrollView>
   );
 };
@@ -188,7 +214,6 @@ const styles = StyleSheet.create({
     fontSize: 24
   },
   inputContainer: {
-    backgroundColor: '#F8FAFC',
     borderRadius: 4.87,
     borderColor: '#DFE3E9',
     borderWidth: 1

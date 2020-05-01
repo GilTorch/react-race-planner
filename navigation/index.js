@@ -4,8 +4,8 @@ import AuthStack from './AuthStack';
 import RootStack from './RootStack';
 
 export default function AppNavigation() {
-  const { user } = store.getState();
-  if (!user.token) {
+  const { currentUser } = store.getState().user;
+  if (!currentUser) {
     return <AuthStack />;
   }
 

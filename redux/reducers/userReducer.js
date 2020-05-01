@@ -1,9 +1,17 @@
-import { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAILURE } from '../actions/types';
+import {
+  LOGIN_START,
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE,
+  ADD_SESSION,
+  CLEAR_MESSAGE
+} from '../actions/types';
 
 const initialState = {
   loadingLogin: false,
   token: null,
-  message: null
+  currentUser: null,
+  message: null,
+  code: null
 };
 
 const userReducer = (state = initialState, action) => {
@@ -14,11 +22,29 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         loadingLogin: false,
+        code: action.data.code,
         token: action.data.token,
         message: action.data.message
       };
+    case ADD_SESSION:
+      return {
+        ...state,
+        loadingLogin: false,
+        currentUser: action.payload.user
+      };
     case LOGIN_FAILURE:
-      return { ...state, loadingLogin: false, message: action.data.message };
+      return {
+        ...state,
+        loadingLogin: false,
+        code: action.data.code,
+        token: action.data.token,
+        message: action.data.message
+      };
+    case CLEAR_MESSAGE:
+      return {
+        ...state,
+        message: null
+      };
     default:
       return state;
   }

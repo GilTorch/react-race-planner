@@ -1,4 +1,4 @@
-import { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAILURE } from './types';
+import { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAILURE, CLEAR_MESSAGE } from './types';
 import axios from '../../services/axiosService';
 
 export const login = payload => {
@@ -10,7 +10,14 @@ export const login = payload => {
         dispatch({ type: LOGIN_SUCCESS, data: res.data });
       })
       .catch(error => {
-        dispatch({ type: LOGIN_FAILURE, data: error.response.data });
+        console.log(`LOGIN FAILURE: ${error}`);
+        dispatch({ type: LOGIN_FAILURE, data: error });
       });
+  };
+};
+
+export const clearMessage = () => {
+  return dispatch => {
+    dispatch({ type: CLEAR_MESSAGE });
   };
 };
