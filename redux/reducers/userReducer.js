@@ -11,7 +11,7 @@ import {
 
 const initialState = {
   loadingLogin: false,
-  loadingSendOTP: false,
+  loadingVerifyOTP: false,
   token: null,
   currentUser: null,
   message: null,
@@ -53,7 +53,7 @@ const userReducer = (state = initialState, action) => {
     case VERIFY_OTP_START:
       return {
         ...state,
-        loadingSendOTP: true
+        loadingVerifyOTP: true
       };
     case VERIFY_OTP_FAILURE:
       return {
@@ -61,14 +61,14 @@ const userReducer = (state = initialState, action) => {
         otpSuccess: false,
         code: action.data.code,
         message: action.data.message,
-        loadingSendOTP: false
+        loadingVerifyOTP: false
       };
     case VERIFY_OTP_SUCCESS:
       return {
         ...state,
         otpSuccess: true,
         message: 'Your account was successfully activated',
-        loadingSendOTP: true
+        loadingVerifyOTP: false
       };
     default:
       return state;

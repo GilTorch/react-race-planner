@@ -32,11 +32,12 @@ const LoginScreen = ({ navigation }) => {
   const loading = useSelector(state => state.user.loadingLogin);
   const message = useSelector(state => state.user.message);
   const currentUser = useSelector(state => state.user.currentUser);
+  const otpSuccess = useSelector(state => state.user.otpSuccess);
 
   if (currentUser && currentUser.isActive) {
     navigation.push('Home');
   }
-  if (code === 'InactiveAccount') {
+  if (code === 'InactiveAccount' && !otpSuccess) {
     navigation.push('OTPVerification');
   }
   const submit = data => {

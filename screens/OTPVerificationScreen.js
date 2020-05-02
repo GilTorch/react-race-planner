@@ -24,16 +24,17 @@ const OTPVerificationScreen = ({ navigation }) => {
     validationSchema
   });
   const message = useSelector(state => state.user.message);
-  const loading = useSelector(state => state.user.loadingSendOTP);
+  const loading = useSelector(state => state.user.loadingVerifyOTP);
+  const currentUser = useSelector(state => state.user.currentUser);
   const [requestEnabled, setRequestEnabled] = useState(true);
-  const token = useSelector(state => state.user.token);
+  // const token = useSelector(state => state.user.token);
   const tokenExpiration = useSelector(state => state.user.currentUser.exp);
   const formattedTime = moment.unix(tokenExpiration).fromNow();
   const tokenHasExpired = formattedTime.includes('ago');
   const expiresOrExpired = tokenHasExpired ? 'expired' : 'expires';
   const dispatch = useDispatch();
   const otpSuccess = useSelector(state => state.user.otpSuccess);
-  const [requestTimeOut, setRequestTimeOut] = useState(180000);
+  // const [requestTimeOut, setRequestTimeOut] = useState(180000);
 
   if (otpSuccess) {
     navigation.push('Login');
@@ -119,7 +120,7 @@ const OTPVerificationScreen = ({ navigation }) => {
               <Text style={{ marginTop: 10, color: 'red' }}>{errors.otp.message}</Text>
             )}
           </View>
-          <Text>{requestTimeOut}</Text>
+          {/* <Text>{requestTimeOut}</Text> */}
           <TouchableOpacity
             testID="reset-password-button"
             style={styles.submitButton}
