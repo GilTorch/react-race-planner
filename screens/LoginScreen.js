@@ -1,16 +1,61 @@
 import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
+import {
+  View,
+  ScrollView,
+  Image,
+  TextInput,
+  StyleSheet,
+  Platform,
+  Modal,
+  ActivityIndicator
+} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+import * as Google from 'expo-google-app-auth';
 
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
 const LoginScreen = ({ navigation }) => {
+  const [form, setState] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    if (form.socialAccount) {
+      // login();
+    }
+  }, [form.socialAccount]);
+
+  async function signInWithGoogle() {
+    setLoading(true);
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: '980543837281-7uu46lgibdqstt24j80p3795pvcd7clq.apps.googleusercontent.com',
+        scopes: ['profile']
+      });
+
+      if (result.type === 'success') {
+        setState({
+          socialAccount: true,
+          googleAccountId: result.user.id
+        });
+      }
+      setLoading(false);
+      return null;
+    } catch (e) {
+      setLoading(false);
+      return { error: true };
+    }
+  }
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
+      <Modal transparent visible={loading}>
+        <View style={styles.spiner}>
+          <ActivityIndicator size={Platform.isAndroid ? 60 : 'large'} color="#f8f8f8" />
+        </View>
+      </Modal>
       <View style={styles.container}>
         <Image testID="logo" source={SRLogo} style={styles.logo} />
         <View style={styles.headlineContainer}>
@@ -79,6 +124,7 @@ const LoginScreen = ({ navigation }) => {
               <Entypo name="facebook-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={signInWithGoogle}
               testID="google-icon-button"
               style={{
                 backgroundColor: '#e6e6e6',
@@ -106,6 +152,12 @@ const LoginScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  spiner: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   container: {
     backgroundColor: 'white',
     width: '100%',
