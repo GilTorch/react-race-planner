@@ -20,14 +20,21 @@ export const signupSchema = yup.object().shape({
     .string()
     .email('Invalid email address')
     .required('Email is required'),
-  password: yup
-    .string()
-    .min(8, 'Password should be at last 8 characters long')
-    // .matches(passwordRegExp, 'Password is not valid.')
-    .required('Password is required'),
-  password2: yup
-    .string()
-    // .matches(passwordRegExp, 'Password is not valid.')
-    .oneOf([yup.ref('password'), null], "Password don't match")
-    .required('Password Confirmation is required')
+  password: yup.string().when('socialAccount', {
+    is: true,
+    then: yup.string(),
+    otherwise: yup
+      .string()
+      .min(8, 'password:Password should be at last 8 characters long')
+      .required('password:Password is required')
+  }),
+  password2: yup.string().when('socialAccount', {
+    is: true,
+    then: yup.string(),
+    otherwise: yup
+      .string()
+      .oneOf([yup.ref('password'), null], "password2:Password don't match")
+      .required('password2:Confirm Password is required')
+  }),
+  socialAccount: yup.boolean()
 });
