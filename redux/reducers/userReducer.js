@@ -3,15 +3,20 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   ADD_SESSION,
-  CLEAR_MESSAGE
+  CLEAR_MESSAGE,
+  VERIFY_OTP_START,
+  VERIFY_OTP_SUCCESS,
+  VERIFY_OTP_FAILURE
 } from '../actions/types';
 
 const initialState = {
   loadingLogin: false,
+  loadingSendOTP: false,
   token: null,
   currentUser: null,
   message: null,
-  code: null
+  code: null,
+  otpSuccess: null
 };
 
 const userReducer = (state = initialState, action) => {
@@ -44,6 +49,26 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         message: null
+      };
+    case VERIFY_OTP_START:
+      return {
+        ...state,
+        loadingSendOTP: true
+      };
+    case VERIFY_OTP_FAILURE:
+      return {
+        ...state,
+        otpSuccess: false,
+        code: action.data.code,
+        message: action.data.message,
+        loadingSendOTP: false
+      };
+    case VERIFY_OTP_SUCCESS:
+      return {
+        ...state,
+        otpSuccess: true,
+        message: 'Your account was successfully activated',
+        loadingSendOTP: true
       };
     default:
       return state;

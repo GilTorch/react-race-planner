@@ -8,6 +8,7 @@ import Text from './CustomText';
 import { clearMessage } from '../redux/actions/actionCreators';
 
 const ToastComponent = ({ message }) => {
+  if (!message) return null;
   const opacity = new Animated.Value(0);
   const dispatch = useDispatch();
 
@@ -23,11 +24,11 @@ const ToastComponent = ({ message }) => {
   const fadeOut = () => {
     Animated.timing(opacity, {
       toValue: 0,
-      duration: 2000
+      duration: 500
     }).start();
     setTimeout(() => {
       dispatch(clearMessage());
-    }, 2000);
+    }, 500);
   };
 
   if (message) {
@@ -78,7 +79,11 @@ const ToastComponent = ({ message }) => {
 };
 
 ToastComponent.propTypes = {
-  message: PropTypes.string.isRequired
+  message: PropTypes.string
+};
+
+ToastComponent.defaultProps = {
+  message: null
 };
 
 export default ToastComponent;

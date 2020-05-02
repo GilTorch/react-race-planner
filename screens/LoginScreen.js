@@ -28,20 +28,18 @@ const LoginScreen = ({ navigation }) => {
   });
 
   const dispatch = useDispatch();
+  const code = useSelector(state => state.user.code);
   const loading = useSelector(state => state.user.loadingLogin);
   const message = useSelector(state => state.user.message);
-  const code = useSelector(state => state.user.code);
   const currentUser = useSelector(state => state.user.currentUser);
 
+  if (currentUser && currentUser.isActive) {
+    navigation.push('Home');
+  }
   if (code === 'InactiveAccount') {
     navigation.push('OTPVerification');
   }
-
-  if (currentUser) {
-    navigation.push('Home');
-  }
-
-  const submit = async data => {
+  const submit = data => {
     dispatch(login(data));
   };
 

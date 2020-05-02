@@ -5,7 +5,7 @@ import RootStack from './RootStack';
 
 export default function AppNavigation() {
   const { currentUser } = store.getState().user;
-  if (!currentUser) {
+  if (!currentUser || !currentUser.isActive) {
     return <AuthStack />;
   }
 
