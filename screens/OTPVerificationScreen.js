@@ -7,9 +7,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { Entypo } from '@expo/vector-icons';
+import { useDidUpdateEffect } from '../hooks/useDidUpdateEffect';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
-// import { useDidUpdateEffect } from '../hooks/useDidUpdateEffect';
 import { verifyOTP } from '../redux/actions/actionCreators';
 import Toast from '../components/Toast';
 
@@ -25,47 +26,37 @@ const OTPVerificationScreen = ({ navigation }) => {
   });
   const message = useSelector(state => state.user.message);
   const loading = useSelector(state => state.user.loadingVerifyOTP);
-  const currentUser = useSelector(state => state.user.currentUser);
+  const token = useSelector(state => state.user.token);
   const [requestEnabled, setRequestEnabled] = useState(true);
-  // const token = useSelector(state => state.user.token);
   const tokenExpiration = useSelector(state => state.user.currentUser.exp);
   const formattedTime = moment.unix(tokenExpiration).fromNow();
   const tokenHasExpired = formattedTime.includes('ago');
   const expiresOrExpired = tokenHasExpired ? 'expired' : 'expires';
   const dispatch = useDispatch();
   const otpSuccess = useSelector(state => state.user.otpSuccess);
-  // const [requestTimeOut, setRequestTimeOut] = useState(180000);
 
   if (otpSuccess) {
     navigation.push('Login');
   }
 
-  // only fire request when token is not expired
-  // and 3 minutes after last token
-  // useDidUpdateEffect(() => {
-  //   // this will work exactly as componentDidUpdate
-  //   // and will fire only when the token has changed
-  //   setRequestEnabled(false);
-  //   const requestTimeOutInterval = setInterval(() => {
-  //     const newRequestTimeOut = requestTimeOut - 1000;
-  //     setRequestTimeOut(newRequestTimeOut);
-  //   }, 1000);
-  //   setTimeout(() => {
-  //     setRequestEnabled(true);
-  //     clearInterval(requestTimeOutInterval);
-  //   }, 180000);
-  // }, [token]);
+  useDidUpdateEffect(() => {
+    const expirationDate = new Date(tokenExpiration * 1000);
+    const now = new Date();
+    const diff = expirationDate - now;
+    if (diff >= 1.99 && !tokenHasExpired) {
+      setRequestEnabled(false);
+      setTimeout(() => {
+        setRequestEnabled(true);
+        clearInterval();
+      }, 180000);
+    }
+  }, [token]);
 
   const submit = data => {
     if (!tokenHasExpired) {
       if (requestEnabled) {
-        // send request
         dispatch(verifyOTP(data));
-      } else {
-        console.error('REQUEST NOT ENABLED. OTP NOT SENT');
       }
-    } else {
-      console.error('TOKEN HAS EXPIRED. OTP NOT SENT');
     }
   };
 
@@ -77,6 +68,25 @@ const OTPVerificationScreen = ({ navigation }) => {
 
   if (loading) {
     submitText = <ActivityIndicator animated color="#fff" />;
+  }
+
+  if (!requestEnabled) {
+    submitText = (
+      <Text type="medium" style={styles.submitButtonText}>
+        Wait 3 minutes before sending the next OTP{' '}
+        <Entypo size={18} color="#fff" style={{ marginRight: 10 }} name="lock" />
+      </Text>
+    );
+  }
+
+  let editable = true;
+
+  if (loading) {
+    editable = false;
+  }
+
+  if (!requestEnabled) {
+    editable = false;
   }
 
   return (
@@ -103,7 +113,14 @@ const OTPVerificationScreen = ({ navigation }) => {
                 <Text type="bold">{moment.unix(tokenExpiration).fromNow()}</Text>):
               </Text>
             </View>
-            <View style={styles.inputContainer}>
+            <View
+              style={{
+                ...styles.inputContainer,
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: loading || !requestEnabled ? '#CFD4E6' : '#F8FAFC',
+                borderBottomColor: errors.usernameOrEmail ? 'red' : '#DFE3E9'
+              }}>
               <Controller
                 as={TextInput}
                 control={control}
@@ -112,15 +129,17 @@ const OTPVerificationScreen = ({ navigation }) => {
                 defaultValue=""
                 style={styles.input}
                 testID="otp"
-                editable={!loading}
+                editable={editable}
               />
+              {!requestEnabled && (
+                <Entypo size={18} color="#8A8D99" style={{ marginRight: 10 }} name="lock" />
+              )}
               {/* <TextInput testID="add-email-address-to-reset" style={styles.input} /> */}
             </View>
             {errors.otp && (
               <Text style={{ marginTop: 10, color: 'red' }}>{errors.otp.message}</Text>
             )}
           </View>
-          {/* <Text>{requestTimeOut}</Text> */}
           <TouchableOpacity
             testID="reset-password-button"
             style={styles.submitButton}
