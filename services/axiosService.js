@@ -1,9 +1,10 @@
 import axios from 'axios';
 import jwt from 'expo-jwt';
 import store from '../redux/store';
+import getEnvVars from '../variables';
 
 const axiosOptions = {
-  baseURL: 'http://localhost:3000/api/v1' // TODO: get the vaseURL from the ENV
+  baseURL: getEnvVars.apiUrl // TODO: get the vaseURL from the ENV
 };
 
 const axiosService = axios.create(axiosOptions);
