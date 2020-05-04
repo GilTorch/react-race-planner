@@ -32,27 +32,30 @@ const SignupScreen = ({ navigation }) => {
     }, [])
   );
 
-  const inputs = {};
-  const { register, handleSubmit, errors, setValue } = useForm({
-    validationSchema: signupSchema,
-    validateCriteriaMode: 'all'
-  });
+  let scrollRef = React.useRef();
+  const [socialMediaName, setSocialMediaName] = React.useState('');
+  const [socialSignUp, setSocialSignup] = React.useState(false);
 
   const loading = useSelector(state => state.auth.loading);
   const requestError = useSelector(state => state.auth.requestError);
   const user = useSelector(state => state.auth.currentUser);
   const dispatch = useDispatch();
 
-  const [loading, setLoading] = React.useState(false);
-  const [socialMediaName, setSocialMediaName] = React.useState('');
+  const { register, handleSubmit, errors, setValue, watch } = useForm({
+    validationSchema: signupSchema,
+    validateCriteriaMode: 'all'
+  });
+  const socialAccount = watch('socialAccount', false);
 
   React.useEffect(() => {
-    // dispatch({ type: 'SIGN_UP_ATTEMPT' });
     if (user) {
       // TODO: navigate to OTP screen
       navigation.navigate('Home');
     }
-  });
+    if (socialAccount) {
+      handleSubmit(signup)();
+    }
+  }, [socialAccount, user]);
 
   React.useEffect(() => {
     register('username');
@@ -61,45 +64,42 @@ const SignupScreen = ({ navigation }) => {
     register('email');
     register('password');
     register('password2');
+    register('socialAccount');
+    register('googleAccountId');
   }, [register]);
 
+  const inputs = {};
   const focusNextField = name => inputs[name].focus();
 
   const signup = data => {
     dispatch(signUpUser(data));
   };
 
-  // React.useEffect(() => {
-  //   if (form.socialAccount) {
-  //     signup();
-  //   }
-  // }, [form.socialAccount]);
-
   async function signInWithGoogleAsync() {
-    setLoading(true);
+    setSocialSignup(true);
+    scrollRef.scrollTo({ y: 100, animated: true });
 
     try {
       const result = await Google.logInAsync({
-        androidClientId: '706451172353-809kg5r2ha357574ii7iupnbf8nv8qvo.apps.googleusercontent.com',
+        androidClientId: '980543837281-7uu46lgibdqstt24j80p3795pvcd7clq.apps.googleusercontent.com',
         scopes: ['profile', 'email']
       });
 
       if (result.type === 'success') {
-        setState({
-          username: '',
-          firstName: result.user.givenName,
-          lastName: result.user.familyName,
-          email: result.user.email,
-          socialAccount: true,
-          googleAcountId: result.user.id
-        });
+        setValue([
+          { username: '' },
+          { firstName: result.user.givenName },
+          { lastName: result.user.familyName },
+          { email: result.user.email },
+          { socialAccount: true },
+          { googleAccountId: result.user.id }
+        ]);
         setSocialMediaName('Google');
       }
-
-      setLoading(false);
+      setSocialSignup(false);
       return null;
     } catch (e) {
-      setLoading(false);
+      setSocialSignup(false);
       return { error: true };
     }
   }
@@ -114,25 +114,30 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' && 'padding'}>
-      <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
+      <ScrollView
+        ref={scroll => {
+          scrollRef = scroll;
+        }}
+        contentContainerStyle={{ backgroundColor: 'white' }}>
         <View style={styles.container}>
           <Image testID="logo" source={SRLogo} resizeMode="contain" style={styles.logo} />
           <View testID="create-account-text" style={styles.headlineContainer}>
             <Text type="medium" style={styles.headline}>
               Create an Account
-          </Text>
+            </Text>
           </View>
           <View style={styles.form}>
             <View style={styles.formGroup}>
               <View style={styles.labelContainer}>
                 <Text type="medium" style={styles.label}>
                   Username
-              </Text>
+                </Text>
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
                   testID="user-name"
                   onChangeText={text => setValue('username', text)}
+                  value={watch('username')}
                   onSubmitEditing={() => focusNextField('firstName')}
                   blurOnSubmit={false}
                   returnKeyType="next"
@@ -147,12 +152,13 @@ const SignupScreen = ({ navigation }) => {
               <View style={styles.labelContainer}>
                 <Text type="medium" style={styles.label}>
                   First Name
-              </Text>
+                </Text>
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
                   testID="first-name"
                   onChangeText={text => setValue('firstName', text)}
+                  value={watch('firstName')}
                   onSubmitEditing={() => focusNextField('lastName')}
                   blurOnSubmit={false}
                   ref={input => {
@@ -170,12 +176,13 @@ const SignupScreen = ({ navigation }) => {
               <View style={styles.labelContainer}>
                 <Text type="medium" style={styles.label}>
                   Last Name
-              </Text>
+                </Text>
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
                   testID="last-name"
                   onChangeText={text => setValue('lastName', text)}
+                  value={watch('lastName')}
                   onSubmitEditing={() => focusNextField('email')}
                   blurOnSubmit={false}
                   ref={input => {
@@ -193,12 +200,13 @@ const SignupScreen = ({ navigation }) => {
               <View style={styles.labelContainer}>
                 <Text type="medium" style={styles.label}>
                   Email
-              </Text>
+                </Text>
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
                   testID="email-address"
                   onChangeText={text => setValue('email', text)}
+                  value={watch('email')}
                   onSubmitEditing={() => focusNextField('password')}
                   blurOnSubmit={false}
                   ref={input => {
@@ -213,60 +221,69 @@ const SignupScreen = ({ navigation }) => {
                 <Text style={{ fontSize: 11, color: 'red' }}>{errors.email.message}</Text>
               )}
             </View>
-            <View style={styles.formGroup}>
-              <View style={styles.labelContainer}>
-                <Text type="medium" style={styles.label}>
-                  Password
-              </Text>
-              </View>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  testID="password"
-                  onChangeText={text => setValue('password', text)}
-                  onSubmitEditing={() => focusNextField('password2')}
-                  blurOnSubmit={false}
-                  ref={input => {
-                    inputs.password = input;
-                  }}
-                  secureTextEntry
-                  returnKeyType="next"
-                  style={[styles.input, errors.password && styles.errorInput]}
-                />
-              </View>
-              {errors.password && (
-                <Text style={{ fontSize: 11, color: 'red' }}>{errors.password.message}</Text>
-              )}
-            </View>
-            <View style={styles.formGroup}>
-              <View style={styles.labelContainer}>
-                <Text type="medium" style={styles.label}>
-                  Confirm Password
-              </Text>
-              </View>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  testID="password-confirmation"
-                  onChangeText={text => setValue('password2', text)}
-                  onSubmitEditing={handleSubmit(signup)}
-                  ref={input => {
-                    inputs.password2 = input;
-                  }}
-                  secureTextEntry
-                  returnKeyType="done"
-                  style={[styles.input, errors.password2 && styles.errorInput]}
-                />
-              </View>
-              {errors.password2 && (
-                <Text style={{ fontSize: 11, color: 'red' }}>{errors.password2.message}</Text>
-              )}
-            </View>
-            <TouchableOpacity onPress={handleSubmit(signup)} style={styles.submitButton}>
-              {form.socialAccount && (
+            {!socialAccount && (
+              <>
+                <View style={styles.formGroup}>
+                  <View style={styles.labelContainer}>
+                    <Text type="medium" style={styles.label}>
+                      Password
+                    </Text>
+                  </View>
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      testID="password"
+                      onChangeText={text => setValue('password', text)}
+                      value={watch('password')}
+                      onSubmitEditing={() => focusNextField('password2')}
+                      blurOnSubmit={false}
+                      ref={input => {
+                        inputs.password = input;
+                      }}
+                      secureTextEntry
+                      returnKeyType="next"
+                      style={[styles.input, errors.password && styles.errorInput]}
+                    />
+                  </View>
+                  {errors.password && (
+                    <Text style={{ fontSize: 11, color: 'red' }}>{errors.password.message}</Text>
+                  )}
+                </View>
+                <View style={styles.formGroup}>
+                  <View style={styles.labelContainer}>
+                    <Text type="medium" style={styles.label}>
+                      Confirm Password
+                    </Text>
+                  </View>
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      testID="password-confirmation"
+                      onChangeText={text => setValue('password2', text)}
+                      value={watch('password2')}
+                      onSubmitEditing={handleSubmit(signup)}
+                      ref={input => {
+                        inputs.password2 = input;
+                      }}
+                      secureTextEntry
+                      returnKeyType="done"
+                      style={[styles.input, errors.password2 && styles.errorInput]}
+                    />
+                  </View>
+                  {errors.password2 && (
+                    <Text style={{ fontSize: 11, color: 'red' }}>{errors.password2.message}</Text>
+                  )}
+                </View>
+              </>
+            )}
+            <TouchableOpacity
+              testID="sign-up-button"
+              onPress={handleSubmit(signup)}
+              style={styles.submitButton}>
+              {socialAccount && (
                 <Text type="medium" style={styles.submitButtonText}>
                   Continue signup with {socialMediaName}
                 </Text>
               )}
-              {!form.socialAccount && (
+              {!socialAccount && (
                 <Text type="medium" style={styles.submitButtonText}>
                   Sign Up
                 </Text>
@@ -279,6 +296,7 @@ const SignupScreen = ({ navigation }) => {
             </View>
             <View style={styles.socialMediaButtonsContainer}>
               <TouchableOpacity
+                testID="twitter-icon-button"
                 style={{
                   backgroundColor: '#3ABDFF',
                   ...styles.socialMediaButton
@@ -286,6 +304,7 @@ const SignupScreen = ({ navigation }) => {
                 <Entypo name="twitter-with-circle" size={24} color="#fff" />
               </TouchableOpacity>
               <TouchableOpacity
+                testID="facebook-icon-button"
                 style={{
                   backgroundColor: '#1382D5',
                   ...styles.socialMediaButton
@@ -307,7 +326,7 @@ const SignupScreen = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate('Login')}
                 style={styles.goToLoginPageButton}>
-                <View>
+                <View testID="go-to-loggin-page">
                   <Text style={styles.goToLoginPageButtonText}>Log in</Text>
                 </View>
               </TouchableOpacity>
@@ -316,6 +335,7 @@ const SignupScreen = ({ navigation }) => {
         </View>
       </ScrollView>
       <PageSpinner visible={loading} />
+      <PageSpinner visible={socialSignUp} />
     </KeyboardAvoidingView>
   );
 };

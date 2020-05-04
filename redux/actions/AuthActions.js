@@ -2,7 +2,14 @@ import axios from '../../services/axiosService';
 import { Auth } from './types';
 import { NEW_SESSION_URL } from '../../api/urls';
 
-export const signUpUser = ({ username, firstName, lastName, email, password }) => dispatch => {
+export const signUpUser = ({
+  username,
+  firstName,
+  lastName,
+  email,
+  password,
+  googleAccountId
+}) => dispatch => {
   dispatch({ type: Auth.SIGN_UP_ATTEMPT });
 
   return axios
@@ -11,7 +18,8 @@ export const signUpUser = ({ username, firstName, lastName, email, password }) =
       firstName,
       lastName,
       email,
-      password
+      password,
+      googleAccountId
     })
     .catch(error => {
       // TODO: handle server error, right now got an error status 500 for duplicated
