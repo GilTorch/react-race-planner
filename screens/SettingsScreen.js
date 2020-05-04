@@ -103,7 +103,7 @@ const SettingsScreen = ({ navigation }) => {
             paddingBottom: Constants.statusBarHeight,
             paddingTop: Constants.statusBarHeight * 2
           }}>
-          <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
+          <Text testID="settings-text" type="bold" style={{ color: 'white', fontSize: 18 }}>
             Settings
           </Text>
         </LinearGradient>
@@ -111,7 +111,12 @@ const SettingsScreen = ({ navigation }) => {
 
       <ScrollView>
         <View>
-          <View style={{ justifyContent: 'center', marginLeft: 20, marginVertical: 20 }}>
+          <View
+            style={{
+              justifyContent: 'center',
+              marginLeft: 20,
+              marginVertical: 20
+            }}>
             <Text style={styles.headline}>PROFILE INFO</Text>
           </View>
           <TouchableOpacity
@@ -144,8 +149,12 @@ const SettingsScreen = ({ navigation }) => {
               borderWidth: 1
             }}>
             <TouchableOpacity
+              testID="username-btn"
               onPress={() =>
-                navigation.navigate('EditSettingsScreen', { key: 'username', value: 'john.doe' })
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'username',
+                  value: 'john.doe'
+                })
               }
               style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Username</Text>
@@ -161,7 +170,10 @@ const SettingsScreen = ({ navigation }) => {
             <Divider />
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('EditSettingsScreen', { key: 'firstname', value: 'John' })
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'firstname',
+                  value: 'John'
+                })
               }
               style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>First Name</Text>
@@ -177,7 +189,10 @@ const SettingsScreen = ({ navigation }) => {
             <Divider />
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('EditSettingsScreen', { key: 'lastname', value: 'Doe' })
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'lastname',
+                  value: 'Doe'
+                })
               }
               style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Last Name</Text>
@@ -193,7 +208,10 @@ const SettingsScreen = ({ navigation }) => {
             <Divider />
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('EditSettingsScreen', { key: 'gender', value: 'Male' })
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'gender',
+                  value: 'Male'
+                })
               }
               style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Gender</Text>
@@ -298,7 +316,12 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View>
-          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
+          <View
+            style={{
+              marginVertical: 20,
+              justifyContent: 'center',
+              marginLeft: 20
+            }}>
             <Text style={styles.headline}>SECURITY</Text>
           </View>
           <View
@@ -317,7 +340,10 @@ const SettingsScreen = ({ navigation }) => {
             <Divider />
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate('EditSettingsScreen', { key: 'privacy', value: 'username' })
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'privacy',
+                  value: 'username'
+                })
               }
               style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Default Privacy</Text>
@@ -334,7 +360,12 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View>
-          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
+          <View
+            style={{
+              marginVertical: 20,
+              justifyContent: 'center',
+              marginLeft: 20
+            }}>
             <Text style={styles.headline}>SOCIAL ACCOUNTS</Text>
           </View>
           <View style={{ backgroundColor: 'white' }}>
@@ -393,7 +424,12 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View>
-          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
+          <View
+            style={{
+              marginVertical: 20,
+              justifyContent: 'center',
+              marginLeft: 20
+            }}>
             <Text style={styles.headline}>CONTACT US</Text>
           </View>
           <View
@@ -403,7 +439,12 @@ const SettingsScreen = ({ navigation }) => {
               borderColor: '#C8C7CC',
               borderWidth: 1
             }}>
-            <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
               <Text style={{ fontSize: 18 }}>Help & Support</Text>
             </TouchableOpacity>
           </View>
@@ -415,14 +456,24 @@ const SettingsScreen = ({ navigation }) => {
               borderWidth: 1,
               marginTop: 30
             }}>
-            <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
               <Text style={{ fontSize: 18 }}>Rate Us</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         <View>
-          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
+          <View
+            style={{
+              marginVertical: 20,
+              justifyContent: 'center',
+              marginLeft: 20
+            }}>
             <Text style={styles.headline}>LEGAL</Text>
           </View>
           <View

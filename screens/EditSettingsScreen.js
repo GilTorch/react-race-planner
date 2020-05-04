@@ -90,7 +90,13 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             Settings
           </Text>
-          <IconButton onPress={() => ''} disabled={disableCheck} icon="check" color="white" />
+          <IconButton
+            testID="icon-check"
+            onPress={() => ''}
+            disabled={disableCheck}
+            icon="check"
+            color="white"
+          />
         </LinearGradient>
       </Surface>
 
@@ -100,6 +106,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Usermame</Text>
           </View>
           <TextInput
+            testID="edit-username"
             placeholder="username"
             underlineColor="#C8C7CC"
             value={username}

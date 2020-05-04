@@ -26,7 +26,7 @@ describe('Filter Page', () => {
   });
 
   it('Should check that story title is clickable', async () => {
-     waitFor(boxMenu.threeDotMenuButton).toBeVisible();
+    waitFor(boxMenu.threeDotMenuButton).toBeVisible();
     await boxMenu.threeDotMenuButton.tap();
   });
 
