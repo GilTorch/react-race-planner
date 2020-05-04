@@ -86,7 +86,12 @@ const EditSettingsScreen = ({ navigation, route }) => {
             paddingBottom: Constants.statusBarHeight,
             paddingTop: Constants.statusBarHeight * 2
           }}>
-          <IconButton onPress={() => navigation.goBack()} icon="arrow-left" color="white" />
+          <IconButton
+            testID="back-arrow"
+            onPress={() => navigation.goBack()}
+            icon="arrow-left"
+            color="white"
+          />
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             Settings
           </Text>
@@ -124,6 +129,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>First Name</Text>
           </View>
           <TextInput
+            testID="edit-firstname"
             placeholder="first-name"
             underlineColor="#C8C7CC"
             value={firstName}
@@ -141,6 +147,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Last Name</Text>
           </View>
           <TextInput
+            testID="edit-lastname"
             placeholder="last-name"
             underlineColor="#C8C7CC"
             value={lastName}
@@ -292,7 +299,10 @@ const EditSettingsScreen = ({ navigation, route }) => {
               {gender === 'Male' && <FontAwesome name="check" size={18} color="#03A2A2" />}
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity onPress={() => selectFemale()} style={styles.checkBox}>
+            <TouchableOpacity
+              testID="edit-gender"
+              onPress={() => selectFemale()}
+              style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Female</Text>
               {gender === 'Female' && <FontAwesome name="check" size={18} color="#03A2A2" />}
             </TouchableOpacity>

@@ -169,6 +169,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="firstname-btn"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'firstname',
@@ -188,6 +189,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="lastname-btn"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'lastname',
@@ -207,6 +209,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="gender-btn"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'gender',
@@ -225,7 +228,7 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity onPress={showDatepicker} style={styles.profileField}>
+            <TouchableOpacity testID="dob-btn" onPress={showDatepicker} style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Date of Birth</Text>
               <View
                 style={{

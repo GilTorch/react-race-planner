@@ -1,10 +1,10 @@
 {
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 2318,
   "expoServerNgrokUrl": "https://bc-nyr.anonymous.sr-mobile.exp.direct",
   "packagerNgrokUrl": "https://packager.bc-nyr.anonymous.sr-mobile.exp.direct",
-  "ngrokPid": 57868,
+  "ngrokPid": 2349,
   "devToolsPort": 19002,
   "webpackServerPort": null
 }
