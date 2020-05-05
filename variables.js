@@ -1,10 +1,11 @@
 import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 
 export const prodUrl = 'http://localhost:3000/api/v1';
 
 const ENV = {
   dev: {
-    apiUrl: 'http://localhost:3000/api/v1'
+    apiUrl: Platform.OS === 'ios' ? 'http://localhost:3000/api/v1' : 'http://10.0.2.2:3000/api/v1'
   },
   staging: {
     apiUrl: prodUrl
