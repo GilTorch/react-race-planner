@@ -19,7 +19,11 @@ export const login = payload => {
         dispatch({ type: LOGIN_SUCCESS, data: res.data });
       })
       .catch(error => {
-        dispatch({ type: LOGIN_FAILURE, data: error.response.data });
+        let response = { message: 'We have issues connecting with the server. Try again later' };
+        if (error.response && error.response.data) {
+          response = error.response.data;
+        }
+        dispatch({ type: LOGIN_FAILURE, data: response });
       });
   };
 };
