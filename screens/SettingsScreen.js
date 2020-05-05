@@ -284,6 +284,7 @@ const SettingsScreen = ({ navigation }) => {
               borderWidth: 1
             }}>
             <TouchableOpacity
+              testID="email-btn"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'email',
@@ -303,6 +304,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="phones-btn"
               onPress={() => navigation.navigate('EditSettingsScreen', { key: 'phones' })}
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Phones</Text>
@@ -310,6 +312,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="address-btn"
               onPress={() => navigation.navigate('EditSettingsScreen', { key: 'address' })}
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Address</Text>

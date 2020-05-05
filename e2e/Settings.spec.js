@@ -9,10 +9,24 @@ describe('Settings Page', () => {
   const firstName = casual.first_name;
   const lastName = casual.last_name;
   const userName = `${firstName}_${lastName}`;
+  const emailAddress = `${firstName}.${lastName}@gmail.com`;
+  const phoneNumber1 = casual.phone;
+  const phoneNumber2 = casual.phone;
+  const addressNumber1 = casual.address;
+  const addressNumber2 = casual.address;
+  const currentCity = casual.city;
+  const currentCountry = casual.country;
   const config = {
     username: userName,
     firstname: firstName,
     lastname: lastName,
+    email: emailAddress,
+    phone1: phoneNumber1,
+    phone2: phoneNumber2,
+    address1: addressNumber1,
+    address2: addressNumber2,
+    city: currentCity,
+    country: currentCountry,
     password: '**********'
   };
 
@@ -93,6 +107,63 @@ describe('Settings Page', () => {
   it('Should edit gender in settings', async () => {
     expect(editSettingsPage.editGender).toBeVisible();
     await editSettingsPage.editGender.tap();
+    await editSettingsPage.iconCheck.tap();
+    await editSettingsPage.backArrow.tap();
+  });
+
+  it('Should ensure `email` button is clickable and can navigate to edit email page', async () => {
+    await settingsPage.email.tap();
+  });
+
+  it('Should edit gender in settings', async () => {
+    expect(editSettingsPage.editEmail).toBeVisible();
+    await editSettingsPage.editEmail.clearText();
+    await editSettingsPage.editSettingsEmail(config);
+    await editSettingsPage.iconCheck.tap();
+    await editSettingsPage.backArrow.tap();
+  });
+
+  it('Should ensure `phones` button is clickable and can navigate to edit phones page', async () => {
+    await settingsPage.scrollScreenUp();
+    await settingsPage.phones.tap();
+  });
+
+  it('Should add phone 1 in settings', async () => {
+    expect(editSettingsPage.editPhoneOne).toBeVisible();
+    //  await editSettingsPage.editPhoneOne.clearText();
+    await editSettingsPage.editSettingsPhoneOne(config);
+  });
+
+  it('Should add phone 2 in settings', async () => {
+    expect(editSettingsPage.editPhoneTwo).toBeVisible();
+    await editSettingsPage.editSettingsPhoneTwo(config);
+    await editSettingsPage.iconCheck.tap();
+    await editSettingsPage.backArrow.tap();
+  });
+
+  it('Should ensure `Address` button is clickable and can navigate to edit phones page', async () => {
+    // await settingsPage.scrollScreenUp();
+    await settingsPage.address.tap();
+  });
+
+  it('Should add address 1 in settings', async () => {
+    expect(editSettingsPage.editAddressOne).toBeVisible();
+    await editSettingsPage.editSettingsAddressOne(config);
+  });
+
+  it('Should add address 2 in settings', async () => {
+    expect(editSettingsPage.editAddressTwo).toBeVisible();
+    await editSettingsPage.editSettingsAddressTwo(config);
+  });
+
+  it('Should add city in settings', async () => {
+    expect(editSettingsPage.editCity).toBeVisible();
+    await editSettingsPage.editSettingsCity(config);
+  });
+
+  it('Should add country in settings', async () => {
+    expect(editSettingsPage.editCountry).toBeVisible();
+    await editSettingsPage.editSettingsCountry(config);
     await editSettingsPage.iconCheck.tap();
     await editSettingsPage.backArrow.tap();
   });

@@ -165,6 +165,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Email</Text>
           </View>
           <TextInput
+            testID="edit-email"
             placeholder="email"
             underlineColor="#C8C7CC"
             value={email}
@@ -182,6 +183,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Phones</Text>
           </View>
           <TextInput
+            testID="edit-phone1"
             placeholder="phone 1"
             underlineColor="transparent"
             onSubmitEditing={() => focusNextField('phone2')}
@@ -196,6 +198,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
+            testID="edit-phone2"
             placeholder="phone 2"
             underlineColor="#C8C7CC"
             returnKeyType="done"
@@ -221,6 +224,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Address</Text>
           </View>
           <TextInput
+            testID="edit-address1"
             underlineColor="transparent"
             value={address1}
             onChangeText={val => {
@@ -234,6 +238,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
+            testID="edit-address2"
             underlineColor="transparent"
             value={address2}
             onChangeText={val => {
@@ -248,6 +253,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
+            testID="edit-city"
             underlineColor="transparent"
             value={city}
             onChangeText={val => {
@@ -265,6 +271,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
+            testID="edit-country"
             underlineColor="#C8C7CC"
             value={country}
             onChangeText={val => {
