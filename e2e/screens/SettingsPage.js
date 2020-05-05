@@ -3,99 +3,103 @@
 
 class SettingsPage {
   async scrollScreenUp() {
-    await element(by.id('username-btn')).swipe('up', 'slow', 0.9);
+    await element(by.id("username-btn")).swipe("up", "slow", 0.9);
   }
 
   async scrollScreenUpToBotom() {
-    await element(by.id('phones-btn')).swipe('up', 'slow', 0.9);
+    await element(by.id("phones-btn")).swipe("up", "slow", 0.9);
   }
 
   get settingsText() {
-    return element(by.id('settings-text'));
+    return element(by.id("settings-text"));
   }
 
   get username() {
-    return element(by.id('username-btn'));
+    return element(by.id("username-btn"));
   }
 
   get firstname() {
-    return element(by.id('firstname-btn'));
+    return element(by.id("firstname-btn"));
   }
 
   get lastname() {
-    return element(by.id('lastname-btn'));
+    return element(by.id("lastname-btn"));
   }
 
   get gender() {
-    return element(by.id('gender-btn'));
+    return element(by.id("gender-btn"));
   }
 
   get DOB() {
-    return element(by.id('dob-btn'));
+    return element(by.id("dob-btn"));
   }
+  get dateTimePicker() {
+    return element(by.id("dateTimePicker"));
+  }
+  
 
   get email() {
-    return element(by.id('email-btn'));
+    return element(by.id("email-btn"));
   }
 
   get phones() {
-    return element(by.id('phones-btn'));
+    return element(by.id("phones-btn"));
   }
 
   get address() {
-    return element(by.id('address-btn'));
+    return element(by.id("address-btn"));
   }
 
   get updatePassword() {
-    return element(by.id('update-password-btn'));
+    return element(by.id("update-password-btn"));
   }
 
   get defaultPrivacy() {
-    return element(by.id('defaut-privacy'));
+    return element(by.id("defaut-privacy"));
   }
 
   get facebook() {
-    return element(by.id('facebook-btn'));
+    return element(by.id("facebook-btn"));
   }
 
   get google() {
-    return element(by.id('google-btn'));
+    return element(by.id("google-btn"));
   }
 
   get supportAndHelp() {
-    return element(by.id('support-and-help'));
+    return element(by.id("support-and-help"));
   }
 
   get rateUs() {
-    return element(by.id('rate-us-btn'));
+    return element(by.id("rate-us-btn"));
   }
 
   get privacyPolicy() {
-    return element(by.id('privacy-policy'));
+    return element(by.id("privacy-policy"));
   }
 
   get termAndService() {
-    return element(by.id('term-and-service-btn'));
+    return element(by.id("term-and-service-btn"));
   }
 
   get licences() {
-    return element(by.id('licences-btn'));
+    return element(by.id("licences-btn"));
   }
 
   get logout() {
-    return element(by.id('logout-btn'));
+    return element(by.id("logout-btn"));
   }
 
   get settingsLogo() {
-    return element(by.id('_logo'));
+    return element(by.id("_logo"));
   }
 
   get deleteAccount() {
-    return element(by.id('delete-account'));
+    return element(by.id("delete-account"));
   }
 
   get cancelDeletion() {
-    return element(by.id('cancel-deletion'));
+    return element(by.id("cancel-deletion"));
   }
 }
 

@@ -119,6 +119,24 @@ describe('Settings Page', () => {
     await editSettingsPage.backArrow.tap();
   });
 
+  it('Should edit DOB in setting', async () => {
+    await settingsPage.DOB.tap();
+    await settingsPage.username.swipe('up', 'slow', 0.1);
+    await element(by.text('October'))
+      .atIndex(1)
+      .replaceText('June');
+    await element(by.text('9'))
+      .atIndex(1)
+      .replaceText('04');
+    await element(by.text('1991'))
+      .atIndex(1)
+      .replaceText('2000');
+    // e.element(e.by.type("UIPickerView")).setColumnToValue(1, "6");
+    // await settingsPage.dateTimePicker.setColumnToValue(0, "November");
+    // await settingsPage.dateTimePicker(by.type("UIPickerView")).setColumnToValue(1, "6");
+    // await settingsPage.dateTimePicker.setColumnToValue(2, "1993");
+  });
+
   it('Should ensure `phones` button is clickable and can navigate to edit phones page', async () => {
     await settingsPage.scrollScreenUp();
     await settingsPage.phones.tap();
