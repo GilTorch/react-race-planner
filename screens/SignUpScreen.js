@@ -24,6 +24,7 @@ import Text from '../components/CustomText';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 import { signupSchema } from '../utils/validators';
 import PageSpinner from '../components/PageSpinner';
+import * as Twitter from '../services/twitter';
 
 const SignupScreen = ({ navigation }) => {
   useFocusEffect(
@@ -50,7 +51,7 @@ const SignupScreen = ({ navigation }) => {
   React.useEffect(() => {
     if (user) {
       // TODO: navigate to OTP screen
-      navigation.navigate('Home');
+      // navigation.navigate('Home');
     }
     if (socialAccount) {
       handleSubmit(signup)();
@@ -103,6 +104,26 @@ const SignupScreen = ({ navigation }) => {
       return { error: true };
     }
   }
+
+  const signupWithTwitter = async () => {
+    setSocialSignup(true);
+    scrollRef.scrollTo({ y: 100, animated: true });
+    const { twitterAccountId, username, lastName, firstName, email } = await Twitter.authSession(
+      false
+    );
+    if (twitterAccountId) {
+      setValue([
+        { twitterAccountId },
+        { username },
+        { lastName },
+        { firstName },
+        { email },
+        { socialAccount: true }
+      ]);
+      setSocialMediaName('Twitter');
+    }
+    setSocialSignup(false);
+  };
 
   if (requestError) {
     Toast.show(requestError.message, {
@@ -296,6 +317,7 @@ const SignupScreen = ({ navigation }) => {
             </View>
             <View style={styles.socialMediaButtonsContainer}>
               <TouchableOpacity
+                onPress={signupWithTwitter}
                 testID="twitter-icon-button"
                 style={{
                   backgroundColor: '#3ABDFF',
