@@ -1,20 +1,116 @@
-import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
-
+import { ActivityIndicator } from 'react-native-paper';
+import * as yup from 'yup';
+import { useForm, Controller } from 'react-hook-form';
+import { useSelector, useDispatch } from 'react-redux';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import * as Facebook from '../utils/facebook';
+import { signup } from '../redux/actions/actionCreators';
+import { useDidUpdateEffect } from '../hooks/useDidUpdateEffect';
+
+const validationSchema = yup.object().shape({
+  facebookAccountId: yup.number().default(0),
+  username: yup.string().required('Enter your username'),
+  firstName: yup.string().required('Enter your first name'),
+  lastName: yup.string().required('Enter your last name'),
+  email: yup
+    .string()
+    .email()
+    .required('Enter your email'),
+  password: yup.string().when('facebookAccountId', {
+    is: 0,
+    then: yup
+      .string()
+      .min(8, 'Your password should be at least 8 characters')
+      .required('Enter your password')
+  }),
+  confirmPassword: yup.string().when('facebookAccountId', {
+    is: 0,
+    then: yup
+      .string()
+      .required('Confirm password')
+      .oneOf([yup.ref('password'), null], 'Passwords are not the same')
+  })
+});
 
 const SignupScreen = ({ navigation }) => {
+  const loading = useSelector(state => state.user.loadingSignup);
+  const dispatch = useDispatch();
+  const code = useSelector(state => state.user.code);
+  const currentUser = useSelector(state => state.user.currentUser);
+  const [isSigningUpWithFacebook, setIsSigningUpFacebook] = useState(false);
+
+  const { handleSubmit, errors, control, setValue, register } = useForm({
+    validationSchema
+  });
+
+  useEffect(() => {
+    register('facebookAccountId');
+  }, []);
+
+  useDidUpdateEffect(() => {
+    if (currentUser && currentUser.isActive) {
+      navigation.navigate('Home');
+    }
+
+    if (currentUser && !currentUser.isActive) {
+      navigation.navigate('OTPVerification');
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (code === 'InactiveAccount') {
+      navigation.navigate('OTPVerification');
+    }
+  }, [code]);
+
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(true);
     }, [])
   );
+
+  const submit = data => {
+    dispatch(signup(data));
+  };
+
+  const setValueIfFieldExists = (label, value) => {
+    if (label) {
+      setValue(`${label}`, value);
+    }
+  };
+
+  const fbSignup = async () => {
+    const { id, email, first_name, last_name } = await Facebook.logIn();
+    if (id) {
+      setValue('facebookAccountId', id);
+      setValueIfFieldExists('email', email);
+      setValueIfFieldExists('firstName', first_name);
+      setValueIfFieldExists('lastName', last_name);
+      setIsSigningUpFacebook(true);
+    } else {
+      Alert.alert(
+        'There was an error while trying to access your Facebook account. Try again later.'
+      );
+    }
+  };
+
+  let submitText = (
+    <Text type="medium" style={styles.submitButtonText}>
+      Sign Up
+    </Text>
+  );
+
+  if (loading) {
+    submitText = <ActivityIndicator animated color="#fff" />;
+  }
 
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
@@ -32,9 +128,26 @@ const SignupScreen = ({ navigation }) => {
                 Username
               </Text>
             </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="user-name" style={styles.input} />
+            <View
+              style={{
+                ...styles.inputContainer,
+                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
+                borderBottomColor: errors.username ? 'red' : '#DFE3E9'
+              }}>
+              <Controller
+                as={TextInput}
+                control={control}
+                name="username"
+                onChange={args => args[0].nativeEvent.text}
+                defaultValue=""
+                style={styles.input}
+                testID="signup-username"
+                editable={!loading}
+              />
             </View>
+            {errors.username && (
+              <Text style={{ marginTop: 10, color: 'red' }}>{errors.username.message}</Text>
+            )}
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
@@ -42,9 +155,26 @@ const SignupScreen = ({ navigation }) => {
                 First Name
               </Text>
             </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="first-name" style={styles.input} />
+            <View
+              style={{
+                ...styles.inputContainer,
+                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
+                borderBottomColor: errors.firstName ? 'red' : '#DFE3E9'
+              }}>
+              <Controller
+                as={TextInput}
+                control={control}
+                name="firstName"
+                onChange={args => args[0].nativeEvent.text}
+                defaultValue=""
+                style={styles.input}
+                testID="signup-firstName"
+                editable={!loading}
+              />
             </View>
+            {errors.firstName && (
+              <Text style={{ marginTop: 10, color: 'red' }}>{errors.firstName.message}</Text>
+            )}
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
@@ -52,9 +182,26 @@ const SignupScreen = ({ navigation }) => {
                 Last Name
               </Text>
             </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="last-name" style={styles.input} />
+            <View
+              style={{
+                ...styles.inputContainer,
+                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
+                borderBottomColor: errors.lastName ? 'red' : '#DFE3E9'
+              }}>
+              <Controller
+                as={TextInput}
+                control={control}
+                name="lastName"
+                onChange={args => args[0].nativeEvent.text}
+                defaultValue=""
+                style={styles.input}
+                testID="signup-lastName"
+                editable={!loading}
+              />
             </View>
+            {errors.lastName && (
+              <Text style={{ marginTop: 10, color: 'red' }}>{errors.lastName.message}</Text>
+            )}
           </View>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
@@ -62,34 +209,94 @@ const SignupScreen = ({ navigation }) => {
                 Email
               </Text>
             </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="email-address" style={styles.input} />
+            <View
+              style={{
+                ...styles.inputContainer,
+                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
+                borderBottomColor: errors.email ? 'red' : '#DFE3E9'
+              }}>
+              <Controller
+                as={TextInput}
+                control={control}
+                name="email"
+                onChange={args => args[0].nativeEvent.text}
+                defaultValue=""
+                style={styles.input}
+                testID="signup-email"
+                editable={!loading}
+              />
             </View>
+            {errors.email && (
+              <Text style={{ marginTop: 10, color: 'red' }}>{errors.email.message}</Text>
+            )}
           </View>
-          <View style={styles.formGroup}>
-            <View style={styles.labelContainer}>
-              <Text type="medium" style={styles.label}>
-                Password
-              </Text>
-            </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="password" style={styles.input} />
-            </View>
-          </View>
-          <View style={styles.formGroup}>
-            <View style={styles.labelContainer}>
-              <Text testID="password-confirmation" type="medium" style={styles.label}>
-                Confirm Password
-              </Text>
-            </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="password-confirmation" style={styles.input} />
-            </View>
-          </View>
-          <TouchableOpacity testID="sign-up-button" style={styles.submitButton}>
-            <Text type="medium" style={styles.submitButtonText}>
-              Sign Up
-            </Text>
+          {!isSigningUpWithFacebook && (
+            <>
+              <View style={styles.formGroup}>
+                <View style={styles.labelContainer}>
+                  <Text type="medium" style={styles.label}>
+                    Password
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    ...styles.inputContainer,
+                    backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
+                    borderBottomColor: errors.password ? 'red' : '#DFE3E9'
+                  }}>
+                  <Controller
+                    as={TextInput}
+                    control={control}
+                    name="password"
+                    onChange={args => args[0].nativeEvent.text}
+                    defaultValue=""
+                    style={styles.input}
+                    testID="signup-password"
+                    editable={!loading}
+                    secureTextEntry
+                  />
+                </View>
+                {errors.password && (
+                  <Text style={{ marginTop: 10, color: 'red' }}>{errors.password.message}</Text>
+                )}
+              </View>
+              <View style={styles.formGroup}>
+                <View style={styles.labelContainer}>
+                  <Text testID="password-confirmation" type="medium" style={styles.label}>
+                    Confirm Password
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    ...styles.inputContainer,
+                    backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
+                    borderBottomColor: errors.confirmPassword ? 'red' : '#DFE3E9'
+                  }}>
+                  <Controller
+                    as={TextInput}
+                    control={control}
+                    name="confirmPassword"
+                    onChange={args => args[0].nativeEvent.text}
+                    defaultValue=""
+                    style={styles.input}
+                    testID="signup-confirmPassword"
+                    editable={!loading}
+                    secureTextEntry
+                  />
+                </View>
+                {errors.confirmPassword && (
+                  <Text style={{ marginTop: 10, color: 'red' }}>
+                    {errors.confirmPassword.message}
+                  </Text>
+                )}
+              </View>
+            </>
+          )}
+          <TouchableOpacity
+            onPress={handleSubmit(submit)}
+            testID="sign-up-button"
+            style={styles.submitButton}>
+            {submitText}
           </TouchableOpacity>
           <View style={styles.loginWithSocialMediaTextContainer}>
             <Text type="medium" style={{ color: '#7F8FA4', fontWeight: 'bold' }}>
@@ -106,6 +313,7 @@ const SignupScreen = ({ navigation }) => {
               <Entypo name="twitter-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => fbSignup()}
               testID="facebook-icon-btn"
               style={{
                 backgroundColor: '#1382D5',

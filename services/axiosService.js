@@ -16,8 +16,7 @@ axiosService.interceptors.request.use(
     const { token } = store.getState().user;
     const mutableConfig = { ...config };
     mutableConfig.headers['X-RERUM-KEY'] =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0RldiI6dHJ1ZSwiaWF0IjoxNTg4NDE4ODk5fQ.9atGdcwZfXvh5TxM9D3IZO-ihx2FFgdTljJmUDaWXpI';
-    console.log(`AXIOS HEADERS: ${JSON.stringify(mutableConfig.headers)}`);
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0RldiI6dHJ1ZSwiaWF0IjoxNTg4NjYxMDkxfQ.7WLNcZoE3LtKpGWCITKRh58Uf7Vzs-bbHGIHZD7ybYE';
     if (token) {
       mutableConfig.headers.common.Authorization = `Bearer ${token}`;
     }
@@ -31,11 +30,9 @@ axiosService.interceptors.request.use(
 // to the state
 axiosService.interceptors.response.use(
   response => {
-    console.log(`INTERCEPTORS RESPONSE: ${JSON.stringify(response)}`);
     if (response.data?.token) {
       // 1. decode the token
       const decodedUser = jwt.decode(response.data.token, '&^GF^%D^Y&^*G(H9gs');
-      console.log(`DECODED USER: ${decodedUser}`);
       // 2. save the user and the token to the state
       store.dispatch({
         type: 'ADD_SESSION',
@@ -49,11 +46,9 @@ axiosService.interceptors.response.use(
     return response;
   },
   error => {
-    console.log(`AXIOS ERROR: ${JSON.stringify(error.response.data)}`);
     if (error.response.data?.token) {
       // 1. decode the token
       const decodedUser = jwt.decode(error.response.data.token, '&^GF^%D^Y&^*G(H9gs');
-      console.log(`DECODED USER: ${decodedUser}`);
       // 2. save the user and the token to the state
       store.dispatch({
         type: 'ADD_SESSION',

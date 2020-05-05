@@ -2,6 +2,9 @@ import {
   LOGIN_START,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  SIGNUP_START,
+  SIGNUP_SUCCESS,
+  SIGNUP_FAILURE,
   ADD_SESSION,
   CLEAR_MESSAGE,
   VERIFY_OTP_START,
@@ -11,6 +14,7 @@ import {
 
 const initialState = {
   loadingLogin: false,
+  loadingSignup: false,
   loadingVerifyOTP: false,
   token: null,
   currentUser: null,
@@ -21,6 +25,12 @@ const initialState = {
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ADD_SESSION:
+      return {
+        ...state,
+        loadingLogin: false,
+        currentUser: action.payload.user
+      };
     case LOGIN_START:
       return { ...state, loadingLogin: true };
     case LOGIN_SUCCESS:
@@ -31,16 +41,28 @@ const userReducer = (state = initialState, action) => {
         token: action.data.token,
         message: action.data.message
       };
-    case ADD_SESSION:
-      return {
-        ...state,
-        loadingLogin: false,
-        currentUser: action.payload.user
-      };
     case LOGIN_FAILURE:
       return {
         ...state,
         loadingLogin: false,
+        code: action.data.code,
+        token: action.data.token,
+        message: action.data.message
+      };
+    case SIGNUP_START:
+      return { ...state, loadingSignup: true };
+    case SIGNUP_SUCCESS:
+      return {
+        ...state,
+        loadingSignup: false,
+        code: action.data.code,
+        token: action.data.token,
+        message: action.data.message
+      };
+    case SIGNUP_FAILURE:
+      return {
+        ...state,
+        loadingSignup: false,
         code: action.data.code,
         token: action.data.token,
         message: action.data.message

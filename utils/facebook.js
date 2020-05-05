@@ -10,9 +10,11 @@ const logIn = async () => {
       permissions: ['public_profile']
     });
     if (type === 'success') {
-      const response = await axios.get(`https://graph.facebook.com/me?access_token=${token}`);
-      const accountId = await response.data.id;
-      return accountId;
+      const response = await axios.get(
+        `https://graph.facebook.com/me?access_token=${token}&fields=email,first_name,last_name`
+      );
+      const facebookData = await response.data;
+      return facebookData;
     }
   } catch ({ message }) {
     Alert.alert(`Facebook Login Error: ${message}`);

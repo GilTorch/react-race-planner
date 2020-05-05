@@ -3,11 +3,11 @@ import { View, ScrollView, Image, TextInput, StyleSheet, Alert } from 'react-nat
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
-
 import * as yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActivityIndicator } from 'react-native-paper';
+import { useDidUpdateEffect } from '../hooks/useDidUpdateEffect';
 import Toast from '../components/Toast';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
@@ -35,12 +35,18 @@ const LoginScreen = ({ navigation }) => {
   const currentUser = useSelector(state => state.user.currentUser);
   const otpSuccess = useSelector(state => state.user.otpSuccess);
 
-  if (currentUser && currentUser.isActive) {
-    navigation.push('Home');
-  }
+  useDidUpdateEffect(() => {
+    if (currentUser && currentUser.isActive) {
+      navigation.navigate('Home');
+    }
+
+    if (currentUser && !currentUser.isActive) {
+      navigation.navigate('OTPVerification');
+    }
+  }, [currentUser]);
 
   if (code === 'InactiveAccount' && !otpSuccess) {
-    navigation.push('OTPVerification');
+    navigation.navigate('OTPVerification');
   }
 
   const submit = data => {
@@ -58,7 +64,8 @@ const LoginScreen = ({ navigation }) => {
   }
 
   const handleFacebookLogin = async () => {
-    const facebookAccountId = await Facebook.logIn();
+    const facebookData = await Facebook.logIn();
+    const facebookAccountId = facebookData.id;
     if (facebookAccountId) {
       dispatch(login({ facebookAccountId }));
     } else {

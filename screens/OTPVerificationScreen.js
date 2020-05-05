@@ -11,7 +11,7 @@ import { Entypo } from '@expo/vector-icons';
 import { useDidUpdateEffect } from '../hooks/useDidUpdateEffect';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
-import { verifyOTP } from '../redux/actions/actionCreators';
+import { verifyAccount } from '../redux/actions/actionCreators';
 import Toast from '../components/Toast';
 
 const validationSchema = yup.object().shape({
@@ -36,7 +36,7 @@ const OTPVerificationScreen = ({ navigation }) => {
   const otpSuccess = useSelector(state => state.user.otpSuccess);
 
   if (otpSuccess) {
-    navigation.push('Login');
+    navigation.navigate('Login');
   }
 
   useDidUpdateEffect(() => {
@@ -55,7 +55,7 @@ const OTPVerificationScreen = ({ navigation }) => {
   const submit = data => {
     if (!tokenHasExpired) {
       if (requestEnabled) {
-        dispatch(verifyOTP(data));
+        dispatch(verifyAccount(data));
       }
     }
   };
@@ -72,21 +72,19 @@ const OTPVerificationScreen = ({ navigation }) => {
 
   if (!requestEnabled) {
     submitText = (
-      <Text type="medium" style={styles.submitButtonText}>
-        Wait 3 minutes before sending the next OTP{' '}
-        <Entypo size={18} color="#fff" style={{ marginRight: 10 }} name="lock" />
-      </Text>
+      // <Text type="medium" style={styles.submitButtonText}>
+      <Entypo size={18} color="#fff" style={{ marginRight: 10 }} name="lock" />
     );
   }
 
-  let editable = true;
+  let inputEditable = true;
 
   if (loading) {
-    editable = false;
+    inputEditable = false;
   }
 
   if (!requestEnabled) {
-    editable = false;
+    inputEditable = false;
   }
 
   return (
@@ -129,7 +127,7 @@ const OTPVerificationScreen = ({ navigation }) => {
                 defaultValue=""
                 style={styles.input}
                 testID="otp"
-                editable={editable}
+                editable={inputEditable}
               />
               {!requestEnabled && (
                 <Entypo size={18} color="#8A8D99" style={{ marginRight: 10 }} name="lock" />
@@ -140,13 +138,18 @@ const OTPVerificationScreen = ({ navigation }) => {
               <Text style={{ marginTop: 10, color: 'red' }}>{errors.otp.message}</Text>
             )}
           </View>
+          {!requestEnabled && (
+            <Text style={{ marginTop: 10, ...styles.label }}>
+              Wait <Text type="bold">3 minutes</Text> before sending the next OTP{' '}
+            </Text>
+          )}
           <TouchableOpacity
             testID="reset-password-button"
             style={styles.submitButton}
             onPress={handleSubmit(submit)}>
             <Text style={styles.submitButtonText}>{submitText}</Text>
           </TouchableOpacity>
-          <View style={{ marginTop: 20, marginBottom: 10, flexDirection: 'row' }}>
+          <View style={{ marginTop: 4, marginBottom: 10, flexDirection: 'row' }}>
             <Text style={{ color: '#7F8FA4' }}>Didn't receive an OTP on your email? </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('ResetPassword')}
