@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
+import { View, ScrollView, Image, TextInput, StyleSheet, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
@@ -13,6 +13,7 @@ import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 import { login } from '../redux/actions/actionCreators';
+import * as Facebook from '../utils/facebook';
 
 const validationSchema = yup.object().shape({
   usernameOrEmail: yup.string().required('Enter your username or your email'),
@@ -37,9 +38,11 @@ const LoginScreen = ({ navigation }) => {
   if (currentUser && currentUser.isActive) {
     navigation.push('Home');
   }
+
   if (code === 'InactiveAccount' && !otpSuccess) {
     navigation.push('OTPVerification');
   }
+
   const submit = data => {
     dispatch(login(data));
   };
@@ -53,6 +56,17 @@ const LoginScreen = ({ navigation }) => {
   if (loading) {
     submitText = <ActivityIndicator animated color="#fff" />;
   }
+
+  const handleFacebookLogin = async () => {
+    const facebookAccountId = await Facebook.logIn();
+    if (facebookAccountId) {
+      dispatch(login({ facebookAccountId }));
+    } else {
+      Alert.alert(
+        'There was an error while trying to access your Facebook account. Try again later.'
+      );
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
@@ -151,6 +165,7 @@ const LoginScreen = ({ navigation }) => {
               <Entypo name="twitter-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => handleFacebookLogin()}
               testID="facebook-icon-button"
               style={{
                 backgroundColor: '#1382D5',

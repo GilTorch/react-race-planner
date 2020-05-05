@@ -54,7 +54,8 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "yup": "^0.28.4"
+    "yup": "^0.28.4",
+    "expo-facebook": "~8.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
