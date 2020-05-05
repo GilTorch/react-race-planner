@@ -12,8 +12,8 @@ describe('Settings Page', () => {
   const emailAddress = `${firstName}.${lastName}@gmail.com`;
   const phoneNumber1 = casual.phone;
   const phoneNumber2 = casual.phone;
-  const addressNumber1 = casual.address;
-  const addressNumber2 = casual.address;
+  const addressNumber1 = casual.address1;
+  const addressNumber2 = casual.address2;
   const currentCity = casual.city;
   const currentCountry = casual.country;
   const config = {
@@ -27,7 +27,10 @@ describe('Settings Page', () => {
     address2: addressNumber2,
     city: currentCity,
     country: currentCountry,
-    password: '**********'
+    password: '**********',
+    currentPassword: 'TheHoodMan1839',
+    newPassword: 'newPassword',
+    confirmNewPassword: 'newPassword'
   };
 
   it('Should ensure setting icon is clickable and can navigate to Settings page', async () => {
@@ -60,7 +63,6 @@ describe('Settings Page', () => {
   });
 
   it('Should edit username in settings', async () => {
-    expect(editSettingsPage.editUsername).toBeVisible();
     await editSettingsPage.editUsername.tap();
     await editSettingsPage.editUsername.clearText();
     await editSettingsPage.editSettingsUsername(config);
@@ -79,8 +81,6 @@ describe('Settings Page', () => {
   });
 
   it('Should edit first name in settings', async () => {
-    expect(editSettingsPage.editFirstname).toBeVisible();
-    await editSettingsPage.editFirstname.tap();
     await editSettingsPage.editFirstname.clearText();
     await editSettingsPage.editSettingsFirstname(config);
     await editSettingsPage.iconCheck.tap();
@@ -92,8 +92,6 @@ describe('Settings Page', () => {
   });
 
   it('Should edit lastname in settings', async () => {
-    expect(editSettingsPage.editLastname).toBeVisible();
-    await editSettingsPage.editLastname.tap();
     await editSettingsPage.editLastname.clearText();
     await editSettingsPage.editSettingsLastname(config);
     await editSettingsPage.iconCheck.tap();
@@ -105,7 +103,6 @@ describe('Settings Page', () => {
   });
 
   it('Should edit gender in settings', async () => {
-    expect(editSettingsPage.editGender).toBeVisible();
     await editSettingsPage.editGender.tap();
     await editSettingsPage.iconCheck.tap();
     await editSettingsPage.backArrow.tap();
@@ -116,7 +113,6 @@ describe('Settings Page', () => {
   });
 
   it('Should edit gender in settings', async () => {
-    expect(editSettingsPage.editEmail).toBeVisible();
     await editSettingsPage.editEmail.clearText();
     await editSettingsPage.editSettingsEmail(config);
     await editSettingsPage.iconCheck.tap();
@@ -129,42 +125,118 @@ describe('Settings Page', () => {
   });
 
   it('Should add phone 1 in settings', async () => {
-    expect(editSettingsPage.editPhoneOne).toBeVisible();
     //  await editSettingsPage.editPhoneOne.clearText();
     await editSettingsPage.editSettingsPhoneOne(config);
   });
 
   it('Should add phone 2 in settings', async () => {
-    expect(editSettingsPage.editPhoneTwo).toBeVisible();
     await editSettingsPage.editSettingsPhoneTwo(config);
     await editSettingsPage.iconCheck.tap();
     await editSettingsPage.backArrow.tap();
   });
 
   it('Should ensure `Address` button is clickable and can navigate to edit phones page', async () => {
-    // await settingsPage.scrollScreenUp();
     await settingsPage.address.tap();
   });
 
   it('Should add address 1 in settings', async () => {
-    expect(editSettingsPage.editAddressOne).toBeVisible();
     await editSettingsPage.editSettingsAddressOne(config);
   });
 
   it('Should add address 2 in settings', async () => {
-    expect(editSettingsPage.editAddressTwo).toBeVisible();
     await editSettingsPage.editSettingsAddressTwo(config);
   });
 
   it('Should add city in settings', async () => {
-    expect(editSettingsPage.editCity).toBeVisible();
     await editSettingsPage.editSettingsCity(config);
   });
 
   it('Should add country in settings', async () => {
-    expect(editSettingsPage.editCountry).toBeVisible();
     await editSettingsPage.editSettingsCountry(config);
     await editSettingsPage.iconCheck.tap();
     await editSettingsPage.backArrow.tap();
+  });
+
+  it('Should ensure `Update Password` button is clickable and can navigate to edit password page', async () => {
+    await settingsPage.updatePassword.tap();
+  });
+  it('Should enter current password in settings', async () => {
+    await editSettingsPage.typeCurrentPassword(config);
+  });
+
+  it('Should enter new password in settings', async () => {
+    await editSettingsPage.typeNewPassword(config);
+  });
+
+  it('Should enter confirm new password in settings', async () => {
+    await editSettingsPage.typeConfirmNewPassword(config);
+  });
+
+  it('Should toggle to show & Hide new password in settings', async () => {
+    await editSettingsPage.viewPasswords.tap();
+    await editSettingsPage.hidePasswords.tap();
+    await editSettingsPage.iconCheck.tap();
+    await editSettingsPage.backArrow.tap();
+  });
+
+  it('Should ensure `Default Privacy` button is clickable and can navigate to edit default privacy page', async () => {
+    await settingsPage.defaultPrivacy.tap();
+  });
+
+  it('Should select `Username & Full name` option in in settings', async () => {
+    await editSettingsPage.selectUsernameAndFullname.tap();
+    await editSettingsPage.iconCheck.tap();
+    await editSettingsPage.backArrow.tap();
+  });
+
+  it('Should ensure `Facebook` button is clickable', async () => {
+    await settingsPage.facebook.tap();
+  });
+
+  it('Should ensure `Google` button is clickable', async () => {
+    await settingsPage.google.tap();
+  });
+
+  it('Should ensure `Support & Help` button is clickable', async () => {
+    await settingsPage.scrollScreenUpToBotom();
+    await settingsPage.supportAndHelp.tap();
+  });
+
+  it('Should ensure `Rate Us` button is clickable', async () => {
+    await settingsPage.rateUs.tap();
+  });
+
+  it('Should ensure `Privacy Policy` button is clickable', async () => {
+    await settingsPage.google.swipe('up', 'slow', 0.9);
+    await settingsPage.privacyPolicy.tap();
+  });
+
+  it('Should ensure `Term & Service` button is clickable', async () => {
+    await settingsPage.termAndService.tap();
+  });
+
+  it('Should ensure `Licences` button is clickable', async () => {
+    await settingsPage.licences.tap();
+  });
+
+  it('Should ensure `Logout` button is clickable', async () => {
+    await settingsPage.logout.tap();
+  });
+
+  it('Should ensure `Logout` button is clickable', async () => {
+    await settingsPage.settingsLogo.swipe('up', 'slow', 0.9);
+    expect(settingsPage.settingsLogo).toBeVisible();
+  });
+
+  it('Should ensure `Delete Account` button is clickable & can open delete account modal', async () => {
+    await settingsPage.deleteAccount.tap();
+  });
+
+  it('Should ensure `Delete` button is clickable', async () => {
+    await settingsPage.deleteAccount.atIndex(1).tap();
+  });
+
+  it('Should ensure `Cancel` button is clickable', async () => {
+    await settingsPage.cancelDeletion.tap();
   });
 });

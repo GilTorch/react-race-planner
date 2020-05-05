@@ -6,6 +6,10 @@ class SettingsPage {
     await element(by.id('username-btn')).swipe('up', 'slow', 0.9);
   }
 
+  async scrollScreenUpToBotom() {
+    await element(by.id('phones-btn')).swipe('up', 'slow', 0.9);
+  }
+
   get settingsText() {
     return element(by.id('settings-text'));
   }
@@ -40,6 +44,58 @@ class SettingsPage {
 
   get address() {
     return element(by.id('address-btn'));
+  }
+
+  get updatePassword() {
+    return element(by.id('update-password-btn'));
+  }
+
+  get defaultPrivacy() {
+    return element(by.id('defaut-privacy'));
+  }
+
+  get facebook() {
+    return element(by.id('facebook-btn'));
+  }
+
+  get google() {
+    return element(by.id('google-btn'));
+  }
+
+  get supportAndHelp() {
+    return element(by.id('support-and-help'));
+  }
+
+  get rateUs() {
+    return element(by.id('rate-us-btn'));
+  }
+
+  get privacyPolicy() {
+    return element(by.id('privacy-policy'));
+  }
+
+  get termAndService() {
+    return element(by.id('term-and-service-btn'));
+  }
+
+  get licences() {
+    return element(by.id('licences-btn'));
+  }
+
+  get logout() {
+    return element(by.id('logout-btn'));
+  }
+
+  get settingsLogo() {
+    return element(by.id('_logo'));
+  }
+
+  get deleteAccount() {
+    return element(by.id('delete-account'));
+  }
+
+  get cancelDeletion() {
+    return element(by.id('cancel-deletion'));
   }
 }
 

@@ -10,7 +10,7 @@ class EditSettingsPage {
     await element(by.id('edit-firstname')).typeText(config.firstname);
   }
 
-  async editSettingsLaststname() {
+  async editSettingsLastname(config) {
     await element(by.id('edit-lastname')).typeText(config.firstname);
   }
 
@@ -37,13 +37,29 @@ class EditSettingsPage {
     await element(by.id('edit-address2')).tapReturnKey();
   }
 
+  async editSettingsCountry(config) {
+    await element(by.id('edit-country')).typeText(config.city);
+    await element(by.id('edit-country')).tapReturnKey();
+  }
+
   async editSettingsCity(config) {
     await element(by.id('edit-city')).typeText(config.city);
     await element(by.id('edit-city')).tapReturnKey();
   }
 
-  async editSettingsCountry(config) {
-    await element(by.id('edit-country')).typeText(config.country);
+  async typeCurrentPassword(config) {
+    await element(by.id('current-password')).typeText(config.currentPassword);
+    await element(by.id('current-password')).tapReturnKey();
+  }
+
+  async typeNewPassword(config) {
+    await element(by.id('new-password')).typeText(config.newPassword);
+    await element(by.id('new-password')).tapReturnKey();
+  }
+
+  async typeConfirmNewPassword(config) {
+    await element(by.id('confirm-new-password')).typeText(config.confirmNewPassword);
+    // await element(by.id("confirm-new-password")).tapReturnKey();
   }
 
   get editUsername() {
@@ -96,6 +112,34 @@ class EditSettingsPage {
 
   get editCountry() {
     return element(by.id('edit-country'));
+  }
+
+  get currentPassword() {
+    return element(by.id('current-password'));
+  }
+
+  get newPassword() {
+    return element(by.id('new-password'));
+  }
+
+  get confirmNewPassword() {
+    return element(by.id('confirm-new-password'));
+  }
+
+  get viewPasswords() {
+    return element(by.id('show-password'));
+  }
+
+  get hidePasswords() {
+    return element(by.id('show-password'));
+  }
+
+  get selectUsernameAndFullname() {
+    return element(by.id('username-and-fullname'));
+  }
+
+  get deleteAccount() {
+    return element(by.id('delete-account'));
   }
 }
 

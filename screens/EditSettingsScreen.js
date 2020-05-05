@@ -322,6 +322,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Current Password</Text>
           </View>
           <TextInput
+            testID="current-password"
             underlineColor="#C8C7CC"
             placeholder="required"
             secureTextEntry={secure}
@@ -334,6 +335,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>New Password</Text>
           </View>
           <TextInput
+            testID="new-password"
             underlineColor="#C8C7CC"
             onFocus={() => Platform.OS === 'ios' && scroll.current.scrollTo({ y: 80 })}
             placeholder="required"
@@ -351,6 +353,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
 
           <TextInput
+            testID="confirm-new-password"
             underlineColor="#C8C7CC"
             onFocus={() => Platform.OS === 'ios' && scroll.current.scrollToEnd()}
             placeholder="required"
@@ -373,6 +376,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             }}>
             <Text style={styles.inputTitle}>Show Passwords</Text>
             <Switch
+              testID="show-password"
               onChange={() => setSecure(!secure)}
               trackColor={{ false: '#898989', true: '#03A2A2' }}
               thumbColor="#f4f3f4"
@@ -402,6 +406,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="username-and-fullname"
               onPress={() => setPrivacy('username_and_full_name')}
               style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Username & Full Name</Text>

@@ -338,6 +338,7 @@ const SettingsScreen = ({ navigation }) => {
               paddingLeft: 20
             }}>
             <TouchableOpacity
+              testID="update-password-btn"
               onPress={() => navigation.navigate('EditSettingsScreen', { key: 'password' })}
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Update Password</Text>
@@ -345,6 +346,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="defaut-privacy"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'privacy',
@@ -386,6 +388,7 @@ const SettingsScreen = ({ navigation }) => {
                 alignItems: 'center'
               }}>
               <View
+                testID="facebook-btn"
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'center',
@@ -414,6 +417,7 @@ const SettingsScreen = ({ navigation }) => {
                 alignItems: 'center'
               }}>
               <TouchableOpacity
+                testID="google-btn"
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'center',
@@ -439,6 +443,7 @@ const SettingsScreen = ({ navigation }) => {
             <Text style={styles.headline}>CONTACT US</Text>
           </View>
           <View
+            testID="support-and-help"
             style={{
               height: 50,
               backgroundColor: 'white',
@@ -455,6 +460,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <View
+            testID="rate-us-btn"
             style={{
               height: 50,
               backgroundColor: 'white',
@@ -489,7 +495,7 @@ const SettingsScreen = ({ navigation }) => {
               borderWidth: 1,
               paddingLeft: 20
             }}>
-            <TouchableOpacity>
+            <TouchableOpacity testID="privacy-policy">
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Privacy Policy</Text>
                 <View>
@@ -498,7 +504,7 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity>
+            <TouchableOpacity testID="term-and-service-btn">
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Terms of Service</Text>
                 <View>
@@ -509,7 +515,7 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity>
+            <TouchableOpacity testID="licences-btn">
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Licenses</Text>
                 <View>
@@ -523,6 +529,8 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View
+          testID
+          testID="logout-btn"
           style={{
             height: 50,
             backgroundColor: 'white',
@@ -535,7 +543,7 @@ const SettingsScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ marginTop: 40 }}>
+        <View testID="_logo" style={{ marginTop: 40 }}>
           <Image style={styles.logo} source={Logo} />
         </View>
 
@@ -546,6 +554,7 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View
+          testID="delete-account"
           style={{
             height: 50,
             backgroundColor: '#fff',
@@ -600,14 +609,20 @@ const SettingsScreen = ({ navigation }) => {
                   justifyContent: 'space-evenly'
                 }}>
                 <Surface style={styles.btnSurface}>
-                  <Button onPress={() => ''} style={{ backgroundColor: '#f44336' }}>
+                  <Button
+                    testID="delete-account"
+                    onPress={() => ''}
+                    style={{ backgroundColor: '#f44336' }}>
                     <Text type="bold" style={{ color: '#fff' }}>
                       Delete
                     </Text>
                   </Button>
                 </Surface>
                 <Surface style={styles.btnSurface}>
-                  <Button onPress={() => hideDeleteModal()} style={{ backgroundColor: '#03A2A2' }}>
+                  <Button
+                    testID="cancel-deletion"
+                    onPress={() => hideDeleteModal()}
+                    style={{ backgroundColor: '#03A2A2' }}>
                     <Text type="bold" style={{ color: '#FFF' }}>
                       Cancel
                     </Text>
