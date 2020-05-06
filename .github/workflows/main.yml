@@ -14,7 +14,7 @@ jobs:
               PROJECT_NAME: "sr-mobile"
       - run: npm install
       - run: npm run dl_expo_bins --if-present
-      - run: npm test
+      # - run: npm test
         env:
           CI: true
          
