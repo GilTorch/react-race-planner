@@ -18,7 +18,10 @@ jobs:
       - run: sudo npm i -g detox-cli
       - run: npm install detox
       - run: npm install eslint
+      - run: npm run lint:fix
       # - run: npm test
         env:
           CI: true
-         
+        
+           
+              
