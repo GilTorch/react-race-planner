@@ -17,7 +17,7 @@ jobs:
       - run: sudo npm install -g react-native-cli
       - run: sudo npm i -g detox-cli
       - run: npm install detox
-      - run: eslint --fix .
+      - run: npm eslint --fix .
       # - run: npm test
         env:
           CI: true
