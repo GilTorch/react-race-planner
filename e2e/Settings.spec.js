@@ -108,17 +108,6 @@ describe('Settings Page', () => {
     await editSettingsPage.backArrow.tap();
   });
 
-  it('Should ensure `email` button is clickable and can navigate to edit email page', async () => {
-    await settingsPage.email.tap();
-  });
-
-  it('Should edit gender in settings', async () => {
-    await editSettingsPage.editEmail.clearText();
-    await editSettingsPage.editSettingsEmail(config);
-    await editSettingsPage.iconCheck.tap();
-    await editSettingsPage.backArrow.tap();
-  });
-
   it('Should edit DOB in setting', async () => {
     await settingsPage.DOB.tap();
     await settingsPage.username.swipe('up', 'slow', 0.1);
@@ -136,9 +125,24 @@ describe('Settings Page', () => {
     // await settingsPage.dateTimePicker(by.type("UIPickerView")).setColumnToValue(1, "6");
     // await settingsPage.dateTimePicker.setColumnToValue(2, "1993");
   });
+ it("Should ensure `Done` button is clickable and can close DOB", async () => {
+   await settingsPage.done.tap();
+ });
+
+  it("Should ensure `email` button is clickable and can navigate to edit email page", async () => {
+    await settingsPage.email.tap();
+  });
+
+  it("Should edit email in settings", async () => {
+    await editSettingsPage.editEmail.clearText();
+    await editSettingsPage.editSettingsEmail(config);
+    await editSettingsPage.iconCheck.tap();
+    await editSettingsPage.backArrow.tap();
+  });
+
 
   it('Should ensure `phones` button is clickable and can navigate to edit phones page', async () => {
-    await settingsPage.scrollScreenUp();
+    // await settingsPage.scrollScreenUp();
     await settingsPage.phones.tap();
   });
 
@@ -209,6 +213,7 @@ describe('Settings Page', () => {
 
   it('Should ensure `Facebook` button is clickable', async () => {
     await settingsPage.facebook.tap();
+    await settingsPage.address.swipe('up', 'slow', 0.1);
   });
 
   it('Should ensure `Google` button is clickable', async () => {
@@ -216,7 +221,7 @@ describe('Settings Page', () => {
   });
 
   it('Should ensure `Support & Help` button is clickable', async () => {
-    await settingsPage.scrollScreenUpToBotom();
+    
     await settingsPage.supportAndHelp.tap();
   });
 
@@ -225,12 +230,13 @@ describe('Settings Page', () => {
   });
 
   it('Should ensure `Privacy Policy` button is clickable', async () => {
-    await settingsPage.google.swipe('up', 'slow', 0.9);
+    
     await settingsPage.privacyPolicy.tap();
   });
 
   it('Should ensure `Term & Service` button is clickable', async () => {
     await settingsPage.termAndService.tap();
+    await settingsPage.google.swipe("up", "slow", 0.9);
   });
 
   it('Should ensure `Licences` button is clickable', async () => {
@@ -242,7 +248,7 @@ describe('Settings Page', () => {
   });
 
   it('Should ensure `Logout` button is clickable', async () => {
-    await settingsPage.settingsLogo.swipe('up', 'slow', 0.9);
+    await settingsPage.logout.swipe('up', 'slow', 0.9);
     expect(settingsPage.settingsLogo).toBeVisible();
   });
 

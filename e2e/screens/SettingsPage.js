@@ -38,6 +38,10 @@ class SettingsPage {
     return element(by.id('dateTimePicker'));
   }
 
+  get done() {
+    return element(by.id('done-btn'));
+  }
+
   get email() {
     return element(by.id('email-btn'));
   }
