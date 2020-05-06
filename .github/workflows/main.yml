@@ -1,0 +1,11 @@
+name: sr-mobile project 
+on: push
+jobs:
+  build:
+    name: sr-mobile action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: ./action
+        with:
+          PROJECT_NAME: "sr-mobile"
