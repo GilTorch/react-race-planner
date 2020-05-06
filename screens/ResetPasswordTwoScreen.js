@@ -1,20 +1,67 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
-
+import { ActivityIndicator } from 'react-native-paper';
+import * as yup from 'yup';
+import { useForm, Controller } from 'react-hook-form';
+import { useSelector, useDispatch } from 'react-redux';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
+import Toast from '../components/Toast';
+import { resetPasswordVerify } from '../redux/actions/actionCreators';
+
+const validationSchema = yup.object().shape({
+  otpCode: yup
+    .number()
+    .typeError('One-Time Password must be a number')
+    .required('Enter the otp code you received by email'),
+  newPassword: yup
+    .string()
+    .min(8, 'Your password should be at least 8 characters')
+    .required('Enter your password'),
+  newPasswordConfirmation: yup
+    .string()
+    .required('Confirm password')
+    .oneOf([yup.ref('newPassword'), null], 'Passwords are not the same')
+});
 
 const ResetPasswordScreenTwo = ({ navigation }) => {
+  const message = useSelector(state => state.user.message);
+  const resetPasswordVerifySuccess = useSelector(state => state.user.resetPasswordVerifySuccess);
+  const dispatch = useDispatch();
+  const loading = useSelector(state => state.user.loadingResetPasswordVerify);
+
+  const { handleSubmit, errors, control } = useForm({
+    validationSchema
+  });
+
+  const submit = data => {
+    dispatch(resetPasswordVerify(data));
+  };
+
+  useEffect(() => {
+    if (resetPasswordVerifySuccess) {
+      navigation.navigate('Login');
+    }
+  }, [resetPasswordVerifySuccess]);
+
+  let submitText = (
+    <Text type="medium" style={styles.submitButtonText}>
+      Reset Password
+    </Text>
+  );
+
+  if (loading) {
+    submitText = <ActivityIndicator animated color="#fff" />;
+  }
+
   return (
     <ScrollView
       style={{ backgroundColor: 'white' }}
       contentContainerStyle={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
         <Image testID="logo-" source={SRLogo} style={styles.logo} />
-        {/* <View style={styles.logoContainer}>
-        </View> */}
         <View testID="reset-your-password-text" style={styles.headlineContainer}>
           <Text type="medium" style={styles.headline}>
             Reset Your Password
@@ -45,34 +92,93 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
                 One-Time Password
               </Text>
             </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="password-field-1" style={styles.input} />
+            <View
+              style={{
+                ...styles.inputContainer,
+                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
+                borderBottomColor: errors.usernameOrEmail ? 'red' : '#DFE3E9'
+              }}>
+              <Controller
+                as={TextInput}
+                control={control}
+                name="otpCode"
+                onChange={args => args[0].nativeEvent.text}
+                rules={{ required: true }}
+                defaultValue=""
+                style={styles.input}
+                testID="login-user-name"
+                editable={!loading}
+              />
             </View>
           </View>
+          {errors.otpCode && (
+            <Text style={{ marginTop: 10, color: 'red' }}>{errors.otpCode.message}</Text>
+          )}
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
               <Text type="medium" style={styles.label}>
                 New Password
               </Text>
             </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="new-password-field" style={styles.input} />
+            <View
+              style={{
+                ...styles.inputContainer,
+                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
+                borderBottomColor: errors.newPassword ? 'red' : '#DFE3E9'
+              }}>
+              <Controller
+                as={TextInput}
+                control={control}
+                name="newPassword"
+                onChange={args => args[0].nativeEvent.text}
+                rules={{ required: true }}
+                defaultValue=""
+                style={styles.input}
+                testID="login-user-name"
+                editable={!loading}
+                secureTextEntry
+              />
             </View>
           </View>
+          {errors.password && (
+            <Text style={{ marginTop: 10, color: 'red' }}>
+              {errors.newPasswordConfirmation.message}
+            </Text>
+          )}
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
               <Text type="medium" style={styles.label}>
                 Confirm New Password
               </Text>
             </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="confirm-new-password-field" style={styles.input} />
+            <View
+              style={{
+                ...styles.inputContainer,
+                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
+                borderBottomColor: errors.password ? 'red' : '#DFE3E9'
+              }}>
+              <Controller
+                as={TextInput}
+                control={control}
+                name="newPasswordConfirmation"
+                onChange={args => args[0].nativeEvent.text}
+                rules={{ required: true }}
+                defaultValue=""
+                style={styles.input}
+                testID="login-user-name"
+                editable={!loading}
+                secureTextEntry
+              />
             </View>
           </View>
-          <TouchableOpacity testID="reset-password-button-2" style={styles.submitButton}>
-            <Text type="medium" style={styles.submitButtonText}>
-              Reset Password
-            </Text>
+          {errors.confirmPassword && (
+            <Text style={{ marginTop: 10, color: 'red' }}>{errors.confirmPassword.message}</Text>
+          )}
+          <TouchableOpacity
+            onPress={handleSubmit(submit)}
+            testID="reset-password-button-2"
+            style={styles.submitButton}>
+            {submitText}
           </TouchableOpacity>
           <View style={{ width: '100%', marginTop: 20, flexDirection: 'row' }}>
             <Text style={{ color: '#7F8FA4' }}>
@@ -90,6 +196,7 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
           </View>
         </View>
       </View>
+      <Toast message={message} />
     </ScrollView>
   );
 };

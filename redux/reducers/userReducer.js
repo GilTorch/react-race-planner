@@ -7,20 +7,29 @@ import {
   SIGNUP_FAILURE,
   ADD_SESSION,
   CLEAR_MESSAGE,
-  VERIFY_OTP_START,
-  VERIFY_OTP_SUCCESS,
-  VERIFY_OTP_FAILURE
+  VERIFY_ACCOUNT_START,
+  VERIFY_ACCOUNT_SUCCESS,
+  VERIFY_ACCOUNT_FAILURE,
+  RESET_PASSWORD_START,
+  RESET_PASSWORD_FAILURE,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_VERIFY_START,
+  RESET_PASSWORD_VERIFY_FAILURE,
+  RESET_PASSWORD_VERIFY_SUCCESS
 } from '../actions/types';
 
 const initialState = {
   loadingLogin: false,
   loadingSignup: false,
-  loadingVerifyOTP: false,
+  loadingVerifyAccount: false,
+  loadingPasswordReset: false,
+  loadingResetPasswordVerify: false,
   token: null,
   currentUser: null,
   message: null,
   code: null,
-  otpSuccess: null
+  otpSuccess: null,
+  resetPasswordVerifySuccess: false
 };
 
 const userReducer = (state = initialState, action) => {
@@ -72,25 +81,64 @@ const userReducer = (state = initialState, action) => {
         ...state,
         message: null
       };
-    case VERIFY_OTP_START:
+    case VERIFY_ACCOUNT_START:
       return {
         ...state,
-        loadingVerifyOTP: true
+        loadingVerifyAccount: true
       };
-    case VERIFY_OTP_FAILURE:
+    case VERIFY_ACCOUNT_FAILURE:
       return {
         ...state,
         otpSuccess: false,
         code: action.data.code,
         message: action.data.message,
-        loadingVerifyOTP: false
+        loadingVerifyAccount: false
       };
-    case VERIFY_OTP_SUCCESS:
+    case VERIFY_ACCOUNT_SUCCESS:
       return {
         ...state,
         otpSuccess: true,
         message: 'Your account was successfully activated',
-        loadingVerifyOTP: false
+        loadingVerifyAccount: false
+      };
+    case RESET_PASSWORD_START:
+      return {
+        ...state,
+        loadingPasswordReset: true
+      };
+    case RESET_PASSWORD_FAILURE:
+      return {
+        ...state,
+        loadingPasswordReset: false,
+        message: action.data.message,
+        code: action.data.code
+      };
+    case RESET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loadingPasswordReset: false,
+        message: action.data.message,
+        code: action.data.code,
+        token: action.data.token
+      };
+    case RESET_PASSWORD_VERIFY_START:
+      return {
+        ...state,
+        loadingResetPasswordVerify: true
+      };
+    case RESET_PASSWORD_VERIFY_FAILURE:
+      return {
+        ...state,
+        loadingResetPasswordVerify: false,
+        message: action.data.message,
+        resetPasswordVerifySuccess: false
+      };
+    case RESET_PASSWORD_VERIFY_SUCCESS:
+      return {
+        ...state,
+        loadingResetPasswordVerify: true,
+        message: 'The user account was activated successfully',
+        resetPasswordVerifySuccess: true
       };
     default:
       return state;

@@ -25,7 +25,7 @@ const OTPVerificationScreen = ({ navigation }) => {
     validationSchema
   });
   const message = useSelector(state => state.user.message);
-  const loading = useSelector(state => state.user.loadingVerifyOTP);
+  const loading = useSelector(state => state.user.loadingVerifyAccount);
   const token = useSelector(state => state.user.token);
   const [requestEnabled, setRequestEnabled] = useState(true);
   const tokenExpiration = useSelector(state => state.user.currentUser.exp);
@@ -132,7 +132,6 @@ const OTPVerificationScreen = ({ navigation }) => {
               {!requestEnabled && (
                 <Entypo size={18} color="#8A8D99" style={{ marginRight: 10 }} name="lock" />
               )}
-              {/* <TextInput testID="add-email-address-to-reset" style={styles.input} /> */}
             </View>
             {errors.otp && (
               <Text style={{ marginTop: 10, color: 'red' }}>{errors.otp.message}</Text>

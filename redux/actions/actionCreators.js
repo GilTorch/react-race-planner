@@ -8,7 +8,13 @@ import {
   CLEAR_MESSAGE,
   VERIFY_ACCOUNT_START,
   VERIFY_ACCOUNT_SUCCESS,
-  VERIFY_ACCOUNT_FAILURE
+  VERIFY_ACCOUNT_FAILURE,
+  RESET_PASSWORD_START,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAILURE,
+  RESET_PASSWORD_VERIFY_START,
+  RESET_PASSWORD_VERIFY_SUCCESS,
+  RESET_PASSWORD_VERIFY_FAILURE
 } from './types';
 import axios from '../../services/axiosService';
 
@@ -64,6 +70,34 @@ export const verifyAccount = payload => {
       })
       .catch(error => {
         dispatch({ type: VERIFY_ACCOUNT_FAILURE, data: error.response.data });
+      });
+  };
+};
+
+export const resetPassword = payload => {
+  return dispatch => {
+    dispatch({ type: RESET_PASSWORD_START });
+    return axios
+      .post('/users/password-reset', payload)
+      .then(res => {
+        dispatch({ type: RESET_PASSWORD_SUCCESS, data: res.data });
+      })
+      .catch(error => {
+        dispatch({ type: RESET_PASSWORD_FAILURE, data: error.response.data });
+      });
+  };
+};
+
+export const resetPasswordVerify = payload => {
+  return dispatch => {
+    dispatch({ type: RESET_PASSWORD_VERIFY_START });
+    return axios
+      .post('/users/password-reset/verify', payload)
+      .then(res => {
+        dispatch({ type: RESET_PASSWORD_VERIFY_SUCCESS, data: res.data });
+      })
+      .catch(error => {
+        dispatch({ type: RESET_PASSWORD_VERIFY_FAILURE, data: error.response.data });
       });
   };
 };

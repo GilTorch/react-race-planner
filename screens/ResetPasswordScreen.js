@@ -2,12 +2,48 @@ import React from 'react';
 import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
-import { useFocusEffect } from '@react-navigation/native';
-
+import { ActivityIndicator } from 'react-native-paper';
+import * as yup from 'yup';
+import { useForm, Controller } from 'react-hook-form';
+import { useSelector, useDispatch } from 'react-redux';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
+import { useDidUpdateEffect } from '../hooks/useDidUpdateEffect';
+import { resetPassword } from '../redux/actions/actionCreators';
+import Toast from '../components/Toast';
+
+const validationSchema = yup.object().shape({
+  usernameOrEmail: yup.string().required('Enter your username or your email')
+});
 
 const ResetPasswordScreen = ({ navigation }) => {
+  const message = useSelector(state => state.user.message);
+  const loading = useSelector(state => state.user.loadingPasswordReset);
+  const token = useSelector(state => state.user.token);
+  const dispatch = useDispatch();
+
+  const { errors, control, handleSubmit } = useForm({
+    validationSchema
+  });
+
+  useDidUpdateEffect(() => {
+    navigation.navigate('ResetPasswordTwo');
+  }, [token]);
+
+  const submit = data => {
+    dispatch(resetPassword(data));
+  };
+
+  let submitText = (
+    <Text type="medium" style={styles.submitButtonText}>
+      Send Password Reset Code
+    </Text>
+  );
+
+  if (loading) {
+    submitText = <ActivityIndicator animated color="#fff" />;
+  }
+
   return (
     <ScrollView
       style={{ backgroundColor: 'white' }}
@@ -43,15 +79,33 @@ const ResetPasswordScreen = ({ navigation }) => {
             <View style={styles.labelContainer}>
               <Text style={styles.label}>Username or Email</Text>
             </View>
-            <View style={styles.inputContainer}>
-              <TextInput testID="add-email-address-to-reset" style={styles.input} />
+            <View
+              style={{
+                ...styles.inputContainer,
+                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
+                borderBottomColor: errors.usernameOrEmail ? 'red' : '#DFE3E9'
+              }}>
+              <Controller
+                as={TextInput}
+                control={control}
+                name="usernameOrEmail"
+                onChange={args => args[0].nativeEvent.text}
+                rules={{ required: true }}
+                defaultValue=""
+                style={styles.input}
+                testID="login-user-name"
+                editable={!loading}
+              />
             </View>
           </View>
+          {errors.usernameOrEmail && (
+            <Text style={{ marginTop: 10, color: 'red' }}>{errors.usernameOrEmail.message}</Text>
+          )}
           <TouchableOpacity
+            onPress={handleSubmit(submit)}
             testID="reset-password-button"
-            style={styles.submitButton}
-            onPress={() => navigation.navigate('ResetPasswordTwoScreen')}>
-            <Text style={styles.submitButtonText}>Send Password Reset Code</Text>
+            style={styles.submitButton}>
+            {submitText}
           </TouchableOpacity>
           <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
             <Text style={{ color: '#7F8FA4' }}>Do you remember it now? </Text>
@@ -65,6 +119,7 @@ const ResetPasswordScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
+      <Toast message={message} />
     </ScrollView>
   );
 };
