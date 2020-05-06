@@ -198,7 +198,7 @@ Follow those instructions if you're on a Mac:
  2. If not, go to your respective branch
  3. In your github menu, click on `Action`
  4. Click your last commit (make sur to do that every time you wan to see the github action for your branch/tasks pass) 
- 5. Once you are in the redirected page, click on the node version you want
+ 5. Once you are in the redirected page, click on the node version you want (sr-mobile action 8.x or 12.x) to view it in console
  6. Now watch your github action verify successfully you tasks
  7. If all of your check mark are not green, view the error, debug it, and 
  8. redo the same process by making you click on the lastest commit
