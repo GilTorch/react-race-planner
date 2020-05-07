@@ -80,8 +80,16 @@ const HomeScreen = ({ navigation, route }) => {
             {genres.map(genre => (
               <View
                 key={Math.random()}
-                style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
-                <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: 20
+                }}>
+                <View
+                  style={{
+                    ...styles.genreIconContainer,
+                    backgroundColor: genre.color
+                  }}>
                   {genre.icon(32)}
                 </View>
                 <Text
@@ -143,6 +151,7 @@ const HomeScreen = ({ navigation, route }) => {
                 flexDirection: 'row'
               }}>
               <TouchableOpacity
+                testID="filter-button"
                 style={{ borderRadius: 5, padding: 5, flex: 1 }}
                 onPress={() => {
                   navigation.push('FilterScreen');
@@ -183,7 +192,7 @@ const HomeScreen = ({ navigation, route }) => {
           </View>
         )}
 
-        <View>
+        <View testID="story">
           {stories.map((story, index) => (
             <Story
               key={Math.random()}

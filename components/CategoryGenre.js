@@ -51,6 +51,7 @@ const CategoryGenre = ({ genre }) => {
         <Button
           mode="contained"
           style={{ height: 35, alignItems: 'center', justifyContent: 'center' }}
+          // eslint-disable-next-line no-unused-vars
           icon={({ size, color }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
           labelStyle={{ color: '#fff', fontWeight: 'bold' }}>
           Go
