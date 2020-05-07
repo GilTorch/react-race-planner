@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
-import { FontAwesome, MaterialIcons, AntDesign } from '@expo/vector-icons';
+import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { Button, Surface, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import Text from '../components/CustomText';
@@ -36,7 +36,6 @@ const StoryScreen = ({ navigation, route }) => {
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: 330 });
 
   const scrollView = React.useRef(null);
-  const blockPositions = [];
 
   let coAuthors;
   if (inprogressStory) {
@@ -69,7 +68,7 @@ const StoryScreen = ({ navigation, route }) => {
     }, [])
   );
 
-  const [scrollY, setScrollY] = React.useState(new Animated.Value(0));
+  const [scrollY] = React.useState(new Animated.Value(0));
 
   const HEADER_MINIMUM_HEIGHT = 0;
   const HEADER_MAXIMUM_HEIGHT = SCREEN_HEIGHT * 0.25;
@@ -114,6 +113,12 @@ const StoryScreen = ({ navigation, route }) => {
     if (headerDimensions) return; // layout was already called
 
     setHeaderDimensions(event.nativeEvent.layout);
+  };
+
+  let rawScrollPosition = 0;
+
+  const handleScroll = e => {
+    rawScrollPosition = e.nativeEvent.contentOffset.y;
   };
 
   return (
@@ -264,14 +269,9 @@ const StoryScreen = ({ navigation, route }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  paginationScrollPosition =
-                    paginationScrollPosition >= 300
-                      ? paginationScrollPosition - 300
-                      : paginationScrollPosition;
-
                   scrollView.current.scrollTo({
                     x: 0,
-                    y: paginationScrollPosition,
+                    y: rawScrollPosition - 300,
                     animated: true
                   });
                 }}
@@ -291,10 +291,9 @@ const StoryScreen = ({ navigation, route }) => {
               <TouchableOpacity
                 style={{ flex: 1 }}
                 onPress={() => {
-                  paginationScrollPosition -= new Animated.Value(300);
                   scrollView.current.scrollTo({
                     x: 0,
-                    y: paginationScrollPosition,
+                    y: rawScrollPosition + 300,
                     animated: true
                   });
                 }}>
@@ -337,7 +336,11 @@ const StoryScreen = ({ navigation, route }) => {
           ref={scrollView}
           snapToInterval
           decelerationRate="fast"
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }])}
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+            listener: event => {
+              handleScroll(event);
+            }
+          })}
           contentContainerStyle={{
             marginTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40),
             paddingBottom: 350
