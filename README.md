@@ -17,6 +17,7 @@ The iOS and Android source code of ScriptoRerum - React Native
   * [Publishing for Staging/Demoing](#publishing-for-staging-demoing)
   * [Building for Production](#building-for-production)
   * [e2e Testing with detox](#e2e-testing-with-detox)
+  * [Run Github Action](#run-github-action)
 
 ## Screenshots
 
@@ -189,5 +190,16 @@ Follow those instructions if you're on a Mac:
     - `npm run test:e2e -c -f /filepath/`. Example: `npm run test:e2e -c -f e2e/CreateAccount.spec.js`
     - and scroll up until you can see the  full output of your tests
  8. Reminder: Expect the UI components to have `testID` instead of using `id`.
+
+
+ ## Run Github Action
  
+ 1. After pushing your tasks, check that all your check marks are green
+ 2. If not, go to your respective branch
+ 3. In your github menu, click on `Action`
+ 4. Click your last commit (make sur to do that every time you wan to see the github action for your branch/tasks pass) 
+ 5. Once you are in the redirected page, click on the node version you want (sr-mobile action 8.x or 12.x) to view it in console
+ 6. Now watch your github action verify successfully you tasks
+ 7. If all of your check mark are not green, view the error, debug it, and 
+ 8. redo the same process by making you click on the lastest commit
  

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import * as React from 'react';
 // eslint-disable-next-line import/no-unresolved
 // import NavigationTestUtils from 'react-navigation/NavigationTestUtils';
