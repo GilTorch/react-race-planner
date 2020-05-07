@@ -534,7 +534,6 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View
-          testID
           testID="logout-btn"
           style={{
             height: 50,
