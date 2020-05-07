@@ -36,6 +36,7 @@ const StoryScreen = ({ navigation, route }) => {
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: 330 });
 
   const scrollView = React.useRef(null);
+  const blockPositions = [];
 
   let coAuthors;
   if (inprogressStory) {

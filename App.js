@@ -4,7 +4,6 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
-
 import PropTypes from 'prop-types';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
@@ -30,6 +29,7 @@ import AppNavigation from './navigation';
 import store from './redux/store';
 import persistor from './redux/store/persistor';
 
+persistor.purge();
 function cacheImages(images) {
   return images.map(image => {
     if (typeof image === 'string') {
@@ -100,7 +100,7 @@ export default function App(props) {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <PaperProvider theme={theme}>
+        <PaperProvider>
           <View style={styles.container}>
             <NavigationContainer
               ref={containerRef}
