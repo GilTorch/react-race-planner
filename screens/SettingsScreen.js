@@ -452,7 +452,7 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Licenses</Text>
                 <View>
@@ -461,7 +461,7 @@ const SettingsScreen = ({ navigation }) => {
                   </View>
                 </View>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
