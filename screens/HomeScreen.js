@@ -10,7 +10,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
-import ViewAllCategoriesModal from '../components/modals/ViewAllCategoriesModal';
+import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
 
 const HomeScreen = ({ navigation, route }) => {
@@ -34,7 +34,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <ViewAllCategoriesModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
+      <ViewAllGenresModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
       <Surface
         style={{
           elevation: 3,
