@@ -16,13 +16,19 @@ import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
 const SettingsScreen = ({ navigation }) => {
-  const {
-    expo: { version }
-  } = app;
-
   navigation.setOptions({
     headerShown: false
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('light-content');
+    }, [])
+  );
+
+  const {
+    expo: { version }
+  } = app;
 
   const [visible, setVisible] = React.useState(false);
   const [date, setDate] = React.useState(new Date(687041730000));
@@ -69,15 +75,8 @@ const SettingsScreen = ({ navigation }) => {
       setShow(true);
     }
   };
-
   const showDeleteModal = () => setVisible(true);
   const hideDeleteModal = () => setVisible(false);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      StatusBar.setBarStyle('light-content');
-    }, [])
-  );
 
   return (
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
@@ -432,7 +431,8 @@ const SettingsScreen = ({ navigation }) => {
               borderWidth: 1,
               paddingLeft: 20
             }}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('WebViewScreen', { title: 'Privacy Policy' })}>
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Privacy Policy</Text>
                 <View>
@@ -441,7 +441,8 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('WebViewScreen', { title: 'Terms of Service' })}>
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Terms of Service</Text>
                 <View>
