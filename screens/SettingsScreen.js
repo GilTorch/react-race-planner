@@ -115,6 +115,7 @@ const SettingsScreen = ({ navigation }) => {
             <Text style={styles.headline}>PROFILE INFO</Text>
           </View>
           <TouchableOpacity
+            testID="open-image-picker"
             onPress={openImagePickerAsync}
             style={{
               backgroundColor: '#fff',

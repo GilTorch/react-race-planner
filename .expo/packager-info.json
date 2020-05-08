@@ -1,0 +1,10 @@
+{
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 4379,
+  "expoServerNgrokUrl": "https://ui-rph.anonymous.sr-mobile.exp.direct",
+  "packagerNgrokUrl": "https://packager.ui-rph.anonymous.sr-mobile.exp.direct",
+  "ngrokPid": 4416,
+  "devToolsPort": 19002,
+  "webpackServerPort": null
+}
