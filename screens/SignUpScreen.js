@@ -226,6 +226,7 @@ const SignupScreen = ({ navigation }) => {
               <View style={styles.inputContainer}>
                 <TextInput
                   testID="email-address"
+                  autoCapitalize="none"
                   onChangeText={text => setValue('email', text)}
                   value={watch('email')}
                   onSubmitEditing={() => focusNextField('password')}
