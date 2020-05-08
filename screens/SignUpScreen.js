@@ -166,7 +166,9 @@ const SignupScreen = ({ navigation }) => {
                 />
               </View>
               {errors.username && (
-                <Text style={{ fontSize: 11, color: 'red' }}>{errors.username.message}</Text>
+                <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                  {errors.username.message}
+                </Text>
               )}
             </View>
             <View style={styles.formGroup}>
@@ -190,7 +192,9 @@ const SignupScreen = ({ navigation }) => {
                 />
               </View>
               {errors.firstName && (
-                <Text style={{ fontSize: 11, color: 'red' }}>{errors.firstName.message}</Text>
+                <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                  {errors.firstName.message}
+                </Text>
               )}
             </View>
             <View style={styles.formGroup}>
@@ -214,7 +218,9 @@ const SignupScreen = ({ navigation }) => {
                 />
               </View>
               {errors.lastName && (
-                <Text style={{ fontSize: 11, color: 'red' }}>{errors.lastName.message}</Text>
+                <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                  {errors.lastName.message}
+                </Text>
               )}
             </View>
             <View style={styles.formGroup}>
@@ -240,7 +246,9 @@ const SignupScreen = ({ navigation }) => {
                 />
               </View>
               {errors.email && (
-                <Text style={{ fontSize: 11, color: 'red' }}>{errors.email.message}</Text>
+                <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                  {errors.email.message}
+                </Text>
               )}
             </View>
             {!socialAccount && (
@@ -267,7 +275,9 @@ const SignupScreen = ({ navigation }) => {
                     />
                   </View>
                   {errors.password && (
-                    <Text style={{ fontSize: 11, color: 'red' }}>{errors.password.message}</Text>
+                    <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                      {errors.password.message}
+                    </Text>
                   )}
                 </View>
                 <View style={styles.formGroup}>
@@ -291,7 +301,9 @@ const SignupScreen = ({ navigation }) => {
                     />
                   </View>
                   {errors.password2 && (
-                    <Text style={{ fontSize: 11, color: 'red' }}>{errors.password2.message}</Text>
+                    <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                      {errors.password2.message}
+                    </Text>
                   )}
                 </View>
               </>
