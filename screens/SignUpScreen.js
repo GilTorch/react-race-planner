@@ -26,6 +26,19 @@ import { signupSchema } from '../utils/validators';
 import PageSpinner from '../components/PageSpinner';
 import * as Twitter from '../services/twitter';
 
+const defaultValues = {
+  username: null,
+  firstName: null,
+  lastName: null,
+  email: null,
+  password: null,
+  password2: null,
+  socialAccount: false,
+  googleAccountId: null,
+  twitterAccountId: null,
+  socialPlatformName: null
+};
+
 const SignupScreen = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
@@ -34,7 +47,7 @@ const SignupScreen = ({ navigation }) => {
   );
 
   let scrollRef = React.useRef();
-  const [socialMediaName, setSocialMediaName] = React.useState('');
+  const [socialPlatformName, setSocialPlatformName] = React.useState(null);
   const [socialSignUp, setSocialSignup] = React.useState(false);
 
   const loading = useSelector(state => state.auth.loading);
@@ -42,17 +55,23 @@ const SignupScreen = ({ navigation }) => {
   const user = useSelector(state => state.auth.currentUser);
   const dispatch = useDispatch();
 
-  const { register, handleSubmit, errors, setValue, watch } = useForm({
+  const { register, handleSubmit, errors, setValue, watch, reset } = useForm({
     validationSchema: signupSchema,
     validateCriteriaMode: 'all'
   });
   const socialAccount = watch('socialAccount', false);
 
   React.useEffect(() => {
+    // This will automatically navigate to the appropriate screen as
+    // soon as it detects a user account in the store
     if (user) {
-      // TODO: navigate to OTP screen
+      // TODO: navigate to OTP screen if user is not active
+      // or to home screen otherwise
       // navigation.navigate('Home');
     }
+
+    // This will automatically submit the form as soon as the
+    // Social login is successsful
     if (socialAccount) {
       handleSubmit(signup)();
     }
@@ -67,6 +86,8 @@ const SignupScreen = ({ navigation }) => {
     register('password2');
     register('socialAccount');
     register('googleAccountId');
+    register('twitterAccountId');
+    register('socialPlatformName');
   }, [register]);
 
   const inputs = {};
@@ -87,15 +108,17 @@ const SignupScreen = ({ navigation }) => {
       });
 
       if (result.type === 'success') {
+        setSocialPlatformName('Google');
+
         setValue([
           { username: '' },
           { firstName: result.user.givenName },
           { lastName: result.user.familyName },
           { email: result.user.email },
           { socialAccount: true },
-          { googleAccountId: result.user.id }
+          { googleAccountId: result.user.id },
+          { socialPlatformName }
         ]);
-        setSocialMediaName('Google');
       }
       setSocialSignup(false);
       return null;
@@ -107,21 +130,25 @@ const SignupScreen = ({ navigation }) => {
 
   const signupWithTwitter = async () => {
     setSocialSignup(true);
-    scrollRef.scrollTo({ y: 100, animated: true });
+
     const { twitterAccountId, username, lastName, firstName, email } = await Twitter.authSession(
       false
     );
+
     if (twitterAccountId) {
+      setSocialPlatformName('Twitter');
+
       setValue([
         { twitterAccountId },
         { username },
         { lastName },
         { firstName },
         { email },
-        { socialAccount: true }
+        { socialAccount: true },
+        { socialPlatformName: 'Twitter' }
       ]);
-      setSocialMediaName('Twitter');
     }
+
     setSocialSignup(false);
   };
 
@@ -130,6 +157,7 @@ const SignupScreen = ({ navigation }) => {
       duration: Toast.durations.SHORT,
       position: Toast.positions.BOTTOM
     });
+
     dispatch(clearRequestError());
   }
 
@@ -156,6 +184,7 @@ const SignupScreen = ({ navigation }) => {
               </View>
               <View style={styles.inputContainer}>
                 <TextInput
+                  autoCapitalize="none"
                   testID="user-name"
                   onChangeText={text => setValue('username', text)}
                   value={watch('username')}
@@ -235,13 +264,15 @@ const SignupScreen = ({ navigation }) => {
                   autoCapitalize="none"
                   onChangeText={text => setValue('email', text)}
                   value={watch('email')}
-                  onSubmitEditing={() => focusNextField('password')}
+                  onSubmitEditing={
+                    socialAccount ? handleSubmit(signup) : () => focusNextField('password')
+                  }
                   blurOnSubmit={false}
                   ref={input => {
                     inputs.email = input;
                   }}
                   keyboardType="email-address"
-                  returnKeyType="next"
+                  returnKeyType={socialAccount ? 'send' : 'next'}
                   style={[styles.input, errors.email && styles.errorInput]}
                 />
               </View>
@@ -296,7 +327,7 @@ const SignupScreen = ({ navigation }) => {
                         inputs.password2 = input;
                       }}
                       secureTextEntry
-                      returnKeyType="done"
+                      returnKeyType="send"
                       style={[styles.input, errors.password2 && styles.errorInput]}
                     />
                   </View>
@@ -314,7 +345,7 @@ const SignupScreen = ({ navigation }) => {
               style={styles.submitButton}>
               {socialAccount && (
                 <Text type="medium" style={styles.submitButtonText}>
-                  Continue signup with {socialMediaName}
+                  Continue signup with {socialPlatformName}
                 </Text>
               )}
               {!socialAccount && (
@@ -323,21 +354,51 @@ const SignupScreen = ({ navigation }) => {
                 </Text>
               )}
             </TouchableOpacity>
-            <View style={styles.loginWithSocialMediaTextContainer}>
-              <Text type="medium" style={{ color: '#7F8FA4', fontWeight: 'bold' }}>
-                Or login via social networks
-              </Text>
+            <View
+              style={[
+                styles.loginWithSocialMediaTextContainer,
+                { marginTop: socialAccount ? 15 : 20 }
+              ]}>
+              {socialAccount && (
+                <TouchableOpacity
+                  style={{ marginBottom: 20 }}
+                  onPress={() => {
+                    reset(defaultValues);
+                    setSocialPlatformName(null);
+                  }}>
+                  <Text type="medium" style={{ color: 'red', fontWeight: 'bold' }}>
+                    Cancel {socialPlatformName} login
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {socialAccount && (
+                <Text type="medium" style={{ color: '#7F8FA4', fontWeight: 'bold' }}>
+                  Or login via a different social network
+                </Text>
+              )}
+              {!socialAccount && (
+                <Text type="medium" style={{ color: '#7F8FA4', fontWeight: 'bold' }}>
+                  Or login via social networks
+                </Text>
+              )}
             </View>
-            <View style={styles.socialMediaButtonsContainer}>
-              <TouchableOpacity
-                onPress={signupWithTwitter}
-                testID="twitter-icon-button"
-                style={{
-                  backgroundColor: '#3ABDFF',
-                  ...styles.socialMediaButton
-                }}>
-                <Entypo name="twitter-with-circle" size={24} color="#fff" />
-              </TouchableOpacity>
+            <View
+              style={[
+                styles.socialMediaButtonsContainer,
+                { justifyContent: socialAccount ? 'space-around' : 'space-between' }
+              ]}>
+              {socialPlatformName !== 'Twitter' && (
+                <TouchableOpacity
+                  onPress={signupWithTwitter}
+                  testID="twitter-icon-button"
+                  style={{
+                    backgroundColor: '#3ABDFF',
+                    ...styles.socialMediaButton
+                  }}>
+                  <Entypo name="twitter-with-circle" size={24} color="#fff" />
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
                 testID="facebook-icon-button"
                 style={{
@@ -450,14 +511,12 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   loginWithSocialMediaTextContainer: {
-    marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center'
   },
   socialMediaButtonsContainer: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 20
   },
   socialMediaButton: {
