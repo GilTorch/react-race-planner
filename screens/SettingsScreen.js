@@ -416,7 +416,10 @@ const SettingsScreen = ({ navigation }) => {
                 />
                 <Text style={{ fontSize: 18 }}>Facebook</Text>
               </View>
-              <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
+              {!user.facebookAccountId && (
+                <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
+              )}
+              {user.facebookAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} />
             <TouchableOpacity
@@ -441,7 +444,40 @@ const SettingsScreen = ({ navigation }) => {
                 </View>
                 <Text style={{ fontSize: 18 }}>Google</Text>
               </TouchableOpacity>
-              <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>
+              {!user.googleAccountId && (
+                <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
+              )}
+              {user.googleAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
+            </TouchableOpacity>
+            <Divider style={{ marginLeft: 20 }} />
+            <TouchableOpacity
+              style={{
+                height: 50,
+                borderColor: '#C8C7CC',
+                borderBottomWidth: 1,
+                paddingHorizontal: 20,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                <FontAwesome
+                  name="facebook-square"
+                  size={30}
+                  color="#1ca0f1"
+                  style={{ marginRight: 10 }}
+                />
+                <Text style={{ fontSize: 18 }}>Twitter</Text>
+              </View>
+              {!user.twitterAccountId && (
+                <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
+              )}
+              {user.twitterAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
             </TouchableOpacity>
           </View>
         </View>
