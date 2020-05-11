@@ -7,8 +7,16 @@ import PropTypes from 'prop-types';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import * as Twitter from '../services/twitter';
 
 const LoginScreen = ({ navigation }) => {
+  const loginWithTwitter = async () => {
+    const { twitterAccountId } = await Twitter.authSession(true);
+    if (twitterAccountId) {
+      // dispatch(login(twitterAccountId))
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
@@ -63,6 +71,7 @@ const LoginScreen = ({ navigation }) => {
           </View>
           <View style={styles.socialMediaButtonsContainer}>
             <TouchableOpacity
+              onPress={loginWithTwitter}
               testID="twitter-icon-button"
               style={{
                 backgroundColor: '#3ABDFF',
