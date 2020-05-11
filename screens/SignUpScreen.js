@@ -27,12 +27,12 @@ import PageSpinner from '../components/PageSpinner';
 import * as Twitter from '../services/twitter';
 
 const defaultValues = {
-  username: null,
-  firstName: null,
-  lastName: null,
-  email: null,
-  password: null,
-  password2: null,
+  username: '',
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  password2: '',
   socialAccount: false,
   googleAccountId: null,
   twitterAccountId: null,
@@ -103,15 +103,18 @@ const SignupScreen = ({ navigation }) => {
       if (result.type === 'success') {
         setSocialPlatformName('Google');
 
-        setValue([
-          { username: `${result.user.givenName}_${result.user.familyName}`.toLowerCase() },
-          { firstName: result.user.givenName },
-          { lastName: result.user.familyName },
-          { email: result.user.email },
-          { socialAccount: true },
-          { googleAccountId: result.user.id },
-          { socialPlatformName: 'Google' }
-        ]);
+        setValue(
+          [
+            { username: `${result.user.givenName}_${result.user.familyName}`.toLowerCase() },
+            { firstName: result.user.givenName },
+            { lastName: result.user.familyName },
+            { email: result.user.email },
+            { socialAccount: true },
+            { googleAccountId: result.user.id },
+            { socialPlatformName: 'Google' }
+          ],
+          true
+        );
       }
 
       setSocialSignup(false);
@@ -130,15 +133,18 @@ const SignupScreen = ({ navigation }) => {
     if (twitterAccountId) {
       setSocialPlatformName('Twitter');
 
-      setValue([
-        { twitterAccountId },
-        { username },
-        { lastName },
-        { firstName },
-        { email },
-        { socialAccount: true },
-        { socialPlatformName: 'Twitter' }
-      ]);
+      setValue(
+        [
+          { twitterAccountId },
+          { username },
+          { lastName },
+          { firstName },
+          { email },
+          { socialAccount: true },
+          { socialPlatformName: 'Twitter' }
+        ],
+        true
+      );
     }
 
     setSocialSignup(false);
@@ -387,23 +393,27 @@ const SignupScreen = ({ navigation }) => {
                   <Entypo name="twitter-with-circle" size={24} color="#fff" />
                 </TouchableOpacity>
               )}
-              <TouchableOpacity
-                testID="facebook-icon-button"
-                style={{
-                  backgroundColor: '#1382D5',
-                  ...styles.socialMediaButton
-                }}>
-                <Entypo name="facebook-with-circle" size={24} color="#fff" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={signInWithGoogleAsync}
-                testID="google-icon-btn"
-                style={{
-                  backgroundColor: '#e6e6e6',
-                  ...styles.socialMediaButton
-                }}>
-                <GoogleColorfulIcon />
-              </TouchableOpacity>
+              {socialPlatformName !== 'Facebook' && (
+                <TouchableOpacity
+                  testID="facebook-icon-button"
+                  style={{
+                    backgroundColor: '#1382D5',
+                    ...styles.socialMediaButton
+                  }}>
+                  <Entypo name="facebook-with-circle" size={24} color="#fff" />
+                </TouchableOpacity>
+              )}
+              {socialPlatformName !== 'Google' && (
+                <TouchableOpacity
+                  onPress={signInWithGoogleAsync}
+                  testID="google-icon-btn"
+                  style={{
+                    backgroundColor: '#e6e6e6',
+                    ...styles.socialMediaButton
+                  }}>
+                  <GoogleColorfulIcon />
+                </TouchableOpacity>
+              )}
             </View>
             <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
               <Text style={{ color: '#7F8FA4' }}>Already a member? </Text>
