@@ -30,10 +30,11 @@ const authSession = async isLogin => {
     });
 
     if (authResponse.type === 'cancel') {
-      Toast.show('You cancelled the Twitter login', {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
-      });
+      // Commented this out because it's unneccessary to notify the user about this
+      // Toast.show('You cancelled the Twitter login', {
+      //   duration: Toast.durations.SHORT,
+      //   position: Toast.positions.BOTTOM
+      // });
 
       return {};
     }
