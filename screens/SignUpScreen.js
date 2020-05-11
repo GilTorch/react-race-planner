@@ -46,13 +46,12 @@ const SignupScreen = ({ navigation }) => {
     }, [])
   );
 
-  let scrollRef = React.useRef();
   const [socialPlatformName, setSocialPlatformName] = React.useState(null);
   const [socialSignUp, setSocialSignup] = React.useState(false);
 
   const loading = useSelector(state => state.auth.loading);
   const requestError = useSelector(state => state.auth.requestError);
-  const user = useSelector(state => state.auth.currentUser);
+  const currentUser = useSelector(state => state.auth.currentUser);
   const dispatch = useDispatch();
 
   const { register, handleSubmit, errors, setValue, watch, reset } = useForm({
@@ -64,18 +63,12 @@ const SignupScreen = ({ navigation }) => {
   React.useEffect(() => {
     // This will automatically navigate to the appropriate screen as
     // soon as it detects a user account in the store
-    if (user) {
+    if (currentUser) {
       // TODO: navigate to OTP screen if user is not active
       // or to home screen otherwise
       // navigation.navigate('Home');
     }
-
-    // This will automatically submit the form as soon as the
-    // Social login is successsful
-    if (socialAccount) {
-      handleSubmit(signup)();
-    }
-  }, [socialAccount, user]);
+  }, [currentUser]);
 
   React.useEffect(() => {
     register('username');
@@ -99,11 +92,11 @@ const SignupScreen = ({ navigation }) => {
 
   async function signInWithGoogleAsync() {
     setSocialSignup(true);
-    scrollRef.scrollTo({ y: 100, animated: true });
 
     try {
       const result = await Google.logInAsync({
-        androidClientId: '980543837281-7uu46lgibdqstt24j80p3795pvcd7clq.apps.googleusercontent.com',
+        androidClientId: '179189574549-p2l06hbg13fqqba7nfib4nq7na5ci1lc.apps.googleusercontent.com',
+        iosClientId: '179189574549-3379mn2seve0i471eqfkpgduqkgvnd98.apps.googleusercontent.com',
         scopes: ['profile', 'email']
       });
 
@@ -111,20 +104,19 @@ const SignupScreen = ({ navigation }) => {
         setSocialPlatformName('Google');
 
         setValue([
-          { username: '' },
+          { username: `${result.user.givenName}_${result.user.familyName}`.toLowerCase() },
           { firstName: result.user.givenName },
           { lastName: result.user.familyName },
           { email: result.user.email },
           { socialAccount: true },
           { googleAccountId: result.user.id },
-          { socialPlatformName }
+          { socialPlatformName: 'Google' }
         ]);
       }
+
       setSocialSignup(false);
-      return null;
     } catch (e) {
       setSocialSignup(false);
-      return { error: true };
     }
   }
 
@@ -163,11 +155,7 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' && 'padding'}>
-      <ScrollView
-        ref={scroll => {
-          scrollRef = scroll;
-        }}
-        contentContainerStyle={{ backgroundColor: 'white' }}>
+      <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
         <View style={styles.container}>
           <Image testID="logo" source={SRLogo} resizeMode="contain" style={styles.logo} />
           <View testID="create-account-text" style={styles.headlineContainer}>
@@ -367,7 +355,7 @@ const SignupScreen = ({ navigation }) => {
                     setSocialPlatformName(null);
                   }}>
                   <Text type="medium" style={{ color: 'red', fontWeight: 'bold' }}>
-                    Cancel {socialPlatformName} login
+                    Cancel signing up with {socialPlatformName}
                   </Text>
                 </TouchableOpacity>
               )}
