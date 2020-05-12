@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
+import Toast from 'react-native-root-toast';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
@@ -10,12 +11,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from '../services/axiosService';
 
+import { updateUserProfile, clearRequestError } from '../redux/actions/AuthActions';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import PageSpinner from '../components/PageSpinner';
 
 const SettingsScreen = ({ navigation }) => {
   navigation.setOptions({
@@ -31,20 +33,19 @@ const SettingsScreen = ({ navigation }) => {
     expo: { version }
   } = app;
 
+  const user = useSelector(state => state.auth.currentUser);
+  const requestError = useSelector(state => state.auth.requestError);
+  const loading = useSelector(state => state.auth.loading);
+  const dispatch = useDispatch();
+
+  const dateOfBirth = user?.dateOfBirth ? new Date(user.dateOfBirth) : new Date(687041730000);
+  const picture = user?.picture || null;
+
   const [visible, setVisible] = React.useState(false);
-  const [date, setDate] = React.useState(new Date(687041730000));
+  const [date, setDate] = React.useState(dateOfBirth);
   const [show, setShow] = React.useState(false);
   const [showImageManipulator, setShowImageManipulator] = React.useState(false);
-  const [selectedImage, setSelectedImage] = React.useState(null);
-
-  React.useEffect(() => {
-    if (Platform.OS === 'android' && date !== user.dateOfBirth) {
-      updateData({ dateOfBirth: date });
-    }
-    updateData({ picture: selectedImage });
-  }, [date, selectedImage]);
-
-  const user = useSelector(state => state.auth.currentUser);
+  const [selectedImage, setSelectedImage] = React.useState(picture);
 
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
@@ -66,7 +67,7 @@ const SettingsScreen = ({ navigation }) => {
     setShowImageManipulator(true);
   };
 
-  const onChange = selectedDate => {
+  const onChange = async selectedDate => {
     let currentDate;
     if (Platform.OS === 'ios') {
       currentDate = new Date(selectedDate.nativeEvent.timestamp);
@@ -76,24 +77,39 @@ const SettingsScreen = ({ navigation }) => {
     }
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
-  };
-
-  const showDatepicker = () => {
-    if (show === true) {
-      setShow(false);
-    } else {
-      setShow(true);
+    if (Platform.OS === 'android') {
+      updateDateOfBirth(currentDate);
     }
   };
 
+  const showDatepicker = () => setShow(!show);
+
   const showDeleteModal = () => setVisible(true);
   const hideDeleteModal = () => setVisible(false);
-  const updateData = data => {
-    axios
-      .put(`/users/${user._id}`, data)
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+
+  const updateDateOfBirth = async newDate => {
+    if (newDate.getTime() !== dateOfBirth.getTime()) {
+      const data = await dispatch(updateUserProfile({ id: user._id, dateOfBirth: newDate }));
+      if (data) {
+        showSuccessMessage('Date of Birth');
+      }
+    }
   };
+  const showSuccessMessage = field => {
+    Toast.show(`Successfully update ${field}`, {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.BOTTOM
+    });
+  };
+
+  if (requestError) {
+    Toast.show(requestError.message, {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.BOTTOM
+    });
+
+    dispatch(clearRequestError());
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
@@ -167,13 +183,13 @@ const SettingsScreen = ({ navigation }) => {
                 })
               }
               style={styles.profileField}>
-              <Text style={{ fontSize: 18 }}>{user.username || ''}</Text>
+              <Text style={{ fontSize: 18 }}>Username</Text>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center'
                 }}>
-                <Text style={{ fontSize: 18, color: '#898989' }}>john.doe</Text>
+                <Text style={{ fontSize: 18, color: '#898989' }}>{user.username || ''}</Text>
                 <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
               </View>
             </TouchableOpacity>
@@ -258,8 +274,8 @@ const SettingsScreen = ({ navigation }) => {
                 />
                 {Platform.OS === 'ios' && (
                   <TouchableOpacity
-                    onPress={() => {
-                      updateData();
+                    onPress={async () => {
+                      updateDateOfBirth(date);
                       setShow(false);
                     }}
                     style={{
@@ -425,8 +441,6 @@ const SettingsScreen = ({ navigation }) => {
             <TouchableOpacity
               style={{
                 height: 50,
-                borderColor: '#C8C7CC',
-                borderBottomWidth: 1,
                 paddingLeft: 20,
                 paddingRight: 20,
                 flexDirection: 'row',
@@ -467,7 +481,7 @@ const SettingsScreen = ({ navigation }) => {
                   alignItems: 'center'
                 }}>
                 <FontAwesome
-                  name="facebook-square"
+                  name="twitter-square"
                   size={30}
                   color="#1ca0f1"
                   style={{ marginRight: 10 }}
@@ -651,6 +665,7 @@ const SettingsScreen = ({ navigation }) => {
           </Modal>
         </Portal>
       </ScrollView>
+      <PageSpinner visible={loading} />
     </View>
   );
 };
