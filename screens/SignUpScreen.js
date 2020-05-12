@@ -116,6 +116,7 @@ const SignupScreen = ({ navigation }) => {
 
       setSocialSignup(false);
     } catch (e) {
+      // [Error: ERR_APP_AUTH: Issued at time is more than 600 seconds before or after the current time]
       setSocialSignup(false);
     }
   }
