@@ -18,3 +18,7 @@ export const signUpUser = data => dispatch => {
 export const clearRequestError = () => dispatch => {
   dispatch({ type: Auth.CLEAR_REQUEST_ERROR });
 };
+
+export const logOut = () => dispatch => {
+  dispatch({ type: Auth.LOGOUT });
+};

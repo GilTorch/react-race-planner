@@ -9,7 +9,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { logOut } from '../redux/actions/AuthActions';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
@@ -31,6 +33,15 @@ const SettingsScreen = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = React.useState(null);
 
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+
+  const user = useSelector(state => state.auth.currentUser);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (!user) {
+      navigation.navigate('SignupScreen');
+    }
+  }, [user]);
 
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -473,7 +484,9 @@ const SettingsScreen = ({ navigation }) => {
             borderWidth: 1,
             marginTop: 30
           }}>
-          <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <TouchableOpacity
+            onPress={() => dispatch(logOut())}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontSize: 18 }}>Log Out</Text>
           </TouchableOpacity>
         </View>

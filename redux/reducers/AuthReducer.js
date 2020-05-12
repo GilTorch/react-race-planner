@@ -30,6 +30,12 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         requestError: null
       };
+    case Auth.LOGOUT:
+      return {
+        ...state,
+        token: null,
+        currentUser: null
+      };
     default:
       return state;
   }
