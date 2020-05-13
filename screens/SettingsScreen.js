@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
@@ -9,11 +9,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
-
+import Toast from 'react-native-root-toast';
+import { useSelector, useDispatch } from 'react-redux';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import { deleteAccount, clearRequestError } from '../redux/actions/AuthActions';
+import PageSpinner from '../components/PageSpinner';
 
 const SettingsScreen = ({ navigation }) => {
   const {
@@ -24,13 +27,18 @@ const SettingsScreen = ({ navigation }) => {
     headerShown: false
   });
 
+  const currentUser = useSelector(state => state.auth.currentUser);
+  const [modalUsername, setModalUsername] = useState('');
+  const loadingDeleteAccount = useSelector(state => state.auth.loadingDeleteAccount);
   const [visible, setVisible] = React.useState(false);
   const [date, setDate] = React.useState(new Date(687041730000));
   const [show, setShow] = React.useState(false);
   const [showImageManipulator, setShowImageManipulator] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(null);
-
+  const requestError = useSelector(state => state.auth.requestError);
+  const dispatch = useDispatch();
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  const deleteSuccess = useSelector(state => state.auth.deleteSuccess);
 
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -78,6 +86,23 @@ const SettingsScreen = ({ navigation }) => {
       StatusBar.setBarStyle('light-content');
     }, [])
   );
+
+  if (requestError) {
+    Toast.show(requestError.message, {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.BOTTOM
+    });
+
+    dispatch(clearRequestError());
+  }
+
+  if (deleteSuccess) {
+    navigation.navigate('SignUpScreen');
+    Toast.show('Account was successfully deleted', {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.BOTTOM
+    });
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
@@ -528,6 +553,7 @@ const SettingsScreen = ({ navigation }) => {
             <View style={{ flex: 1, justifyContent: 'space-around' }}>
               <TextInput
                 placeholder="Enter your username"
+                onChangeText={text => setModalUsername(text)}
                 style={{
                   height: 35,
                   width: '90%',
@@ -536,14 +562,19 @@ const SettingsScreen = ({ navigation }) => {
                   backgroundColor: 'white'
                 }}
               />
-
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-evenly'
                 }}>
                 <Surface style={styles.btnSurface}>
-                  <Button onPress={() => ''} style={{ backgroundColor: '#f44336' }}>
+                  <Button
+                    onPress={() => {
+                      if (currentUser && currentUser.username === modalUsername) {
+                        dispatch(deleteAccount(currentUser.id));
+                      }
+                    }}
+                    style={{ backgroundColor: '#f44336' }}>
                     <Text type="bold" style={{ color: '#fff' }}>
                       Delete
                     </Text>
@@ -561,6 +592,7 @@ const SettingsScreen = ({ navigation }) => {
           </Modal>
         </Portal>
       </ScrollView>
+      <PageSpinner visible={loadingDeleteAccount} />
     </View>
   );
 };
