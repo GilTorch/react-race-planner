@@ -44,8 +44,6 @@ describe('Filter Page', () => {
     await filterPage.selectAllOne.tap();
   });
 
-  
-
   it('Should check that `Select All` link2 exists and is visible in Filter Page', async () => {
     await expect(filterPage.selectAllTwo.atIndex(1)).toExist();
     await expect(filterPage.selectAllTwo.atIndex(1)).toBeVisible();
@@ -55,7 +53,7 @@ describe('Filter Page', () => {
     await filterPage.selectAllTwo.tap();
   });
 
-  it("Should check that `Select All` link1 is be hidden", async () => {
+  it('Should check that `Select All` link1 is be hidden', async () => {
     await expect(filterPage.selectAllOne).toBeNotVisible();
   });
 
