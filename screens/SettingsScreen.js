@@ -1,5 +1,13 @@
 import React from 'react';
-import { ScrollView, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
+import {
+  ScrollView,
+  Image,
+  View,
+  TouchableOpacity,
+  StatusBar,
+  Platform,
+  Alert
+} from 'react-native';
 import Toast from 'react-native-root-toast';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
@@ -11,6 +19,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Google from 'expo-google-app-auth';
 
 import { updateUserProfile, clearRequestError } from '../redux/actions/AuthActions';
 import Text from '../components/CustomText';
@@ -18,6 +27,8 @@ import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 import PageSpinner from '../components/PageSpinner';
+import * as Facebook from '../services/facebook';
+import * as Twitter from '../services/twitter';
 
 const SettingsScreen = ({ navigation }) => {
   navigation.setOptions({
@@ -34,6 +45,7 @@ const SettingsScreen = ({ navigation }) => {
   } = app;
 
   const user = useSelector(state => state.auth.currentUser);
+  const { _id: id } = user;
   const requestError = useSelector(state => state.auth.requestError);
   const loading = useSelector(state => state.auth.loading);
   const dispatch = useDispatch();
@@ -46,6 +58,7 @@ const SettingsScreen = ({ navigation }) => {
   const [show, setShow] = React.useState(false);
   const [showImageManipulator, setShowImageManipulator] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(picture);
+  const [socialLink, setSocialLink] = React.useState(false);
 
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
@@ -89,17 +102,87 @@ const SettingsScreen = ({ navigation }) => {
 
   const updateDateOfBirth = async newDate => {
     if (newDate.getTime() !== dateOfBirth.getTime()) {
-      const data = await dispatch(updateUserProfile({ id: user._id, dateOfBirth: newDate }));
+      const data = await dispatch(updateUserProfile({ id, dateOfBirth: newDate }));
       if (data) {
-        showSuccessMessage('Date of Birth');
+        showSuccessMessage('update Date of Birth');
       }
     }
   };
+
   const showSuccessMessage = field => {
-    Toast.show(`Successfully update ${field}`, {
+    Toast.show(`Successfully ${field}`, {
       duration: Toast.durations.SHORT,
       position: Toast.positions.BOTTOM
     });
+  };
+
+  const facebookLogin = async () => {
+    const facebookData = await Facebook.logIn();
+    const facebookAccountId = facebookData.id;
+    if (facebookAccountId) {
+      const data = await dispatch(updateUserProfile({ id, facebookAccountId }));
+      if (data) {
+        showSuccessMessage('link to Facebook account');
+      }
+    }
+    setSocialLink(false);
+  };
+
+  const googleLogin = async () => {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: '179189574549-p2l06hbg13fqqba7nfib4nq7na5ci1lc.apps.googleusercontent.com',
+        iosClientId: '179189574549-3379mn2seve0i471eqfkpgduqkgvnd98.apps.googleusercontent.com',
+        scopes: ['profile']
+      });
+
+      if (result.type === 'success') {
+        const googleAccountId = result.user.id;
+        const data = await dispatch(updateUserProfile({ id, googleAccountId }));
+        if (data) {
+          showSuccessMessage('link to Google account');
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    setSocialLink(false);
+  };
+
+  const twitterLogin = async () => {
+    const { twitterAccountId } = await Twitter.authSession(true);
+    if (twitterAccountId) {
+      const data = await dispatch(updateUserProfile({ id, twitterAccountId }));
+      if (data) {
+        showSuccessMessage('link to Twitter account');
+      }
+    }
+    setSocialLink(false);
+  };
+
+  const linkOrUnlinkAccount = async socialAccountId => {
+    if (user[socialAccountId]) {
+      const data = await dispatch(updateUserProfile({ id, [socialAccountId]: '' }));
+      if (data) {
+        showSuccessMessage('unlink the social account');
+      }
+    } else {
+      setSocialLink(true);
+      switch (socialAccountId) {
+        case 'facebookAccountId':
+          facebookLogin();
+          break;
+        case 'googleAccountId':
+          googleLogin();
+          break;
+        case 'twitterAccountId':
+          twitterLogin();
+          break;
+        default:
+          return null;
+      }
+    }
+    return null;
   };
 
   if (requestError) {
@@ -409,6 +492,7 @@ const SettingsScreen = ({ navigation }) => {
           </View>
           <View style={{ backgroundColor: 'white' }}>
             <TouchableOpacity
+              onPress={() => linkOrUnlinkAccount('facebookAccountId')}
               style={{
                 height: 50,
                 borderColor: '#C8C7CC',
@@ -439,15 +523,15 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} />
             <TouchableOpacity
+              onPress={() => linkOrUnlinkAccount('googleAccountId')}
               style={{
                 height: 50,
-                paddingLeft: 20,
-                paddingRight: 20,
+                paddingHorizontal: 20,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center'
               }}>
-              <TouchableOpacity
+              <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'center',
@@ -457,7 +541,7 @@ const SettingsScreen = ({ navigation }) => {
                   <GoogleColorfulIcon />
                 </View>
                 <Text style={{ fontSize: 18 }}>Google</Text>
-              </TouchableOpacity>
+              </View>
               {!user.googleAccountId && (
                 <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
               )}
@@ -465,6 +549,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} />
             <TouchableOpacity
+              onPress={() => linkOrUnlinkAccount('twitterAccountId')}
               style={{
                 height: 50,
                 borderColor: '#C8C7CC',
@@ -666,6 +751,7 @@ const SettingsScreen = ({ navigation }) => {
         </Portal>
       </ScrollView>
       <PageSpinner visible={loading} />
+      <PageSpinner visible={socialLink} />
     </View>
   );
 };

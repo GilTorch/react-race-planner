@@ -18,6 +18,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "facebookScheme": "fb2868459866594129",
+    "facebookAppId": "2868459866594129",
+    "facebookDisplayName": "ScriptoRerum",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
