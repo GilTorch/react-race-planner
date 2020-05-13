@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,6 +8,7 @@ import {
   Keyboard,
   Platform
 } from 'react-native';
+import Toast from 'react-native-root-toast';
 import { FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
@@ -17,9 +18,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ScrollView } from 'react-native-gesture-handler';
-import axios from '../services/axiosService';
+import { updateUserProfile } from '../redux/actions/AuthActions';
 import Text from '../components/CustomText';
 import { SCREEN_HEIGHT } from '../utils/dimensions';
+import PageSpinner from '../components/PageSpinner';
 
 const EditSettingsScreen = ({ navigation, route }) => {
   navigation.setOptions({
@@ -34,36 +36,38 @@ const EditSettingsScreen = ({ navigation, route }) => {
   const { key, value } = route.params;
   const inputs = {};
 
-  const [userData, setUserData] = useState(value);
-  const [privacy, setPrivacy] = useState(null);
-  const [disableCheck, setDisableCheck] = React.useState(true);
-  const [isEnabled, setIsEnabled] = React.useState(false);
-  const [secure, setSecure] = React.useState(true);
-  const [padding, setPadding] = React.useState(0);
-  // const [username, setUsername] = React.useState(value);
-  // const [firstName, setFirstName] = React.useState(value);
-  // const [lastName, setLastName] = React.useState(value);
-  // const [email, setEmail] = React.useState(value);
-  // const [phone1, setPhone1] = React.useState(value?.phone1);
-  // const [phone2, setPhone2] = React.useState(value?.phone2);
-  // const [address1, setAddress1] = React.useState(value?.address1);
-  // const [address2, setAddress2] = React.useState(value?.address2);
-  // const [city, setCity] = React.useState(value?.city);
-  // const [country, setCountry] = React.useState(value?.country);
-  // const [gender, setGender] = React.useState(value);
-  // const [privacy, setPrivacy] = React.useState(value);
+  const user = useSelector(state => state.auth.currentUser);
+  const loading = useSelector(state => state.auth.loading);
+  const dispatch = useDispatch();
 
-  const scroll = React.useRef();
-  const address2Ref = React.useRef();
-  const cityRef = React.useRef();
-  const countryRef = React.useRef();
+  const [userData, setUserData] = useState(value);
+  const [privacy, setPrivacy] = useState(value.preferences);
+  const [disableCheck, setDisableCheck] = useState(true);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [secure, setSecure] = useState(true);
+  const [padding, setPadding] = useState(0);
+
+  const scroll = useRef();
+  const address2Ref = useRef();
+  const cityRef = useRef();
+  const countryRef = useRef();
 
   const focusNextField = name => inputs[name].focus();
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const selectGender = gender => {
-    setDisableCheck(false);
+    setDisableCheck(value.gender === gender);
     setUserData({ gender });
+  };
+  const updateData = async () => {
+    const data = await dispatch(updateUserProfile({ id: user._id, ...userData }));
+    if (data) {
+      Toast.show('Successfully update profile info', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+      navigation.goBack();
+    }
   };
 
   React.useEffect(() => {
@@ -75,15 +79,6 @@ const EditSettingsScreen = ({ navigation, route }) => {
       Keyboard.removeAllListeners('keyboardDidHide');
     };
   }, []);
-
-  const user = useSelector(state => state.auth.currentUser);
-
-  const updateData = () => {
-    axios
-      .put(`/users/${user._id}`, userData)
-      .then(res => console.log(res))
-      .catch(err => console.log(err, userData));
-  };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
@@ -117,12 +112,11 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <TextInput
             placeholder="username"
             underlineColor="#C8C7CC"
-            // value={username}
             value={userData.username}
+            disabled={loading}
             onChangeText={val => {
-              // setUsername(val);
               setUserData({ username: val });
-              setDisableCheck(!val);
+              setDisableCheck(value.username === val);
             }}
             style={styles.input}
           />
@@ -137,10 +131,10 @@ const EditSettingsScreen = ({ navigation, route }) => {
             placeholder="first-name"
             underlineColor="#C8C7CC"
             value={userData.firstName}
+            disabled={loading}
             onChangeText={val => {
-              // setFirstName(val);
               setUserData({ firstName: val });
-              setDisableCheck(!val);
+              setDisableCheck(value.firstName === val);
             }}
             style={styles.input}
           />
@@ -155,10 +149,10 @@ const EditSettingsScreen = ({ navigation, route }) => {
             placeholder="last-name"
             underlineColor="#C8C7CC"
             value={userData.lastName}
+            disabled={loading}
             onChangeText={val => {
-              // setLastName(val);
               setUserData({ lastName: val });
-              setDisableCheck(!val);
+              setDisableCheck(value.lastName === val);
             }}
             style={styles.input}
           />
@@ -172,11 +166,13 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <TextInput
             placeholder="email"
             underlineColor="#C8C7CC"
+            keyboardType="email-address"
             value={userData.email}
+            disabled={loading}
             onChangeText={val => {
               // setEmail(val);
               setUserData({ email: val });
-              setDisableCheck(!val);
+              setDisableCheck(value.email === val);
             }}
             style={styles.input}
           />
@@ -190,30 +186,32 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <TextInput
             placeholder="phone 1"
             underlineColor="transparent"
+            keyboardType="phone-pad"
             onSubmitEditing={() => focusNextField('phone2')}
             blurOnSubmit={false}
             returnKeyType="next"
             value={userData.phone1}
+            disabled={loading}
             onChangeText={val => {
-              // setPhone1(val);
-              setUserData({ phone1: val });
-              setDisableCheck(!val);
+              setUserData({ ...userData, phone1: val });
+              setDisableCheck(value.phone1 === val);
             }}
             style={{ ...styles.input, borderBottomWidth: 0 }}
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
             placeholder="phone 2"
+            keyboardType="phone-pad"
             underlineColor="#C8C7CC"
             returnKeyType="done"
             ref={input => {
               inputs.phone2 = input;
             }}
             value={userData.phone2}
+            disabled={loading}
             onChangeText={val => {
-              // setPhone2(val);
-              setUserData({ phone2: val });
-              setDisableCheck(!val);
+              setUserData({ ...userData, phone2: val });
+              setDisableCheck(value.phone2 === val);
             }}
             style={{ ...styles.input, borderTopWidth: 0 }}
           />
@@ -231,10 +229,10 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <TextInput
             underlineColor="transparent"
             value={userData.addressLine1}
+            disabled={loading}
             onChangeText={val => {
-              // setAddress1(val);
-              setUserData({ addressLine1: val });
-              setDisableCheck(!val);
+              setUserData({ ...userData, addressLine1: val });
+              setDisableCheck(value.addressLine1 === val);
             }}
             returnKeyType="next"
             onSubmitEditing={() => address2Ref.current.focus()}
@@ -245,10 +243,10 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <TextInput
             underlineColor="transparent"
             value={userData.addressLine2}
+            disabled={loading}
             onChangeText={val => {
-              // setAddress2(val);
-              setUserData({ addressLine2: val });
-              setDisableCheck(!val);
+              setUserData({ ...userData, addressLine2: val });
+              setDisableCheck(value.addressLine2 === val);
             }}
             ref={address2Ref}
             returnKeyType="next"
@@ -260,10 +258,10 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <TextInput
             underlineColor="transparent"
             value={userData.city}
+            disabled={loading}
             onChangeText={val => {
-              // setCity(val);
-              setUserData({ city: val });
-              setDisableCheck(!val);
+              setUserData({ ...userData, city: val });
+              setDisableCheck(value.city === val);
             }}
             ref={cityRef}
             returnKeyType="next"
@@ -278,10 +276,10 @@ const EditSettingsScreen = ({ navigation, route }) => {
           <TextInput
             underlineColor="#C8C7CC"
             value={userData.country}
+            disabled={loading}
             onChangeText={val => {
-              // setCountry(val);
-              setUserData({ country: val });
-              setDisableCheck(!val);
+              setUserData({ ...userData, country: val });
+              setDisableCheck(value.country === val);
             }}
             ref={countryRef}
             returnKeyType="done"
@@ -402,7 +400,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             }}>
             <TouchableOpacity
               onPress={() => {
-                setDisableCheck(false);
+                // setDisableCheck(false);
                 setUserData({ preferences: 1 });
                 setPrivacy('username');
               }}
@@ -413,7 +411,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Divider />
             <TouchableOpacity
               onPress={() => {
-                setDisableCheck(false);
+                // setDisableCheck(false);
                 setUserData({ preferences: 2 });
                 setPrivacy('username_and_full_name');
               }}
@@ -426,7 +424,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Divider />
             <TouchableOpacity
               onPress={() => {
-                setDisableCheck(false);
+                // setDisableCheck(false);
                 setUserData({ preferences: 3 });
                 setPrivacy('anonymous');
               }}
@@ -449,6 +447,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
         </>
       )}
+      <PageSpinner visible={loading} />
     </View>
   );
 };

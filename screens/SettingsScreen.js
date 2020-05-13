@@ -236,7 +236,7 @@ const SettingsScreen = ({ navigation }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'gender',
-                  value: { gender: user.gender }
+                  value: { gender: user.gender || '' }
                 })
               }
               style={styles.profileField}>
@@ -313,7 +313,7 @@ const SettingsScreen = ({ navigation }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'email',
-                  value: { email: user.email }
+                  value: { email: user.email || '' }
                 })
               }
               style={styles.profileField}>
@@ -333,8 +333,8 @@ const SettingsScreen = ({ navigation }) => {
                 navigation.navigate('EditSettingsScreen', {
                   key: 'phones',
                   value: {
-                    phone1: user.phone1,
-                    phone2: user.phone2
+                    phone1: user.phone1 || '',
+                    phone2: user.phone2 || ''
                   }
                 })
               }
@@ -348,10 +348,10 @@ const SettingsScreen = ({ navigation }) => {
                 navigation.navigate('EditSettingsScreen', {
                   key: 'address',
                   value: {
-                    addressLine1: user.addressLine1,
-                    addressLine2: user.addressLine2,
-                    city: user.city,
-                    country: user.country
+                    addressLine1: user.addressLine1 || '',
+                    addressLine2: user.addressLine2 || '',
+                    city: user.city || '',
+                    country: user.country || ''
                   }
                 })
               }
@@ -384,7 +384,7 @@ const SettingsScreen = ({ navigation }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'privacy',
-                  value: { preferences: user.preferences }
+                  value: { preferences: user.preferences || 'username' }
                 })
               }
               style={styles.profileField}>
