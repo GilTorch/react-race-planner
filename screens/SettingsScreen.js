@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { ScrollView, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
@@ -12,6 +12,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
+import Menu, { MenuItem } from 'react-native-material-menu';
 
 import { updateUserProfile, clearRequestError } from '../redux/actions/AuthActions';
 import Text from '../components/CustomText';
@@ -52,7 +53,12 @@ const SettingsScreen = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = React.useState(picture);
   const [socialLink, setSocialLink] = React.useState(false);
 
+  const menuRef = useRef();
+
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+
+  const showMenu = () => menuRef.current.show();
+  const hideMenu = () => menuRef.current.hide();
 
   const openImagePickerAsync = async () => {
     const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -64,7 +70,6 @@ const SettingsScreen = ({ navigation }) => {
     const pickerResult = await ImagePicker.launchImageLibraryAsync();
 
     if (pickerResult.cancelled === true) {
-      setSelectedImage(null);
       return;
     }
 
@@ -207,7 +212,7 @@ const SettingsScreen = ({ navigation }) => {
           photo={{ uri: selectedImage }}
           isVisible={showImageManipulator}
           onPictureChoosed={({ uri: uriM }) => {
-            console.log(uriM);
+            // console.log(uriM);
             updateProfilePicture(uriM);
             setSelectedImage(uriM);
           }}
@@ -239,28 +244,64 @@ const SettingsScreen = ({ navigation }) => {
           <View style={{ justifyContent: 'center', marginLeft: 20, marginVertical: 20 }}>
             <Text style={styles.headline}>PROFILE INFO</Text>
           </View>
-          <TouchableOpacity
-            onPress={openImagePickerAsync}
-            style={{
-              backgroundColor: '#fff',
-              borderColor: '#C8C7CC',
-              borderWidth: 1,
-              marginBottom: 20,
-              width: 100,
-              height: 100,
-              borderRadius: 100,
-              overflow: 'hidden',
-              alignItems: 'center',
-              justifyContent: 'center',
-              alignSelf: 'center'
-            }}>
-            {selectedImage === null && <FontAwesome name="user" color="#898989" size={70} />}
-            {selectedImage !== null && (
-              <View style={{ flex: 1 }}>
-                <Image source={{ uri: selectedImage }} style={styles.thumbnail} />
-              </View>
-            )}
-          </TouchableOpacity>
+          <Menu
+            ref={menuRef}
+            style={{ marginLeft: 150, marginTop: 50 }}
+            button={
+              <TouchableOpacity
+                onPress={() => {
+                  if (selectedImage) {
+                    showMenu();
+                  } else {
+                    openImagePickerAsync();
+                  }
+                }}
+                style={{
+                  backgroundColor: '#fff',
+                  borderColor: '#C8C7CC',
+                  borderWidth: 1,
+                  marginBottom: 20,
+                  width: 100,
+                  height: 100,
+                  borderRadius: 100,
+                  overflow: 'hidden',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  alignSelf: 'center'
+                }}>
+                {selectedImage === null && <FontAwesome name="user" color="#898989" size={70} />}
+                {selectedImage !== null && (
+                  <View style={{ flex: 1 }}>
+                    <Image source={{ uri: selectedImage }} style={styles.thumbnail} />
+                  </View>
+                )}
+              </TouchableOpacity>
+            }>
+            <MenuItem
+              onPress={() => {
+                setShowImageManipulator(true);
+                hideMenu();
+              }}>
+              Edit Photo
+            </MenuItem>
+            <MenuItem
+              onPress={() => {
+                openImagePickerAsync();
+                hideMenu();
+              }}>
+              Choose Photo
+            </MenuItem>
+            <MenuItem
+              onPress={() => {
+                setSelectedImage(null);
+                hideMenu();
+                // TODO: api endpoint or logic to remove the picture on the server
+                // updateUserProfile(null);
+              }}
+              textStyle={{ color: 'red' }}>
+              Delete Photo
+            </MenuItem>
+          </Menu>
           <View
             style={{
               paddingLeft: 20,
