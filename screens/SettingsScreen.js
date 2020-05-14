@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  ScrollView,
-  Image,
-  View,
-  TouchableOpacity,
-  StatusBar,
-  Platform,
-  Alert
-} from 'react-native';
+import { ScrollView, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
@@ -109,6 +101,20 @@ const SettingsScreen = ({ navigation }) => {
     }
   };
 
+  const updateProfilePicture = async uri => {
+    const uriParts = uri.split('.');
+    const fileType = uriParts[uriParts.length - 1];
+
+    const formData = new FormData();
+    formData.append('picture', {
+      uri,
+      name: `photo.${fileType}`,
+      type: `image/${fileType}`
+    });
+    // TDDO: handle multipart/form-data on the server
+    dispatch(updateUserProfile({ id, formData }));
+  };
+
   const showSuccessMessage = field => {
     Toast.show(`Successfully ${field}`, {
       duration: Toast.durations.SHORT,
@@ -200,7 +206,11 @@ const SettingsScreen = ({ navigation }) => {
         <ImageManipulator
           photo={{ uri: selectedImage }}
           isVisible={showImageManipulator}
-          onPictureChoosed={({ uri: uriM }) => setSelectedImage(uriM)}
+          onPictureChoosed={({ uri: uriM }) => {
+            console.log(uriM);
+            updateProfilePicture(uriM);
+            setSelectedImage(uriM);
+          }}
           onToggleModal={() => setShowImageManipulator(false)}
         />
       )}
