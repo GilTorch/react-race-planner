@@ -11,7 +11,11 @@ import Text from '../CustomText';
 const ViewAllGenresModal = ({ visible, dismiss }) => {
   return (
     <Portal>
-      <Modal style={{ overflow: 'hidden' }} visible={visible}>
+      <Modal
+        dismissable={false}
+        style={{ overflow: 'hidden' }}
+        visible={visible}
+        onDismiss={dismiss}>
         <View
           style={{
             height: SCREEN_HEIGHT * 0.85,
