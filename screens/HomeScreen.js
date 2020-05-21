@@ -14,9 +14,6 @@ import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
 
 const HomeScreen = ({ navigation, route }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [searchBarVisible, setSearchBarVisible] = useState(false);
-
   navigation.setOptions({
     headerShown: false
   });
@@ -27,6 +24,9 @@ const HomeScreen = ({ navigation, route }) => {
       StatusBar.setBarStyle('light-content');
     }, [])
   );
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [searchBarVisible, setSearchBarVisible] = useState(false);
 
   const inprogressStories = stories.filter(
     story => story.status === 'In Progress' || story.status === 'Waiting for players'
@@ -96,6 +96,15 @@ const HomeScreen = ({ navigation, route }) => {
             ))}
           </ScrollView>
         </Surface>
+        {/* Nick removed this in a previous commit, don't know why */}
+        {/* I think we can remove this and display the modal in the start new story button above */}
+        <View style={{ paddingLeft: 23 }}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Text type="medium" style={{ fontSize: 12, marginTop: 10, color: '#03A2A2' }}>
+              View all genres
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         {searchBarVisible && (
           <View
