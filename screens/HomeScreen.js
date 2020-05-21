@@ -192,18 +192,6 @@ const HomeScreen = ({ navigation, route }) => {
           </View>
         )}
 
-        <View>
-          {stories.map((story, index) => (
-            <Story
-              key={Math.random()}
-              story={story}
-              index={index}
-              length={stories.length}
-              navigation={navigation}
-            />
-          ))}
-        </View>
-
         {inprogressStories.map((story, index) => (
           <Story
             route={route}
