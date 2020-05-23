@@ -5,16 +5,20 @@ import PropTypes from 'prop-types';
 
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
 import { genres } from '../../utils/data';
-import CategoryGenre from '../CategoryGenre';
+import Genre from '../Genre';
 import Text from '../CustomText';
 
-const ViewAllCategoriesModal = ({ visible, dismiss }) => {
+const ViewAllGenresModal = ({ visible, dismiss }) => {
   return (
     <Portal>
-      <Modal style={{ overflow: 'hidden' }} visible={visible}>
+      <Modal
+        dismissable={false}
+        style={{ overflow: 'hidden' }}
+        visible={visible}
+        onDismiss={dismiss}>
         <View
           style={{
-            height: SCREEN_HEIGHT * .85,
+            height: SCREEN_HEIGHT * 0.85,
             backgroundColor: 'white',
             marginHorizontal: 20,
             borderRadius: 6
@@ -29,14 +33,14 @@ const ViewAllCategoriesModal = ({ visible, dismiss }) => {
             }}>
             <Text style={{ color: '#5A7582' }}>Start a New Story</Text>
             <Text type="bold" style={{ fontSize: 30, color: '#5A7582' }}>
-              Pick a Category
+              Pick a Genre
             </Text>
           </View>
           <FlatList
             style={{ overflow: 'hidden' }}
             data={genres}
             keyExtractor={item => item.id.toString()}
-            renderItem={({ item }) => <CategoryGenre genre={item} />}
+            renderItem={({ item }) => <Genre genre={item} />}
           />
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -51,7 +55,7 @@ const ViewAllCategoriesModal = ({ visible, dismiss }) => {
   );
 };
 
-ViewAllCategoriesModal.propTypes = {
+ViewAllGenresModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   dismiss: PropTypes.func.isRequired
 };
@@ -82,6 +86,6 @@ const styles = {
     color: 'white',
     fontSize: 18
   }
-}
+};
 
-export default ViewAllCategoriesModal;
+export default ViewAllGenresModal;
