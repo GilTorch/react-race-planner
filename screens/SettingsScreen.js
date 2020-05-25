@@ -392,7 +392,7 @@ const SettingsScreen = ({ navigation }) => {
           </View>
         </View>
 
-        <View>
+        {/* <View>
           <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
             <Text style={styles.headline}>CONTACT US</Text>
           </View>
@@ -406,8 +406,8 @@ const SettingsScreen = ({ navigation }) => {
             <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <Text style={{ fontSize: 18 }}>Help & Support</Text>
             </TouchableOpacity>
-          </View>
-          <View
+          </View> */}
+        {/* <View
             style={{
               height: 50,
               backgroundColor: 'white',
@@ -418,8 +418,8 @@ const SettingsScreen = ({ navigation }) => {
             <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <Text style={{ fontSize: 18 }}>Rate Us</Text>
             </TouchableOpacity>
-          </View>
-        </View>
+          </View> */}
+        {/* </View> */}
 
         <View>
           <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
@@ -452,7 +452,7 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Licenses</Text>
                 <View>
@@ -461,7 +461,7 @@ const SettingsScreen = ({ navigation }) => {
                   </View>
                 </View>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 

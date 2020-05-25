@@ -4,12 +4,12 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
-
 import PropTypes from 'prop-types';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+
 import useLinking from './navigation/useLinking';
 import SpaceMono from './assets/fonts/SpaceMono-Regular.ttf';
 import RobotoBlack from './assets/fonts/Roboto-Black.ttf';
@@ -24,7 +24,6 @@ import RobotoMediumItalic from './assets/fonts/Roboto-MediumItalic.ttf';
 import RobotoRegular from './assets/fonts/Roboto-Regular.ttf';
 import RobotoThin from './assets/fonts/Roboto-Thin.ttf';
 import RobotoThinItalic from './assets/fonts/Roboto-ThinItalic.ttf';
-
 import ScriptoRerumLogo from './assets/images/scriptorerum-logo.png';
 import AppNavigation from './navigation';
 import store from './redux/store';

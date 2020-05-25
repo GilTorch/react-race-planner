@@ -9,7 +9,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
-import ViewAllCategoriesModal from '../components/modals/ViewAllCategoriesModal';
+import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
 
 const HomeScreen = ({ navigation, route }) => {
@@ -33,7 +33,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <ViewAllCategoriesModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
+      <ViewAllGenresModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
       <Surface
         style={{
           elevation: 3,
@@ -95,6 +95,15 @@ const HomeScreen = ({ navigation, route }) => {
             ))}
           </ScrollView>
         </Surface>
+        {/* Nick removed this in a previous commit, don't know why */}
+        {/* I think we can remove this and display the modal in the start new story button above */}
+        <View style={{ paddingLeft: 23 }}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Text type="medium" style={{ fontSize: 12, marginTop: 10, color: '#03A2A2' }}>
+              View all genres
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         {searchBarVisible && (
           <View
@@ -181,18 +190,6 @@ const HomeScreen = ({ navigation, route }) => {
             </View>
           </View>
         )}
-
-        <View>
-          {stories.map((story, index) => (
-            <Story
-              key={Math.random()}
-              story={story}
-              index={index}
-              length={stories.length}
-              navigation={navigation}
-            />
-          ))}
-        </View>
 
         {inprogressStories.map((story, index) => (
           <Story
