@@ -1,60 +1,85 @@
-import React, { useEffect } from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, ScrollView, Image, TextInput, StatusBar, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
-import { ActivityIndicator } from 'react-native-paper';
-import * as yup from 'yup';
-import { useForm, Controller } from 'react-hook-form';
-import { useSelector, useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { useSelector, connect } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import Toast from 'react-native-root-toast';
+import moment from 'moment';
+
+import { passwordResetVerificationSchema } from '../utils/validators';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
-import Toast from '../components/Toast';
-import { resetPasswordVerify } from '../redux/actions/actionCreators';
+import { passwordResetVerificationAction, otpCodeAction } from '../redux/actions/AuthActions';
+import PageSpinner from '../components/PageSpinner';
 
-const validationSchema = yup.object().shape({
-  otpCode: yup
-    .number()
-    .typeError('One-Time Password must be a number')
-    .required('Enter the otp code you received by email'),
-  newPassword: yup
-    .string()
-    .min(8, 'Your password should be at least 8 characters')
-    .required('Enter your password'),
-  newPasswordConfirmation: yup
-    .string()
-    .required('Confirm password')
-    .oneOf([yup.ref('newPassword'), null], 'Passwords are not the same')
-});
-
-const ResetPasswordScreenTwo = ({ navigation }) => {
-  const message = useSelector(state => state.user.message);
-  const resetPasswordVerifySuccess = useSelector(state => state.user.resetPasswordVerifySuccess);
-  const dispatch = useDispatch();
-  const loading = useSelector(state => state.user.loadingResetPasswordVerify);
-
-  const { handleSubmit, errors, control } = useForm({
-    validationSchema
+const PasswordResetVerificationScreen = ({ navigation, verifyPasswordReset, resendOtp }) => {
+  const authState = useSelector(state => state.auth);
+  const inputs = {};
+  const focusNextField = name => inputs[name].focus();
+  const { register, handleSubmit, errors, setValue, watch } = useForm({
+    validationSchema: passwordResetVerificationSchema,
+    validateCriteriaMode: 'all'
   });
+  const tokenExpiration = authState.currentUser?.exp;
+  const formattedTime = moment.unix(tokenExpiration).fromNow();
+  const tokenHasExpired = formattedTime.includes('ago');
+  const expiresOrExpired = tokenHasExpired ? 'expired' : 'expires';
 
-  const submit = data => {
-    dispatch(resetPasswordVerify(data));
-  };
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setHidden(true);
 
-  useEffect(() => {
-    if (resetPasswordVerifySuccess) {
-      navigation.navigate('Login');
-    }
-  }, [resetPasswordVerifySuccess]);
-
-  let submitText = (
-    <Text type="medium" style={styles.submitButtonText}>
-      Reset Password
-    </Text>
+      navigation.setOptions({
+        headerShown: false
+      });
+    }, [])
   );
 
-  if (loading) {
-    submitText = <ActivityIndicator animated color="#fff" />;
-  }
+  React.useEffect(() => {
+    register('otpCode');
+    register('newPassword');
+    register('newPasswordConfirmation');
+  }, [register]);
+
+  const submit = async data => {
+    try {
+      if (!tokenHasExpired) {
+        await verifyPasswordReset(data);
+
+        navigation.navigate('Login');
+      } else {
+        await resendOtp('password-reset');
+
+        Toast.show('We sent the OTP code to your email', {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM
+        });
+      }
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    }
+  };
+
+  const resendPasswordResetOtp = async () => {
+    try {
+      await resendOtp('password-reset');
+
+      Toast.show('We sent the OTP code to your email', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    } catch (e) {
+      Toast.show(e?.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    }
+  };
 
   return (
     <ScrollView
@@ -76,13 +101,13 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
           <Text
             type="medium"
             style={{
-              fontSize: 11,
-              lineHeight: 16,
+              fontSize: 13,
               textAlign: 'center',
               color: '#7F8FA4'
             }}>
-            We’ve sent you a one-time password via email (test123@gmail.com). Please, enter it below
-            to be able to reset the password for your account.
+            We’ve sent you a one-time password via email. Please, enter it below to be able to reset
+            the password for your account. It {expiresOrExpired}{' '}
+            <Text type="bold">{moment.unix(tokenExpiration).fromNow()}</Text>:
           </Text>
         </View>
         <View style={styles.form}>
@@ -92,22 +117,18 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
                 One-Time Password
               </Text>
             </View>
-            <View
-              style={{
-                ...styles.inputContainer,
-                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                borderBottomColor: errors.usernameOrEmail ? 'red' : '#DFE3E9'
-              }}>
-              <Controller
-                as={TextInput}
-                control={control}
-                name="otpCode"
-                onChange={args => args[0].nativeEvent.text}
-                rules={{ required: true }}
-                defaultValue=""
-                style={styles.input}
-                testID="login-user-name"
-                editable={!loading}
+            <View style={styles.inputContainer}>
+              <TextInput
+                ref={input => {
+                  inputs.otpCode = input;
+                }}
+                autoCapitalize="none"
+                onChangeText={text => setValue('otpCode', text)}
+                value={watch('otpCode')}
+                onSubmitEditing={() => focusNextField('newPassword')}
+                blurOnSubmit={false}
+                returnKeyType="next"
+                style={[styles.input, errors.otpCode && styles.errorInput]}
               />
             </View>
           </View>
@@ -120,30 +141,24 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
                 New Password
               </Text>
             </View>
-            <View
-              style={{
-                ...styles.inputContainer,
-                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                borderBottomColor: errors.newPassword ? 'red' : '#DFE3E9'
-              }}>
-              <Controller
-                as={TextInput}
-                control={control}
-                name="newPassword"
-                onChange={args => args[0].nativeEvent.text}
-                rules={{ required: true }}
-                defaultValue=""
-                style={styles.input}
-                testID="login-user-name"
-                editable={!loading}
+            <View style={styles.inputContainer}>
+              <TextInput
+                ref={input => {
+                  inputs.newPassword = input;
+                }}
+                autoCapitalize="none"
+                onChangeText={text => setValue('newPassword', text)}
+                value={watch('newPassword')}
                 secureTextEntry
+                onSubmitEditing={() => focusNextField('newPasswordConfirmation')}
+                blurOnSubmit={false}
+                returnKeyType="next"
+                style={[styles.input, errors.newPassword && styles.errorInput]}
               />
             </View>
           </View>
-          {errors.password && (
-            <Text style={{ marginTop: 10, color: 'red' }}>
-              {errors.newPasswordConfirmation.message}
-            </Text>
+          {errors.newPassword && (
+            <Text style={{ marginTop: 10, color: 'red' }}>{errors.newPassword.message}</Text>
           )}
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
@@ -151,39 +166,61 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
                 Confirm New Password
               </Text>
             </View>
-            <View
-              style={{
-                ...styles.inputContainer,
-                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                borderBottomColor: errors.password ? 'red' : '#DFE3E9'
-              }}>
-              <Controller
-                as={TextInput}
-                control={control}
-                name="newPasswordConfirmation"
-                onChange={args => args[0].nativeEvent.text}
-                rules={{ required: true }}
-                defaultValue=""
-                style={styles.input}
-                testID="login-user-name"
-                editable={!loading}
+            <View style={styles.inputContainer}>
+              <TextInput
+                ref={input => {
+                  inputs.newPasswordConfirmation = input;
+                }}
+                autoCapitalize="none"
                 secureTextEntry
+                onChangeText={text => setValue('newPasswordConfirmation', text)}
+                value={watch('newPasswordConfirmation')}
+                onSubmitEditing={handleSubmit(submit)}
+                blurOnSubmit={false}
+                returnKeyType="send"
+                style={[styles.input, errors.newPasswordConfirmation && styles.errorInput]}
               />
             </View>
           </View>
-          {errors.confirmPassword && (
-            <Text style={{ marginTop: 10, color: 'red' }}>{errors.confirmPassword.message}</Text>
+          {errors.newPasswordConfirmation && (
+            <Text style={{ marginTop: 10, color: 'red' }}>
+              {errors.newPasswordConfirmation.message}
+            </Text>
           )}
           <TouchableOpacity
             onPress={handleSubmit(submit)}
             testID="reset-password-button-2"
             style={styles.submitButton}>
-            {submitText}
-          </TouchableOpacity>
-          <View style={{ width: '100%', marginTop: 20, flexDirection: 'row' }}>
-            <Text style={{ color: '#7F8FA4' }}>
-              Do you wish to cancel resetting your password?{' '}
+            <Text type="medium" style={styles.submitButtonText}>
+              Reset Password
             </Text>
+          </TouchableOpacity>
+
+          <View style={{ marginTop: 15, marginBottom: 10, flexDirection: 'row' }}>
+            {!tokenHasExpired && (
+              <Text style={{ color: '#7F8FA4' }}>Didn't receive the code? </Text>
+            )}
+
+            {tokenHasExpired && (
+              <Text style={{ color: '#7F8FA4' }}>Your OTP code has expired. </Text>
+            )}
+            <TouchableOpacity
+              onPress={() => resendPasswordResetOtp()}
+              style={styles.goToLoginPageButton}>
+              <View testID="return-to-login-page">
+                {!tokenHasExpired && (
+                  <Text style={styles.goToLoginPageButtonText}>Send another one</Text>
+                )}
+
+                {tokenHasExpired && (
+                  <Text style={styles.goToLoginPageButtonText}>Send a new one</Text>
+                )}
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={{ marginTop: 20 }}>
+            <Text style={{ color: '#7F8FA4' }}>Do you wish to cancel resetting your password?</Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('Login')}
               style={styles.goToLoginPageButton}>
@@ -196,13 +233,9 @@ const ResetPasswordScreenTwo = ({ navigation }) => {
           </View>
         </View>
       </View>
-      <Toast message={message} />
+      <PageSpinner visible={authState.loading} />
     </ScrollView>
   );
-};
-
-ResetPasswordScreenTwo.propTypes = {
-  navigation: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
@@ -291,4 +324,15 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ResetPasswordScreenTwo;
+PasswordResetVerificationScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  verifyPasswordReset: PropTypes.func.isRequired,
+  resendOtp: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  verifyPasswordReset: passwordResetVerificationAction,
+  resendOtp: otpCodeAction
+};
+
+export default connect(null, mapDispatchToProps)(PasswordResetVerificationScreen);

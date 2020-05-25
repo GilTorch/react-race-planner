@@ -1,82 +1,90 @@
 import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet, Alert } from 'react-native';
+import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Entypo } from '@expo/vector-icons';
+// import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
-import * as yup from 'yup';
-import { useForm, Controller } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import { ActivityIndicator } from 'react-native-paper';
-import { useDidUpdateEffect } from '../hooks/useDidUpdateEffect';
-import Toast from '../components/Toast';
+import { useForm } from 'react-hook-form';
+import { useSelector, connect } from 'react-redux';
+import Toast from 'react-native-root-toast';
+import { useFocusEffect } from '@react-navigation/native';
+
+import { loginSchema } from '../utils/validators';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
-import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
-import { login } from '../redux/actions/actionCreators';
-import * as Facebook from '../utils/facebook';
+// import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+// import * as Facebook from '../utils/facebook';
+// import * as Twitter from '../services/twitter';
+import { loginAction } from '../redux/actions/AuthActions';
+import PageSpinner from '../components/PageSpinner';
 
-const validationSchema = yup.object().shape({
-  usernameOrEmail: yup.string().required('Enter your username or your email'),
-  password: yup
-    .string()
-    .min(8)
-    .required('Enter your password')
-});
-
-const LoginScreen = ({ navigation }) => {
-  const { handleSubmit, errors, control } = useForm({
-    validationSchema
+const LoginScreen = ({ navigation, login }) => {
+  const authState = useSelector(state => state.auth);
+  const { errors, handleSubmit, register, watch, setValue } = useForm({
+    validationSchema: loginSchema,
+    validateCriteriaMode: 'all'
   });
+  const inputs = {};
+  const focusNextField = name => inputs[name].focus();
 
-  const dispatch = useDispatch();
-  const code = useSelector(state => state.user.code);
-  const loading = useSelector(state => state.user.loadingLogin);
-  const message = useSelector(state => state.user.message);
-  const currentUser = useSelector(state => state.user.currentUser);
-  const otpSuccess = useSelector(state => state.user.otpSuccess);
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setHidden(true);
 
-  useDidUpdateEffect(() => {
-    if (currentUser && currentUser.isActive) {
-      navigation.navigate('Home');
-    }
-
-    if (currentUser && !currentUser.isActive) {
-      navigation.navigate('OTPVerification');
-    }
-  }, [currentUser]);
-
-  if (code === 'InactiveAccount' && !otpSuccess) {
-    navigation.navigate('OTPVerification');
-  }
-
-  const submit = data => {
-    dispatch(login(data));
-  };
-
-  let submitText = (
-    <Text type="medium" style={styles.submitButtonText}>
-      Log in
-    </Text>
+      navigation.setOptions({
+        headerShown: false
+      });
+    }, [])
   );
 
-  if (loading) {
-    submitText = <ActivityIndicator animated color="#fff" />;
-  }
+  React.useEffect(() => {
+    register('usernameOrEmail');
+    register('password');
+  }, [register]);
 
-  const handleFacebookLogin = async () => {
-    const facebookData = await Facebook.logIn();
-    const facebookAccountId = facebookData.id;
-    if (facebookAccountId) {
-      dispatch(login({ facebookAccountId }));
-    } else {
-      Alert.alert(
-        'There was an error while trying to access your Facebook account. Try again later.'
-      );
+  const submit = async data => {
+    try {
+      await login(data);
+    } catch (e) {
+      let toastMessage = e.message;
+
+      if (e.code === 'UnauthorizedUser') {
+        toastMessage = 'This username/email and password combination is incorrect';
+      }
+
+      Toast.show(toastMessage, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+
+      if (authState.currentUser?.isActive === false) {
+        navigation.navigate('OTPVerification');
+      }
     }
   };
 
+  // const facebookLogin = async () => {
+  //   const facebookData = await Facebook.logIn();
+  //   const facebookAccountId = facebookData.id;
+  //   if (facebookAccountId) {
+  //     // dispatch(loginUser({ facebookAccountId }));
+  //   } else {
+  //     Alert.alert(
+  //       'There was an error while trying to access your Facebook account. Try again later.'
+  //     );
+  //   }
+  // };
+
+  // const twitterLogin = async () => {
+  //   const { twitterAccountId } = await Twitter.authSession(true);
+  //   if (twitterAccountId) {
+  //     // dispatch(login(twitterAccountId))
+  //   }
+  // };
+
   return (
-    <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
+    <ScrollView
+      style={{ backgroundColor: 'white' }}
+      contentContainerStyle={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
         <Image testID="logo" source={SRLogo} style={styles.logo} />
         <View style={styles.headlineContainer}>
@@ -91,26 +99,25 @@ const LoginScreen = ({ navigation }) => {
                 Username or Email
               </Text>
             </View>
-            <View
-              style={{
-                ...styles.inputContainer,
-                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                borderBottomColor: errors.usernameOrEmail ? 'red' : '#DFE3E9'
-              }}>
-              <Controller
-                as={TextInput}
-                control={control}
-                name="usernameOrEmail"
-                onChange={args => args[0].nativeEvent.text}
-                rules={{ required: true }}
-                defaultValue=""
-                style={styles.input}
+            <View style={styles.inputContainer}>
+              <TextInput
+                ref={input => {
+                  inputs.usernameOrEmail = input;
+                }}
+                autoCapitalize="none"
                 testID="login-user-name"
-                editable={!loading}
+                onChangeText={text => setValue('usernameOrEmail', text)}
+                value={watch('usernameOrEmail')}
+                onSubmitEditing={() => focusNextField('password')}
+                blurOnSubmit={false}
+                returnKeyType="next"
+                style={[styles.input, errors.usernameOrEmail && styles.errorInput]}
               />
             </View>
             {errors.usernameOrEmail && (
-              <Text style={{ marginTop: 10, color: 'red' }}>{errors.usernameOrEmail.message}</Text>
+              <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                {errors.usernameOrEmail.message}
+              </Text>
             )}
           </View>
           <View style={styles.formGroup}>
@@ -119,26 +126,25 @@ const LoginScreen = ({ navigation }) => {
                 Password
               </Text>
             </View>
-            <View
-              style={{
-                ...styles.inputContainer,
-                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                borderBottomColor: errors.password ? 'red' : '#DFE3E9'
-              }}>
-              <Controller
-                as={TextInput}
-                control={control}
-                name="password"
-                onChange={args => args[0].nativeEvent.text}
-                defaultValue=""
-                style={styles.input}
+            <View style={styles.inputContainer}>
+              <TextInput
+                ref={input => {
+                  inputs.password = input;
+                }}
                 testID="login-password"
-                editable={!loading}
+                onChangeText={text => setValue('password', text)}
+                value={watch('password')}
+                onSubmitEditing={handleSubmit(submit)}
+                blurOnSubmit={false}
+                returnKeyType="send"
                 secureTextEntry
+                style={[styles.input, errors.password && styles.errorInput]}
               />
             </View>
             {errors.password && (
-              <Text style={{ marginTop: 10, color: 'red' }}>{errors.password.message}</Text>
+              <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                {errors.password.message}
+              </Text>
             )}
           </View>
           <View style={{ marginTop: 10, marginBottom: 10 }}>
@@ -151,19 +157,23 @@ const LoginScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity
-            disabled={loading}
+            disabled={authState.loading}
             testID="login-button"
             style={styles.submitButton}
             onPress={handleSubmit(submit)}>
-            {submitText}
+            <Text type="medium" style={styles.submitButtonText}>
+              Log in
+            </Text>
           </TouchableOpacity>
-          <View style={styles.loginWithSocialMediaTextContainer}>
+
+          {/* <View style={styles.loginWithSocialMediaTextContainer}>
             <Text type="medium" style={{ color: '#7F8FA4' }}>
               Or login via social networks
             </Text>
           </View>
           <View style={styles.socialMediaButtonsContainer}>
             <TouchableOpacity
+              onPress={twitterLogin}
               testID="twitter-icon-button"
               style={{
                 backgroundColor: '#3ABDFF',
@@ -172,7 +182,7 @@ const LoginScreen = ({ navigation }) => {
               <Entypo name="twitter-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => handleFacebookLogin()}
+              onPress={() => facebookLogin()}
               testID="facebook-icon-button"
               style={{
                 backgroundColor: '#1382D5',
@@ -188,7 +198,7 @@ const LoginScreen = ({ navigation }) => {
               }}>
               <GoogleColorfulIcon />
             </TouchableOpacity>
-          </View>
+          </View> */}
           <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
             <Text style={{ color: '#7F8FA4' }}>Don't have an account yet? </Text>
             <TouchableOpacity
@@ -203,7 +213,7 @@ const LoginScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
-      <Toast message={message} />
+      <PageSpinner visible={authState.loading} />
     </ScrollView>
   );
 };
@@ -211,7 +221,6 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 70,
@@ -237,6 +246,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     borderRadius: 4.87,
     borderColor: '#DFE3E9',
+    backgroundColor: '#F8FAFC',
     borderWidth: 1
   },
   labelContainer: {
@@ -288,11 +298,20 @@ const styles = StyleSheet.create({
   goToLoginPageButton: {},
   goToLoginPageButtonText: {
     color: '#23C2C2'
+  },
+  errorInput: {
+    borderColor: 'red',
+    borderBottomWidth: 1
   }
 });
 
 LoginScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  login: PropTypes.func.isRequired
 };
 
-export default LoginScreen;
+const mapDispatchToProps = {
+  login: loginAction
+};
+
+export default connect(null, mapDispatchToProps)(LoginScreen);

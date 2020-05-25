@@ -1,48 +1,55 @@
 import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
+import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
-import { ActivityIndicator } from 'react-native-paper';
-import * as yup from 'yup';
-import { useForm, Controller } from 'react-hook-form';
-import { useSelector, useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { useSelector, connect } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import Toast from 'react-native-root-toast';
+
+import { passwordResetSchema } from '../utils/validators';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
-import { useDidUpdateEffect } from '../hooks/useDidUpdateEffect';
-import { resetPassword } from '../redux/actions/actionCreators';
-import Toast from '../components/Toast';
+import { passwordResetAction } from '../redux/actions/AuthActions';
+import PageSpinner from '../components/PageSpinner';
 
-const validationSchema = yup.object().shape({
-  usernameOrEmail: yup.string().required('Enter your username or your email')
-});
+const ResetPasswordScreen = ({ navigation, resetPassword }) => {
+  const authState = useSelector(state => state.auth);
 
-const ResetPasswordScreen = ({ navigation }) => {
-  const message = useSelector(state => state.user.message);
-  const loading = useSelector(state => state.user.loadingPasswordReset);
-  const token = useSelector(state => state.user.token);
-  const dispatch = useDispatch();
-
-  const { errors, control, handleSubmit } = useForm({
-    validationSchema
+  const { errors, handleSubmit, register, watch, setValue } = useForm({
+    validationSchema: passwordResetSchema
   });
 
-  useDidUpdateEffect(() => {
-    navigation.navigate('ResetPasswordTwo');
-  }, [token]);
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setHidden(true);
 
-  const submit = data => {
-    dispatch(resetPassword(data));
-  };
-
-  let submitText = (
-    <Text type="medium" style={styles.submitButtonText}>
-      Send Password Reset Code
-    </Text>
+      navigation.setOptions({
+        headerShown: false
+      });
+    }, [])
   );
 
-  if (loading) {
-    submitText = <ActivityIndicator animated color="#fff" />;
-  }
+  React.useEffect(() => {
+    register('usernameOrEmail');
+  }, [register]);
+
+  const submit = async data => {
+    try {
+      await resetPassword(data);
+
+      navigation.navigate('ResetPasswordTwo');
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+
+      if (authState.currentUser?.isActive === false) {
+        navigation.navigate('OTPVerification');
+      }
+    }
+  };
 
   return (
     <ScrollView
@@ -66,8 +73,7 @@ const ResetPasswordScreen = ({ navigation }) => {
           <Text
             type="medium"
             style={{
-              fontSize: 11,
-              lineHeight: 16,
+              fontSize: 13,
               textAlign: 'center',
               color: '#7F8FA4'
             }}>
@@ -79,33 +85,32 @@ const ResetPasswordScreen = ({ navigation }) => {
             <View style={styles.labelContainer}>
               <Text style={styles.label}>Username or Email</Text>
             </View>
-            <View
-              style={{
-                ...styles.inputContainer,
-                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                borderBottomColor: errors.usernameOrEmail ? 'red' : '#DFE3E9'
-              }}>
-              <Controller
-                as={TextInput}
-                control={control}
-                name="usernameOrEmail"
-                onChange={args => args[0].nativeEvent.text}
-                rules={{ required: true }}
-                defaultValue=""
-                style={styles.input}
+            <View style={styles.inputContainer}>
+              <TextInput
                 testID="login-user-name"
-                editable={!loading}
+                autoCapitalize="none"
+                onChangeText={text => setValue('usernameOrEmail', text)}
+                value={watch('usernameOrEmail')}
+                onSubmitEditing={handleSubmit(submit)}
+                blurOnSubmit={false}
+                returnKeyType="send"
+                style={[styles.input, errors.usernameOrEmail && styles.errorInput]}
               />
             </View>
+
+            {errors.usernameOrEmail && (
+              <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                {errors.usernameOrEmail.message}
+              </Text>
+            )}
           </View>
-          {errors.usernameOrEmail && (
-            <Text style={{ marginTop: 10, color: 'red' }}>{errors.usernameOrEmail.message}</Text>
-          )}
           <TouchableOpacity
             onPress={handleSubmit(submit)}
             testID="reset-password-button"
             style={styles.submitButton}>
-            {submitText}
+            <Text type="medium" style={styles.submitButtonText}>
+              Send Password Reset Code
+            </Text>
           </TouchableOpacity>
           <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
             <Text style={{ color: '#7F8FA4' }}>Do you remember it now? </Text>
@@ -119,13 +124,9 @@ const ResetPasswordScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
-      <Toast message={message} />
+      <PageSpinner visible={authState.loading} />
     </ScrollView>
   );
-};
-
-ResetPasswordScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   submitButton: {
-    marginTop: 30,
+    marginTop: 15,
     borderRadius: 4.87,
     backgroundColor: '#23C2C2',
     justifyContent: 'center',
@@ -213,4 +214,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ResetPasswordScreen;
+ResetPasswordScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  resetPassword: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  resetPassword: passwordResetAction
+};
+
+export default connect(null, mapDispatchToProps)(ResetPasswordScreen);

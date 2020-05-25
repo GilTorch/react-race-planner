@@ -5,7 +5,6 @@ import { Surface, Searchbar } from 'react-native-paper';
 import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
@@ -17,14 +16,14 @@ const HomeScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
 
-  navigation.setOptions({
-    headerShown: false
-  });
-
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(false);
       StatusBar.setBarStyle('light-content');
+
+      navigation.setOptions({
+        headerShown: false
+      });
     }, [])
   );
 
@@ -46,8 +45,8 @@ const HomeScreen = ({ navigation, route }) => {
           style={{
             alignItems: 'center',
             flexDirection: 'column',
-            paddingBottom: Constants.statusBarHeight,
-            paddingTop: Constants.statusBarHeight * 2
+            paddingBottom: 44,
+            paddingTop: 44 * 2
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             ScriptoRerum
@@ -145,7 +144,7 @@ const HomeScreen = ({ navigation, route }) => {
               <TouchableOpacity
                 style={{ borderRadius: 5, padding: 5, flex: 1 }}
                 onPress={() => {
-                  navigation.navigate('FilterScreen');
+                  navigation.push('FilterScreen');
                 }}>
                 <Surface
                   style={{

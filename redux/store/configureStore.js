@@ -1,5 +1,4 @@
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
@@ -9,15 +8,14 @@ import rootReducer from '../reducers';
 
 const persistConfig = {
   key: 'root',
-  storage: AsyncStorage,
-  blacklist: ['user']
+  storage: AsyncStorage
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const middleware = [thunk, logger];
 
-const composedEnhancers = composeWithDevTools(applyMiddleware(...middleware));
+const composedEnhancers = compose(applyMiddleware(...middleware));
 
 export default () => {
   const store = createStore(persistedReducer, undefined, composedEnhancers);

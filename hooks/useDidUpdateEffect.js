@@ -9,4 +9,4 @@ const useDidUpdateEffect = (fn, inputs) => {
   }, inputs);
 };
 
-export { useDidUpdateEffect };
+export default useDidUpdateEffect;

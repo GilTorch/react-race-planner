@@ -1,356 +1,463 @@
-import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar, Alert } from 'react-native';
+import React from 'react';
+import {
+  View,
+  ScrollView,
+  Image,
+  TextInput,
+  StyleSheet,
+  StatusBar,
+  Platform,
+  KeyboardAvoidingView
+} from 'react-native';
+import Toast from 'react-native-root-toast';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Entypo } from '@expo/vector-icons';
+// import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
-import { ActivityIndicator } from 'react-native-paper';
-import * as yup from 'yup';
-import { useForm, Controller } from 'react-hook-form';
-import { useSelector, useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { useSelector, connect } from 'react-redux';
+// import * as Google from 'expo-google-app-auth';
+
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
-import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
-import * as Facebook from '../utils/facebook';
-import { signup } from '../redux/actions/actionCreators';
-import { useDidUpdateEffect } from '../hooks/useDidUpdateEffect';
+// import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+// import * as Facebook from '../utils/facebook';
+import { signupAction } from '../redux/actions/AuthActions';
+import { signupSchema } from '../utils/validators';
+import PageSpinner from '../components/PageSpinner';
+// import * as Twitter from '../services/twitter';
 
-const validationSchema = yup.object().shape({
-  facebookAccountId: yup.number().default(0),
-  username: yup.string().required('Enter your username'),
-  firstName: yup.string().required('Enter your first name'),
-  lastName: yup.string().required('Enter your last name'),
-  email: yup
-    .string()
-    .email()
-    .required('Enter your email'),
-  password: yup.string().when('facebookAccountId', {
-    is: 0,
-    then: yup
-      .string()
-      .min(8, 'Your password should be at least 8 characters')
-      .required('Enter your password')
-  }),
-  confirmPassword: yup.string().when('facebookAccountId', {
-    is: 0,
-    then: yup
-      .string()
-      .required('Confirm password')
-      .oneOf([yup.ref('password'), null], 'Passwords are not the same')
-  })
-});
+// const defaultValues = {
+//   username: '',
+//   firstName: '',
+//   lastName: '',
+//   email: '',
+//   password: '',
+//   password2: '',
+//   socialAccount: '',
+//   googleAccountId: '',
+//   twitterAccountId: '',
+//   facebookAccountId: '',
+//   socialPlatformName: ''
+// };
 
-const SignupScreen = ({ navigation }) => {
-  const loading = useSelector(state => state.user.loadingSignup);
-  const dispatch = useDispatch();
-  const code = useSelector(state => state.user.code);
-  const currentUser = useSelector(state => state.user.currentUser);
-  const [isSigningUpWithFacebook, setIsSigningUpFacebook] = useState(false);
-
-  const { handleSubmit, errors, control, setValue, register } = useForm({
-    validationSchema
+const SignupScreen = ({ navigation, signup }) => {
+  const authState = useSelector(state => state.auth);
+  // const [socialSignUp, setSocialSignup] = React.useState(false);
+  // const { register, handleSubmit, errors, setValue, watch, reset } = useForm({
+  const { register, handleSubmit, errors, setValue, watch } = useForm({
+    validationSchema: signupSchema,
+    validateCriteriaMode: 'all'
   });
-
-  useEffect(() => {
-    register('facebookAccountId');
-  }, []);
-
-  useDidUpdateEffect(() => {
-    if (currentUser && currentUser.isActive) {
-      navigation.navigate('Home');
-    }
-
-    if (currentUser && !currentUser.isActive) {
-      navigation.navigate('OTPVerification');
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
-    if (code === 'InactiveAccount') {
-      navigation.navigate('OTPVerification');
-    }
-  }, [code]);
+  const socialAccount = watch('socialAccount', false);
+  const socialPlatformName = watch('socialPlatformName', false);
+  const inputs = {};
+  const focusNextField = name => inputs[name].focus();
 
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(true);
+
+      navigation.setOptions({
+        headerShown: false
+      });
     }, [])
   );
 
-  const submit = data => {
-    dispatch(signup(data));
-  };
+  // Since this is the first screen in the auth stack, we check if there's
+  // no saved user data. If there is and the user account hasn't been activated
+  // yet, we send them to the OTP verification screen, if there is and it's a password reset
+  // we send them to the password reset verification one
+  React.useEffect(() => {
+    if (authState.currentUser?.isActive === false) {
+      navigation.navigate('OTPVerification');
+    } else if (authState.currentUser?.isPasswordReset) {
+      navigation.navigate('ResetPasswordTwo');
+    }
+  }, [authState.currentUser]);
 
-  const setValueIfFieldExists = (label, value) => {
-    if (label) {
-      setValue(`${label}`, value);
+  React.useEffect(() => {
+    register('username');
+    register('firstName');
+    register('lastName');
+    register('email');
+    register('password');
+    register('password2');
+    register('socialAccount');
+    register('googleAccountId');
+    register('twitterAccountId');
+    register('facebookAccountId');
+    register('socialPlatformName');
+  }, [register]);
+
+  const submit = async data => {
+    try {
+      await signup(data);
+
+      // If it gets here, it means the user account is saved successfully
+      // and they need to verify their account
+      navigation.navigate('OTPVerification');
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
     }
   };
 
-  const fbSignup = async () => {
-    const { id, email, first_name, last_name } = await Facebook.logIn();
-    if (id) {
-      setValue('facebookAccountId', id);
-      setValueIfFieldExists('email', email);
-      setValueIfFieldExists('firstName', first_name);
-      setValueIfFieldExists('lastName', last_name);
-      setIsSigningUpFacebook(true);
-    } else {
-      Alert.alert(
-        'There was an error while trying to access your Facebook account. Try again later.'
-      );
-    }
-  };
+  // async function googleLogin() {
+  //   setSocialSignup(true);
 
-  let submitText = (
-    <Text type="medium" style={styles.submitButtonText}>
-      Sign Up
-    </Text>
-  );
+  //   try {
+  //     const result = await Google.logInAsync({
+  //       androidClientId: '179189574549-p2l06hbg13fqqba7nfib4nq7na5ci1lc.apps.googleusercontent.com',
+  //       iosClientId: '179189574549-3379mn2seve0i471eqfkpgduqkgvnd98.apps.googleusercontent.com',
+  //       scopes: ['profile', 'email']
+  //     });
 
-  if (loading) {
-    submitText = <ActivityIndicator animated color="#fff" />;
-  }
+  //     if (result.type === 'success') {
+  //       setValue([
+  //         { username: `${result.user.givenName}_${result.user.familyName}`.toLowerCase() },
+  //         { firstName: result.user.givenName },
+  //         { lastName: result.user.familyName },
+  //         { email: result.user.email },
+  //         { socialAccount: true },
+  //         { googleAccountId: result.user.id },
+  //         { socialPlatformName: 'Google' }
+  //       ]);
+  //     }
+
+  //     setSocialSignup(false);
+  //   } catch (e) {
+  //     setSocialSignup(false);
+  //   }
+  // }
+
+  // const twitterLogin = async () => {
+  //   setSocialSignup(true);
+
+  //   const { twitterAccountId, username, lastName, firstName, email } = await Twitter.authSession(
+  //     false
+  //   );
+
+  //   if (twitterAccountId) {
+  //     setValue([
+  //       { twitterAccountId },
+  //       { username },
+  //       { lastName },
+  //       { firstName },
+  //       { email },
+  //       { socialAccount: true },
+  //       { socialPlatformName: 'Twitter' }
+  //     ]);
+  //   }
+
+  //   setSocialSignup(false);
+  // };
+
+  // const fbSignup = async () => {
+  //   const { id, email, first_name, last_name } = await Facebook.logIn();
+  //   if (id) {
+  //     setValue('facebookAccountId', id);
+  //     setValueIfFieldExists('email', email);
+  //     setValueIfFieldExists('firstName', first_name);
+  //     setValueIfFieldExists('lastName', last_name);
+  //     setIsSigningUpFacebook(true);
+  //   } else {
+  //     Alert.alert(
+  //       'There was an error while trying to access your Facebook account. Try again later.'
+  //     );
+  //   }
+  // };
+
+  // Toast.show(requestError.message, {
+  //   duration: Toast.durations.SHORT,
+  //   position: Toast.positions.BOTTOM
+  // });
 
   return (
-    <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
-      <View style={styles.container}>
-        <Image testID="logo" source={SRLogo} resizeMode="contain" style={styles.logo} />
-        <View testID="create-account-text" style={styles.headlineContainer}>
-          <Text type="medium" style={styles.headline}>
-            Create an Account
-          </Text>
-        </View>
-        <View style={styles.form}>
-          <View style={styles.formGroup}>
-            <View style={styles.labelContainer}>
-              <Text type="medium" style={styles.label}>
-                Username
-              </Text>
-            </View>
-            <View
-              style={{
-                ...styles.inputContainer,
-                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                borderBottomColor: errors.username ? 'red' : '#DFE3E9'
-              }}>
-              <Controller
-                as={TextInput}
-                control={control}
-                name="username"
-                onChange={args => args[0].nativeEvent.text}
-                defaultValue=""
-                style={styles.input}
-                testID="signup-username"
-                editable={!loading}
-              />
-            </View>
-            {errors.username && (
-              <Text style={{ marginTop: 10, color: 'red' }}>{errors.username.message}</Text>
-            )}
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' && 'padding'}>
+      <ScrollView style={{ backgroundColor: 'white' }}>
+        <View style={styles.container}>
+          <Image testID="logo" source={SRLogo} resizeMode="contain" style={styles.logo} />
+          <View testID="create-account-text" style={styles.headlineContainer}>
+            <Text type="medium" style={styles.headline}>
+              Create an Account
+            </Text>
           </View>
-          <View style={styles.formGroup}>
-            <View style={styles.labelContainer}>
-              <Text type="medium" style={styles.label}>
-                First Name
-              </Text>
+          <View style={styles.form}>
+            <View style={styles.formGroup}>
+              <View style={styles.labelContainer}>
+                <Text type="medium" style={styles.label}>
+                  Username
+                </Text>
+              </View>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  autoCapitalize="none"
+                  testID="user-name"
+                  onChangeText={text => setValue('username', text)}
+                  value={watch('username')}
+                  onSubmitEditing={() => focusNextField('firstName')}
+                  blurOnSubmit={false}
+                  returnKeyType="next"
+                  style={[styles.input, errors.username && styles.errorInput]}
+                />
+              </View>
+              {errors.username && (
+                <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                  {errors.username.message}
+                </Text>
+              )}
             </View>
-            <View
-              style={{
-                ...styles.inputContainer,
-                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                borderBottomColor: errors.firstName ? 'red' : '#DFE3E9'
-              }}>
-              <Controller
-                as={TextInput}
-                control={control}
-                name="firstName"
-                onChange={args => args[0].nativeEvent.text}
-                defaultValue=""
-                style={styles.input}
-                testID="signup-firstName"
-                editable={!loading}
-              />
+            <View style={styles.formGroup}>
+              <View style={styles.labelContainer}>
+                <Text type="medium" style={styles.label}>
+                  First Name
+                </Text>
+              </View>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  testID="first-name"
+                  onChangeText={text => setValue('firstName', text)}
+                  value={watch('firstName')}
+                  onSubmitEditing={() => focusNextField('lastName')}
+                  blurOnSubmit={false}
+                  ref={input => {
+                    inputs.firstName = input;
+                  }}
+                  returnKeyType="next"
+                  style={[styles.input, errors.firstName && styles.errorInput]}
+                />
+              </View>
+
+              {errors.firstName && (
+                <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                  {errors.firstName.message}
+                </Text>
+              )}
             </View>
-            {errors.firstName && (
-              <Text style={{ marginTop: 10, color: 'red' }}>{errors.firstName.message}</Text>
+            <View style={styles.formGroup}>
+              <View style={styles.labelContainer}>
+                <Text type="medium" style={styles.label}>
+                  Last Name
+                </Text>
+              </View>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  testID="last-name"
+                  onChangeText={text => setValue('lastName', text)}
+                  value={watch('lastName')}
+                  onSubmitEditing={() => focusNextField('email')}
+                  blurOnSubmit={false}
+                  ref={input => {
+                    inputs.lastName = input;
+                  }}
+                  returnKeyType="next"
+                  style={[styles.input, errors.lastName && styles.errorInput]}
+                />
+              </View>
+              {errors.lastName && (
+                <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                  {errors.lastName.message}
+                </Text>
+              )}
+            </View>
+            <View style={styles.formGroup}>
+              <View style={styles.labelContainer}>
+                <Text type="medium" style={styles.label}>
+                  Email
+                </Text>
+              </View>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  testID="email-address"
+                  autoCapitalize="none"
+                  onChangeText={text => setValue('email', text)}
+                  value={watch('email')}
+                  onSubmitEditing={
+                    socialAccount ? handleSubmit(submit) : () => focusNextField('password')
+                  }
+                  blurOnSubmit={false}
+                  ref={input => {
+                    inputs.email = input;
+                  }}
+                  keyboardType="email-address"
+                  returnKeyType={socialAccount ? 'send' : 'next'}
+                  style={[styles.input, errors.email && styles.errorInput]}
+                />
+              </View>
+              {errors.email && (
+                <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                  {errors.email.message}
+                </Text>
+              )}
+            </View>
+            {!socialAccount && (
+              <>
+                <View style={styles.formGroup}>
+                  <View style={styles.labelContainer}>
+                    <Text type="medium" style={styles.label}>
+                      Password
+                    </Text>
+                  </View>
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      testID="password"
+                      onChangeText={text => setValue('password', text)}
+                      value={watch('password')}
+                      onSubmitEditing={() => focusNextField('password2')}
+                      blurOnSubmit={false}
+                      ref={input => {
+                        inputs.password = input;
+                      }}
+                      secureTextEntry
+                      returnKeyType="next"
+                      style={[styles.input, errors.password && styles.errorInput]}
+                    />
+                  </View>
+                  {errors.password && (
+                    <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                      {errors.password.message}
+                    </Text>
+                  )}
+                </View>
+                <View style={styles.formGroup}>
+                  <View style={styles.labelContainer}>
+                    <Text type="medium" style={styles.label}>
+                      Confirm Password
+                    </Text>
+                  </View>
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      testID="password-confirmation"
+                      onChangeText={text => setValue('password2', text)}
+                      value={watch('password2')}
+                      onSubmitEditing={handleSubmit(submit)}
+                      blurOnSubmit={false}
+                      ref={input => {
+                        inputs.password2 = input;
+                      }}
+                      secureTextEntry
+                      returnKeyType="send"
+                      style={[styles.input, errors.password2 && styles.errorInput]}
+                    />
+                  </View>
+                  {errors.password2 && (
+                    <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                      {errors.password2.message}
+                    </Text>
+                  )}
+                </View>
+              </>
             )}
-          </View>
-          <View style={styles.formGroup}>
-            <View style={styles.labelContainer}>
-              <Text type="medium" style={styles.label}>
-                Last Name
-              </Text>
+            <TouchableOpacity
+              testID="sign-up-button"
+              onPress={handleSubmit(submit)}
+              style={styles.submitButton}>
+              {socialAccount && (
+                <Text type="medium" style={styles.submitButtonText}>
+                  Continue signup with {socialPlatformName}
+                </Text>
+              )}
+              {!socialAccount && (
+                <Text type="medium" style={styles.submitButtonText}>
+                  Sign Up
+                </Text>
+              )}
+            </TouchableOpacity>
+
+            {/* <View
+              style={[
+                styles.loginWithSocialMediaTextContainer,
+                { marginTop: socialAccount ? 15 : 20 }
+              ]}>
+              {socialAccount && (
+                <TouchableOpacity
+                  style={{ marginBottom: 20 }}
+                  onPress={() => {
+                    reset(defaultValues);
+                  }}>
+                  <Text type="medium" style={{ color: 'red', fontWeight: 'bold' }}>
+                    Cancel signing up with {socialPlatformName}
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {socialAccount && (
+                <Text type="medium" style={{ color: '#7F8FA4', fontWeight: 'bold' }}>
+                  Or login via a different social network
+                </Text>
+              )}
+              {!socialAccount && (
+                <Text type="medium" style={{ color: '#7F8FA4', fontWeight: 'bold' }}>
+                  Or login via social networks
+                </Text>
+              )}
             </View>
             <View
-              style={{
-                ...styles.inputContainer,
-                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                borderBottomColor: errors.lastName ? 'red' : '#DFE3E9'
-              }}>
-              <Controller
-                as={TextInput}
-                control={control}
-                name="lastName"
-                onChange={args => args[0].nativeEvent.text}
-                defaultValue=""
-                style={styles.input}
-                testID="signup-lastName"
-                editable={!loading}
-              />
-            </View>
-            {errors.lastName && (
-              <Text style={{ marginTop: 10, color: 'red' }}>{errors.lastName.message}</Text>
-            )}
-          </View>
-          <View style={styles.formGroup}>
-            <View style={styles.labelContainer}>
-              <Text type="medium" style={styles.label}>
-                Email
-              </Text>
-            </View>
-            <View
-              style={{
-                ...styles.inputContainer,
-                backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                borderBottomColor: errors.email ? 'red' : '#DFE3E9'
-              }}>
-              <Controller
-                as={TextInput}
-                control={control}
-                name="email"
-                onChange={args => args[0].nativeEvent.text}
-                defaultValue=""
-                style={styles.input}
-                testID="signup-email"
-                editable={!loading}
-              />
+              style={[
+                styles.socialMediaButtonsContainer,
+                { justifyContent: socialAccount ? 'space-around' : 'space-between' }
+              ]}>
+              {socialPlatformName !== 'Twitter' && (
+                <TouchableOpacity
+                  onPress={twitterLogin}
+                  testID="twitter-icon-button"
+                  style={{
+                    backgroundColor: '#3ABDFF',
+                    ...styles.socialMediaButton
+                  }}>
+                  <Entypo name="twitter-with-circle" size={24} color="#fff" />
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity
+                testID="facebook-icon-button"
+                style={{
+                  backgroundColor: '#1382D5',
+                  ...styles.socialMediaButton
+                }}>
+                <Entypo name="facebook-with-circle" size={24} color="#fff" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={googleLogin}
+                testID="google-icon-btn"
+                style={{
+                  backgroundColor: '#e6e6e6',
+                  ...styles.socialMediaButton
+                }}>
+                <GoogleColorfulIcon />
+              </TouchableOpacity>
+            </View> */}
+            <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
+              <Text style={{ color: '#7F8FA4' }}>Already a member? </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Login')}
+                style={styles.goToLoginPageButton}>
+                <View testID="go-to-loggin-page">
+                  <Text style={styles.goToLoginPageButtonText}>Log in</Text>
+                </View>
+              </TouchableOpacity>
             </View>
             {errors.email && (
               <Text style={{ marginTop: 10, color: 'red' }}>{errors.email.message}</Text>
             )}
           </View>
-          {!isSigningUpWithFacebook && (
-            <>
-              <View style={styles.formGroup}>
-                <View style={styles.labelContainer}>
-                  <Text type="medium" style={styles.label}>
-                    Password
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    ...styles.inputContainer,
-                    backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                    borderBottomColor: errors.password ? 'red' : '#DFE3E9'
-                  }}>
-                  <Controller
-                    as={TextInput}
-                    control={control}
-                    name="password"
-                    onChange={args => args[0].nativeEvent.text}
-                    defaultValue=""
-                    style={styles.input}
-                    testID="signup-password"
-                    editable={!loading}
-                    secureTextEntry
-                  />
-                </View>
-                {errors.password && (
-                  <Text style={{ marginTop: 10, color: 'red' }}>{errors.password.message}</Text>
-                )}
-              </View>
-              <View style={styles.formGroup}>
-                <View style={styles.labelContainer}>
-                  <Text testID="password-confirmation" type="medium" style={styles.label}>
-                    Confirm Password
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    ...styles.inputContainer,
-                    backgroundColor: loading ? '#CFD4E6' : '#F8FAFC',
-                    borderBottomColor: errors.confirmPassword ? 'red' : '#DFE3E9'
-                  }}>
-                  <Controller
-                    as={TextInput}
-                    control={control}
-                    name="confirmPassword"
-                    onChange={args => args[0].nativeEvent.text}
-                    defaultValue=""
-                    style={styles.input}
-                    testID="signup-confirmPassword"
-                    editable={!loading}
-                    secureTextEntry
-                  />
-                </View>
-                {errors.confirmPassword && (
-                  <Text style={{ marginTop: 10, color: 'red' }}>
-                    {errors.confirmPassword.message}
-                  </Text>
-                )}
-              </View>
-            </>
-          )}
-          <TouchableOpacity
-            onPress={handleSubmit(submit)}
-            testID="sign-up-button"
-            style={styles.submitButton}>
-            {submitText}
-          </TouchableOpacity>
-          <View style={styles.loginWithSocialMediaTextContainer}>
-            <Text type="medium" style={{ color: '#7F8FA4', fontWeight: 'bold' }}>
-              Or login via social networks
-            </Text>
-          </View>
-          <View style={styles.socialMediaButtonsContainer}>
-            <TouchableOpacity
-              testID="twitter-icon-btn"
-              style={{
-                backgroundColor: '#3ABDFF',
-                ...styles.socialMediaButton
-              }}>
-              <Entypo name="twitter-with-circle" size={24} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => fbSignup()}
-              testID="facebook-icon-btn"
-              style={{
-                backgroundColor: '#1382D5',
-                ...styles.socialMediaButton
-              }}>
-              <Entypo name="facebook-with-circle" size={24} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              testID="google-icon-btn"
-              style={{
-                backgroundColor: '#e6e6e6',
-                ...styles.socialMediaButton
-              }}>
-              <GoogleColorfulIcon />
-            </TouchableOpacity>
-          </View>
-          <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
-            <Text style={{ color: '#7F8FA4' }}>Already a member? </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Login')}
-              style={styles.goToLoginPageButton}>
-              <View testID="go-to-loggin-page">
-                <Text style={styles.goToLoginPageButtonText}>Log in</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+      {/* <PageSpinner visible={authState.loading || socialSignUp} /> */}
+      <PageSpinner visible={authState.loading} />
+    </KeyboardAvoidingView>
   );
 };
 
-SignupScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
-};
-
 const styles = StyleSheet.create({
+  spiner: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   container: {
     backgroundColor: 'white',
     width: '100%',
@@ -393,6 +500,10 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 35.43
   },
+  errorInput: {
+    borderColor: 'red',
+    borderBottomWidth: 1
+  },
   form: {
     width: '75%'
   },
@@ -411,14 +522,12 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   loginWithSocialMediaTextContainer: {
-    marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center'
   },
   socialMediaButtonsContainer: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 20
   },
   socialMediaButton: {
@@ -433,4 +542,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SignupScreen;
+SignupScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  signup: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  signup: signupAction
+};
+
+export default connect(null, mapDispatchToProps)(SignupScreen);

@@ -1,10 +1,13 @@
+import { Platform } from 'react-native';
 import axios from 'axios';
 import jwt from 'expo-jwt';
+import { Auth } from '../redux/actions/types';
 import store from '../redux/store';
-import getEnvVars from '../variables';
 
 const axiosOptions = {
-  baseURL: getEnvVars.apiUrl // TODO: get the vaseURL from the ENV
+  // TODO: get the baseURL from the ENV
+  baseURL:
+    Platform.OS === 'android' ? 'http://10.0.2.2:3000/api/v1' : 'http://localhost:3000/api/v1'
 };
 
 const axiosService = axios.create(axiosOptions);
@@ -13,10 +16,12 @@ const axiosService = axios.create(axiosOptions);
 // to the headers
 axiosService.interceptors.request.use(
   config => {
-    const { token } = store.getState().user;
+    const { token } = store.getState().auth;
     const mutableConfig = { ...config };
+    // TODO: get the token from the ENV variable
     mutableConfig.headers['X-RERUM-KEY'] =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0RldiI6dHJ1ZSwiaWF0IjoxNTg4NjYxMDkxfQ.7WLNcZoE3LtKpGWCITKRh58Uf7Vzs-bbHGIHZD7ybYE';
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0RldiI6dHJ1ZSwiaWF0IjoxNTg4Mjc3OTQ2fQ.J-5O1kUdIgnbJAkVRmikS66WUqUBlzbSlNvCtLtK1t0';
+
     if (token) {
       mutableConfig.headers.common.Authorization = `Bearer ${token}`;
     }
@@ -29,18 +34,17 @@ axiosService.interceptors.request.use(
 // Add a response interceptor to automatically save the token we got from the server
 // to the state
 axiosService.interceptors.response.use(
-  response => {
+  async response => {
     if (response.data?.token) {
       // 1. decode the token
       const decodedUser = jwt.decode(response.data.token, '&^GF^%D^Y&^*G(H9gs');
+
+      decodedUser.isPasswordReset = response.data.isPasswordReset;
+
       // 2. save the user and the token to the state
       store.dispatch({
-        type: 'ADD_SESSION',
-        payload: {
-          user: decodedUser,
-          token: response.data.token,
-          tokenExpiration: decodedUser.exp
-        }
+        type: Auth.ADD_SESSION,
+        data: { user: decodedUser, token: response.data.token }
       });
     }
     return response;
@@ -49,13 +53,15 @@ axiosService.interceptors.response.use(
     if (error.response.data?.token) {
       // 1. decode the token
       const decodedUser = jwt.decode(error.response.data.token, '&^GF^%D^Y&^*G(H9gs');
+
+      decodedUser.isPasswordReset = error.response.data.isPasswordReset;
+
       // 2. save the user and the token to the state
       store.dispatch({
-        type: 'ADD_SESSION',
-        payload: {
+        type: Auth.ADD_SESSION,
+        data: {
           user: decodedUser,
-          token: error.response.data.token,
-          tokenExpiration: decodedUser.exp
+          token: error.response.data.token
         }
       });
     }

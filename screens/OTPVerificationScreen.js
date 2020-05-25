@@ -1,91 +1,80 @@
-import React, { useState } from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
-import { ActivityIndicator } from 'react-native-paper';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 import moment from 'moment';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { Entypo } from '@expo/vector-icons';
-import { useDidUpdateEffect } from '../hooks/useDidUpdateEffect';
+import { useForm } from 'react-hook-form';
+import Toast from 'react-native-root-toast';
+import { useFocusEffect } from '@react-navigation/native';
+
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
-import { verifyAccount } from '../redux/actions/actionCreators';
-import Toast from '../components/Toast';
+import { accountVerificationAction, otpCodeAction } from '../redux/actions/AuthActions';
+import { otpVerificationSchema } from '../utils/validators';
+import PageSpinner from '../components/PageSpinner';
 
-const validationSchema = yup.object().shape({
-  otpCode: yup
-    .number('One-Time Password should be numbers only')
-    .required('Enter One-Time Passwrod')
-});
-
-const OTPVerificationScreen = ({ navigation }) => {
-  const { control, errors, handleSubmit } = useForm({
-    validationSchema
+const OTPVerificationScreen = ({ navigation, verifyAccount, resendOtp }) => {
+  const authState = useSelector(state => state.auth);
+  const { errors, handleSubmit, register, watch, setValue } = useForm({
+    validationSchema: otpVerificationSchema
   });
-  const message = useSelector(state => state.user.message);
-  const loading = useSelector(state => state.user.loadingVerifyAccount);
-  const token = useSelector(state => state.user.token);
-  const [requestEnabled, setRequestEnabled] = useState(true);
-  const tokenExpiration = useSelector(state => state.user.currentUser.exp);
+  const tokenExpiration = authState.currentUser?.exp;
   const formattedTime = moment.unix(tokenExpiration).fromNow();
   const tokenHasExpired = formattedTime.includes('ago');
   const expiresOrExpired = tokenHasExpired ? 'expired' : 'expires';
-  const dispatch = useDispatch();
-  const otpSuccess = useSelector(state => state.user.otpSuccess);
 
-  if (otpSuccess) {
-    navigation.navigate('Login');
-  }
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setHidden(true);
 
-  useDidUpdateEffect(() => {
-    const expirationDate = new Date(tokenExpiration * 1000);
-    const now = new Date();
-    const diff = expirationDate - now;
-    if (diff >= 1.99 && !tokenHasExpired) {
-      setRequestEnabled(false);
-      setTimeout(() => {
-        setRequestEnabled(true);
-        clearInterval();
-      }, 180000);
+      navigation.setOptions({
+        headerShown: false
+      });
+    }, [])
+  );
+
+  React.useEffect(() => {
+    if (!authState.currentUser) {
+      navigation.navigate('Login');
     }
-  }, [token]);
+  }, [authState.currentUser]);
 
-  const submit = data => {
-    if (!tokenHasExpired) {
-      if (requestEnabled) {
-        dispatch(verifyAccount(data));
-      }
+  const resendVerificationOtp = async () => {
+    try {
+      await resendOtp('account-verification');
+
+      Toast.show('We sent the OTP code to your email', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    } catch (e) {
+      Toast.show(e?.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
     }
   };
 
-  let submitText = (
-    <Text type="medium" style={styles.submitButtonText}>
-      Activate my account
-    </Text>
-  );
+  const submit = async data => {
+    try {
+      if (!tokenHasExpired) {
+        await verifyAccount(data);
+        navigation.navigate('Login');
+      } else {
+        resendVerificationOtp();
+      }
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    }
+  };
 
-  if (loading) {
-    submitText = <ActivityIndicator animated color="#fff" />;
-  }
-
-  if (!requestEnabled) {
-    submitText = (
-      // <Text type="medium" style={styles.submitButtonText}>
-      <Entypo size={18} color="#fff" style={{ marginRight: 10 }} name="lock" />
-    );
-  }
-
-  let inputEditable = true;
-
-  if (loading) {
-    inputEditable = false;
-  }
-
-  if (!requestEnabled) {
-    inputEditable = false;
-  }
+  React.useEffect(() => {
+    register('otpCode');
+  }, [register]);
 
   return (
     <ScrollView
@@ -104,80 +93,73 @@ const OTPVerificationScreen = ({ navigation }) => {
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
               <Text style={styles.label}>
-                {' '}
-                Enter the One-Time Password (OTP) that was sent to your email (it {
-                  expiresOrExpired
-                }{' '}
-                <Text type="bold">{moment.unix(tokenExpiration).fromNow()}</Text>):
+                Enter the One-Time Password (OTP) that was sent to your email (
+                {authState.currentUser?.email}). It {expiresOrExpired}{' '}
+                <Text type="bold">{moment.unix(tokenExpiration).fromNow()}</Text>:
               </Text>
             </View>
-            <View
-              style={{
-                ...styles.inputContainer,
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: loading || !requestEnabled ? '#CFD4E6' : '#F8FAFC',
-                borderBottomColor: errors.usernameOrEmail ? 'red' : '#DFE3E9'
-              }}>
-              <Controller
-                as={TextInput}
-                control={control}
-                name="otpCode"
-                onChange={args => args[0].nativeEvent.text}
-                defaultValue=""
-                style={styles.input}
+            <View style={styles.inputContainer}>
+              <TextInput
                 testID="otp"
-                editable={inputEditable}
+                onChangeText={text => setValue('otpCode', text)}
+                value={watch('otpCode')}
+                onSubmitEditing={handleSubmit(submit)}
+                blurOnSubmit={false}
+                returnKeyType="send"
+                style={[styles.input, errors.otpCode && styles.errorInput]}
               />
-              {!requestEnabled && (
-                <Entypo size={18} color="#8A8D99" style={{ marginRight: 10 }} name="lock" />
-              )}
             </View>
-            {errors.otp && (
-              <Text style={{ marginTop: 10, color: 'red' }}>{errors.otp.message}</Text>
+            {errors.otpCode && (
+              <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                {errors.otpCode.message}
+              </Text>
             )}
           </View>
-          {!requestEnabled && (
-            <Text style={{ marginTop: 10, ...styles.label }}>
-              Wait <Text type="bold">3 minutes</Text> before sending the next OTP{' '}
-            </Text>
-          )}
           <TouchableOpacity
             testID="reset-password-button"
             style={styles.submitButton}
             onPress={handleSubmit(submit)}>
-            <Text style={styles.submitButtonText}>{submitText}</Text>
+            <Text type="medium" style={styles.submitButtonText}>
+              Activate my account
+            </Text>
           </TouchableOpacity>
-          <View style={{ marginTop: 4, marginBottom: 10, flexDirection: 'row' }}>
-            <Text style={{ color: '#7F8FA4' }}>Didn't receive an OTP on your email? </Text>
+          <View style={{ marginTop: 15, marginBottom: 10, flexDirection: 'row' }}>
+            {!tokenHasExpired && (
+              <Text style={{ color: '#7F8FA4' }}>Didn't receive the code? </Text>
+            )}
+
+            {tokenHasExpired && (
+              <Text style={{ color: '#7F8FA4' }}>Your OTP code has expired. </Text>
+            )}
             <TouchableOpacity
-              onPress={() => navigation.navigate('ResetPassword')}
+              onPress={() => resendVerificationOtp()}
               style={styles.goToLoginPageButton}>
               <View testID="return-to-login-page">
-                <Text style={styles.goToLoginPageButtonText}>Send one</Text>
+                {!tokenHasExpired && (
+                  <Text style={styles.goToLoginPageButtonText}>Send another one</Text>
+                )}
+
+                {tokenHasExpired && (
+                  <Text style={styles.goToLoginPageButtonText}>Send a new one</Text>
+                )}
               </View>
             </TouchableOpacity>
           </View>
-          <View />
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ color: '#7F8FA4' }}>Already activated your account? </Text>
+
+          <View style={{ marginTop: 10, marginBottom: 10, flexDirection: 'row' }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Login')}
+              onPress={() => navigation.goBack()}
               style={styles.goToLoginPageButton}>
               <View testID="return-to-login-page">
-                <Text style={styles.goToLoginPageButtonText}>Login</Text>
+                <Text style={styles.goToLoginPageButtonText}>Cancel signing up</Text>
               </View>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-      <Toast message={message} />
+      <PageSpinner visible={authState.loading} />
     </ScrollView>
   );
-};
-
-OTPVerificationScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
@@ -218,7 +200,8 @@ const styles = StyleSheet.create({
   label: {
     color: '#7F8FA4',
     fontWeight: 'bold',
-    fontSize: 11
+    fontSize: 13,
+    textAlign: 'center'
   },
   input: {
     paddingLeft: 8,
@@ -232,7 +215,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   submitButton: {
-    marginTop: 30,
+    marginTop: 15,
     borderRadius: 4.87,
     backgroundColor: '#23C2C2',
     justifyContent: 'center',
@@ -262,7 +245,22 @@ const styles = StyleSheet.create({
   goToLoginPageButton: {},
   goToLoginPageButtonText: {
     color: '#23C2C2'
+  },
+  errorInput: {
+    borderColor: 'red',
+    borderBottomWidth: 1
   }
 });
 
-export default OTPVerificationScreen;
+OTPVerificationScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  verifyAccount: PropTypes.func.isRequired,
+  resendOtp: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  verifyAccount: accountVerificationAction,
+  resendOtp: otpCodeAction
+};
+
+export default connect(null, mapDispatchToProps)(OTPVerificationScreen);

@@ -40,8 +40,8 @@ const LibraryScreen = ({ navigation }) => {
           style={{
             alignItems: 'center',
             flexDirection: 'column',
-            paddingBottom: Constants.statusBarHeight,
-            paddingTop: Constants.statusBarHeight * 2
+            paddingBottom: 44,
+            paddingTop: 44 * 2
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             Library
@@ -139,7 +139,7 @@ const LibraryScreen = ({ navigation }) => {
               <TouchableOpacity
                 style={{ borderRadius: 5, padding: 5, flex: 1 }}
                 onPress={() => {
-                  navigation.navigate('FilterScreen');
+                  navigation.push('FilterScreen');
                 }}>
                 <Surface
                   style={{
