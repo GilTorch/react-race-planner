@@ -37,19 +37,36 @@ axiosService.interceptors.response.use(
   async response => {
     if (response.data?.token) {
       // 1. decode the token
-      const decodedUser = await jwt.decode(response.data.token, '&^GF^%D^Y&^*G(H9gs', {
-        timeSkew: 30
-      });
+      const decodedUser = jwt.decode(response.data.token, '&^GF^%D^Y&^*G(H9gs');
+
+      decodedUser.isPasswordReset = response.data.isPasswordReset;
 
       // 2. save the user and the token to the state
       store.dispatch({
         type: Auth.ADD_SESSION,
-        payload: { user: decodedUser, token: response.data.token }
+        data: { user: decodedUser, token: response.data.token }
       });
     }
     return response;
   },
-  error => Promise.reject(error)
+  error => {
+    if (error.response.data?.token) {
+      // 1. decode the token
+      const decodedUser = jwt.decode(error.response.data.token, '&^GF^%D^Y&^*G(H9gs');
+
+      decodedUser.isPasswordReset = error.response.data.isPasswordReset;
+
+      // 2. save the user and the token to the state
+      store.dispatch({
+        type: Auth.ADD_SESSION,
+        data: {
+          user: decodedUser,
+          token: error.response.data.token
+        }
+      });
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default axiosService;

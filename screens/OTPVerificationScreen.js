@@ -2,23 +2,27 @@ import React from 'react';
 import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
-import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import moment from 'moment';
+import { useForm } from 'react-hook-form';
 import Toast from 'react-native-root-toast';
+import { useFocusEffect } from '@react-navigation/native';
 
-import { passwordResetSchema } from '../utils/validators';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
-import { passwordResetAction } from '../redux/actions/AuthActions';
+import { accountVerificationAction, otpCodeAction } from '../redux/actions/AuthActions';
+import { otpVerificationSchema } from '../utils/validators';
 import PageSpinner from '../components/PageSpinner';
 
-const ResetPasswordScreen = ({ navigation, resetPassword }) => {
+const OTPVerificationScreen = ({ navigation, verifyAccount, resendOtp }) => {
   const authState = useSelector(state => state.auth);
-
   const { errors, handleSubmit, register, watch, setValue } = useForm({
-    validationSchema: passwordResetSchema
+    validationSchema: otpVerificationSchema
   });
+  const tokenExpiration = authState.currentUser?.exp;
+  const formattedTime = moment.unix(tokenExpiration).fromNow();
+  const tokenHasExpired = formattedTime.includes('ago');
+  const expiresOrExpired = tokenHasExpired ? 'expired' : 'expires';
 
   useFocusEffect(
     React.useCallback(() => {
@@ -31,25 +35,46 @@ const ResetPasswordScreen = ({ navigation, resetPassword }) => {
   );
 
   React.useEffect(() => {
-    register('usernameOrEmail');
-  }, [register]);
+    if (!authState.currentUser) {
+      navigation.navigate('Login');
+    }
+  }, [authState.currentUser]);
+
+  const resendVerificationOtp = async () => {
+    try {
+      await resendOtp('account-verification');
+
+      Toast.show('We sent the OTP code to your email', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    } catch (e) {
+      Toast.show(e?.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    }
+  };
 
   const submit = async data => {
     try {
-      await resetPassword(data);
-
-      navigation.navigate('ResetPasswordTwo');
+      if (!tokenHasExpired) {
+        await verifyAccount(data);
+        navigation.navigate('Login');
+      } else {
+        resendVerificationOtp();
+      }
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
         position: Toast.positions.BOTTOM
       });
-
-      if (authState.currentUser?.isActive === false) {
-        navigation.navigate('OTPVerification');
-      }
     }
   };
+
+  React.useEffect(() => {
+    register('otpCode');
+  }, [register]);
 
   return (
     <ScrollView
@@ -61,64 +86,72 @@ const ResetPasswordScreen = ({ navigation, resetPassword }) => {
         </View>
         <View style={styles.headlineContainer}>
           <Text type="medium" style={styles.headline}>
-            Reset Your Password
-          </Text>
-        </View>
-        <View
-          style={{
-            width: '60%',
-            marginTop: 20,
-            marginBottom: 20
-          }}>
-          <Text
-            type="medium"
-            style={{
-              fontSize: 13,
-              textAlign: 'center',
-              color: '#7F8FA4'
-            }}>
-            We will send you a One Time Password via email for you to be able to reset your password
+            Account Verification
           </Text>
         </View>
         <View style={styles.form}>
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
-              <Text style={styles.label}>Username or Email</Text>
+              <Text style={styles.label}>
+                Enter the One-Time Password (OTP) that was sent to your email (
+                {authState.currentUser?.email}). It {expiresOrExpired}{' '}
+                <Text type="bold">{moment.unix(tokenExpiration).fromNow()}</Text>:
+              </Text>
             </View>
             <View style={styles.inputContainer}>
               <TextInput
-                testID="login-user-name"
-                autoCapitalize="none"
-                onChangeText={text => setValue('usernameOrEmail', text)}
-                value={watch('usernameOrEmail')}
+                testID="otp"
+                onChangeText={text => setValue('otpCode', text)}
+                value={watch('otpCode')}
                 onSubmitEditing={handleSubmit(submit)}
                 blurOnSubmit={false}
                 returnKeyType="send"
-                style={[styles.input, errors.usernameOrEmail && styles.errorInput]}
+                style={[styles.input, errors.otpCode && styles.errorInput]}
               />
             </View>
-
-            {errors.usernameOrEmail && (
+            {errors.otpCode && (
               <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
-                {errors.usernameOrEmail.message}
+                {errors.otpCode.message}
               </Text>
             )}
           </View>
           <TouchableOpacity
-            onPress={handleSubmit(submit)}
             testID="reset-password-button"
-            style={styles.submitButton}>
+            style={styles.submitButton}
+            onPress={handleSubmit(submit)}>
             <Text type="medium" style={styles.submitButtonText}>
-              Send Password Reset Code
+              Activate my account
             </Text>
           </TouchableOpacity>
-          <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
-            <Text style={{ color: '#7F8FA4' }}>Do you remember it now? </Text>
+          <View style={{ marginTop: 15, marginBottom: 10, flexDirection: 'row' }}>
+            {!tokenHasExpired && (
+              <Text style={{ color: '#7F8FA4' }}>Didn't receive the code? </Text>
+            )}
+
+            {tokenHasExpired && (
+              <Text style={{ color: '#7F8FA4' }}>Your OTP code has expired. </Text>
+            )}
             <TouchableOpacity
-              onPress={() => navigation.navigate('Login')}
+              onPress={() => resendVerificationOtp()}
               style={styles.goToLoginPageButton}>
               <View testID="return-to-login-page">
-                <Text style={styles.goToLoginPageButtonText}>Log in</Text>
+                {!tokenHasExpired && (
+                  <Text style={styles.goToLoginPageButtonText}>Send another one</Text>
+                )}
+
+                {tokenHasExpired && (
+                  <Text style={styles.goToLoginPageButtonText}>Send a new one</Text>
+                )}
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={{ marginTop: 10, marginBottom: 10, flexDirection: 'row' }}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.goToLoginPageButton}>
+              <View testID="return-to-login-page">
+                <Text style={styles.goToLoginPageButtonText}>Cancel signing up</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -167,7 +200,8 @@ const styles = StyleSheet.create({
   label: {
     color: '#7F8FA4',
     fontWeight: 'bold',
-    fontSize: 11
+    fontSize: 13,
+    textAlign: 'center'
   },
   input: {
     paddingLeft: 8,
@@ -211,16 +245,22 @@ const styles = StyleSheet.create({
   goToLoginPageButton: {},
   goToLoginPageButtonText: {
     color: '#23C2C2'
+  },
+  errorInput: {
+    borderColor: 'red',
+    borderBottomWidth: 1
   }
 });
 
-ResetPasswordScreen.propTypes = {
+OTPVerificationScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  resetPassword: PropTypes.func.isRequired
+  verifyAccount: PropTypes.func.isRequired,
+  resendOtp: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = {
-  resetPassword: passwordResetAction
+  verifyAccount: accountVerificationAction,
+  resendOtp: otpCodeAction
 };
 
-export default connect(null, mapDispatchToProps)(ResetPasswordScreen);
+export default connect(null, mapDispatchToProps)(OTPVerificationScreen);

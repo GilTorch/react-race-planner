@@ -11,64 +11,70 @@ import {
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Entypo } from '@expo/vector-icons';
+// import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import * as Google from 'expo-google-app-auth';
+import { useSelector, connect } from 'react-redux';
+// import * as Google from 'expo-google-app-auth';
 
-import { signUpUser, clearRequestError } from '../redux/actions/AuthActions';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
-import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+// import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+// import * as Facebook from '../utils/facebook';
+import { signupAction } from '../redux/actions/AuthActions';
 import { signupSchema } from '../utils/validators';
 import PageSpinner from '../components/PageSpinner';
-import * as Twitter from '../services/twitter';
+// import * as Twitter from '../services/twitter';
 
-const defaultValues = {
-  username: null,
-  firstName: null,
-  lastName: null,
-  email: null,
-  password: null,
-  password2: null,
-  socialAccount: false,
-  googleAccountId: null,
-  twitterAccountId: null,
-  socialPlatformName: null
-};
+// const defaultValues = {
+//   username: '',
+//   firstName: '',
+//   lastName: '',
+//   email: '',
+//   password: '',
+//   password2: '',
+//   socialAccount: '',
+//   googleAccountId: '',
+//   twitterAccountId: '',
+//   facebookAccountId: '',
+//   socialPlatformName: ''
+// };
 
-const SignupScreen = ({ navigation }) => {
-  useFocusEffect(
-    React.useCallback(() => {
-      StatusBar.setHidden(true);
-    }, [])
-  );
-
-  const [socialPlatformName, setSocialPlatformName] = React.useState(null);
-  const [socialSignUp, setSocialSignup] = React.useState(false);
-
-  const loading = useSelector(state => state.auth.loading);
-  const requestError = useSelector(state => state.auth.requestError);
-  const currentUser = useSelector(state => state.auth.currentUser);
-  const dispatch = useDispatch();
-
-  const { register, handleSubmit, errors, setValue, watch, reset } = useForm({
+const SignupScreen = ({ navigation, signup }) => {
+  const authState = useSelector(state => state.auth);
+  // const [socialSignUp, setSocialSignup] = React.useState(false);
+  // const { register, handleSubmit, errors, setValue, watch, reset } = useForm({
+  const { register, handleSubmit, errors, setValue, watch } = useForm({
     validationSchema: signupSchema,
     validateCriteriaMode: 'all'
   });
   const socialAccount = watch('socialAccount', false);
+  const socialPlatformName = watch('socialPlatformName', false);
+  const inputs = {};
+  const focusNextField = name => inputs[name].focus();
 
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setHidden(true);
+
+      navigation.setOptions({
+        headerShown: false
+      });
+    }, [])
+  );
+
+  // Since this is the first screen in the auth stack, we check if there's
+  // no saved user data. If there is and the user account hasn't been activated
+  // yet, we send them to the OTP verification screen, if there is and it's a password reset
+  // we send them to the password reset verification one
   React.useEffect(() => {
-    // This will automatically navigate to the appropriate screen as
-    // soon as it detects a user account in the store
-    if (currentUser) {
-      // TODO: navigate to OTP screen if user is not active
-      // or to home screen otherwise
-      // navigation.navigate('Home');
+    if (authState.currentUser?.isActive === false) {
+      navigation.navigate('OTPVerification');
+    } else if (authState.currentUser?.isPasswordReset) {
+      navigation.navigate('ResetPasswordTwo');
     }
-  }, [currentUser]);
+  }, [authState.currentUser]);
 
   React.useEffect(() => {
     register('username');
@@ -80,82 +86,98 @@ const SignupScreen = ({ navigation }) => {
     register('socialAccount');
     register('googleAccountId');
     register('twitterAccountId');
+    register('facebookAccountId');
     register('socialPlatformName');
   }, [register]);
 
-  const inputs = {};
-  const focusNextField = name => inputs[name].focus();
-
-  const signup = data => {
-    dispatch(signUpUser(data));
-  };
-
-  async function signInWithGoogleAsync() {
-    setSocialSignup(true);
-
+  const submit = async data => {
     try {
-      const result = await Google.logInAsync({
-        androidClientId: '179189574549-p2l06hbg13fqqba7nfib4nq7na5ci1lc.apps.googleusercontent.com',
-        iosClientId: '179189574549-3379mn2seve0i471eqfkpgduqkgvnd98.apps.googleusercontent.com',
-        scopes: ['profile', 'email']
-      });
+      await signup(data);
 
-      if (result.type === 'success') {
-        setSocialPlatformName('Google');
-
-        setValue([
-          { username: `${result.user.givenName}_${result.user.familyName}`.toLowerCase() },
-          { firstName: result.user.givenName },
-          { lastName: result.user.familyName },
-          { email: result.user.email },
-          { socialAccount: true },
-          { googleAccountId: result.user.id },
-          { socialPlatformName: 'Google' }
-        ]);
-      }
-
-      setSocialSignup(false);
+      // If it gets here, it means the user account is saved successfully
+      // and they need to verify their account
+      navigation.navigate('OTPVerification');
     } catch (e) {
-      setSocialSignup(false);
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
     }
-  }
-
-  const signupWithTwitter = async () => {
-    setSocialSignup(true);
-
-    const { twitterAccountId, username, lastName, firstName, email } = await Twitter.authSession(
-      false
-    );
-
-    if (twitterAccountId) {
-      setSocialPlatformName('Twitter');
-
-      setValue([
-        { twitterAccountId },
-        { username },
-        { lastName },
-        { firstName },
-        { email },
-        { socialAccount: true },
-        { socialPlatformName: 'Twitter' }
-      ]);
-    }
-
-    setSocialSignup(false);
   };
 
-  if (requestError) {
-    Toast.show(requestError.message, {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.BOTTOM
-    });
+  // async function googleLogin() {
+  //   setSocialSignup(true);
 
-    dispatch(clearRequestError());
-  }
+  //   try {
+  //     const result = await Google.logInAsync({
+  //       androidClientId: '179189574549-p2l06hbg13fqqba7nfib4nq7na5ci1lc.apps.googleusercontent.com',
+  //       iosClientId: '179189574549-3379mn2seve0i471eqfkpgduqkgvnd98.apps.googleusercontent.com',
+  //       scopes: ['profile', 'email']
+  //     });
+
+  //     if (result.type === 'success') {
+  //       setValue([
+  //         { username: `${result.user.givenName}_${result.user.familyName}`.toLowerCase() },
+  //         { firstName: result.user.givenName },
+  //         { lastName: result.user.familyName },
+  //         { email: result.user.email },
+  //         { socialAccount: true },
+  //         { googleAccountId: result.user.id },
+  //         { socialPlatformName: 'Google' }
+  //       ]);
+  //     }
+
+  //     setSocialSignup(false);
+  //   } catch (e) {
+  //     setSocialSignup(false);
+  //   }
+  // }
+
+  // const twitterLogin = async () => {
+  //   setSocialSignup(true);
+
+  //   const { twitterAccountId, username, lastName, firstName, email } = await Twitter.authSession(
+  //     false
+  //   );
+
+  //   if (twitterAccountId) {
+  //     setValue([
+  //       { twitterAccountId },
+  //       { username },
+  //       { lastName },
+  //       { firstName },
+  //       { email },
+  //       { socialAccount: true },
+  //       { socialPlatformName: 'Twitter' }
+  //     ]);
+  //   }
+
+  //   setSocialSignup(false);
+  // };
+
+  // const fbSignup = async () => {
+  //   const { id, email, first_name, last_name } = await Facebook.logIn();
+  //   if (id) {
+  //     setValue('facebookAccountId', id);
+  //     setValueIfFieldExists('email', email);
+  //     setValueIfFieldExists('firstName', first_name);
+  //     setValueIfFieldExists('lastName', last_name);
+  //     setIsSigningUpFacebook(true);
+  //   } else {
+  //     Alert.alert(
+  //       'There was an error while trying to access your Facebook account. Try again later.'
+  //     );
+  //   }
+  // };
+
+  // Toast.show(requestError.message, {
+  //   duration: Toast.durations.SHORT,
+  //   position: Toast.positions.BOTTOM
+  // });
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' && 'padding'}>
-      <ScrollView contentContainerStyle={{ backgroundColor: 'white' }}>
+      <ScrollView style={{ backgroundColor: 'white' }}>
         <View style={styles.container}>
           <Image testID="logo" source={SRLogo} resizeMode="contain" style={styles.logo} />
           <View testID="create-account-text" style={styles.headlineContainer}>
@@ -208,6 +230,7 @@ const SignupScreen = ({ navigation }) => {
                   style={[styles.input, errors.firstName && styles.errorInput]}
                 />
               </View>
+
               {errors.firstName && (
                 <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
                   {errors.firstName.message}
@@ -253,7 +276,7 @@ const SignupScreen = ({ navigation }) => {
                   onChangeText={text => setValue('email', text)}
                   value={watch('email')}
                   onSubmitEditing={
-                    socialAccount ? handleSubmit(signup) : () => focusNextField('password')
+                    socialAccount ? handleSubmit(submit) : () => focusNextField('password')
                   }
                   blurOnSubmit={false}
                   ref={input => {
@@ -310,7 +333,8 @@ const SignupScreen = ({ navigation }) => {
                       testID="password-confirmation"
                       onChangeText={text => setValue('password2', text)}
                       value={watch('password2')}
-                      onSubmitEditing={handleSubmit(signup)}
+                      onSubmitEditing={handleSubmit(submit)}
+                      blurOnSubmit={false}
                       ref={input => {
                         inputs.password2 = input;
                       }}
@@ -329,7 +353,7 @@ const SignupScreen = ({ navigation }) => {
             )}
             <TouchableOpacity
               testID="sign-up-button"
-              onPress={handleSubmit(signup)}
+              onPress={handleSubmit(submit)}
               style={styles.submitButton}>
               {socialAccount && (
                 <Text type="medium" style={styles.submitButtonText}>
@@ -342,7 +366,8 @@ const SignupScreen = ({ navigation }) => {
                 </Text>
               )}
             </TouchableOpacity>
-            <View
+
+            {/* <View
               style={[
                 styles.loginWithSocialMediaTextContainer,
                 { marginTop: socialAccount ? 15 : 20 }
@@ -352,7 +377,6 @@ const SignupScreen = ({ navigation }) => {
                   style={{ marginBottom: 20 }}
                   onPress={() => {
                     reset(defaultValues);
-                    setSocialPlatformName(null);
                   }}>
                   <Text type="medium" style={{ color: 'red', fontWeight: 'bold' }}>
                     Cancel signing up with {socialPlatformName}
@@ -378,7 +402,7 @@ const SignupScreen = ({ navigation }) => {
               ]}>
               {socialPlatformName !== 'Twitter' && (
                 <TouchableOpacity
-                  onPress={signupWithTwitter}
+                  onPress={twitterLogin}
                   testID="twitter-icon-button"
                   style={{
                     backgroundColor: '#3ABDFF',
@@ -396,7 +420,7 @@ const SignupScreen = ({ navigation }) => {
                 <Entypo name="facebook-with-circle" size={24} color="#fff" />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={signInWithGoogleAsync}
+                onPress={googleLogin}
                 testID="google-icon-btn"
                 style={{
                   backgroundColor: '#e6e6e6',
@@ -404,7 +428,7 @@ const SignupScreen = ({ navigation }) => {
                 }}>
                 <GoogleColorfulIcon />
               </TouchableOpacity>
-            </View>
+            </View> */}
             <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
               <Text style={{ color: '#7F8FA4' }}>Already a member? </Text>
               <TouchableOpacity
@@ -415,17 +439,16 @@ const SignupScreen = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
             </View>
+            {errors.email && (
+              <Text style={{ marginTop: 10, color: 'red' }}>{errors.email.message}</Text>
+            )}
           </View>
         </View>
       </ScrollView>
-      <PageSpinner visible={loading} />
-      <PageSpinner visible={socialSignUp} />
+      {/* <PageSpinner visible={authState.loading || socialSignUp} /> */}
+      <PageSpinner visible={authState.loading} />
     </KeyboardAvoidingView>
   );
-};
-
-SignupScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
@@ -519,4 +542,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SignupScreen;
+SignupScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  signup: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  signup: signupAction
+};
+
+export default connect(null, mapDispatchToProps)(SignupScreen);
