@@ -1,13 +1,12 @@
 import { Platform } from 'react-native';
 import axios from 'axios';
 import jwt from 'expo-jwt';
+import { ANDROID_BASE_URL, IOS_BASE_URL, JWT_SECRET, RERUM_KEY } from 'react-native-dotenv';
 import { Auth } from '../redux/actions/types';
 import store from '../redux/store';
 
 const axiosOptions = {
-  // TODO: get the baseURL from the ENV
-  baseURL:
-    Platform.OS === 'android' ? 'http://10.0.2.2:3000/api/v1' : 'http://localhost:3000/api/v1'
+  baseURL: Platform.OS === 'android' ? ANDROID_BASE_URL : IOS_BASE_URL
 };
 
 const axiosService = axios.create(axiosOptions);
@@ -18,9 +17,8 @@ axiosService.interceptors.request.use(
   config => {
     const { token } = store.getState().auth;
     const mutableConfig = { ...config };
-    // TODO: get the token from the ENV variable
-    mutableConfig.headers['X-RERUM-KEY'] =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0RldiI6dHJ1ZSwiaWF0IjoxNTg4Mjc3OTQ2fQ.J-5O1kUdIgnbJAkVRmikS66WUqUBlzbSlNvCtLtK1t0';
+
+    mutableConfig.headers['X-RERUM-KEY'] = RERUM_KEY;
 
     if (token) {
       mutableConfig.headers.common.Authorization = `Bearer ${token}`;
@@ -37,7 +35,7 @@ axiosService.interceptors.response.use(
   async response => {
     if (response.data?.token) {
       // 1. decode the token
-      const decodedUser = jwt.decode(response.data.token, '&^GF^%D^Y&^*G(H9gs');
+      const decodedUser = jwt.decode(response.data.token, JWT_SECRET);
 
       decodedUser.isPasswordReset = response.data.isPasswordReset;
 
@@ -52,7 +50,7 @@ axiosService.interceptors.response.use(
   error => {
     if (error.response.data?.token) {
       // 1. decode the token
-      const decodedUser = jwt.decode(error.response.data.token, '&^GF^%D^Y&^*G(H9gs');
+      const decodedUser = jwt.decode(error.response.data.token, JWT_SECRET);
 
       decodedUser.isPasswordReset = error.response.data.isPasswordReset;
 
