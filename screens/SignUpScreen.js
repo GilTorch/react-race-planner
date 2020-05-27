@@ -17,6 +17,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
 // import * as Google from 'expo-google-app-auth';
+// import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from 'react-native-dotenv';
 
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
@@ -110,8 +111,8 @@ const SignupScreen = ({ navigation, signup }) => {
 
   //   try {
   //     const result = await Google.logInAsync({
-  //       androidClientId: '179189574549-p2l06hbg13fqqba7nfib4nq7na5ci1lc.apps.googleusercontent.com',
-  //       iosClientId: '179189574549-3379mn2seve0i471eqfkpgduqkgvnd98.apps.googleusercontent.com',
+  //       androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+  //       iosClientId: GOOGLE_IOS_CLIENT_ID,
   //       scopes: ['profile', 'email']
   //     });
 
