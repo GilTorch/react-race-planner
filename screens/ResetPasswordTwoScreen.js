@@ -133,7 +133,9 @@ const PasswordResetVerificationScreen = ({ navigation, verifyPasswordReset, rese
             </View>
           </View>
           {errors.otpCode && (
-            <Text style={{ marginTop: 10, color: 'red' }}>{errors.otpCode.message}</Text>
+            <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+              {errors.otpCode.message}
+            </Text>
           )}
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
@@ -158,7 +160,9 @@ const PasswordResetVerificationScreen = ({ navigation, verifyPasswordReset, rese
             </View>
           </View>
           {errors.newPassword && (
-            <Text style={{ marginTop: 10, color: 'red' }}>{errors.newPassword.message}</Text>
+            <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+              {errors.newPassword.message}
+            </Text>
           )}
           <View style={styles.formGroup}>
             <View style={styles.labelContainer}>
@@ -183,7 +187,7 @@ const PasswordResetVerificationScreen = ({ navigation, verifyPasswordReset, rese
             </View>
           </View>
           {errors.newPasswordConfirmation && (
-            <Text style={{ marginTop: 10, color: 'red' }}>
+            <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
               {errors.newPasswordConfirmation.message}
             </Text>
           )}
@@ -204,9 +208,7 @@ const PasswordResetVerificationScreen = ({ navigation, verifyPasswordReset, rese
             {tokenHasExpired && (
               <Text style={{ color: '#7F8FA4' }}>Your OTP code has expired. </Text>
             )}
-            <TouchableOpacity
-              onPress={() => resendPasswordResetOtp()}
-              style={styles.goToLoginPageButton}>
+            <TouchableOpacity onPress={() => resendPasswordResetOtp()}>
               <View testID="return-to-login-page">
                 {!tokenHasExpired && (
                   <Text style={styles.goToLoginPageButtonText}>Send another one</Text>
@@ -221,9 +223,7 @@ const PasswordResetVerificationScreen = ({ navigation, verifyPasswordReset, rese
 
           <View style={{ marginTop: 20 }}>
             <Text style={{ color: '#7F8FA4' }}>Do you wish to cancel resetting your password?</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Login')}
-              style={styles.goToLoginPageButton}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
               <View testID="shrink-to-login-page">
                 <Text type="medium" style={styles.goToLoginPageButtonText}>
                   Log in
@@ -318,9 +318,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  goToLoginPageButton: {},
   goToLoginPageButtonText: {
     color: '#23C2C2'
+  },
+  errorInput: {
+    borderColor: 'red',
+    borderBottomWidth: 1
   }
 });
 

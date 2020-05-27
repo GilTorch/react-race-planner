@@ -439,9 +439,9 @@ const SignupScreen = ({ navigation, signup }) => {
                 </View>
               </TouchableOpacity>
             </View>
-            {errors.email && (
+            {/* {errors.email && (
               <Text style={{ marginTop: 10, color: 'red' }}>{errors.email.message}</Text>
-            )}
+            )} */}
           </View>
         </View>
       </ScrollView>

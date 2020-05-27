@@ -114,11 +114,9 @@ const ResetPasswordScreen = ({ navigation, resetPassword }) => {
           </TouchableOpacity>
           <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
             <Text style={{ color: '#7F8FA4' }}>Do you remember it now? </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Login')}
-              style={styles.goToLoginPageButton}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
               <View testID="return-to-login-page">
-                <Text style={styles.goToLoginPageButtonText}>Log in</Text>
+                <Text style={{ color: '#23C2C2' }}>Log in</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -208,9 +206,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  goToLoginPageButton: {},
-  goToLoginPageButtonText: {
-    color: '#23C2C2'
+  errorInput: {
+    borderColor: 'red',
+    borderBottomWidth: 1
   }
 });
 
