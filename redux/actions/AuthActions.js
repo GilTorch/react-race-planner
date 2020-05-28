@@ -78,3 +78,7 @@ export const passwordResetVerificationAction = data => dispatch => {
       throw error.response?.data;
     });
 };
+
+export const logoutAction = () => dispatch => {
+  dispatch({ type: Auth.LOGOUT });
+};

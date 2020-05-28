@@ -94,6 +94,12 @@ export default (state = INITIAL_STATE, action) => {
         token: null, // Get rid of the temporary token
         currentUser: null // And its user data
       };
+    case Auth.LOGOUT:
+      return {
+        ...state,
+        token: null,
+        currentUser: null
+      };
     default:
       return state;
   }

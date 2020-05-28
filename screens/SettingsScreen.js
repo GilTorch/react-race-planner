@@ -3,19 +3,20 @@ import { ScrollView, Image, View, TouchableOpacity, StatusBar, Platform } from '
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
-import Constants from 'expo-constants';
 import { Surface, Portal, Modal, Divider, Button, TextInput } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
+import { connect } from 'react-redux';
 
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import { logoutAction } from '../redux/actions/AuthActions';
 
-const SettingsScreen = ({ navigation }) => {
+const SettingsScreen = ({ navigation, logout }) => {
   const {
     expo: { version }
   } = app;
@@ -473,7 +474,9 @@ const SettingsScreen = ({ navigation }) => {
             borderWidth: 1,
             marginTop: 30
           }}>
-          <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <TouchableOpacity
+            onPress={() => logout()}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontSize: 18 }}>Log Out</Text>
           </TouchableOpacity>
         </View>
@@ -605,4 +608,13 @@ const styles = {
   }
 };
 
-export default SettingsScreen;
+SettingsScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  logout: logoutAction
+};
+
+export default connect(null, mapDispatchToProps)(SettingsScreen);
