@@ -110,7 +110,9 @@ dist
 web-build
 .env.local
 .env.development.local
+.env.development
 .env.test.local
 .env.production.local
+.env.production
 .expo
 bin
