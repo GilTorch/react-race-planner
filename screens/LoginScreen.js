@@ -45,9 +45,9 @@ const LoginScreen = ({ navigation, login }) => {
     try {
       await login(data);
     } catch (e) {
-      let toastMessage = e.message;
+      let toastMessage = e?.message || 'Something unexpected happened';
 
-      if (e.code === 'UnauthorizedUser') {
+      if (e?.code === 'UnauthorizedUser') {
         toastMessage = 'This username/email and password combination is incorrect';
       }
 
