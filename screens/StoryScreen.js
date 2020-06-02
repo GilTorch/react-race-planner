@@ -334,7 +334,6 @@ const StoryScreen = ({ navigation, route }) => {
         <ScrollView
           scrollEventThrottle={16}
           ref={scrollView}
-          snapToInterval
           decelerationRate="fast"
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
             listener: event => {

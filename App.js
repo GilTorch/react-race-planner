@@ -29,7 +29,7 @@ import AppNavigation from './navigation';
 import store from './redux/store';
 import persistor from './redux/store/persistor';
 
-persistor.purge();
+// persistor.purge();
 function cacheImages(images) {
   return images.map(image => {
     if (typeof image === 'string') {
@@ -100,7 +100,7 @@ export default function App(props) {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <PaperProvider>
+        <PaperProvider theme={theme}>
           <View style={styles.container}>
             <NavigationContainer
               ref={containerRef}
