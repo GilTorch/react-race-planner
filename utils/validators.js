@@ -31,3 +31,37 @@ export const signupSchema = yup.object().shape({
   }),
   socialAccount: yup.boolean()
 });
+
+export const loginSchema = yup.object().shape({
+  usernameOrEmail: yup.string().required('Enter your username or your email'),
+  password: yup
+    .string()
+    .min(8)
+    .required('Enter your password')
+});
+
+export const otpVerificationSchema = yup.object().shape({
+  otpCode: yup
+    .number()
+    .typeError('One-Time Password must be a number')
+    .required('One-Time Password is required')
+});
+
+export const passwordResetSchema = yup.object().shape({
+  usernameOrEmail: yup.string().required('Enter your username or your email')
+});
+
+export const passwordResetVerificationSchema = yup.object().shape({
+  otpCode: yup
+    .number()
+    .typeError('One-Time Password must be a number')
+    .required('Enter the otp code you received by email'),
+  newPassword: yup
+    .string()
+    .min(8, 'Your password should be at least 8 characters')
+    .required('Enter your password'),
+  newPasswordConfirmation: yup
+    .string()
+    .required('Confirm password')
+    .oneOf([yup.ref('newPassword'), null], 'Passwords are not the same')
+});
