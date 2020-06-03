@@ -2,8 +2,6 @@ import React from 'react';
 import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
-// eslint-disable-next-line no-unused-vars
-import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
