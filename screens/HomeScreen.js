@@ -1,13 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome, SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
-import { Surface, Searchbar } from 'react-native-paper';
+import { Surface, Searchbar, Button } from 'react-native-paper';
 import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import Menu from 'react-native-material-menu';
-
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
 import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
@@ -16,6 +15,16 @@ import Story from '../components/stories/Story';
 const HomeScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
+  const [currentGenre, setCurrentGenre] = useState(genres[0]);
+  let menu = null;
+  const setMenuRef = ref => {
+    menu = ref;
+  };
+
+  const showMenu = async genreIndex => {
+    setCurrentGenre(genres[genreIndex]);
+    menu.show();
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -96,38 +105,20 @@ const HomeScreen = ({ navigation, route }) => {
             ))}
           </ScrollView>
         </Surface>
-<<<<<<< HEAD
         <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              marginTop: 10,
-              marginRight: 10
-            }}>
-            <TouchableOpacity
-              onPress={() => menu.hide()}
+          <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
+            <View
               style={{
-                width: 25,
-                height: 25,
+                flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: '#F44336',
-                borderRadius: 5
+                marginBottom: 10
               }}>
-              <MaterialIcons name="close" style={{ color: '#fff' }} size={24} />
-            </TouchableOpacity>
-          </View>
-          <View style={{ paddingLeft: 10, paddingRight: 10, marginBottom: 20 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
               <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
-                {currentGenre.name}{' '}
+                {currentGenre.name}
               </Text>
-              <TouchableOpacity>
-                <MaterialIcons name="open-in-new" style={{ color: '#ED8A18' }} size={18} />
-              </TouchableOpacity>
             </View>
-            <Text>
+            <Text style={{ textAlign: 'center' }}>
               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
               has been the industry's standard dummy text ever since the 1500s, when an unknown
               printer took a galley of type and scrambled it to make a type specimen book. It has
@@ -135,11 +126,35 @@ const HomeScreen = ({ navigation, route }) => {
               remaining essentially unchanged. It was popularised in the 1960s with the release of
               Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
             </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '65%',
+                alignSelf: 'flex-end',
+                justifyContent: 'flex-end',
+                marginTop: 15,
+                marginBottom: 20
+              }}>
+              <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
+                <Button uppercase={false} onPress={() => ''} style={{ backgroundColor: '#03A2A2' }}>
+                  <Text type="bold" style={{ color: '#FFF' }}>
+                    Go
+                  </Text>
+                </Button>
+              </Surface>
+              <Surface style={styles.btnSurface}>
+                <Button
+                  onPress={() => menu.hide()}
+                  uppercase={false}
+                  style={{ backgroundColor: '#f44336' }}>
+                  <Text type="bold" style={{ color: '#fff' }}>
+                    Cancel
+                  </Text>
+                </Button>
+              </Surface>
+            </View>
           </View>
         </Menu>
-=======
-        {/* Nick removed this in a previous commit, don't know why */}
-        {/* I think we can remove this and display the modal in the start new story button above */}
         <View style={{ paddingLeft: 23 }}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Text type="medium" style={{ fontSize: 12, marginTop: 10, color: '#03A2A2' }}>
@@ -148,7 +163,6 @@ const HomeScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
 
->>>>>>> develop
         {searchBarVisible && (
           <View
             style={{
@@ -260,6 +274,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EEE'
+  },
+  btnSurface: {
+    elevation: 4,
+    marginVertical: 10,
+    borderRadius: 5
   },
   headline: { color: '#5A7582' },
   genreIconContainer: {
