@@ -5,41 +5,26 @@ import { Surface, Searchbar } from 'react-native-paper';
 import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
-import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
+import Menu from 'react-native-material-menu';
 
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
-import ViewAllCategoriesModal from '../components/modals/ViewAllCategoriesModal';
+import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
 
 const HomeScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
 
-  let menu = null;
-
-  const [currentGenre, setCurrentGenre] = useState(genres[0]);
-
-  const setMenuRef = ref => {
-    menu = ref;
-  };
-
-  const showMenu = async genreIndex => {
-    setCurrentGenre(genres[genreIndex]);
-    // setMenuPosition({ top: 125, left: 35 + genreIndex * 50 });
-    menu.show();
-  };
-
-  navigation.setOptions({
-    headerShown: false
-  });
-
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(false);
       StatusBar.setBarStyle('light-content');
+
+      navigation.setOptions({
+        headerShown: false
+      });
     }, [])
   );
 
@@ -49,7 +34,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <ViewAllCategoriesModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
+      <ViewAllGenresModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
       <Surface
         style={{
           elevation: 3,
@@ -61,8 +46,8 @@ const HomeScreen = ({ navigation, route }) => {
           style={{
             alignItems: 'center',
             flexDirection: 'column',
-            paddingBottom: Constants.statusBarHeight,
-            paddingTop: Constants.statusBarHeight * 2
+            paddingBottom: 44,
+            paddingTop: 44 * 2
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             ScriptoRerum
@@ -111,6 +96,7 @@ const HomeScreen = ({ navigation, route }) => {
             ))}
           </ScrollView>
         </Surface>
+<<<<<<< HEAD
         <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
           <View
             style={{
@@ -151,6 +137,18 @@ const HomeScreen = ({ navigation, route }) => {
             </Text>
           </View>
         </Menu>
+=======
+        {/* Nick removed this in a previous commit, don't know why */}
+        {/* I think we can remove this and display the modal in the start new story button above */}
+        <View style={{ paddingLeft: 23 }}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Text type="medium" style={{ fontSize: 12, marginTop: 10, color: '#03A2A2' }}>
+              View all genres
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+>>>>>>> develop
         {searchBarVisible && (
           <View
             style={{
@@ -236,18 +234,6 @@ const HomeScreen = ({ navigation, route }) => {
             </View>
           </View>
         )}
-
-        <View>
-          {stories.map((story, index) => (
-            <Story
-              key={Math.random()}
-              story={story}
-              index={index}
-              length={stories.length}
-              navigation={navigation}
-            />
-          ))}
-        </View>
 
         {inprogressStories.map((story, index) => (
           <Story

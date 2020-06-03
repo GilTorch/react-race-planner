@@ -83,8 +83,8 @@ const EditSettingsScreen = ({ navigation, route }) => {
             alignItems: 'center',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingBottom: Constants.statusBarHeight,
-            paddingTop: Constants.statusBarHeight * 2
+            paddingBottom: 44,
+            paddingTop: 44 * 2
           }}>
           <IconButton onPress={() => navigation.goBack()} icon="arrow-left" color="white" />
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>

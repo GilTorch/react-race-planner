@@ -10,25 +10,10 @@ import { useFocusEffect } from '@react-navigation/native';
 import Menu from 'react-native-material-menu';
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
+import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
 
 const LibraryScreen = ({ navigation }) => {
-  const [searchBarVisible, setSearchBarVisible] = useState(false);
-
-  let menu = null;
-
-  const [currentGenre, setCurrentGenre] = useState(genres[0]);
-
-  const setMenuRef = ref => {
-    menu = ref;
-  };
-
-  const showMenu = async genreIndex => {
-    setCurrentGenre(genres[genreIndex]);
-    // setMenuPosition({ top: 125, left: 35 + genreIndex * 50 });
-    menu.show();
-  };
-
   navigation.setOptions({
     headerShown: false
   });
@@ -39,10 +24,14 @@ const LibraryScreen = ({ navigation }) => {
     }, [])
   );
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [searchBarVisible, setSearchBarVisible] = useState(false);
+
   const completedStories = stories.filter(story => story.status === 'Completed');
 
   return (
     <View style={styles.container}>
+      <ViewAllGenresModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
       <Surface
         style={{
           elevation: 3,
@@ -54,8 +43,8 @@ const LibraryScreen = ({ navigation }) => {
           style={{
             alignItems: 'center',
             flexDirection: 'column',
-            paddingBottom: Constants.statusBarHeight,
-            paddingTop: Constants.statusBarHeight * 2
+            paddingBottom: 44,
+            paddingTop: 44 * 2
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             Library
@@ -170,6 +159,15 @@ const LibraryScreen = ({ navigation }) => {
             </View>
           </View>
         )}
+        {/* Nick removed this in a previous commit, don't know why */}
+        {/* I think we can remove this and display the modal in the start new story button above */}
+        <View style={{ paddingLeft: 23 }}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Text type="medium" style={{ fontSize: 12, marginTop: 10, color: '#03A2A2' }}>
+              View all genres
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         {!searchBarVisible && (
           <View
