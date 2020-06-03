@@ -8,15 +8,17 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 
+import Toast from 'react-native-root-toast';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
-import { logoutAction } from '../redux/actions/AuthActions';
+import { logoutAction, deleteAccountAction } from '../redux/actions/AuthActions';
+import PageSpinner from '../components/PageSpinner';
 
-const SettingsScreen = ({ navigation }) => {
+const SettingsScreen = ({ navigation, logout, deleteAccount }) => {
   const {
     expo: { version }
   } = app;
@@ -27,14 +29,12 @@ const SettingsScreen = ({ navigation }) => {
 
   const currentUser = useSelector(state => state.auth.currentUser);
   const [modalUsername, setModalUsername] = useState('');
-  const loadingDeleteAccount = useSelector(state => state.auth.loadingDeleteAccount);
-  const [visible, setVisible] = React.useState(false);
+  const loading = useSelector(state => state.auth.loading);
+  const [modalVisible, setModalVisible] = React.useState(false);
   const [date, setDate] = React.useState(new Date(687041730000));
   const [show, setShow] = React.useState(false);
   const [showImageManipulator, setShowImageManipulator] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(null);
-  const requestError = useSelector(state => state.auth.requestError);
-  const dispatch = useDispatch();
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
   const openImagePickerAsync = async () => {
@@ -75,8 +75,8 @@ const SettingsScreen = ({ navigation }) => {
     }
   };
 
-  const showDeleteModal = () => setVisible(true);
-  const hideDeleteModal = () => setVisible(false);
+  const showDeleteModal = () => setModalVisible(true);
+  const hideDeleteModal = () => setModalVisible(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -84,14 +84,28 @@ const SettingsScreen = ({ navigation }) => {
     }, [])
   );
 
-  // if (requestError) {
-  //   Toast.show(requestError.message, {
-  //     duration: Toast.durations.SHORT,
-  //     position: Toast.positions.BOTTOM
-  //   });
-
-  //   dispatch(clearRequestError());
-  // }
+  const handleDeleteAccount = async () => {
+    if (currentUser && currentUser.username === modalUsername) {
+      try {
+        // eslint-disable-next-line no-underscore-dangle
+        await deleteAccount(currentUser._id);
+      } catch (e) {
+        let toastMessage = e?.message || 'Something unexpected happened';
+        if (e?.code === 'ServerError') {
+          toastMessage = 'Something unexpected happened';
+        }
+        Toast.show(toastMessage, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM
+        });
+      }
+    } else {
+      Toast.show('Enter your username to confirm you want to delete your account', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    }
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
@@ -488,7 +502,7 @@ const SettingsScreen = ({ navigation }) => {
             marginTop: 30
           }}>
           <TouchableOpacity
-            onPress={() => dispatch(logoutAction())}
+            onPress={() => logout()}
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontSize: 18 }}>Log Out</Text>
           </TouchableOpacity>
@@ -522,7 +536,7 @@ const SettingsScreen = ({ navigation }) => {
         <Portal>
           <Modal
             dismissable={false}
-            visible={visible}
+            visible={modalVisible}
             contentContainerStyle={{
               backgroundColor: 'white',
               borderRadius: 6,
@@ -537,12 +551,21 @@ const SettingsScreen = ({ navigation }) => {
                 margin: 20,
                 marginBottom: 10
               }}>
-              <Text type="bold" style={{ fontSize: 24, color: '#5A7582' }}>
-                Delete Account !
+              <Text type="bold" style={{ fontSize: 20, color: '#5A7582' }}>
+                Before you delete your Account
+              </Text>
+              <Text style={{ marginTop: 10, fontSize: 16, color: '#5A7582' }}>
+                Please enter your
+                <Text type="bold" style={{ fontSize: 16 }}>
+                  {' '}
+                  username{' '}
+                </Text>
+                to confirm that you wish to delete your account.
               </Text>
             </View>
             <View style={{ flex: 1, justifyContent: 'space-around' }}>
               <TextInput
+                autoCapitalize="none"
                 placeholder="Enter your username"
                 onChangeText={text => setModalUsername(text)}
                 style={{
@@ -560,11 +583,7 @@ const SettingsScreen = ({ navigation }) => {
                 }}>
                 <Surface style={styles.btnSurface}>
                   <Button
-                    onPress={() => {
-                      if (currentUser && currentUser.username === modalUsername) {
-                        dispatch(deleteAccount(currentUser.id));
-                      }
-                    }}
+                    onPress={() => handleDeleteAccount()}
                     style={{ backgroundColor: '#f44336' }}>
                     <Text type="bold" style={{ color: '#fff' }}>
                       Delete
@@ -583,7 +602,7 @@ const SettingsScreen = ({ navigation }) => {
           </Modal>
         </Portal>
       </ScrollView>
-      <PageSpinner visible={loadingDeleteAccount} />
+      <PageSpinner visible={loading} />
     </View>
   );
 };
@@ -629,7 +648,14 @@ const styles = {
 };
 
 SettingsScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired,
+  deleteAccount: PropTypes.func.isRequired
 };
 
-export default SettingsScreen;
+const mapDispatchToProps = {
+  logout: logoutAction,
+  deleteAccount: deleteAccountAction
+};
+
+export default connect(null, mapDispatchToProps)(SettingsScreen);
