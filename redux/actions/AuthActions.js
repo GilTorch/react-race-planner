@@ -83,7 +83,7 @@ export const logoutAction = () => dispatch => {
   dispatch({ type: Auth.LOGOUT });
 };
 
-export const deleteAccount = currentUserId => {
+export const deleteAccountAction = currentUserId => {
   return dispatch => {
     dispatch({ type: Auth.DELETE_ACCOUNT_START });
     return axios.delete(`/users/${currentUserId}`).then(
