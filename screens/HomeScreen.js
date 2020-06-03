@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome, SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
 import { Surface, Searchbar, Button } from 'react-native-paper';
