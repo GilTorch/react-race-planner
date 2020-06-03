@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome, SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
 import { Surface, Searchbar } from 'react-native-paper';
@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
-import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
+import Menu from 'react-native-material-menu';
 
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
@@ -28,7 +28,6 @@ const HomeScreen = ({ navigation, route }) => {
 
   const showMenu = async genreIndex => {
     setCurrentGenre(genres[genreIndex]);
-    // setMenuPosition({ top: 125, left: 35 + genreIndex * 50 });
     menu.show();
   };
 
