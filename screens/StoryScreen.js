@@ -73,8 +73,6 @@ const StoryScreen = ({ navigation, route }) => {
   const HEADER_MINIMUM_HEIGHT = 0;
   const HEADER_MAXIMUM_HEIGHT = SCREEN_HEIGHT * 0.25;
 
-  let paginationScrollPosition = scrollY;
-
   const titleHeight = scrollY.interpolate({
     inputRange: [0, 25],
     outputRange: [25, 0],
@@ -246,11 +244,8 @@ const StoryScreen = ({ navigation, route }) => {
               }}>
               <TouchableOpacity
                 onPress={() => {
-                  paginationScrollPosition = 0;
-
                   scrollView.current.scrollTo({
-                    x: 0,
-                    y: paginationScrollPosition,
+                    y: 0,
                     animated: true
                   });
                 }}
@@ -264,13 +259,11 @@ const StoryScreen = ({ navigation, route }) => {
                     alignItems: 'center'
                   }}>
                   <AntDesign name="stepbackward" size={14} color="white" />
-                  {/* <Text style={{ color: 'white', fontSize: 14 }}>First</Text> */}
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   scrollView.current.scrollTo({
-                    x: 0,
                     y: rawScrollPosition - 300,
                     animated: true
                   });
@@ -285,14 +278,12 @@ const StoryScreen = ({ navigation, route }) => {
                     alignItems: 'center'
                   }}>
                   <AntDesign name="banckward" size={14} color="white" />
-                  {/* <Text style={{ color: 'white', fontSize: 14 }}>Previous</Text> */}
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
                 style={{ flex: 1 }}
                 onPress={() => {
                   scrollView.current.scrollTo({
-                    x: 0,
                     y: rawScrollPosition + 300,
                     animated: true
                   });
@@ -306,7 +297,6 @@ const StoryScreen = ({ navigation, route }) => {
                     alignItems: 'center'
                   }}>
                   <AntDesign name="forward" size={14} color="white" />
-                  {/* <Text style={{ color: 'white', fontSize: 14 }}>Next</Text> */}
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
@@ -323,7 +313,6 @@ const StoryScreen = ({ navigation, route }) => {
                     alignItems: 'center'
                   }}>
                   <AntDesign name="stepforward" size={16} color="white" />
-                  {/* <Text style={{ color: 'white', fontSize: 14 }}>Last</Text> */}
                 </View>
               </TouchableOpacity>
             </Animated.View>
