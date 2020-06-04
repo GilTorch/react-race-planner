@@ -1,7 +1,7 @@
-import { SET_HOME_STORY_FILTERS } from '../actions/types';
+import { Home } from '../actions/types';
 
 const initialState = {
-  homeStoryFilters: {
+  filters: {
     status: {
       allSelected: false,
       tags: [
@@ -22,14 +22,15 @@ const initialState = {
         { selected: false, label: 'Essay' },
         { selected: false, label: 'Bedtime Stories' }
       ]
-    }
+    },
+    authors: [5, 20]
   }
 };
 
 const homeReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_HOME_STORY_FILTERS:
-      return { ...state, homeStoryFilters: { ...state.homeStoryFilters, ...action.data } };
+    case Home.SET_FILTERS:
+      return { ...state, filters: { ...state.filters, ...action.data } };
     default:
       return state;
   }

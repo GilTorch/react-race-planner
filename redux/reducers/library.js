@@ -1,7 +1,7 @@
-import { SET_LIBRARY_STORY_FILTERS } from '../actions/types';
+import { Library } from '../actions/types';
 
 const initialState = {
-  libraryStoryFilters: {
+  filters: {
     status: {
       allSelected: false,
       tags: [
@@ -22,14 +22,15 @@ const initialState = {
         { selected: false, label: 'Essay' },
         { selected: false, label: 'Bedtime Stories' }
       ]
-    }
+    },
+    authors: [5, 20]
   }
 };
 
 const libraryReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_LIBRARY_STORY_FILTERS:
-      return { ...state, libraryStoryFilters: { ...state.libraryStoryFilters, ...action.data } };
+    case Library.SET_FILTERS:
+      return { ...state, filters: { ...state.filters, ...action.data } };
     default:
       return state;
   }

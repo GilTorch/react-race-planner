@@ -5,7 +5,6 @@ import { AntDesign, FontAwesome, SimpleLineIcons } from '@expo/vector-icons';
 import { Surface, Searchbar } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
 
 import Text from '../components/CustomText';
@@ -151,7 +150,7 @@ const LibraryScreen = ({ navigation }) => {
               <TouchableOpacity
                 style={{ borderRadius: 5, padding: 5, flex: 1 }}
                 onPress={() => {
-                  navigation.push('FilterScreen', { previousScreen: 'library' });
+                  navigation.navigate('FilterScreen', { previousScreen: 'library' });
                 }}>
                 <Surface
                   style={{

@@ -1,7 +1,7 @@
-import { SET_WRITING_STORY_FILTERS } from '../actions/types';
+import { Writing } from '../actions/types';
 
 const initialState = {
-  writingStoryFilters: {
+  filters: {
     status: {
       allSelected: false,
       tags: [
@@ -22,14 +22,15 @@ const initialState = {
         { selected: false, label: 'Essay' },
         { selected: false, label: 'Bedtime Stories' }
       ]
-    }
+    },
+    authors: [5, 20]
   }
 };
 
 const writingReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_WRITING_STORY_FILTERS:
-      return { ...state, writingStoryFilters: { ...state.writingStoryFilters, ...action.data } };
+    case Writing.SET_FILTERS:
+      return { ...state, filters: { ...state.filters, ...action.data } };
     default:
       return state;
   }
