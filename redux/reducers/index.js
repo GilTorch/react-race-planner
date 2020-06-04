@@ -1,12 +1,16 @@
 import { combineReducers } from 'redux';
-import homeReducer from './home';
-import libraryReducer from './library';
-import writingReducer from './writing';
+import { persistReducer } from 'redux-persist';
+import { AsyncStorage } from 'react-native';
+
+import AuthReducer from './AuthReducer';
+
+const authPersistConfig = {
+  key: 'auth',
+  storage: AsyncStorage
+};
 
 const rootReducer = combineReducers({
-  home: homeReducer,
-  library: libraryReducer,
-  writing: writingReducer
+  auth: persistReducer(authPersistConfig, AuthReducer)
 });
 
 export default rootReducer;

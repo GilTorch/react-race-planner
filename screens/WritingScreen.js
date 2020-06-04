@@ -39,8 +39,8 @@ const Writing = ({ navigation }) => {
           style={{
             alignItems: 'center',
             flexDirection: 'column',
-            paddingBottom: Constants.statusBarHeight,
-            paddingTop: Constants.statusBarHeight * 2
+            paddingBottom: 44,
+            paddingTop: 44 * 2
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             My Stories
@@ -97,7 +97,7 @@ const Writing = ({ navigation }) => {
                 <TouchableOpacity
                   style={{ borderRadius: 5, padding: 5, flex: 1 }}
                   onPress={() => {
-                    navigation.push('FilterScreen', { previousScreen: 'writing' });
+                    navigation.navigate('FilterScreen');
                   }}>
                   <Surface
                     style={{
