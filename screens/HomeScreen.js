@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign, FontAwesome, SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
 import { Surface, Searchbar, Button } from 'react-native-paper';
 import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
@@ -136,7 +136,11 @@ const HomeScreen = ({ navigation, route }) => {
                 marginBottom: 20
               }}>
               <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
-                <Button uppercase={false} onPress={() => ''} style={{ backgroundColor: '#03A2A2' }}>
+                <Button
+                  icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+                  uppercase={false}
+                  onPress={() => ''}
+                  style={{ backgroundColor: '#03A2A2' }}>
                   <Text type="bold" style={{ color: '#FFF' }}>
                     Go
                   </Text>
