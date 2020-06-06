@@ -160,13 +160,6 @@ const LibraryScreen = ({ navigation }) => {
             </View>
           </View>
         </Menu>
-        <View style={{ paddingLeft: 23 }}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Text type="medium" style={{ fontSize: 12, marginTop: 10, color: '#03A2A2' }}>
-              View all genres
-            </Text>
-          </TouchableOpacity>
-        </View>
 
         {searchBarVisible && (
           <View

@@ -159,13 +159,6 @@ const HomeScreen = ({ navigation, route }) => {
             </View>
           </View>
         </Menu>
-        <View style={{ paddingLeft: 23 }}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Text type="medium" style={{ fontSize: 12, marginTop: 10, color: '#03A2A2' }}>
-              View all genres
-            </Text>
-          </TouchableOpacity>
-        </View>
 
         {searchBarVisible && (
           <View
@@ -213,9 +206,10 @@ const HomeScreen = ({ navigation, route }) => {
                 flexDirection: 'row'
               }}>
               <TouchableOpacity
+                testID="filter-button"
                 style={{ borderRadius: 5, padding: 5, flex: 1 }}
                 onPress={() => {
-                  navigation.push('FilterScreen');
+                  navigation.navigate('FilterScreen');
                 }}>
                 <Surface
                   style={{
@@ -252,6 +246,18 @@ const HomeScreen = ({ navigation, route }) => {
             </View>
           </View>
         )}
+
+        <View testID="story">
+          {stories.map((story, index) => (
+            <Story
+              key={Math.random()}
+              story={story}
+              index={index}
+              length={stories.length}
+              navigation={navigation}
+            />
+          ))}
+        </View>
 
         {inprogressStories.map((story, index) => (
           <Story
