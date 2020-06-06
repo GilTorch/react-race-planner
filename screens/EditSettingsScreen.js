@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable import/no-unresolved */
 import React, { useState, useRef } from 'react';
 import {
   StyleSheet,
