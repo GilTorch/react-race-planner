@@ -86,11 +86,22 @@ const EditSettingsScreen = ({ navigation, route }) => {
             paddingBottom: 44,
             paddingTop: 44 * 2
           }}>
-          <IconButton onPress={() => navigation.goBack()} icon="arrow-left" color="white" />
+          <IconButton
+            testID="back-arrow"
+            onPress={() => navigation.goBack()}
+            icon="arrow-left"
+            color="white"
+          />
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             Settings
           </Text>
-          <IconButton onPress={() => ''} disabled={disableCheck} icon="check" color="white" />
+          <IconButton
+            testID="icon-check"
+            onPress={() => ''}
+            disabled={disableCheck}
+            icon="check"
+            color="white"
+          />
         </LinearGradient>
       </Surface>
 
@@ -100,6 +111,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Usermame</Text>
           </View>
           <TextInput
+            testID="edit-username"
             placeholder="username"
             underlineColor="#C8C7CC"
             value={username}
@@ -117,6 +129,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>First Name</Text>
           </View>
           <TextInput
+            testID="edit-firstname"
             placeholder="first-name"
             underlineColor="#C8C7CC"
             value={firstName}
@@ -134,6 +147,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Last Name</Text>
           </View>
           <TextInput
+            testID="edit-lastname"
             placeholder="last-name"
             underlineColor="#C8C7CC"
             value={lastName}
@@ -151,6 +165,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Email</Text>
           </View>
           <TextInput
+            testID="edit-email"
             placeholder="email"
             underlineColor="#C8C7CC"
             value={email}
@@ -168,6 +183,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Phones</Text>
           </View>
           <TextInput
+            testID="edit-phone1"
             placeholder="phone 1"
             underlineColor="transparent"
             onSubmitEditing={() => focusNextField('phone2')}
@@ -182,6 +198,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
+            testID="edit-phone2"
             placeholder="phone 2"
             underlineColor="#C8C7CC"
             returnKeyType="done"
@@ -207,6 +224,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Address</Text>
           </View>
           <TextInput
+            testID="edit-address1"
             underlineColor="transparent"
             value={address1}
             onChangeText={val => {
@@ -220,6 +238,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
+            testID="edit-address2"
             underlineColor="transparent"
             value={address2}
             onChangeText={val => {
@@ -234,6 +253,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
+            testID="edit-city"
             underlineColor="transparent"
             value={city}
             onChangeText={val => {
@@ -251,6 +271,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           />
           <Divider style={{ marginLeft: 20 }} />
           <TextInput
+            testID="edit-country"
             underlineColor="#C8C7CC"
             value={country}
             onChangeText={val => {
@@ -285,7 +306,10 @@ const EditSettingsScreen = ({ navigation, route }) => {
               {gender === 'Male' && <FontAwesome name="check" size={18} color="#03A2A2" />}
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity onPress={() => selectFemale()} style={styles.checkBox}>
+            <TouchableOpacity
+              testID="edit-gender"
+              onPress={() => selectFemale()}
+              style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Female</Text>
               {gender === 'Female' && <FontAwesome name="check" size={18} color="#03A2A2" />}
             </TouchableOpacity>
@@ -298,6 +322,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>Current Password</Text>
           </View>
           <TextInput
+            testID="current-password"
             underlineColor="#C8C7CC"
             placeholder="required"
             secureTextEntry={secure}
@@ -310,6 +335,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text style={styles.inputTitle}>New Password</Text>
           </View>
           <TextInput
+            testID="new-password"
             underlineColor="#C8C7CC"
             onFocus={() => Platform.OS === 'ios' && scroll.current.scrollTo({ y: 80 })}
             placeholder="required"
@@ -327,6 +353,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
           </View>
 
           <TextInput
+            testID="confirm-new-password"
             underlineColor="#C8C7CC"
             onFocus={() => Platform.OS === 'ios' && scroll.current.scrollToEnd()}
             placeholder="required"
@@ -349,6 +376,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             }}>
             <Text style={styles.inputTitle}>Show Passwords</Text>
             <Switch
+              testID="show-password"
               onChange={() => setSecure(!secure)}
               trackColor={{ false: '#898989', true: '#03A2A2' }}
               thumbColor="#f4f3f4"
@@ -378,6 +406,7 @@ const EditSettingsScreen = ({ navigation, route }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="username-and-fullname"
               onPress={() => setPrivacy('username_and_full_name')}
               style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Username & Full Name</Text>

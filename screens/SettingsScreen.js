@@ -104,7 +104,7 @@ const SettingsScreen = ({ navigation, logout }) => {
             paddingBottom: 44,
             paddingTop: 44 * 2
           }}>
-          <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
+          <Text testID="settings-text" type="bold" style={{ color: 'white', fontSize: 18 }}>
             Settings
           </Text>
         </LinearGradient>
@@ -112,7 +112,13 @@ const SettingsScreen = ({ navigation, logout }) => {
 
       <ScrollView>
         <View>
-          <View style={{ justifyContent: 'center', marginLeft: 20, marginVertical: 20 }}>
+          <View
+            testID="profile-text"
+            style={{
+              justifyContent: 'center',
+              marginLeft: 20,
+              marginVertical: 20
+            }}>
             <Text style={styles.headline}>PROFILE INFO</Text>
           </View>
           <TouchableOpacity
@@ -146,8 +152,12 @@ const SettingsScreen = ({ navigation, logout }) => {
               borderWidth: 1
             }}>
             <TouchableOpacity
+              testID="username-btn"
               onPress={() =>
-                navigation.navigate('EditSettingsScreen', { key: 'username', value: 'john.doe' })
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'username',
+                  value: 'john.doe'
+                })
               }
               style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Username</Text>
@@ -162,8 +172,12 @@ const SettingsScreen = ({ navigation, logout }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="firstname-btn"
               onPress={() =>
-                navigation.navigate('EditSettingsScreen', { key: 'firstname', value: 'John' })
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'firstname',
+                  value: 'John'
+                })
               }
               style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>First Name</Text>
@@ -178,8 +192,12 @@ const SettingsScreen = ({ navigation, logout }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="lastname-btn"
               onPress={() =>
-                navigation.navigate('EditSettingsScreen', { key: 'lastname', value: 'Doe' })
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'lastname',
+                  value: 'Doe'
+                })
               }
               style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Last Name</Text>
@@ -194,8 +212,12 @@ const SettingsScreen = ({ navigation, logout }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="gender-btn"
               onPress={() =>
-                navigation.navigate('EditSettingsScreen', { key: 'gender', value: 'Male' })
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'gender',
+                  value: 'Male'
+                })
               }
               style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Gender</Text>
@@ -212,6 +234,7 @@ const SettingsScreen = ({ navigation, logout }) => {
             <TouchableOpacity onPress={showDatepicker} style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Date of Birth</Text>
               <View
+                testID="dob-btn"
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center'
@@ -222,16 +245,19 @@ const SettingsScreen = ({ navigation, logout }) => {
             </TouchableOpacity>
             {show && (
               <>
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode="date"
-                  maximumDate={new Date(2010, 1, 1)}
-                  display="default"
-                  onChange={onChange}
-                />
+                <View testID="dateTimePicker">
+                  <DateTimePicker
+                    value={date}
+                    mode="date"
+                    maximumDate={new Date(2010, 1, 1)}
+                    display="default"
+                    onChange={onChange}
+                  />
+                </View>
+
                 {Platform.OS === 'ios' && (
                   <TouchableOpacity
+                    testID="done-btn"
                     onPress={() => setShow(false)}
                     style={{
                       alignSelf: 'flex-end',
@@ -265,6 +291,7 @@ const SettingsScreen = ({ navigation, logout }) => {
               borderWidth: 1
             }}>
             <TouchableOpacity
+              testID="email-btn"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'email',
@@ -284,6 +311,7 @@ const SettingsScreen = ({ navigation, logout }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="phones-btn"
               onPress={() => navigation.navigate('EditSettingsScreen', { key: 'phones' })}
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Phones</Text>
@@ -291,6 +319,7 @@ const SettingsScreen = ({ navigation, logout }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="address-btn"
               onPress={() => navigation.navigate('EditSettingsScreen', { key: 'address' })}
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Address</Text>
@@ -300,7 +329,12 @@ const SettingsScreen = ({ navigation, logout }) => {
         </View>
 
         <View>
-          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
+          <View
+            style={{
+              marginVertical: 20,
+              justifyContent: 'center',
+              marginLeft: 20
+            }}>
             <Text style={styles.headline}>SECURITY</Text>
           </View>
           <View
@@ -311,6 +345,7 @@ const SettingsScreen = ({ navigation, logout }) => {
               paddingLeft: 20
             }}>
             <TouchableOpacity
+              testID="update-password-btn"
               onPress={() => navigation.navigate('EditSettingsScreen', { key: 'password' })}
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Update Password</Text>
@@ -318,8 +353,12 @@ const SettingsScreen = ({ navigation, logout }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="defaut-privacy"
               onPress={() =>
-                navigation.navigate('EditSettingsScreen', { key: 'privacy', value: 'username' })
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'privacy',
+                  value: 'username'
+                })
               }
               style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Default Privacy</Text>
@@ -336,7 +375,12 @@ const SettingsScreen = ({ navigation, logout }) => {
         </View>
 
         <View>
-          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
+          <View
+            style={{
+              marginVertical: 20,
+              justifyContent: 'center',
+              marginLeft: 20
+            }}>
             <Text style={styles.headline}>SOCIAL ACCOUNTS</Text>
           </View>
           <View style={{ backgroundColor: 'white' }}>
@@ -351,6 +395,7 @@ const SettingsScreen = ({ navigation, logout }) => {
                 alignItems: 'center'
               }}>
               <View
+                testID="facebook-btn"
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'center',
@@ -379,6 +424,7 @@ const SettingsScreen = ({ navigation, logout }) => {
                 alignItems: 'center'
               }}>
               <TouchableOpacity
+                testID="google-btn"
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'center',
@@ -399,13 +445,19 @@ const SettingsScreen = ({ navigation, logout }) => {
             <Text style={styles.headline}>CONTACT US</Text>
           </View>
           <View
+            testID="support-and-help"
             style={{
               height: 50,
               backgroundColor: 'white',
               borderColor: '#C8C7CC',
               borderWidth: 1
             }}>
-            <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
               <Text style={{ fontSize: 18 }}>Help & Support</Text>
             </TouchableOpacity>
           </View> */}
@@ -417,14 +469,24 @@ const SettingsScreen = ({ navigation, logout }) => {
               borderWidth: 1,
               marginTop: 30
             }}>
-            <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
               <Text style={{ fontSize: 18 }}>Rate Us</Text>
             </TouchableOpacity>
           </View> */}
         {/* </View> */}
 
         <View>
-          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
+          <View
+            style={{
+              marginVertical: 20,
+              justifyContent: 'center',
+              marginLeft: 20
+            }}>
             <Text style={styles.headline}>LEGAL</Text>
           </View>
           <View
@@ -434,7 +496,7 @@ const SettingsScreen = ({ navigation, logout }) => {
               borderWidth: 1,
               paddingLeft: 20
             }}>
-            <TouchableOpacity>
+            <TouchableOpacity testID="privacy-policy">
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Privacy Policy</Text>
                 <View>
@@ -443,7 +505,7 @@ const SettingsScreen = ({ navigation, logout }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity>
+            <TouchableOpacity testID="term-and-service-btn">
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Terms of Service</Text>
                 <View>
@@ -468,6 +530,7 @@ const SettingsScreen = ({ navigation, logout }) => {
         </View>
 
         <View
+          testID="logout-btn"
           style={{
             height: 50,
             backgroundColor: 'white',
@@ -482,7 +545,7 @@ const SettingsScreen = ({ navigation, logout }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ marginTop: 40 }}>
+        <View testID="_logo" style={{ marginTop: 40 }}>
           <Image style={styles.logo} source={Logo} />
         </View>
 
@@ -493,6 +556,7 @@ const SettingsScreen = ({ navigation, logout }) => {
         </View>
 
         <View
+          testID="delete-account"
           style={{
             height: 50,
             backgroundColor: '#fff',
@@ -547,14 +611,20 @@ const SettingsScreen = ({ navigation, logout }) => {
                   justifyContent: 'space-evenly'
                 }}>
                 <Surface style={styles.btnSurface}>
-                  <Button onPress={() => ''} style={{ backgroundColor: '#f44336' }}>
+                  <Button
+                    testID="delete-account"
+                    onPress={() => ''}
+                    style={{ backgroundColor: '#f44336' }}>
                     <Text type="bold" style={{ color: '#fff' }}>
                       Delete
                     </Text>
                   </Button>
                 </Surface>
                 <Surface style={styles.btnSurface}>
-                  <Button onPress={() => hideDeleteModal()} style={{ backgroundColor: '#03A2A2' }}>
+                  <Button
+                    testID="cancel-deletion"
+                    onPress={() => hideDeleteModal()}
+                    style={{ backgroundColor: '#03A2A2' }}>
                     <Text type="bold" style={{ color: '#FFF' }}>
                       Cancel
                     </Text>

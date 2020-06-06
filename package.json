@@ -10,7 +10,9 @@
     "dl_expo_bins": "./scripts/dl_expo_bins",
     "lint:fix": "eslint --fix .",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "lint": "eslint .",
+    "lint:dryfix": "eslint --fix-dry-run ."
   },
   "jest": {
     "preset": "jest-expo"
