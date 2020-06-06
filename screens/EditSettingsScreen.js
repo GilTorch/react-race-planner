@@ -83,8 +83,8 @@ const EditSettingsScreen = ({ navigation, route }) => {
             alignItems: 'center',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingBottom: Constants.statusBarHeight,
-            paddingTop: Constants.statusBarHeight * 2
+            paddingBottom: 44,
+            paddingTop: 44 * 2
           }}>
           <IconButton
             testID="back-arrow"

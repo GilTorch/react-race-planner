@@ -21,9 +21,18 @@ describe('Filter Page', () => {
     await expect(navigationBar.homeIcon.atIndex(1)).toBeVisible();
   });
 
-  
   it('Should ensre `FILTER` button is clickable and can navigate to `Filter` page', async () => {
     await filterPage.filterButton();
+  });
+
+  it('Should ensure all statuses exist', async () => {
+    await expect(filterPage.statuses.atIndex(1)).toExist();
+    await expect(filterPage.statuses.atIndex(1)).toBeVisible();
+  });
+
+  it('Should ensure all genres exist', async () => {
+    await expect(filterPage.genres.atIndex(1)).toExist();
+    await expect(filterPage.genres.atIndex(1)).toBeVisible();
   });
 
   it('Should check that `Select All` link1 exists and is visible in Filter Page', async () => {
@@ -31,22 +40,8 @@ describe('Filter Page', () => {
     await expect(filterPage.selectAllOne.atIndex(1)).toBeVisible();
   });
 
-  it('Should ensure all the statuses exist', async () => {
-    await expect(filterPage.statuses.atIndex(1)).toExist();
-    await expect(filterPage.statuses.atIndex(1)).toBeVisible();
-  });
-
-  it('Should ensure all the genres exist', async () => {
-    await expect(filterPage.genres.atIndex(1)).toExist();
-    await expect(filterPage.genres.atIndex(1)).toBeVisible();
-  });
-
   it('Should check that `Select All` link1 is clickable and can select all status', async () => {
-    await expect(filterPage.selectAllOne.atIndex(1)).toExist();
-  });
-
-  it('Should check that `Select All` link1 is be hidden', async () => {
-    await expect(filterPage.selectAllOne.atIndex(1)).toBeNotVisible();
+    await filterPage.selectAllOne.tap();
   });
 
   it('Should check that `Select All` link2 exists and is visible in Filter Page', async () => {
@@ -56,6 +51,10 @@ describe('Filter Page', () => {
 
   it('Should check that `Select All` link2 is clickable and can select all status', async () => {
     await filterPage.selectAllTwo.tap();
+  });
+
+  it('Should check that `Select All` link1 is be hidden', async () => {
+    await expect(filterPage.selectAllOne).toBeNotVisible();
   });
 
   it('Should check that `Select All` link2 is hidden', async () => {
@@ -72,6 +71,10 @@ describe('Filter Page', () => {
 
   it('Should check that `Clear All` link1 is clickable and can clear all status', async () => {
     await filterPage.clearAllOne.tap();
+  });
+
+  it('Should check that `Clear All` link2 is clickable and can clear all status', async () => {
+    await filterPage.clearAllTwo.tap();
   });
 
   it('Should select authors by slider', async () => {

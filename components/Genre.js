@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const CategoryGenre = ({ genre }) => {
+const Genre = ({ genre }) => {
   return (
     <View
       style={{
@@ -51,8 +51,7 @@ const CategoryGenre = ({ genre }) => {
         <Button
           mode="contained"
           style={{ height: 35, alignItems: 'center', justifyContent: 'center' }}
-          // eslint-disable-next-line no-unused-vars
-          icon={({ size, color }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+          icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
           labelStyle={{ color: '#fff', fontWeight: 'bold' }}>
           Go
         </Button>
@@ -61,8 +60,8 @@ const CategoryGenre = ({ genre }) => {
   );
 };
 
-export default CategoryGenre;
+export default Genre;
 
-CategoryGenre.propTypes = {
+Genre.propTypes = {
   genre: PropTypes.object.isRequired
 };
