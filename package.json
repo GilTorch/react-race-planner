@@ -8,6 +8,7 @@
     "test": "jest --watchAll",
     "test:e2e": "detox test --configuration ios.sim",
     "dl_expo_bins": "./scripts/dl_expo_bins",
+    "lint:fix": "eslint --fix .",
     "web": "expo start --web",
     "eject": "expo eject"
   },
