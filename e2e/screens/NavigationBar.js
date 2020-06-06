@@ -11,6 +11,14 @@ class NavigationBar {
     await element(by.id('login-button')).tap();
   }
 
+  get library() {
+    return element(by.id('library'));
+  }
+
+  get libraryIcon() {
+    return element(by.id('library-icon'));
+  }
+
   get home() {
     return element(by.id('home'));
   }

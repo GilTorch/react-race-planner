@@ -66,6 +66,7 @@
       "prefer-double"
     ],
     "camelcase": "off",
+    "no-throw-literal": "off",
     "react/no-multi-comp": [
       2,
       {
