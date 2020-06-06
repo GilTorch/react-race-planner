@@ -153,7 +153,7 @@ const HomeScreen = ({ navigation, route }) => {
               <TouchableOpacity
                 style={{ borderRadius: 5, padding: 5, flex: 1 }}
                 onPress={() => {
-                  navigation.push('FilterScreen');
+                  navigation.navigate('FilterScreen');
                 }}>
                 <Surface
                   style={{
