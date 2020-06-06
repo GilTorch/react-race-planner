@@ -27,8 +27,6 @@ const BoxMenu = ({ parentType, block }) => {
   };
 
   const showVotingModal = () => {
-    // if (block.hasElected) return;
-
     setshowMenu(false);
     setShowVoting(true);
   };
