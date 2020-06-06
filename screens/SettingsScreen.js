@@ -25,6 +25,12 @@ const SettingsScreen = ({ navigation, logout }) => {
     headerShown: false
   });
 
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('light-content');
+    }, [])
+  );
+
   const [visible, setVisible] = React.useState(false);
   const [date, setDate] = React.useState(new Date(687041730000));
   const [show, setShow] = React.useState(false);
@@ -70,15 +76,8 @@ const SettingsScreen = ({ navigation, logout }) => {
       setShow(true);
     }
   };
-
   const showDeleteModal = () => setVisible(true);
   const hideDeleteModal = () => setVisible(false);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      StatusBar.setBarStyle('light-content');
-    }, [])
-  );
 
   return (
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
@@ -496,7 +495,9 @@ const SettingsScreen = ({ navigation, logout }) => {
               borderWidth: 1,
               paddingLeft: 20
             }}>
-            <TouchableOpacity testID="privacy-policy">
+            <TouchableOpacity
+              onPress={() => navigation.navigate('WebViewScreen', { title: 'Privacy Policy' })}
+              testID="privacy-policy">
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Privacy Policy</Text>
                 <View>
@@ -505,7 +506,9 @@ const SettingsScreen = ({ navigation, logout }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity testID="term-and-service-btn">
+            <TouchableOpacity
+              onPress={() => navigation.navigate('WebViewScreen', { title: 'Terms of Service' })}
+              testID="term-and-service-btn">
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Terms of Service</Text>
                 <View>

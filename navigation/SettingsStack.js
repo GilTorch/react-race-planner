@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import SettingsScreen from '../screens/SettingsScreen';
 import EditSettingsScreen from '../screens/EditSettingsScreen';
+import WebViewScreen from '../screens/WebViewScreen';
 
 const Stack = createStackNavigator();
 
@@ -11,6 +12,7 @@ export default function SettingsStack() {
     <Stack.Navigator initialRouteName="SettingsScreen">
       <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
       <Stack.Screen name="EditSettingsScreen" component={EditSettingsScreen} />
+      <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
     </Stack.Navigator>
   );
 }
