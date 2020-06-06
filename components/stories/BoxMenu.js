@@ -14,6 +14,7 @@ const BoxMenu = ({ parentType, block }) => {
   const [showVoting, setShowVoting] = React.useState(false);
   const [showComment, setShowComment] = React.useState(false);
   const penddingStatus = block.status === 'In Progress' || block.status === 'Pendding';
+  const introEnding = parentType === 'Intro' || parentType === 'Ending';
 
   const showReportModal = () => {
     setshowMenu(false);
@@ -26,8 +27,6 @@ const BoxMenu = ({ parentType, block }) => {
   };
 
   const showVotingModal = () => {
-    // if (block.hasElected) return;
-
     setshowMenu(false);
     setShowVoting(true);
   };
@@ -44,7 +43,14 @@ const BoxMenu = ({ parentType, block }) => {
         parent={block}
         onDismiss={dismissReport}
       />
-      <VotingModal dismiss={dismissVoting} visible={showVoting} />
+      {introEnding && (
+        <VotingModal
+          dismiss={dismissVoting}
+          visible={showVoting}
+          parentType={parentType}
+          parent={block}
+        />
+      )}
       <CommentModal dismiss={dismissComment} visible={showComment} parent={block} />
       <TouchableOpacity onPress={() => setshowMenu(true)}>
         <Menu
@@ -77,7 +83,7 @@ const BoxMenu = ({ parentType, block }) => {
               </Text>
             </TouchableOpacity>
           )}
-          {parentType === 'intro_ending' && (
+          {introEnding && (
             <>
               <TouchableOpacity
                 onPress={showCommentModal}

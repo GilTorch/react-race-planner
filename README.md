@@ -162,7 +162,28 @@ So, again, it goes like:
 
 As mentioned above, we use the `staging` branch to setup the demo for ScriptoRerum stakeholders to test features/fixes themselves.
 
-TBD
+- Always make sure you have the latest version of the Expo cli:
+```
+npm install -g expo-cli
+```
+- Clone the repository (through SSH) and move into the directory:
+```
+git clone git@github.com:NouKod-Haiti/sr-mobile.git
+cd sr-mobile
+```
+- Use the [.env file over there](https://app.clickup.com/2351815/v/dc/16z6a-777/27rp7-245) by creating it in the root directory of the repo.
+- SSH into the staging VM where the API is running so you can [generate a new token for this Expo publish](https://github.com/NouKod-Haiti/sr-api/tree/staging#generating-a-new-token-for-clients)
+- Update `.env` file to replace the value of the `RERUM_KEY` variable with the token you got from the API above
+- Update it again to make sure the value of the `JWT_SECRET` variable matches the `USER_JWT_SECRET` one in the `.env` of the staging API above
+- Install dependencies:
+```
+npm i
+```
+- Start the Expo server:
+```
+expo start -c
+```
+
 
 ## Building for Production
 
