@@ -2,7 +2,7 @@
 import axios from '../../services/axiosService';
 import { Auth } from './types';
 
-export const userUpdateAction = dataObj => dispatch => {
+export const updateUserAction = dataObj => dispatch => {
   dispatch({ type: Auth.START_A_REQUEST });
 
   return axios
