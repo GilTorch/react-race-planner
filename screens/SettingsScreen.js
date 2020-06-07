@@ -113,7 +113,7 @@ const SettingsScreen = ({ navigation, logout }) => {
 
   const updateDateOfBirth = async newDate => {
     if (newDate.getTime() !== dateOfBirth.getTime()) {
-      const data = await dispatch(updateUserProfile({ id: user?._id, dateOfBirth: newDate }));
+      const data = await dispatch(updateUserProfile({ _id: user?._id, dateOfBirth: newDate }));
 
       if (data) {
         showSuccessMessage('update Date of Birth');
@@ -141,7 +141,7 @@ const SettingsScreen = ({ navigation, logout }) => {
       type: `image/${fileType}`
     });
 
-    dispatch(updateUserProfile({ id: user?._id, formData }));
+    dispatch(updateUserProfile({ _id: user?._id, data: formData }));
   };
 
   const showSuccessMessage = field => {
@@ -155,7 +155,7 @@ const SettingsScreen = ({ navigation, logout }) => {
   //   const facebookData = await Facebook.logIn();
   //   const facebookAccountId = facebookData.id;
   //   if (facebookAccountId) {
-  //     const data = await dispatch(updateUserProfile({ id: user?._id, facebookAccountId }));
+  //     const data = await dispatch(updateUserProfile({ _id: user?._id, facebookAccountId }));
   //     if (data) {
   //       showSuccessMessage('link to Facebook account');
   //     }
@@ -173,7 +173,7 @@ const SettingsScreen = ({ navigation, logout }) => {
 
   //     if (result.type === 'success') {
   //       const googleAccountId = result.user?.id;
-  //       const data = await dispatch(updateUserProfile({ id: user?._id, googleAccountId }));
+  //       const data = await dispatch(updateUserProfile({ _id: user?._id, googleAccountId }));
   //       if (data) {
   //         showSuccessMessage('link to Google account');
   //       }
@@ -187,7 +187,7 @@ const SettingsScreen = ({ navigation, logout }) => {
   // const twitterLogin = async () => {
   //   const { twitterAccountId } = await Twitter.authSession(true);
   //   if (twitterAccountId) {
-  //     const data = await dispatch(updateUserProfile({ id: user?._id, twitterAccountId }));
+  //     const data = await dispatch(updateUserProfile({ _id: user?._id, twitterAccountId }));
   //     if (data) {
   //       showSuccessMessage('link to Twitter account');
   //     }
@@ -197,7 +197,7 @@ const SettingsScreen = ({ navigation, logout }) => {
 
   // const linkOrUnlinkAccount = async socialAccountId => {
   //   if (user[socialAccountId]) {
-  //     const data = await dispatch(updateUserProfile({ id: user?._id, [socialAccountId]: '' }));
+  //     const data = await dispatch(updateUserProfile({ _id: user?._id, [socialAccountId]: '' }));
   //     if (data) {
   //       showSuccessMessage('unlink the social account');
   //     }

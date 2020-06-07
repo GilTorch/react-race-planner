@@ -6,7 +6,7 @@ export const updateUserProfile = data => dispatch => {
   dispatch({ type: Auth.START_A_REQUEST });
 
   return axios
-    .put(`/users/${data.id}`, data.formData)
+    .put(`/users/${data._id}`, data)
     .then(response => {
       dispatch({ type: Auth.UPDATE_PROFILE_SUCCESS, payload: response.data });
       return response.data;
