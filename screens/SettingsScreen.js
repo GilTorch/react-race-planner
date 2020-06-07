@@ -18,7 +18,8 @@ import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 
 import PageSpinner from '../components/PageSpinner';
-import { updateUserProfile, logoutAction } from '../redux/actions/AuthActions';
+import { logoutAction } from '../redux/actions/AuthActions';
+import { updateUserProfile } from '../redux/actions/UserActions';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
