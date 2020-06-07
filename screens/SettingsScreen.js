@@ -12,7 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
-import { useDispatch, useSelector, connect } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 // import * as Google from 'expo-google-app-auth';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import * as Permissions from 'expo-permissions';
@@ -20,19 +20,18 @@ import Constants from 'expo-constants';
 
 import moment from 'moment';
 import { logoutAction } from '../redux/actions/AuthActions';
-import { updateUserProfile } from '../redux/actions/UserActions';
+import { updateUserAction } from '../redux/actions/UserActions';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
-const SettingsScreen = ({ navigation, logout }) => {
+const SettingsScreen = ({ navigation, logout, updateUser }) => {
   const {
     expo: { version }
   } = app;
 
   const user = useSelector(state => state.auth.currentUser);
-  const dispatch = useDispatch();
 
   const dateOfBirth = user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(687041730000);
   const picture = user?.picture || null;
@@ -44,7 +43,7 @@ const SettingsScreen = ({ navigation, logout }) => {
   );
 
   useEffect(() => {
-    alert('foo');
+    alert('bar');
   }, []);
 
   const [visible, setVisible] = React.useState(false);
@@ -113,7 +112,7 @@ const SettingsScreen = ({ navigation, logout }) => {
 
   const updateDateOfBirth = async newDate => {
     if (newDate.getTime() !== dateOfBirth.getTime()) {
-      const data = await dispatch(updateUserProfile({ id: user?._id, dateOfBirth: newDate }));
+      const data = await updateUser({ id: user?._id, dateOfBirth: newDate });
 
       if (data) {
         showSuccessMessage('update Date of Birth');
@@ -141,12 +140,19 @@ const SettingsScreen = ({ navigation, logout }) => {
       type: `image/${fileType}`
     });
 
-    dispatch(updateUserProfile({ id: user?._id, data: formData }));
+    try {
+      updateUser({ id: user?._id, data: formData });
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
+    }
   };
 
   const showSuccessMessage = field => {
     Toast.show(`Successfully ${field}`, {
-      duration: Toast.durations.SHORT,
+      duration: Toast.durations.LONG,
       position: Toast.positions.BOTTOM
     });
   };
@@ -155,7 +161,7 @@ const SettingsScreen = ({ navigation, logout }) => {
   //   const facebookData = await Facebook.logIn();
   //   const facebookAccountId = facebookData.id;
   //   if (facebookAccountId) {
-  //     const data = await dispatch(updateUserProfile({ id: user?._id, facebookAccountId }));
+  //     const data = await updateUser({ id: user?._id, facebookAccountId });
   //     if (data) {
   //       showSuccessMessage('link to Facebook account');
   //     }
@@ -173,7 +179,7 @@ const SettingsScreen = ({ navigation, logout }) => {
 
   //     if (result.type === 'success') {
   //       const googleAccountId = result.user?.id;
-  //       const data = await dispatch(updateUserProfile({ id: user?._id, googleAccountId }));
+  //       const data = await updateUser({ id: user?._id, googleAccountId });
   //       if (data) {
   //         showSuccessMessage('link to Google account');
   //       }
@@ -187,7 +193,7 @@ const SettingsScreen = ({ navigation, logout }) => {
   // const twitterLogin = async () => {
   //   const { twitterAccountId } = await Twitter.authSession(true);
   //   if (twitterAccountId) {
-  //     const data = await dispatch(updateUserProfile({ id: user?._id, twitterAccountId }));
+  //     const data = await updateUser({ id: user?._id, twitterAccountId });
   //     if (data) {
   //       showSuccessMessage('link to Twitter account');
   //     }
@@ -197,7 +203,7 @@ const SettingsScreen = ({ navigation, logout }) => {
 
   // const linkOrUnlinkAccount = async socialAccountId => {
   //   if (user[socialAccountId]) {
-  //     const data = await dispatch(updateUserProfile({ id: user?._id, [socialAccountId]: '' }));
+  //     const data = await updateUser({ id: user?._id, [socialAccountId]: '' });
   //     if (data) {
   //       showSuccessMessage('unlink the social account');
   //     }
@@ -315,7 +321,6 @@ const SettingsScreen = ({ navigation, logout }) => {
                 setSelectedImage(null);
                 hideMenu();
                 // TODO: api endpoint or logic to remove the picture on the server
-                // updateUserProfile(null);
               }}
               textStyle={{ color: 'red' }}>
               Delete Photo
@@ -928,11 +933,13 @@ const styles = {
 
 SettingsScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  logout: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
+  updateUser: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = {
-  logout: logoutAction
+  logout: logoutAction,
+  updateUser: updateUserAction
 };
 
 export default connect(null, mapDispatchToProps)(SettingsScreen);
