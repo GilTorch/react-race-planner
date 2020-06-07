@@ -34,7 +34,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
                 <Text type="bold" style={styles.subTitle}>
                   By {proposedBlock.author}
                 </Text>
-                <BoxMenu parentType="intro_ending" block={{ ...proposedBlock, hasElected }} />
+                <BoxMenu parentType={type} block={{ ...proposedBlock, hasElected }} />
               </View>
               <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
                 {loremText}

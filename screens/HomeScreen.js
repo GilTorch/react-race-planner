@@ -1,30 +1,39 @@
 import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign, FontAwesome, SimpleLineIcons } from '@expo/vector-icons';
-import { Surface, Searchbar } from 'react-native-paper';
+import { AntDesign, FontAwesome, SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
+import { Surface, Searchbar, Button } from 'react-native-paper';
 import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
-
+import Menu from 'react-native-material-menu';
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
-import ViewAllCategoriesModal from '../components/modals/ViewAllCategoriesModal';
+import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
 
 const HomeScreen = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
+  const [currentGenre, setCurrentGenre] = useState(genres[0]);
+  let menu = null;
+  const setMenuRef = ref => {
+    menu = ref;
+  };
 
-  navigation.setOptions({
-    headerShown: false
-  });
+  const showMenu = async genreIndex => {
+    setCurrentGenre(genres[genreIndex]);
+    menu.show();
+  };
 
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(false);
       StatusBar.setBarStyle('light-content');
+
+      navigation.setOptions({
+        headerShown: false
+      });
     }, [])
   );
 
@@ -34,7 +43,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <ViewAllCategoriesModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
+      <ViewAllGenresModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
       <Surface
         style={{
           elevation: 3,
@@ -46,8 +55,8 @@ const HomeScreen = ({ navigation, route }) => {
           style={{
             alignItems: 'center',
             flexDirection: 'column',
-            paddingBottom: Constants.statusBarHeight,
-            paddingTop: Constants.statusBarHeight * 2
+            paddingBottom: 44,
+            paddingTop: 44 * 2
           }}>
           <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
             ScriptoRerum
@@ -77,25 +86,79 @@ const HomeScreen = ({ navigation, route }) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingLeft: 23 }}>
-            {genres.map(genre => (
-              <View
-                key={Math.random()}
-                style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
-                <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
-                  {genre.icon(32)}
+            {genres.map((genre, index) => (
+              <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+                  <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
+                    {genre.icon(32)}
+                  </View>
+                  <Text
+                    type="medium"
+                    style={{
+                      color: '#5A7582',
+                      fontSize: 14
+                    }}>
+                    {genre.name}
+                  </Text>
                 </View>
-                <Text
-                  type="medium"
-                  style={{
-                    color: '#5A7582',
-                    fontSize: 14
-                  }}>
-                  {genre.name}
-                </Text>
-              </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </Surface>
+        <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
+          <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 10
+              }}>
+              <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
+                {currentGenre.name}
+              </Text>
+            </View>
+            <Text style={{ textAlign: 'center' }}>
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+              has been the industry's standard dummy text ever since the 1500s, when an unknown
+              printer took a galley of type and scrambled it to make a type specimen book. It has
+              survived not only five centuries, but also the leap into electronic typesetting,
+              remaining essentially unchanged. It was popularised in the 1960s with the release of
+              Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '65%',
+                alignSelf: 'flex-end',
+                justifyContent: 'flex-end',
+                marginTop: 15,
+                marginBottom: 20
+              }}>
+              <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
+                <Button
+                  icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+                  uppercase={false}
+                  onPress={() => ''}
+                  style={{ backgroundColor: '#03A2A2' }}>
+                  <Text type="bold" style={{ color: '#FFF' }}>
+                    Go
+                  </Text>
+                </Button>
+              </Surface>
+              <Surface style={styles.btnSurface}>
+                <Button
+                  onPress={() => menu.hide()}
+                  uppercase={false}
+                  style={{ backgroundColor: '#f44336' }}>
+                  <Text type="bold" style={{ color: '#fff' }}>
+                    Cancel
+                  </Text>
+                </Button>
+              </Surface>
+            </View>
+          </View>
+        </Menu>
 
         {searchBarVisible && (
           <View
@@ -143,9 +206,10 @@ const HomeScreen = ({ navigation, route }) => {
                 flexDirection: 'row'
               }}>
               <TouchableOpacity
+                testID="filter-button"
                 style={{ borderRadius: 5, padding: 5, flex: 1 }}
                 onPress={() => {
-                  navigation.push('FilterScreen');
+                  navigation.navigate('FilterScreen');
                 }}>
                 <Surface
                   style={{
@@ -183,7 +247,7 @@ const HomeScreen = ({ navigation, route }) => {
           </View>
         )}
 
-        <View>
+        <View testID="story">
           {stories.map((story, index) => (
             <Story
               key={Math.random()}
@@ -220,6 +284,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EEE'
+  },
+  btnSurface: {
+    elevation: 4,
+    marginVertical: 10,
+    borderRadius: 5
   },
   headline: { color: '#5A7582' },
   genreIconContainer: {

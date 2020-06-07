@@ -1,13 +1,56 @@
 import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet } from 'react-native';
+import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
+import { useForm } from 'react-hook-form';
+import { useSelector, connect } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
+import Toast from 'react-native-root-toast';
 
+import { passwordResetSchema } from '../utils/validators';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
+import { passwordResetAction } from '../redux/actions/AuthActions';
+import PageSpinner from '../components/PageSpinner';
 
-const ResetPasswordScreen = ({ navigation }) => {
+const ResetPasswordScreen = ({ navigation, resetPassword }) => {
+  const authState = useSelector(state => state.auth);
+
+  const { errors, handleSubmit, register, watch, setValue } = useForm({
+    validationSchema: passwordResetSchema
+  });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setHidden(true);
+
+      navigation.setOptions({
+        headerShown: false
+      });
+    }, [])
+  );
+
+  React.useEffect(() => {
+    register('usernameOrEmail');
+  }, [register]);
+
+  const submit = async data => {
+    try {
+      await resetPassword(data);
+
+      navigation.navigate('ResetPasswordTwo');
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+
+      if (authState.currentUser?.isActive === false) {
+        navigation.navigate('OTPVerification');
+      }
+    }
+  };
+
   return (
     <ScrollView
       style={{ backgroundColor: 'white' }}
@@ -30,8 +73,7 @@ const ResetPasswordScreen = ({ navigation }) => {
           <Text
             type="medium"
             style={{
-              fontSize: 11,
-              lineHeight: 16,
+              fontSize: 13,
               textAlign: 'center',
               color: '#7F8FA4'
             }}>
@@ -44,33 +86,45 @@ const ResetPasswordScreen = ({ navigation }) => {
               <Text style={styles.label}>Username or Email</Text>
             </View>
             <View style={styles.inputContainer}>
-              <TextInput testID="add-email-address-to-reset" style={styles.input} />
+              <TextInput
+                testID="login-user-name"
+                autoCapitalize="none"
+                onChangeText={text => setValue('usernameOrEmail', text)}
+                value={watch('usernameOrEmail')}
+                onSubmitEditing={handleSubmit(submit)}
+                blurOnSubmit={false}
+                returnKeyType="send"
+                style={[styles.input, errors.usernameOrEmail && styles.errorInput]}
+              />
             </View>
+
+            {errors.usernameOrEmail && (
+              <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                {errors.usernameOrEmail.message}
+              </Text>
+            )}
           </View>
           <TouchableOpacity
+            onPress={handleSubmit(submit)}
             testID="reset-password-button"
-            style={styles.submitButton}
-            onPress={() => navigation.navigate('ResetPasswordTwoScreen')}>
-            <Text style={styles.submitButtonText}>Send Password Reset Code</Text>
+            style={styles.submitButton}>
+            <Text type="medium" style={styles.submitButtonText}>
+              Send Password Reset Code
+            </Text>
           </TouchableOpacity>
           <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
             <Text style={{ color: '#7F8FA4' }}>Do you remember it now? </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Login')}
-              style={styles.goToLoginPageButton}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
               <View testID="return-to-login-page">
-                <Text style={styles.goToLoginPageButtonText}>Log in</Text>
+                <Text style={{ color: '#23C2C2' }}>Log in</Text>
               </View>
             </TouchableOpacity>
           </View>
         </View>
       </View>
+      <PageSpinner visible={authState.loading} />
     </ScrollView>
   );
-};
-
-ResetPasswordScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
@@ -125,7 +179,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   submitButton: {
-    marginTop: 30,
+    marginTop: 15,
     borderRadius: 4.87,
     backgroundColor: '#23C2C2',
     justifyContent: 'center',
@@ -152,10 +206,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  goToLoginPageButton: {},
-  goToLoginPageButtonText: {
-    color: '#23C2C2'
+  errorInput: {
+    borderColor: 'red',
+    borderBottomWidth: 1
   }
 });
 
-export default ResetPasswordScreen;
+ResetPasswordScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  resetPassword: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  resetPassword: passwordResetAction
+};
+
+export default connect(null, mapDispatchToProps)(ResetPasswordScreen);

@@ -27,6 +27,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "com.scriptorerum.ScriptoRerum"
+    },
     "ios": {
       "supportsTablet": true
     },

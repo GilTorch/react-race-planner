@@ -1,38 +1,28 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-alert */
 import React, { useRef } from 'react';
 import { ScrollView, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
-import Constants from 'expo-constants';
 import { Surface, Portal, Modal, Divider, Button, TextInput } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
-import { useDispatch, useSelector } from 'react-redux';
-import * as Google from 'expo-google-app-auth';
+import { useDispatch, useSelector, connect } from 'react-redux';
+// import * as Google from 'expo-google-app-auth';
 import Menu, { MenuItem } from 'react-native-material-menu';
 
-import { updateUserProfile, clearRequestError } from '../redux/actions/AuthActions';
+import PageSpinner from '../components/PageSpinner';
+import { updateUserProfile, logoutAction } from '../redux/actions/AuthActions';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
-import PageSpinner from '../components/PageSpinner';
-import * as Facebook from '../services/facebook';
-import * as Twitter from '../services/twitter';
 
-const SettingsScreen = ({ navigation }) => {
-  navigation.setOptions({
-    headerShown: false
-  });
-  useFocusEffect(
-    React.useCallback(() => {
-      StatusBar.setBarStyle('light-content');
-    }, [])
-  );
-
+const SettingsScreen = ({ navigation, logout }) => {
   const {
     expo: { version }
   } = app;
@@ -46,12 +36,19 @@ const SettingsScreen = ({ navigation }) => {
   const dateOfBirth = user?.dateOfBirth ? new Date(user.dateOfBirth) : new Date(687041730000);
   const picture = user?.picture || null;
 
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('light-content');
+    }, [])
+  );
+
   const [visible, setVisible] = React.useState(false);
   const [date, setDate] = React.useState(dateOfBirth);
   const [show, setShow] = React.useState(false);
   const [showImageManipulator, setShowImageManipulator] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(picture);
-  const [socialLink, setSocialLink] = React.useState(false);
+  const [socialLink] = React.useState(false);
+  // const [socialLink, setSocialLink] = React.useState(false);
 
   const menuRef = useRef();
 
@@ -110,6 +107,7 @@ const SettingsScreen = ({ navigation }) => {
     const uriParts = uri.split('.');
     const fileType = uriParts[uriParts.length - 1];
 
+    // eslint-disable-next-line no-undef
     const formData = new FormData();
     formData.append('picture', {
       uri,
@@ -127,82 +125,80 @@ const SettingsScreen = ({ navigation }) => {
     });
   };
 
-  const facebookLogin = async () => {
-    const facebookData = await Facebook.logIn();
-    const facebookAccountId = facebookData.id;
-    if (facebookAccountId) {
-      const data = await dispatch(updateUserProfile({ id, facebookAccountId }));
-      if (data) {
-        showSuccessMessage('link to Facebook account');
-      }
-    }
-    setSocialLink(false);
-  };
+  // const facebookLogin = async () => {
+  //   const facebookData = await Facebook.logIn();
+  //   const facebookAccountId = facebookData.id;
+  //   if (facebookAccountId) {
+  //     const data = await dispatch(updateUserProfile({ id, facebookAccountId }));
+  //     if (data) {
+  //       showSuccessMessage('link to Facebook account');
+  //     }
+  //   }
+  //   setSocialLink(false);
+  // };
 
-  const googleLogin = async () => {
-    try {
-      const result = await Google.logInAsync({
-        androidClientId: '179189574549-p2l06hbg13fqqba7nfib4nq7na5ci1lc.apps.googleusercontent.com',
-        iosClientId: '179189574549-3379mn2seve0i471eqfkpgduqkgvnd98.apps.googleusercontent.com',
-        scopes: ['profile']
-      });
+  // const googleLogin = async () => {
+  //   try {
+  //     const result = await Google.logInAsync({
+  //       androidClientId: '179189574549-p2l06hbg13fqqba7nfib4nq7na5ci1lc.apps.googleusercontent.com',
+  //       iosClientId: '179189574549-3379mn2seve0i471eqfkpgduqkgvnd98.apps.googleusercontent.com',
+  //       scopes: ['profile']
+  //     });
 
-      if (result.type === 'success') {
-        const googleAccountId = result.user.id;
-        const data = await dispatch(updateUserProfile({ id, googleAccountId }));
-        if (data) {
-          showSuccessMessage('link to Google account');
-        }
-      }
-    } catch (e) {
-      console.log(e);
-    }
-    setSocialLink(false);
-  };
+  //     if (result.type === 'success') {
+  //       const googleAccountId = result.user.id;
+  //       const data = await dispatch(updateUserProfile({ id, googleAccountId }));
+  //       if (data) {
+  //         showSuccessMessage('link to Google account');
+  //       }
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  //   setSocialLink(false);
+  // };
 
-  const twitterLogin = async () => {
-    const { twitterAccountId } = await Twitter.authSession(true);
-    if (twitterAccountId) {
-      const data = await dispatch(updateUserProfile({ id, twitterAccountId }));
-      if (data) {
-        showSuccessMessage('link to Twitter account');
-      }
-    }
-    setSocialLink(false);
-  };
+  // const twitterLogin = async () => {
+  //   const { twitterAccountId } = await Twitter.authSession(true);
+  //   if (twitterAccountId) {
+  //     const data = await dispatch(updateUserProfile({ id, twitterAccountId }));
+  //     if (data) {
+  //       showSuccessMessage('link to Twitter account');
+  //     }
+  //   }
+  //   setSocialLink(false);
+  // };
 
-  const linkOrUnlinkAccount = async socialAccountId => {
-    if (user[socialAccountId]) {
-      const data = await dispatch(updateUserProfile({ id, [socialAccountId]: '' }));
-      if (data) {
-        showSuccessMessage('unlink the social account');
-      }
-    } else {
-      setSocialLink(true);
-      switch (socialAccountId) {
-        case 'facebookAccountId':
-          facebookLogin();
-          break;
-        case 'googleAccountId':
-          googleLogin();
-          break;
-        case 'twitterAccountId':
-          twitterLogin();
-          break;
-        default:
-          return null;
-      }
-    }
-    return null;
-  };
+  // const linkOrUnlinkAccount = async socialAccountId => {
+  //   if (user[socialAccountId]) {
+  //     const data = await dispatch(updateUserProfile({ id, [socialAccountId]: '' }));
+  //     if (data) {
+  //       showSuccessMessage('unlink the social account');
+  //     }
+  //   } else {
+  //     setSocialLink(true);
+  //     switch (socialAccountId) {
+  //       case 'facebookAccountId':
+  //         facebookLogin();
+  //         break;
+  //       case 'googleAccountId':
+  //         googleLogin();
+  //         break;
+  //       case 'twitterAccountId':
+  //         twitterLogin();
+  //         break;
+  //       default:
+  //         return null;
+  //     }
+  //   }
+  //   return null;
+  // };
 
   if (requestError) {
     Toast.show(requestError.message, {
       duration: Toast.durations.SHORT,
       position: Toast.positions.BOTTOM
     });
-
-    dispatch(clearRequestError());
   }
 
   return (
@@ -230,10 +226,10 @@ const SettingsScreen = ({ navigation }) => {
           style={{
             alignItems: 'center',
             flexDirection: 'column',
-            paddingBottom: Constants.statusBarHeight,
-            paddingTop: Constants.statusBarHeight * 2
+            paddingBottom: 44,
+            paddingTop: 44 * 2
           }}>
-          <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
+          <Text testID="settings-text" type="bold" style={{ color: 'white', fontSize: 18 }}>
             Settings
           </Text>
         </LinearGradient>
@@ -241,7 +237,13 @@ const SettingsScreen = ({ navigation }) => {
 
       <ScrollView>
         <View>
-          <View style={{ justifyContent: 'center', marginLeft: 20, marginVertical: 20 }}>
+          <View
+            testID="profile-text"
+            style={{
+              justifyContent: 'center',
+              marginLeft: 20,
+              marginVertical: 20
+            }}>
             <Text style={styles.headline}>PROFILE INFO</Text>
           </View>
           <Menu
@@ -310,6 +312,7 @@ const SettingsScreen = ({ navigation }) => {
               borderWidth: 1
             }}>
             <TouchableOpacity
+              testID="username-btn"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'username',
@@ -329,6 +332,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="firstname-btn"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'firstname',
@@ -348,6 +352,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="lastname-btn"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'lastname',
@@ -367,6 +372,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="gender-btn"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'gender',
@@ -388,6 +394,7 @@ const SettingsScreen = ({ navigation }) => {
             <TouchableOpacity onPress={showDatepicker} style={styles.profileField}>
               <Text style={{ fontSize: 18 }}>Date of Birth</Text>
               <View
+                testID="dob-btn"
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center'
@@ -398,20 +405,23 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             {show && (
               <>
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode="date"
-                  maximumDate={new Date(2010, 1, 1)}
-                  display="default"
-                  onChange={onChange}
-                />
+                <View testID="dateTimePicker">
+                  <DateTimePicker
+                    value={date}
+                    mode="date"
+                    maximumDate={new Date(2010, 1, 1)}
+                    display="default"
+                    onChange={onChange}
+                  />
+                </View>
+
                 {Platform.OS === 'ios' && (
                   <TouchableOpacity
                     onPress={async () => {
                       updateDateOfBirth(date);
                       setShow(false);
                     }}
+                    testID="done-btn"
                     style={{
                       alignSelf: 'flex-end',
                       paddingRight: 27,
@@ -444,6 +454,7 @@ const SettingsScreen = ({ navigation }) => {
               borderWidth: 1
             }}>
             <TouchableOpacity
+              testID="email-btn"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'email',
@@ -472,6 +483,7 @@ const SettingsScreen = ({ navigation }) => {
                   }
                 })
               }
+              testID="phones-btn"
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Phones</Text>
               <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
@@ -489,6 +501,7 @@ const SettingsScreen = ({ navigation }) => {
                   }
                 })
               }
+              testID="address-btn"
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Address</Text>
               <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
@@ -497,7 +510,12 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View>
-          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
+          <View
+            style={{
+              marginVertical: 20,
+              justifyContent: 'center',
+              marginLeft: 20
+            }}>
             <Text style={styles.headline}>SECURITY</Text>
           </View>
           <View
@@ -508,13 +526,20 @@ const SettingsScreen = ({ navigation }) => {
               paddingLeft: 20
             }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('EditSettingsScreen', { key: 'password' })}
+              testID="update-password-btn"
+              onPress={() =>
+                navigation.navigate('EditSettingsScreen', {
+                  key: 'password',
+                  value: { preferences: user.preferences }
+                })
+              }
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Update Password</Text>
               <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
+              testID="defaut-privacy"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'privacy',
@@ -538,12 +563,17 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View>
-          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
+          <View
+            style={{
+              marginVertical: 20,
+              justifyContent: 'center',
+              marginLeft: 20
+            }}>
             <Text style={styles.headline}>SOCIAL ACCOUNTS</Text>
           </View>
           <View style={{ backgroundColor: 'white' }}>
             <TouchableOpacity
-              onPress={() => linkOrUnlinkAccount('facebookAccountId')}
+              onPress={() => alert('facebook')}
               style={{
                 height: 50,
                 borderColor: '#C8C7CC',
@@ -554,6 +584,7 @@ const SettingsScreen = ({ navigation }) => {
                 alignItems: 'center'
               }}>
               <View
+                testID="facebook-btn"
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'center',
@@ -574,7 +605,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} />
             <TouchableOpacity
-              onPress={() => linkOrUnlinkAccount('googleAccountId')}
+              onPress={() => alert('google')}
               style={{
                 height: 50,
                 paddingHorizontal: 20,
@@ -583,6 +614,7 @@ const SettingsScreen = ({ navigation }) => {
                 alignItems: 'center'
               }}>
               <View
+                testID="google-btn"
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'center',
@@ -600,7 +632,7 @@ const SettingsScreen = ({ navigation }) => {
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} />
             <TouchableOpacity
-              onPress={() => linkOrUnlinkAccount('twitterAccountId')}
+              onPress={() => alert('twitter')}
               style={{
                 height: 50,
                 borderColor: '#C8C7CC',
@@ -632,22 +664,28 @@ const SettingsScreen = ({ navigation }) => {
           </View>
         </View>
 
-        <View>
+        {/* <View>
           <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
             <Text style={styles.headline}>CONTACT US</Text>
           </View>
           <View
+            testID="support-and-help"
             style={{
               height: 50,
               backgroundColor: 'white',
               borderColor: '#C8C7CC',
               borderWidth: 1
             }}>
-            <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
               <Text style={{ fontSize: 18 }}>Help & Support</Text>
             </TouchableOpacity>
-          </View>
-          <View
+          </View> */}
+        {/* <View
             style={{
               height: 50,
               backgroundColor: 'white',
@@ -655,14 +693,24 @@ const SettingsScreen = ({ navigation }) => {
               borderWidth: 1,
               marginTop: 30
             }}>
-            <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
               <Text style={{ fontSize: 18 }}>Rate Us</Text>
             </TouchableOpacity>
-          </View>
-        </View>
+          </View> */}
+        {/* </View> */}
 
         <View>
-          <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
+          <View
+            style={{
+              marginVertical: 20,
+              justifyContent: 'center',
+              marginLeft: 20
+            }}>
             <Text style={styles.headline}>LEGAL</Text>
           </View>
           <View
@@ -672,7 +720,9 @@ const SettingsScreen = ({ navigation }) => {
               borderWidth: 1,
               paddingLeft: 20
             }}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('WebViewScreen', { title: 'Privacy Policy' })}
+              testID="privacy-policy">
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Privacy Policy</Text>
                 <View>
@@ -681,7 +731,9 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('WebViewScreen', { title: 'Terms of Service' })}
+              testID="term-and-service-btn">
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Terms of Service</Text>
                 <View>
@@ -692,7 +744,7 @@ const SettingsScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
             <Divider />
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <View style={styles.profileField}>
                 <Text style={{ fontSize: 18 }}>Licenses</Text>
                 <View>
@@ -701,11 +753,12 @@ const SettingsScreen = ({ navigation }) => {
                   </View>
                 </View>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
         <View
+          testID="logout-btn"
           style={{
             height: 50,
             backgroundColor: 'white',
@@ -713,12 +766,14 @@ const SettingsScreen = ({ navigation }) => {
             borderWidth: 1,
             marginTop: 30
           }}>
-          <TouchableOpacity style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <TouchableOpacity
+            onPress={() => logout()}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ fontSize: 18 }}>Log Out</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={{ marginTop: 40 }}>
+        <View testID="_logo" style={{ marginTop: 40 }}>
           <Image style={styles.logo} source={Logo} />
         </View>
 
@@ -729,6 +784,7 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <View
+          testID="delete-account"
           style={{
             height: 50,
             backgroundColor: '#fff',
@@ -783,14 +839,20 @@ const SettingsScreen = ({ navigation }) => {
                   justifyContent: 'space-evenly'
                 }}>
                 <Surface style={styles.btnSurface}>
-                  <Button onPress={() => ''} style={{ backgroundColor: '#f44336' }}>
+                  <Button
+                    testID="delete-account"
+                    onPress={() => ''}
+                    style={{ backgroundColor: '#f44336' }}>
                     <Text type="bold" style={{ color: '#fff' }}>
                       Delete
                     </Text>
                   </Button>
                 </Surface>
                 <Surface style={styles.btnSurface}>
-                  <Button onPress={() => hideDeleteModal()} style={{ backgroundColor: '#03A2A2' }}>
+                  <Button
+                    testID="cancel-deletion"
+                    onPress={() => hideDeleteModal()}
+                    style={{ backgroundColor: '#03A2A2' }}>
                     <Text type="bold" style={{ color: '#FFF' }}>
                       Cancel
                     </Text>
@@ -801,8 +863,7 @@ const SettingsScreen = ({ navigation }) => {
           </Modal>
         </Portal>
       </ScrollView>
-      <PageSpinner visible={loading} />
-      <PageSpinner visible={socialLink} />
+      <PageSpinner visible={loading || socialLink} />
     </View>
   );
 };
@@ -847,4 +908,13 @@ const styles = {
   }
 };
 
-export default SettingsScreen;
+SettingsScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  logout: logoutAction
+};
+
+export default connect(null, mapDispatchToProps)(SettingsScreen);
