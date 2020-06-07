@@ -2,11 +2,11 @@
 import axios from '../../services/axiosService';
 import { Auth } from './types';
 
-export const updateUserProfile = data => dispatch => {
+export const updateUserProfile = dataObj => dispatch => {
   dispatch({ type: Auth.START_A_REQUEST });
 
   return axios
-    .put(`/users/${data._id}`, data)
+    .put(`/users/${dataObj.id}`, dataObj.data)
     .then(response => {
       dispatch({ type: Auth.UPDATE_PROFILE_SUCCESS, payload: response.data });
       return response.data;
