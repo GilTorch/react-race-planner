@@ -14,6 +14,8 @@ import { ImageManipulator } from 'expo-image-crop';
 import { useDispatch, useSelector, connect } from 'react-redux';
 // import * as Google from 'expo-google-app-auth';
 import Menu, { MenuItem } from 'react-native-material-menu';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
 
 import PageSpinner from '../components/PageSpinner';
 import { updateUserProfile, logoutAction } from '../redux/actions/AuthActions';
@@ -28,12 +30,11 @@ const SettingsScreen = ({ navigation, logout }) => {
   } = app;
 
   const user = useSelector(state => state.auth.currentUser);
-  const { _id: id } = user;
   const requestError = useSelector(state => state.auth.requestError);
   const loading = useSelector(state => state.auth.loading);
   const dispatch = useDispatch();
 
-  const dateOfBirth = user?.dateOfBirth ? new Date(user.dateOfBirth) : new Date(687041730000);
+  const dateOfBirth = user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(687041730000);
   const picture = user?.picture || null;
 
   useFocusEffect(
@@ -58,19 +59,32 @@ const SettingsScreen = ({ navigation, logout }) => {
   const hideMenu = () => menuRef.current.hide();
 
   const openImagePickerAsync = async () => {
-    const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
+    // Prompt the user for the CAMERA_ROLL permission. If they have already
+    // granted access, response will be success
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
 
-    if (permissionResult.granted === false) {
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
       return;
     }
 
-    const pickerResult = await ImagePicker.launchImageLibraryAsync();
-
-    if (pickerResult.cancelled === true) {
+    if (!Constants.isDevice) {
+      alert('Camera access is not available on the emulator/simulator');
       return;
     }
 
-    setSelectedImage(pickerResult.uri);
+    // Display the system UI for taking a photo with the camera
+    const { cancelled, uri } = await ImagePicker.launchCameraAsync();
+
+    if (cancelled === true) {
+      Toast.show('You cancelled taking the picture', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+      return;
+    }
+
+    setSelectedImage(uri);
     setShowImageManipulator(true);
   };
 
@@ -96,7 +110,7 @@ const SettingsScreen = ({ navigation, logout }) => {
 
   const updateDateOfBirth = async newDate => {
     if (newDate.getTime() !== dateOfBirth.getTime()) {
-      const data = await dispatch(updateUserProfile({ id, dateOfBirth: newDate }));
+      const data = await dispatch(updateUserProfile({ id: user?._id, dateOfBirth: newDate }));
       if (data) {
         showSuccessMessage('update Date of Birth');
       }
@@ -115,7 +129,7 @@ const SettingsScreen = ({ navigation, logout }) => {
       type: `image/${fileType}`
     });
     // TDDO: handle multipart/form-data on the server
-    dispatch(updateUserProfile({ id, formData }));
+    dispatch(updateUserProfile({ id: user?._id, formData }));
   };
 
   const showSuccessMessage = field => {
@@ -129,7 +143,7 @@ const SettingsScreen = ({ navigation, logout }) => {
   //   const facebookData = await Facebook.logIn();
   //   const facebookAccountId = facebookData.id;
   //   if (facebookAccountId) {
-  //     const data = await dispatch(updateUserProfile({ id, facebookAccountId }));
+  //     const data = await dispatch(updateUserProfile({ id: user?._id, facebookAccountId }));
   //     if (data) {
   //       showSuccessMessage('link to Facebook account');
   //     }
@@ -146,8 +160,8 @@ const SettingsScreen = ({ navigation, logout }) => {
   //     });
 
   //     if (result.type === 'success') {
-  //       const googleAccountId = result.user.id;
-  //       const data = await dispatch(updateUserProfile({ id, googleAccountId }));
+  //       const googleAccountId = result.user?.id;
+  //       const data = await dispatch(updateUserProfile({ id: user?._id, googleAccountId }));
   //       if (data) {
   //         showSuccessMessage('link to Google account');
   //       }
@@ -161,7 +175,7 @@ const SettingsScreen = ({ navigation, logout }) => {
   // const twitterLogin = async () => {
   //   const { twitterAccountId } = await Twitter.authSession(true);
   //   if (twitterAccountId) {
-  //     const data = await dispatch(updateUserProfile({ id, twitterAccountId }));
+  //     const data = await dispatch(updateUserProfile({ id: user?._id, twitterAccountId }));
   //     if (data) {
   //       showSuccessMessage('link to Twitter account');
   //     }
@@ -171,7 +185,7 @@ const SettingsScreen = ({ navigation, logout }) => {
 
   // const linkOrUnlinkAccount = async socialAccountId => {
   //   if (user[socialAccountId]) {
-  //     const data = await dispatch(updateUserProfile({ id, [socialAccountId]: '' }));
+  //     const data = await dispatch(updateUserProfile({ id: user?._id, [socialAccountId]: '' }));
   //     if (data) {
   //       showSuccessMessage('unlink the social account');
   //     }
@@ -316,7 +330,7 @@ const SettingsScreen = ({ navigation, logout }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'username',
-                  value: { username: user.username }
+                  value: { username: user?.username }
                 })
               }
               style={styles.profileField}>
@@ -326,7 +340,7 @@ const SettingsScreen = ({ navigation, logout }) => {
                   flexDirection: 'row',
                   alignItems: 'center'
                 }}>
-                <Text style={{ fontSize: 18, color: '#898989' }}>{user.username || ''}</Text>
+                <Text style={{ fontSize: 18, color: '#898989' }}>{user?.username || ''}</Text>
                 <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
               </View>
             </TouchableOpacity>
@@ -336,7 +350,7 @@ const SettingsScreen = ({ navigation, logout }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'firstname',
-                  value: { firstName: user.firstName }
+                  value: { firstName: user?.firstName }
                 })
               }
               style={styles.profileField}>
@@ -346,7 +360,7 @@ const SettingsScreen = ({ navigation, logout }) => {
                   flexDirection: 'row',
                   alignItems: 'center'
                 }}>
-                <Text style={{ fontSize: 18, color: '#898989' }}>{user.firstName || ''}</Text>
+                <Text style={{ fontSize: 18, color: '#898989' }}>{user?.firstName || ''}</Text>
                 <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
               </View>
             </TouchableOpacity>
@@ -356,7 +370,7 @@ const SettingsScreen = ({ navigation, logout }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'lastname',
-                  value: { lastName: user.lastName }
+                  value: { lastName: user?.lastName }
                 })
               }
               style={styles.profileField}>
@@ -366,7 +380,7 @@ const SettingsScreen = ({ navigation, logout }) => {
                   flexDirection: 'row',
                   alignItems: 'center'
                 }}>
-                <Text style={{ fontSize: 18, color: '#898989' }}>{user.lastName || ''}</Text>
+                <Text style={{ fontSize: 18, color: '#898989' }}>{user?.lastName || ''}</Text>
                 <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
               </View>
             </TouchableOpacity>
@@ -376,7 +390,7 @@ const SettingsScreen = ({ navigation, logout }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'gender',
-                  value: { gender: user.gender || '' }
+                  value: { gender: user?.gender || '' }
                 })
               }
               style={styles.profileField}>
@@ -386,7 +400,7 @@ const SettingsScreen = ({ navigation, logout }) => {
                   flexDirection: 'row',
                   alignItems: 'center'
                 }}>
-                <Text style={{ fontSize: 18, color: '#898989' }}>{user.gender || ''}</Text>
+                <Text style={{ fontSize: 18, color: '#898989' }}>{user?.gender || ''}</Text>
                 <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
               </View>
             </TouchableOpacity>
@@ -458,7 +472,7 @@ const SettingsScreen = ({ navigation, logout }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'email',
-                  value: { email: user.email || '' }
+                  value: { email: user?.email || '' }
                 })
               }
               style={styles.profileField}>
@@ -468,7 +482,7 @@ const SettingsScreen = ({ navigation, logout }) => {
                   flexDirection: 'row',
                   alignItems: 'center'
                 }}>
-                <Text style={{ fontSize: 18, color: '#898989' }}>{user.email || ''}</Text>
+                <Text style={{ fontSize: 18, color: '#898989' }}>{user?.email || ''}</Text>
                 <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
               </View>
             </TouchableOpacity>
@@ -478,8 +492,8 @@ const SettingsScreen = ({ navigation, logout }) => {
                 navigation.navigate('EditSettingsScreen', {
                   key: 'phones',
                   value: {
-                    phone1: user.phone1 || '',
-                    phone2: user.phone2 || ''
+                    phone1: user?.phone1 || '',
+                    phone2: user?.phone2 || ''
                   }
                 })
               }
@@ -494,10 +508,10 @@ const SettingsScreen = ({ navigation, logout }) => {
                 navigation.navigate('EditSettingsScreen', {
                   key: 'address',
                   value: {
-                    addressLine1: user.addressLine1 || '',
-                    addressLine2: user.addressLine2 || '',
-                    city: user.city || '',
-                    country: user.country || ''
+                    addressLine1: user?.addressLine1 || '',
+                    addressLine2: user?.addressLine2 || '',
+                    city: user?.city || '',
+                    country: user?.country || ''
                   }
                 })
               }
@@ -530,7 +544,7 @@ const SettingsScreen = ({ navigation, logout }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'password',
-                  value: { preferences: user.preferences }
+                  value: { preferences: user?.preferences }
                 })
               }
               style={{ ...styles.profileField, paddingRight: 30 }}>
@@ -543,7 +557,7 @@ const SettingsScreen = ({ navigation, logout }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'privacy',
-                  value: { preferences: user.preferences || 'username' }
+                  value: { preferences: user?.preferences || 'username' }
                 })
               }
               style={styles.profileField}>
@@ -554,7 +568,7 @@ const SettingsScreen = ({ navigation, logout }) => {
                   alignItems: 'center'
                 }}>
                 <Text style={{ fontSize: 18, color: '#898989' }}>
-                  {user.preferences || 'username'}
+                  {user?.preferences || 'username'}
                 </Text>
                 <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
               </View>
@@ -598,10 +612,12 @@ const SettingsScreen = ({ navigation, logout }) => {
                 />
                 <Text style={{ fontSize: 18 }}>Facebook</Text>
               </View>
-              {!user.facebookAccountId && (
+              {!user?.facebookAccountId && (
                 <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
               )}
-              {user.facebookAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
+              {user?.facebookAccountId && (
+                <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>
+              )}
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} />
             <TouchableOpacity
@@ -625,10 +641,10 @@ const SettingsScreen = ({ navigation, logout }) => {
                 </View>
                 <Text style={{ fontSize: 18 }}>Google</Text>
               </View>
-              {!user.googleAccountId && (
+              {!user?.googleAccountId && (
                 <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
               )}
-              {user.googleAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
+              {user?.googleAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} />
             <TouchableOpacity
@@ -656,10 +672,10 @@ const SettingsScreen = ({ navigation, logout }) => {
                 />
                 <Text style={{ fontSize: 18 }}>Twitter</Text>
               </View>
-              {!user.twitterAccountId && (
+              {!user?.twitterAccountId && (
                 <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
               )}
-              {user.twitterAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
+              {user?.twitterAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
             </TouchableOpacity>
           </View>
         </View>
