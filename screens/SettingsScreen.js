@@ -23,6 +23,7 @@ import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import moment from 'moment';
 
 const SettingsScreen = ({ navigation, logout }) => {
   const {
@@ -61,7 +62,7 @@ const SettingsScreen = ({ navigation, logout }) => {
   const openImagePickerAsync = async () => {
     // Prompt the user for the CAMERA_ROLL permission. If they have already
     // granted access, response will be success
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
 
     if (status !== 'granted') {
       alert('Sorry, we need camera roll permissions to make this work!');
@@ -123,12 +124,17 @@ const SettingsScreen = ({ navigation, logout }) => {
 
     // eslint-disable-next-line no-undef
     const formData = new FormData();
+
+    // User avatars are saved in this format:
+    // [USER-FIRST-NAME]-[USER-LAST-NAME]-[USER-ID-IN-THE-DB]-[UNIX-TIMESTAMP-AT-TIME-OF-UPLOAD.[FILE-TYPE]
+    const fileName = `${user.firstName.toLowerCase()}-${user.lastName.toLowerCase()}-${user._id}-${moment().unix()}.${fileType}`;
+
     formData.append('picture', {
       uri,
-      name: `photo.${fileType}`,
+      name: fileName,
       type: `image/${fileType}`
     });
-    // TDDO: handle multipart/form-data on the server
+
     dispatch(updateUserProfile({ id: user?._id, formData }));
   };
 
@@ -222,9 +228,7 @@ const SettingsScreen = ({ navigation, logout }) => {
           photo={{ uri: selectedImage }}
           isVisible={showImageManipulator}
           onPictureChoosed={({ uri: uriM }) => {
-            // console.log(uriM);
             updateProfilePicture(uriM);
-            setSelectedImage(uriM);
           }}
           onToggleModal={() => setShowImageManipulator(false)}
         />
@@ -879,7 +883,6 @@ const SettingsScreen = ({ navigation, logout }) => {
           </Modal>
         </Portal>
       </ScrollView>
-      <PageSpinner visible={loading || socialLink} />
     </View>
   );
 };
