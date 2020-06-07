@@ -106,8 +106,7 @@ export default (state = INITIAL_STATE, action) => {
     case Auth.UPDATE_PROFILE_FAILURE:
       return {
         ...state,
-        loading: false,
-        requestError: action.payload
+        loading: false
       };
     case Auth.UPDATE_PROFILE_SUCCESS:
       return {
