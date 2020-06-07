@@ -112,6 +112,7 @@ const SettingsScreen = ({ navigation, logout }) => {
   const updateDateOfBirth = async newDate => {
     if (newDate.getTime() !== dateOfBirth.getTime()) {
       const data = await dispatch(updateUserProfile({ id: user?._id, dateOfBirth: newDate }));
+
       if (data) {
         showSuccessMessage('update Date of Birth');
       }
