@@ -87,14 +87,20 @@ export const updateUserProfile = data => dispatch => {
   dispatch({ type: Auth.START_A_REQUEST });
 
   return axios
-    .put(`/users/${data.id}`, data)
+    .put(`/users/${data.id}`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
     .then(response => {
       dispatch({ type: Auth.UPDATE_PROFILE_SUCCESS, payload: response.data });
       return response.data;
     })
     .catch(error => {
+      alert(JSON.stringify(error.response));
+
       dispatch({
-        type: Auth.UPDATE_PROFILE_FAIL,
+        type: Auth.UPDATE_PROFILE_FAILURE,
         payload: error.response?.data || { message: 'Unexpected Error from the app' }
       });
       return null;

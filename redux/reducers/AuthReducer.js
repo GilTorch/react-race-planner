@@ -75,7 +75,8 @@ export default (state = INITIAL_STATE, action) => {
     case Auth.RESEND_OTP_SUCCESS:
       return {
         ...state,
-        currentUser: { ...state.currentUser, isPasswordReset: true }
+        currentUser: { ...state.currentUser, isPasswordReset: true },
+        loading: false
       };
     case Auth.RESET_PASSWORD_VERIFY_START:
       return {
@@ -102,7 +103,7 @@ export default (state = INITIAL_STATE, action) => {
       };
     case Auth.START_A_REQUEST:
       return { ...state, loading: true };
-    case Auth.UPDATE_PROFILE_FAIL:
+    case Auth.UPDATE_PROFILE_FAILURE:
       return {
         ...state,
         loading: false,
