@@ -1,6 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-undef */
 /* eslint-disable no-alert */
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { ScrollView, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
@@ -17,14 +18,13 @@ import Menu, { MenuItem } from 'react-native-material-menu';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 
-import PageSpinner from '../components/PageSpinner';
+import moment from 'moment';
 import { logoutAction } from '../redux/actions/AuthActions';
 import { updateUserProfile } from '../redux/actions/UserActions';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
-import moment from 'moment';
 
 const SettingsScreen = ({ navigation, logout }) => {
   const {
@@ -32,8 +32,6 @@ const SettingsScreen = ({ navigation, logout }) => {
   } = app;
 
   const user = useSelector(state => state.auth.currentUser);
-  const requestError = useSelector(state => state.auth.requestError);
-  const loading = useSelector(state => state.auth.loading);
   const dispatch = useDispatch();
 
   const dateOfBirth = user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(687041730000);
@@ -45,12 +43,15 @@ const SettingsScreen = ({ navigation, logout }) => {
     }, [])
   );
 
+  useEffect(() => {
+    alert('Oh alright then');
+  }, []);
+
   const [visible, setVisible] = React.useState(false);
   const [date, setDate] = React.useState(dateOfBirth);
   const [show, setShow] = React.useState(false);
   const [showImageManipulator, setShowImageManipulator] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(picture);
-  const [socialLink] = React.useState(false);
   // const [socialLink, setSocialLink] = React.useState(false);
 
   const menuRef = useRef();
@@ -62,7 +63,7 @@ const SettingsScreen = ({ navigation, logout }) => {
 
   const openImagePickerAsync = async () => {
     // Prompt the user for the CAMERA_ROLL permission. If they have already
-    // granted access, response will be success
+    // granted access, response will be successful
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
 
     if (status !== 'granted') {
@@ -129,7 +130,10 @@ const SettingsScreen = ({ navigation, logout }) => {
 
     // User avatars are saved in this format:
     // [USER-FIRST-NAME]-[USER-LAST-NAME]-[USER-ID-IN-THE-DB]-[UNIX-TIMESTAMP-AT-TIME-OF-UPLOAD.[FILE-TYPE]
-    const fileName = `${user.firstName.toLowerCase()}-${user.lastName.toLowerCase()}-${user._id}-${moment().unix()}.${fileType}`;
+    const fileName = `${user.firstName.toLowerCase()}-${user.lastName.toLowerCase()}-${
+      user._id
+      // eslint-disable-next-line prettier/prettier
+      }-${moment().unix()}.${fileType}`;
 
     formData.append('picture', {
       uri,
@@ -215,13 +219,6 @@ const SettingsScreen = ({ navigation, logout }) => {
   //   }
   //   return null;
   // };
-
-  if (requestError) {
-    Toast.show(requestError.message, {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.BOTTOM
-    });
-  }
 
   return (
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
