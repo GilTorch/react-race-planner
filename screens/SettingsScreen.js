@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-undef */
 /* eslint-disable no-alert */
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { ScrollView, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
@@ -37,43 +37,29 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
   let imageUrl;
 
   const user = useSelector(state => state.auth.currentUser);
+  const dateOfBirth = user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(687041730000);
   const [visible, setVisible] = React.useState(false);
   const [date, setDate] = React.useState(dateOfBirth);
   const [show, setShow] = React.useState(false);
   const [showImageManipulator, setShowImageManipulator] = React.useState(false);
-  const [selectedImage, setSelectedImage] = React.useState(picture);
+  const [selectedImage, setSelectedImage] = React.useState(user.picture);
+  const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   // const [socialLink, setSocialLink] = React.useState(false);
-  const dateOfBirth = user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(687041730000);
-  const picture = user?.picture || null;
   const menuRef = useRef();
+  imageUrl = `${Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL}/${
+    USER_AVATAR_UPLOAD_LOCATION
+    }/${user.picture}`;
+
+  // If it starts with http, it's probably from a social account login
+  if (user.picture?.startsWith('http')) {
+    imageUrl = user.picture;
+  }
 
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setBarStyle('light-content');
     }, [])
   );
-
-  useEffect(() => {
-    if (selectedImage) {
-      imageUrl = `${Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL}/${USER_AVATAR_UPLOAD_LOCATION}/${selectedImage}`;
-
-      // If it starts with http, it's probably from a social account login
-      if (selectedImage.startsWith('http')) {
-        imageUrl = selectedImage;
-      }
-
-      alert(imageUrl);
-    }
-  }, [selectedImage]);
-
-  useEffect(() => {
-    alert('foo');
-
-    setSelectedImage(currentUser.picture);
-    setDate(currentUser.dateOfBirth);
-  }, []);
-
-  const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
   const showMenu = () => menuRef.current.show();
   const hideMenu = () => menuRef.current.hide();
@@ -316,10 +302,10 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
                   justifyContent: 'center',
                   alignSelf: 'center'
                 }}>
-                {selectedImage === null && <FontAwesome name="user" color="#898989" size={70} />}
-                {selectedImage !== null && (
+                {!selectedImage && <FontAwesome name="user" color="#898989" size={70} />}
+                {selectedImage && (
                   <View style={{ flex: 1 }}>
-                    <Image source={{ uri: selectedImage }} style={styles.thumbnail} />
+                    <Image source={{ uri: imageUrl }} style={styles.thumbnail} />
                   </View>
                 )}
               </TouchableOpacity>
