@@ -18,7 +18,7 @@ import { useSelector, connect } from 'react-redux';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
-import { ANDROID_BASE_URL, IOS_BASE_URL, USER_AVATAR_UPLOAD_LOCATION } from 'react-native-dotenv';
+import { ANDROID_SERVER_URL, IOS_SERVER_URL, USER_AVATAR_UPLOAD_LOCATION } from 'react-native-dotenv';
 
 import moment from 'moment';
 import { logoutAction } from '../redux/actions/AuthActions';
@@ -28,17 +28,24 @@ import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
-const platformBaseURL = Platform.OS === 'android' ? ANDROID_BASE_URL : IOS_BASE_URL;
+const platformServerURL = Platform.OS === 'android' ? ANDROID_SERVER_URL : IOS_SERVER_URL;
 
 const SettingsScreen = ({ navigation, logout, updateUser }) => {
   const {
     expo: { version }
   } = app;
+  let imageUrl;
 
   const user = useSelector(state => state.auth.currentUser);
-
+  const [visible, setVisible] = React.useState(false);
+  const [date, setDate] = React.useState(dateOfBirth);
+  const [show, setShow] = React.useState(false);
+  const [showImageManipulator, setShowImageManipulator] = React.useState(false);
+  const [selectedImage, setSelectedImage] = React.useState(picture);
+  // const [socialLink, setSocialLink] = React.useState(false);
   const dateOfBirth = user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(687041730000);
   const picture = user?.picture || null;
+  const menuRef = useRef();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -47,17 +54,24 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
   );
 
   useEffect(() => {
-    alert('bar');
+    if (selectedImage) {
+      imageUrl = `${Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL}/${USER_AVATAR_UPLOAD_LOCATION}/${selectedImage}`;
+
+      // If it starts with http, it's probably from a social account login
+      if (selectedImage.startsWith('http')) {
+        imageUrl = selectedImage;
+      }
+
+      alert(imageUrl);
+    }
+  }, [selectedImage]);
+
+  useEffect(() => {
+    alert('foo');
+
+    setSelectedImage(currentUser.picture);
+    setDate(currentUser.dateOfBirth);
   }, []);
-
-  const [visible, setVisible] = React.useState(false);
-  const [date, setDate] = React.useState(dateOfBirth);
-  const [show, setShow] = React.useState(false);
-  const [showImageManipulator, setShowImageManipulator] = React.useState(false);
-  const [selectedImage, setSelectedImage] = React.useState(picture);
-  // const [socialLink, setSocialLink] = React.useState(false);
-
-  const menuRef = useRef();
 
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
@@ -237,7 +251,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
           photo={{
             uri: selectedImage.startsWith('file://')
               ? selectedImage
-              : `${Constants.isDevice ? ANDROID_BASE_URL : platformBaseURL}/${USER_AVATAR_UPLOAD_LOCATION}/${selectedImage}`
+              : imageUrl
           }}
           isVisible={showImageManipulator}
           onPictureChoosed={({ uri: uriM }) => {
