@@ -283,11 +283,14 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
             button={
               <TouchableOpacity
                 onPress={() => {
-                  if (selectedImage) {
-                    showMenu();
-                  } else {
-                    openImagePickerAsync();
-                  }
+                  // TODO: We'll implement this feature soon
+                  // if (selectedImage) {
+                  //   showMenu();
+                  // } else {
+                  //   openImagePickerAsync();
+                  // }
+
+                  openImagePickerAsync();
                 }}
                 style={{
                   backgroundColor: '#fff',
