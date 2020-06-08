@@ -1,27 +1,18 @@
+/* eslint-disable no-underscore-dangle */
 import axios from '../../services/axiosService';
-import { Auth } from './types';
+import { User } from './types';
 
-export const updateUserProfile = data => dispatch => {
-  dispatch({ type: Auth.START_A_REQUEST });
+export const updateUserAction = dataObj => dispatch => {
+  dispatch({ type: User.UPDATE_PROFILE_START });
 
   return axios
-    .put(`/users/${data.id}`, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    .then(response => {
-      alert('got them');
-      dispatch({ type: Auth.UPDATE_PROFILE_SUCCESS, payload: response.data });
-      return response.data;
+    .put(`/users/${dataObj.id}`, dataObj.data)
+    .then(() => {
+      dispatch({ type: User.UPDATE_PROFILE_SUCCESS });
     })
     .catch(error => {
-      alert(JSON.stringify(error));
+      dispatch({ type: User.UPDATE_PROFILE_FAILURE });
 
-      dispatch({
-        type: Auth.UPDATE_PROFILE_FAILURE,
-        payload: error.response?.data || { message: 'Unexpected Error from the app' }
-      });
-      return null;
+      throw error.response?.data;
     });
 };
