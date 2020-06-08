@@ -8,7 +8,8 @@ import {
   StatusBar,
   Switch,
   Keyboard,
-  Platform
+  Platform,
+  SafeAreaView
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
@@ -73,32 +74,30 @@ const EditSettingsScreen = ({ navigation, route }) => {
         style={{
           elevation: 3
         }}>
-        <LinearGradient
-          colors={['#03a2a2', '#23c2c2']}
-          locations={[0.5, 1]}
-          style={{
-            alignItems: 'center',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingBottom: 44,
-            paddingTop: 44 * 2
-          }}>
-          <IconButton
-            testID="back-arrow"
-            onPress={() => navigation.goBack()}
-            icon="arrow-left"
-            color="white"
-          />
-          <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
-            Settings
-          </Text>
-          <IconButton
-            testID="icon-check"
-            onPress={() => ''}
-            disabled={disableCheck}
-            icon="check"
-            color="white"
-          />
+        <LinearGradient colors={['#03a2a2', '#23c2c2']} locations={[0.5, 1]}>
+          <SafeAreaView
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}>
+            <IconButton
+              testID="back-arrow"
+              onPress={() => navigation.goBack()}
+              icon="arrow-left"
+              color="white"
+            />
+            <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
+              Settings
+            </Text>
+            <IconButton
+              testID="icon-check"
+              onPress={() => ''}
+              disabled={disableCheck}
+              icon="check"
+              color="white"
+            />
+          </SafeAreaView>
         </LinearGradient>
       </Surface>
 
