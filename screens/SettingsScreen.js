@@ -3,13 +3,11 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-alert */
 import React, { useRef } from 'react';
-import { ScrollView, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
+import { ScrollView, Image, View, TouchableOpacity, Platform, SafeAreaView, StatusBar } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
-import { useFocusEffect } from '@react-navigation/native';
 import { Surface, Portal, Modal, Divider, Button, TextInput } from 'react-native-paper';
-import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
@@ -18,6 +16,7 @@ import { useSelector, connect } from 'react-redux';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
+import { useFocusEffect } from '@react-navigation/native';
 import { ANDROID_SERVER_URL, IOS_SERVER_URL, USER_AVATAR_UPLOAD_LOCATION } from 'react-native-dotenv';
 
 import moment from 'moment';
@@ -26,7 +25,8 @@ import { updateUserAction } from '../redux/actions/UserActions';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
-import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import CustomStatusBar from '../components/StatusBar';
+// import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
 const platformServerURL = Platform.OS === 'android' ? ANDROID_SERVER_URL : IOS_SERVER_URL;
 
@@ -57,7 +57,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setBarStyle('light-content');
+      StatusBar.setBarStyle('dark-content');
     }, [])
   );
 
@@ -232,6 +232,8 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
+      <CustomStatusBar backgroundColor="#fff" barStyle="dark-content" />
+
       {selectedImage && (
         <ImageManipulator
           photo={{
@@ -246,34 +248,15 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
           onToggleModal={() => setShowImageManipulator(false)}
         />
       )}
-      <Surface
-        style={{
-          elevation: 3,
-          zIndex: 1
-        }}>
-        <LinearGradient
-          colors={['#03a2a2', '#23c2c2']}
-          locations={[0.5, 1]}
-          style={{
-            alignItems: 'center',
-            flexDirection: 'column',
-            paddingBottom: 44,
-            paddingTop: 44 * 2
-          }}>
-          <Text testID="settings-text" type="bold" style={{ color: 'white', fontSize: 18 }}>
-            Settings
-          </Text>
-        </LinearGradient>
-      </Surface>
 
       <ScrollView>
-        <View>
+        <SafeAreaView>
           <View
             testID="profile-text"
             style={{
               justifyContent: 'center',
               marginLeft: 20,
-              marginVertical: 20
+              marginVertical: 15
             }}>
             <Text style={styles.headline}>PROFILE INFO</Text>
           </View>
@@ -544,7 +527,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
               <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
             </TouchableOpacity>
           </View>
-        </View>
+        </SafeAreaView>
 
         <View>
           <View
@@ -599,7 +582,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
           </View>
         </View>
 
-        <View>
+        {/* <View>
           <View
             style={{
               marginVertical: 20,
@@ -701,7 +684,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
               {user?.twitterAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
 
         {/* <View>
           <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
