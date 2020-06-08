@@ -37,7 +37,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
   let imageUrl;
 
   const user = useSelector(state => state.auth.currentUser);
-  const dateOfBirth = user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(687041730000);
+  const dateOfBirth = user.dateOfBirth ? new Date(user.dateOfBirth) : new Date(687041730000);
   const [visible, setVisible] = React.useState(false);
   const [date, setDate] = React.useState(dateOfBirth);
   const [show, setShow] = React.useState(false);
@@ -61,7 +61,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
     }, [])
   );
 
-  const showMenu = () => menuRef.current.show();
+  // const showMenu = () => menuRef.current.show();
   const hideMenu = () => menuRef.current.hide();
 
   const openImagePickerAsync = async () => {
@@ -308,7 +308,11 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
                 {!selectedImage && <FontAwesome name="user" color="#898989" size={70} />}
                 {selectedImage && (
                   <View style={{ flex: 1 }}>
-                    <Image source={{ uri: imageUrl }} style={styles.thumbnail} />
+                    <Image source={{
+                      uri: selectedImage.startsWith('file://')
+                        ? selectedImage
+                        : imageUrl
+                    }} style={styles.thumbnail} />
                   </View>
                 )}
               </TouchableOpacity>
