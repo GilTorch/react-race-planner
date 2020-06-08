@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-undef */
 /* eslint-disable no-alert */
@@ -17,6 +18,7 @@ import { useSelector, connect } from 'react-redux';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
+import { ANDROID_BASE_URL, IOS_BASE_URL, USER_AVATAR_UPLOAD_LOCATION } from 'react-native-dotenv';
 
 import moment from 'moment';
 import { logoutAction } from '../redux/actions/AuthActions';
@@ -25,6 +27,8 @@ import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+
+const platformBaseURL = Platform.OS === 'android' ? ANDROID_BASE_URL : IOS_BASE_URL;
 
 const SettingsScreen = ({ navigation, logout, updateUser }) => {
   const {
@@ -230,7 +234,11 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
       {selectedImage && (
         <ImageManipulator
-          photo={{ uri: selectedImage }}
+          photo={{
+            uri: selectedImage.startsWith('file://')
+              ? selectedImage
+              : `${Constants.isDevice ? ANDROID_BASE_URL : platformBaseURL}/${USER_AVATAR_UPLOAD_LOCATION}/${selectedImage}`
+          }}
           isVisible={showImageManipulator}
           onPictureChoosed={({ uri: uriM }) => {
             updateProfilePicture(uriM);
