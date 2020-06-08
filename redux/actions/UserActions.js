@@ -1,17 +1,17 @@
 /* eslint-disable no-underscore-dangle */
 import axios from '../../services/axiosService';
-import { Auth } from './types';
+import { User } from './types';
 
 export const updateUserAction = dataObj => dispatch => {
-  dispatch({ type: Auth.START_A_REQUEST });
+  dispatch({ type: User.UPDATE_PROFILE_START });
 
   return axios
     .put(`/users/${dataObj.id}`, dataObj.data)
-    .then(response => {
-      dispatch({ type: Auth.UPDATE_PROFILE_SUCCESS, payload: response.data });
+    .then(() => {
+      dispatch({ type: User.UPDATE_PROFILE_SUCCESS });
     })
     .catch(error => {
-      dispatch({ type: Auth.UPDATE_PROFILE_FAILURE });
+      dispatch({ type: User.UPDATE_PROFILE_FAILURE });
 
       throw error.response?.data;
     });
