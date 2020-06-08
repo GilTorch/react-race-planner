@@ -128,7 +128,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
     const formData = new FormData();
 
     // User avatars are saved in this format:
-    // [USER-FIRST-NAME]-[USER-LAST-NAME]-[USER-ID-IN-THE-DB]-[UNIX-TIMESTAMP-AT-TIME-OF-UPLOAD.[FILE-TYPE]
+    // [USER-FIRST-NAME]-[USER-LAST-NAME]-[USER-ID-IN-THE-DB]-[UNIX-TIMESTAMP-AT-TIME-OF-UPLOAD].[FILE-TYPE]
     const fileName = `${user.firstName.toLowerCase()}-${user.lastName.toLowerCase()}-${
       user._id
       // eslint-disable-next-line prettier/prettier
