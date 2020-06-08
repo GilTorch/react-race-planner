@@ -101,19 +101,6 @@ export default (state = INITIAL_STATE, action) => {
         token: null,
         currentUser: null
       };
-    case Auth.START_A_REQUEST:
-      return { ...state, loading: true };
-    case Auth.UPDATE_PROFILE_FAILURE:
-      return {
-        ...state,
-        loading: false
-      };
-    case Auth.UPDATE_PROFILE_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        currentUser: action.payload
-      };
     default:
       return state;
   }
