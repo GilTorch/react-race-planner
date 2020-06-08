@@ -1,52 +1,136 @@
 import React, { useState } from 'react';
-import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import { Surface, Searchbar } from 'react-native-paper';
+import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
+import { AntDesign, FontAwesome, FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
+import { Surface, Searchbar, Button } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
+import Menu from 'react-native-material-menu';
 
 import Text from '../components/CustomText';
-import { stories } from '../utils/data';
+import { stories, genres } from '../utils/data';
 import { Story } from '../components/stories';
 import FilterBadges from '../components/FilterBadges';
 
 const Writing = ({ navigation }) => {
   const [searchBarVisible, setSearchBarVisible] = useState(false);
+  const [currentGenre, setCurrentGenre] = useState(genres[0]);
+
+  let menu = null;
+  const setMenuRef = ref => {
+    menu = ref;
+  };
 
   navigation.setOptions({
     headerShown: false
   });
 
+  const showMenu = async genreIndex => {
+    setCurrentGenre(genres[genreIndex]);
+    menu.show();
+  };
+
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setBarStyle('light-content');
+      StatusBar.setBarStyle('dark-content');
     }, [])
   );
 
   return (
     <View style={styles.container}>
-      <Surface
-        style={{
-          elevation: 3,
-          zIndex: 1
-        }}>
-        <LinearGradient
-          colors={['#03a2a2', '#23c2c2']}
-          locations={[0.2, 1]}
+      <Surface style={{ paddingBottom: 20, elevation: 2, zIndex: 10 }}>
+        <SafeAreaView
           style={{
-            alignItems: 'center',
-            flexDirection: 'column',
-            paddingBottom: 44,
-            paddingTop: 44 * 2
+            marginBottom: 10,
+            marginLeft: 23,
+            flexDirection: 'row',
+            alignItems: 'center'
           }}>
-          <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
-            My Stories
+          <SimpleLineIcons color="#ED8A18" name="layers" size={25} />
+          <Text style={{ ...styles.headline, fontSize: 16, marginLeft: 15 }} type="medium">
+            Start a New Story
           </Text>
-        </LinearGradient>
+        </SafeAreaView>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingLeft: 23 }}>
+          {genres.map((genre, index) => (
+            <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
+              <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+                <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
+                  {genre.icon(32)}
+                </View>
+                <Text
+                  type="medium"
+                  style={{
+                    color: '#5A7582',
+                    fontSize: 14
+                  }}>
+                  {genre.name}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </Surface>
+
+      <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
+        <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 10
+            }}>
+            <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
+              {currentGenre.name}
+            </Text>
+          </View>
+          <Text style={{ textAlign: 'center' }}>
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+            has been the industry's standard dummy text ever since the 1500s, when an unknown
+            printer took a galley of type and scrambled it to make a type specimen book. It has
+            survived not only five centuries, but also the leap into electronic typesetting,
+            remaining essentially unchanged. It was popularised in the 1960s with the release of
+            Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '65%',
+              alignSelf: 'flex-end',
+              justifyContent: 'flex-end',
+              marginTop: 15,
+              marginBottom: 20
+            }}>
+            <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
+              <Button
+                icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+                uppercase={false}
+                onPress={() => ''}
+                style={{ backgroundColor: '#03A2A2' }}>
+                <Text type="bold" style={{ color: '#FFF' }}>
+                  Go
+                </Text>
+              </Button>
+            </Surface>
+            <Surface style={styles.btnSurface}>
+              <Button
+                onPress={() => menu.hide()}
+                uppercase={false}
+                style={{ backgroundColor: '#f44336' }}>
+                <Text type="bold" style={{ color: '#fff' }}>
+                  Cancel
+                </Text>
+              </Button>
+            </Surface>
+          </View>
+        </View>
+      </Menu>
+
       <ScrollView>
         {searchBarVisible && (
           <View
@@ -54,10 +138,10 @@ const Writing = ({ navigation }) => {
               flexDirection: 'row',
               justifyContent: 'space-around',
               alignItems: 'center',
-              marginTop: 20,
               marginLeft: 20,
               marginRight: 20,
-              marginBottom: 15
+              marginBottom: 15,
+              marginTop: 15
             }}>
             <View style={{ flex: 8 }}>
               <Searchbar style={{ height: 40, paddingTop: 3, elevation: 2 }} iconColor="#03A2A2" />
@@ -81,8 +165,8 @@ const Writing = ({ navigation }) => {
               style={{
                 marginLeft: 20,
                 marginRight: 15,
-                marginTop: 20,
                 marginBottom: 5,
+                marginTop: 15,
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between'
@@ -153,7 +237,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#EEE'
   },
-  headline: { color: '#5A7582' }
+
+  headline: { color: '#5A7582' },
+
+  btnSurface: {
+    elevation: 4,
+    marginVertical: 10,
+    borderRadius: 5
+  },
+
+  genreIconContainer: {
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100
+  }
 });
 
 Writing.propTypes = {
