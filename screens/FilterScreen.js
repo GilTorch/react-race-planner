@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { useFocusEffect } from '@react-navigation/native';
 
+import { connect, useSelector } from 'react-redux';
 import Text from '../components/CustomText';
 import { SCREEN_WIDTH } from '../utils/dimensions';
+import { setHomeFiltersAction } from '../redux/actions/HomeActions';
+import { setWritingFiltersAction } from '../redux/actions/WritingActions';
+import { setLibraryFiltersAction } from '../redux/actions/LibraryActions';
 
-const FilterScreen = ({ navigation }) => {
-  const defaultAuthorRange = [5, 20];
-  const [multiSliderValue, setMultiSliderValue] = useState(defaultAuthorRange);
-
-  const multiSliderValuesChange = values => setMultiSliderValue(values);
+const FilterScreen = ({
+  navigation,
+  route,
+  setHomeFilters,
+  setLibraryFilters,
+  setWritingFilters
+}) => {
+  const { previousScreen } = route.params;
 
   const defaultTagData = {
     status: {
@@ -34,13 +41,49 @@ const FilterScreen = ({ navigation }) => {
         { selected: false, label: 'Essay' },
         { selected: false, label: 'Bedtime Stories' }
       ]
+    },
+    authors: [5, 20]
+  };
+
+  const tagDataHome = useSelector(state => state.home.filters);
+  const tagDataLibrary = useSelector(state => state.library.filters);
+  const tagDataWriting = useSelector(state => state.writing.filters);
+
+  let tagData = defaultTagData;
+
+  switch (previousScreen) {
+    case 'home':
+      tagData = tagDataHome;
+      break;
+    case 'library':
+      tagData = tagDataLibrary;
+      break;
+    case 'writing':
+      tagData = tagDataWriting;
+      break;
+    default:
+      tagData = tagDataHome;
+      break;
+  }
+
+  const setTagData = data => {
+    switch (previousScreen) {
+      case 'home':
+        return setHomeFilters(data);
+      case 'library':
+        return setLibraryFilters(data);
+      case 'writing':
+        return setWritingFilters(data);
+      default:
+        return setHomeFilters(data);
     }
   };
 
-  const [tagData, setTagData] = useState(defaultTagData);
+  const multiSliderValuesChange = values => {
+    setTagData({ ...tagData, authors: values });
+  };
 
   const reset = () => {
-    setMultiSliderValue(defaultAuthorRange);
     setTagData(defaultTagData);
   };
   const doneBtn = (
@@ -226,8 +269,8 @@ const FilterScreen = ({ navigation }) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between'
               }}>
-              <Text style={{ fontSize: 14, color: '#5A7582' }}>{multiSliderValue[0]}</Text>
-              <Text style={{ fontSize: 14, color: '#5A7582' }}>{multiSliderValue[1]}</Text>
+              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authors[0]}</Text>
+              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authors[1]}</Text>
             </View>
             <MultiSlider
               trackStyle={{
@@ -255,7 +298,7 @@ const FilterScreen = ({ navigation }) => {
                   }}
                 />
               )}
-              values={[multiSliderValue[0], multiSliderValue[1]]}
+              values={[tagData.authors[0], tagData.authors[1]]}
               sliderLength={SCREEN_WIDTH - 50}
               onValuesChange={multiSliderValuesChange}
               min={0}
@@ -266,7 +309,7 @@ const FilterScreen = ({ navigation }) => {
             />
             <View>
               <Text style={{ color: '#5A7582' }}>
-                Authors range: {multiSliderValue[0]} - {multiSliderValue[1]}
+                Authors range: {tagData.authors[0]} - {tagData.authors[1]}
               </Text>
             </View>
           </View>
@@ -276,10 +319,24 @@ const FilterScreen = ({ navigation }) => {
   );
 };
 
-export default FilterScreen;
+const mapDispatchToProps = {
+  setHomeFilters: setHomeFiltersAction,
+  setLibraryFilters: setLibraryFiltersAction,
+  setWritingFilters: setWritingFiltersAction
+};
+
+export default connect(null, mapDispatchToProps)(FilterScreen);
 
 FilterScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  route: PropTypes.shape({
+    params: PropTypes.shape({
+      previousScreen: PropTypes.string.isRequired
+    })
+  }).isRequired,
+  setHomeFilters: PropTypes.func.isRequired,
+  setWritingFilters: PropTypes.func.isRequired,
+  setLibraryFilters: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({

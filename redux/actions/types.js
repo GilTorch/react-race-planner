@@ -27,3 +27,13 @@ export const Auth = {
 
   LOGOUT: 'LOGOUT'
 };
+
+export const Home = {
+  SET_FILTERS: 'SET_FILTERS'
+};
+export const Library = {
+  SET_FILTERS: 'SET_FILTERS'
+};
+export const Writing = {
+  SET_FILTERS: 'SET_FILTERS'
+};

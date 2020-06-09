@@ -209,7 +209,7 @@ const HomeScreen = ({ navigation, route }) => {
                 testID="filter-button"
                 style={{ borderRadius: 5, padding: 5, flex: 1 }}
                 onPress={() => {
-                  navigation.navigate('FilterScreen');
+                  navigation.navigate('FilterScreen', { previousScreen: 'home' });
                 }}>
                 <Surface
                   style={{
