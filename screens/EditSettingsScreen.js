@@ -14,16 +14,18 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
-import { Surface, Divider, TextInput, IconButton } from 'react-native-paper';
+import { Surface, Divider, TextInput, IconButton, ActivityIndicator } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
+import Toast from 'react-native-root-toast';
 
 import { ScrollView } from 'react-native-gesture-handler';
 import Text from '../components/CustomText';
 import { SCREEN_HEIGHT } from '../utils/dimensions';
 import PageSpinner from '../components/PageSpinner';
+import { updateUserAction } from '../redux/actions/UserActions';
 
-const EditSettingsScreen = ({ navigation, route }) => {
+const EditSettingsScreen = ({ navigation, route, updateUser }) => {
   navigation.setOptions({
     headerShown: false
   });
@@ -37,7 +39,9 @@ const EditSettingsScreen = ({ navigation, route }) => {
   const inputs = {};
 
   const loading = useSelector(state => state.auth.loading);
+  const userUpdateLoading = useSelector(state => state.user.loading);
 
+  const currentUser = useSelector(state => state.auth.currentUser);
   const [userData, setUserData] = useState(value);
   const [privacy, setPrivacy] = useState(value.preferences);
   const [disableCheck, setDisableCheck] = useState(true);
@@ -54,7 +58,8 @@ const EditSettingsScreen = ({ navigation, route }) => {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const selectGender = gender => {
-    setDisableCheck(value.gender === gender);
+    setDisableCheck(value.gender.toLowerCase() === gender);
+
     setUserData({ gender });
   };
 
@@ -90,13 +95,53 @@ const EditSettingsScreen = ({ navigation, route }) => {
             <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
               Settings
             </Text>
-            <IconButton
-              testID="icon-check"
-              onPress={() => ''}
-              disabled={disableCheck}
-              icon="check"
-              color="white"
-            />
+
+            <View>
+              {userUpdateLoading && (
+                <View
+                  style={{
+                    margin: 6,
+                    width: 36,
+                    height: 36,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <ActivityIndicator color="#fff" size={Platform.OS === 'android' ? 36 : 'small'} />
+                </View>
+              )}
+
+              {!userUpdateLoading && (
+                <IconButton
+                  testID="icon-check"
+                  onPress={async () => {
+                    if (disableCheck) return;
+
+                    try {
+                      await updateUser({ data: userData, id: currentUser._id });
+
+                      Toast.show('Successfully updated', {
+                        duration: Toast.durations.LONG,
+                        position: Toast.positions.BOTTOM
+                      });
+
+                      navigation.goBack();
+                    } catch (e) {
+                      // TODO: Add an error text under each input instead and
+                      // set the error depending on the field being updated.
+                      // We shouldn't use Toast for handling errors. Only for
+                      // success
+                      Toast.show(e.message, {
+                        duration: Toast.durations.LONG,
+                        position: Toast.positions.BOTTOM
+                      });
+                    }
+                  }}
+                  disabled={disableCheck}
+                  icon="check"
+                  color="white"
+                />
+              )}
+            </View>
           </SafeAreaView>
         </LinearGradient>
       </Surface>
@@ -311,17 +356,19 @@ const EditSettingsScreen = ({ navigation, route }) => {
               borderTopWidth: 0.5,
               borderBottomWidth: 0.5
             }}>
-            <TouchableOpacity onPress={() => selectGender('Male')} style={styles.checkBox}>
+            <TouchableOpacity onPress={() => selectGender('male')} style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Male</Text>
-              {userData.gender === 'Male' && <FontAwesome name="check" size={18} color="#03A2A2" />}
+              {userData.gender.toLowerCase() === 'male' && (
+                <FontAwesome name="check" size={18} color="#03A2A2" />
+              )}
             </TouchableOpacity>
             <Divider />
             <TouchableOpacity
               testID="edit-gender"
-              onPress={() => selectGender('Female')}
+              onPress={() => selectGender('female')}
               style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Female</Text>
-              {userData.gender === 'Female' && (
+              {userData.gender.toLowerCase() === 'female' && (
                 <FontAwesome name="check" size={18} color="#03A2A2" />
               )}
             </TouchableOpacity>
@@ -467,11 +514,6 @@ const EditSettingsScreen = ({ navigation, route }) => {
   );
 };
 
-EditSettingsScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
-  route: PropTypes.object.isRequired
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1
@@ -503,4 +545,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export default EditSettingsScreen;
+EditSettingsScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  route: PropTypes.object.isRequired
+};
+
+const mapDispatchToProps = {
+  updateUser: updateUserAction
+};
+
+export default connect(null, mapDispatchToProps)(EditSettingsScreen);
