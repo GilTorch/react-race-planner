@@ -18,6 +18,14 @@ describe('Navigation bar', () => {
     await navigationBar.enterLoginCredential(config);
   });
 
+  it('Should check that `LIBRARY` text is not visible in bottom tab', async () => {
+    await expect(navigationBar.library).toBeNotVisible();
+  });
+
+  it('Should check that library icon exists', async () => {
+    await expect(navigationBar.libraryIcon.atIndex(1)).toExist();
+  });
+
   it('Should check that `HOME` text exits and is visible in bottom tab', async () => {
     await expect(navigationBar.home).toExist();
     await expect(navigationBar.home).toBeVisible();

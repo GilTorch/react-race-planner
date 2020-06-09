@@ -1,0 +1,26 @@
+name: sr-mobile project 
+on: push
+jobs:
+  build:
+    name: sr-mobile action
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [8.x, 12.x]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: ./action
+        with:
+              PROJECT_NAME: "sr-mobile"
+      - run: npm install
+      - run: npm run dl_expo_bins --if-present
+      - run: sudo npm install -g react-native-cli
+      - run: sudo npm i -g detox-cli
+      - run: npm install detox
+      - run: npm audit fix
+      - run: npm run lint:fix
+      # - run: npm test
+        env:
+          CI: true
+          
+         

@@ -39,8 +39,8 @@ const intros = [
 ];
 
 const endings = [
-  { author: 'Marie Clack', elected: true, votes: '11/11', comments: '33' },
-  { author: 'Anonymouns 6', elected: false, votes: '5/11', comments: '15' }
+  { author: 'Marie Clack', elected: true, votes: '11/11', comments: '33', body: loremText },
+  { author: 'Anonymouns 6', elected: false, votes: '5/11', comments: '15', body: loremText }
 ];
 
 const rounds = [

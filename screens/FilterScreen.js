@@ -87,12 +87,12 @@ const FilterScreen = ({
     setTagData(defaultTagData);
   };
   const doneBtn = (
-    <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
+    <TouchableOpacity testID="done" onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
       <Text style={{ color: '#03A2A2', fontSize: 18 }}>Done</Text>
     </TouchableOpacity>
   );
   const resetBtn = (
-    <TouchableOpacity onPress={() => reset()} style={{ marginRight: 20 }}>
+    <TouchableOpacity testID="reset" onPress={() => reset()} style={{ marginRight: 20 }}>
       <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
     </TouchableOpacity>
   );
@@ -162,6 +162,24 @@ const FilterScreen = ({
     }, [])
   );
 
+  const filterSelector = ['select-all-part-one', 'clear-all-part-one'];
+  let selector = [];
+  if (!tagData.status.allSelected) {
+    selector.push(filterSelector[0]);
+  } else if (tagData.status.allSelected) {
+    selector = [];
+    selector.push(filterSelector[1]);
+  }
+
+  const filterSelector2 = ['select-all-part-two', 'clear-all-part-two'];
+  let selector2 = [];
+  if (!tagData.genres.allSelected) {
+    selector2.push(filterSelector2[0]);
+  } else {
+    selector2 = [];
+    selector2.push(filterSelector2[1]);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.innerWrapper}>
@@ -173,7 +191,7 @@ const FilterScreen = ({
               justifyContent: 'space-between'
             }}>
             <Text style={styles.filterCategory}>STATUS</Text>
-            <TouchableOpacity onPress={() => toggleSelectAll('status')}>
+            <TouchableOpacity testID={selector.join('')} onPress={() => toggleSelectAll('status')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
                 {tagData.status.allSelected ? 'Clear All' : 'Select All'}
               </Text>
@@ -188,8 +206,13 @@ const FilterScreen = ({
               const textStyle = tag.selected ? { color: '#fff' } : { color: '#5A7582' };
 
               return (
-                <TouchableOpacity key={Math.random()} onPress={() => onSelect('status', tag)}>
-                  <View style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
+                <TouchableOpacity
+                  testID="selected-status"
+                  key={Math.random()}
+                  onPress={() => onSelect('status', tag)}>
+                  <View
+                    testID="statuses"
+                    style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
                     <Text type="bold" style={{ ...styles.text, ...textStyle }}>
                       {tag.label}
                     </Text>
@@ -207,7 +230,7 @@ const FilterScreen = ({
               justifyContent: 'space-between'
             }}>
             <Text style={styles.filterCategory}>GENRES</Text>
-            <TouchableOpacity onPress={() => toggleSelectAll('genres')}>
+            <TouchableOpacity testID={selector2.join('')} onPress={() => toggleSelectAll('genres')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
                 {tagData.genres.allSelected ? 'Clear All' : 'Select All'}
               </Text>
@@ -222,8 +245,11 @@ const FilterScreen = ({
               const textStyle = tag.selected ? { color: '#fff' } : { color: '#5A7582' };
 
               return (
-                <TouchableOpacity key={Math.random()} onPress={() => onSelect('genres', tag)}>
-                  <View style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
+                <TouchableOpacity
+                  testID="selected-genres"
+                  key={Math.random()}
+                  onPress={() => onSelect('genres', tag)}>
+                  <View testID="genres" style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
                     <Text type="bold" style={{ ...styles.text, ...textStyle }}>
                       {tag.label}
                     </Text>
@@ -260,6 +286,7 @@ const FilterScreen = ({
               markerOffsetY={5}
               customMarker={() => (
                 <View
+                  testID="authors-slider"
                   style={{
                     width: 25,
                     height: 25,
