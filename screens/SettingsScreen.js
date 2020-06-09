@@ -116,10 +116,20 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
 
   const updateDateOfBirth = async newDate => {
     if (newDate.getTime() !== dateOfBirth.getTime()) {
-      const data = await updateUser({ id: user?._id, dateOfBirth: newDate });
+      try {
+        await updateUser({ id: user?._id, data: {
+          dateOfBirth: newDate
+         }});
 
-      if (data) {
-        showSuccessMessage('update Date of Birth');
+        Toast.show('Successfully updated', {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM
+        });
+      } catch (e) {
+        Toast.show(e.message, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM
+        });
       }
     }
   };
