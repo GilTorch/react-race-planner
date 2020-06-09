@@ -37,22 +37,22 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
   let imageUrl;
 
   const user = useSelector(state => state.auth.currentUser);
-  const dateOfBirth = user.dateOfBirth ? new Date(user.dateOfBirth) : new Date(687041730000);
+  const dateOfBirth = user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(687041730000);
   const [visible, setVisible] = React.useState(false);
   const [date, setDate] = React.useState(dateOfBirth);
   const [show, setShow] = React.useState(false);
   const [showImageManipulator, setShowImageManipulator] = React.useState(false);
-  const [selectedImage, setSelectedImage] = React.useState(user.picture);
+  const [selectedImage, setSelectedImage] = React.useState(user?.picture);
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   // const [socialLink, setSocialLink] = React.useState(false);
   const menuRef = useRef();
   imageUrl = `${Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL}/${
     USER_AVATAR_UPLOAD_LOCATION
-    }/${user.picture}`;
+    }/${user?.picture}`;
 
   // If it starts with http, it's probably from a social account login
-  if (user.picture?.startsWith('http')) {
-    imageUrl = user.picture;
+  if (user?.picture?.startsWith('http')) {
+    imageUrl = user?.picture;
   }
 
   useFocusEffect(
@@ -133,8 +133,8 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
 
     // User avatars are saved in this format:
     // [USER-FIRST-NAME]-[USER-LAST-NAME]-[USER-ID-IN-THE-DB]-[UNIX-TIMESTAMP-AT-TIME-OF-UPLOAD].[FILE-TYPE]
-    const fileName = `${user.firstName.toLowerCase()}-${user.lastName.toLowerCase()}-${
-      user._id
+    const fileName = `${user?.firstName.toLowerCase()}-${user?.lastName.toLowerCase()}-${
+      user?._id
       // eslint-disable-next-line prettier/prettier
       }-${moment().unix()}.${fileType}`;
 
