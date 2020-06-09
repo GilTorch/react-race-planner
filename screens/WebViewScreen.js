@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, StatusBar, SafeAreaView } from 'react-native';
+import { View, StatusBar, SafeAreaView, Platform } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Surface, IconButton } from 'react-native-paper';
 import { WebView } from 'react-native-webview';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ANDROID_SERVER_URL, IOS_SERVER_URL } from 'react-native-dotenv';
 
 import Text from '../components/CustomText';
 
@@ -20,6 +21,8 @@ const WebViewScreen = ({ navigation, route }) => {
   );
 
   const { title } = route.params;
+  const baseUri = Platform.OS === 'android' ? ANDROID_SERVER_URL : IOS_SERVER_URL;
+  const uri = title === 'Privacy Policy' ? `${baseUri}/pp` : `${baseUri}/tos`;
 
   return (
     <View style={{ flex: 1 }}>
@@ -41,7 +44,7 @@ const WebViewScreen = ({ navigation, route }) => {
           </SafeAreaView>
         </LinearGradient>
       </Surface>
-      <WebView source={{ uri: 'https://google.com' }} />
+      <WebView source={{ uri }} />
     </View>
   );
 };
