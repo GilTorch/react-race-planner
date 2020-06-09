@@ -32,7 +32,11 @@ const EditSettingsScreen = ({ navigation, route, updateUser }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setBarStyle('light-content');
+      if (Platform.OS === 'android') {
+        StatusBar.setHidden(true);
+      } else {
+        StatusBar.setBarStyle('light-content');
+      }
     }, [])
   );
   const { key, value } = route.params;
