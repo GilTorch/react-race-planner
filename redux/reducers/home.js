@@ -1,6 +1,10 @@
 import { Home } from '../actions/types';
+import mergeResponse from '../../utils/mergeResponse';
 
 const initialState = {
+  loadingStories: false,
+  stories: null,
+  updatingStories: false,
   filters: {
     status: {
       allSelected: false,
@@ -31,6 +35,19 @@ const homeReducer = (state = initialState, action) => {
   switch (action.type) {
     case Home.SET_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
+    case Home.GET_ACTIVE_STORIES_START:
+      return { ...state, loadingStories: true };
+    case Home.UPDATE_ACTIVE_STORIES:
+      return { ...state, updatingStories: action.data };
+    case Home.GET_ACTIVE_STORIES_SUCCESS:
+      return {
+        ...state,
+        stories: mergeResponse(state.stories, action.data),
+        loadingStories: false,
+        updatingStories: false
+      };
+    case Home.GET_ACTIVE_STORIES_FAILURE:
+      return { ...state, loadingStories: false, updatingStories: false };
     default:
       return state;
   }

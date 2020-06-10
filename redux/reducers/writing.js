@@ -1,6 +1,9 @@
 import { Writing } from '../actions/types';
 
 const initialState = {
+  loadingStories: false,
+  stories: null,
+  updatingStories: false,
   filters: {
     status: {
       allSelected: false,
