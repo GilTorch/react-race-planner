@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-undef */
 /* eslint-disable no-alert */
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, Image, View, TouchableOpacity, Platform, SafeAreaView, StatusBar } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
@@ -12,6 +12,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
 import { useSelector, connect } from 'react-redux';
+
 // import * as Google from 'expo-google-app-auth';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import * as Permissions from 'expo-permissions';
@@ -20,8 +21,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { ANDROID_SERVER_URL, IOS_SERVER_URL, USER_AVATAR_UPLOAD_LOCATION } from 'react-native-dotenv';
 
 import moment from 'moment';
-import { logoutAction } from '../redux/actions/AuthActions';
-import { updateUserAction } from '../redux/actions/UserActions';
+import { logoutAction, deleteAccountAction } from '../redux/actions/AuthActions';
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
@@ -30,7 +30,7 @@ import CustomStatusBar from '../components/StatusBar';
 
 const platformServerURL = Platform.OS === 'android' ? ANDROID_SERVER_URL : IOS_SERVER_URL;
 
-const SettingsScreen = ({ navigation, logout, updateUser }) => {
+const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
   const {
     expo: { version }
   } = app;
@@ -38,7 +38,8 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
 
   const user = useSelector(state => state.auth.currentUser);
   const dateOfBirth = user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(687041730000);
-  const [visible, setVisible] = React.useState(false);
+  const [modalUsername, setModalUsername] = useState('');
+  const [modalVisible, setModalVisible] = React.useState(false);
   const [date, setDate] = React.useState(dateOfBirth);
   const [show, setShow] = React.useState(false);
   const [showImageManipulator, setShowImageManipulator] = React.useState(false);
@@ -111,8 +112,8 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
 
   const showDatepicker = () => setShow(!show);
 
-  const showDeleteModal = () => setVisible(true);
-  const hideDeleteModal = () => setVisible(false);
+  const showDeleteModal = () => setModalVisible(true);
+  const hideDeleteModal = () => setModalVisible(false);
 
   const updateDateOfBirth = async newDate => {
     if (newDate.getTime() !== dateOfBirth.getTime()) {
@@ -241,6 +242,31 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
   //   }
   //   return null;
   // };
+
+  const handleDeleteAccount = async () => {
+    if (user?.username === modalUsername) {
+      try {
+        // eslint-disable-next-line no-underscore-dangle
+        await deleteAccount(user?._id);
+      } catch (e) {
+        let toastMessage = e?.message || 'Something unexpected happened';
+
+        if (e?.code === 'ServerError') {
+          toastMessage = 'Something unexpected happened';
+        }
+
+        Toast.show(toastMessage, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM
+        });
+      }
+    } else {
+      Toast.show('Enter your username to confirm you want to delete your account', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    }
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
@@ -836,7 +862,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
         <Portal>
           <Modal
             dismissable={false}
-            visible={visible}
+            visible={modalVisible}
             contentContainerStyle={{
               backgroundColor: 'white',
               borderRadius: 6,
@@ -851,13 +877,23 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
                 margin: 20,
                 marginBottom: 10
               }}>
-              <Text type="bold" style={{ fontSize: 24, color: '#5A7582' }}>
-                Delete Account !
+              <Text type="bold" style={{ fontSize: 20, color: '#5A7582' }}>
+                Before you delete your Account
+              </Text>
+              <Text style={{ marginTop: 10, fontSize: 16, color: '#5A7582' }}>
+                Please enter your
+                <Text type="bold" style={{ fontSize: 16 }}>
+                  {' '}
+                  username{' '}
+                </Text>
+                to confirm that you wish to delete your account.
               </Text>
             </View>
             <View style={{ flex: 1, justifyContent: 'space-around' }}>
               <TextInput
+                autoCapitalize="none"
                 placeholder="Enter your username"
+                onChangeText={text => setModalUsername(text)}
                 style={{
                   height: 35,
                   width: '90%',
@@ -866,7 +902,6 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
                   backgroundColor: 'white'
                 }}
               />
-
               <View
                 style={{
                   flexDirection: 'row',
@@ -874,8 +909,8 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
                 }}>
                 <Surface style={styles.btnSurface}>
                   <Button
+                    onPress={() => handleDeleteAccount()}
                     testID="delete-account"
-                    onPress={() => ''}
                     style={{ backgroundColor: '#f44336' }}>
                     <Text type="bold" style={{ color: '#fff' }}>
                       Delete
@@ -944,11 +979,13 @@ const styles = {
 SettingsScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
+  deleteAccount: PropTypes.func.isRequired,
   updateUser: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = {
   logout: logoutAction,
+  deleteAccount: deleteAccountAction,
   updateUser: updateUserAction
 };
 

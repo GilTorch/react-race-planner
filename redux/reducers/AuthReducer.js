@@ -2,6 +2,7 @@ import { Auth, User } from '../actions/types';
 
 const INITIAL_STATE = {
   loading: false,
+  requestError: null,
   token: null,
   currentUser: null
 };
@@ -105,6 +106,24 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         token: null,
         currentUser: null
+      };
+    case Auth.DELETE_ACCOUNT_START:
+      return {
+        ...state,
+        loading: true
+      };
+    case Auth.DELETE_ACCOUNT_SUCCESS:
+      return {
+        ...state,
+        currentUser: null,
+        token: null,
+        loading: false
+      };
+    case Auth.DELETE_ACCOUNT_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        requestError: action.data
       };
     default:
       return state;
