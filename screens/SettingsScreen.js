@@ -22,6 +22,8 @@ import { ANDROID_SERVER_URL, IOS_SERVER_URL, USER_AVATAR_UPLOAD_LOCATION } from 
 
 import moment from 'moment';
 import { logoutAction, deleteAccountAction } from '../redux/actions/AuthActions';
+import { updateUserAction } from '../redux/actions/UserActions';
+
 import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
@@ -46,7 +48,7 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
   const [selectedImage, setSelectedImage] = React.useState(user?.picture);
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   // const [socialLink, setSocialLink] = React.useState(false);
-  const menuRef = useRef();
+  const menuRef = React.useRef();
   imageUrl = `${Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL}/${
     USER_AVATAR_UPLOAD_LOCATION
     }/${user?.picture}`;
