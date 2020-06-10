@@ -9,9 +9,7 @@ export const updateUserAction = dataObj => dispatch => {
     .put(`/users/${dataObj.id}`, dataObj.data)
     .then(response => {
       const { user } = response.data;
-      delete user.isActive;
-      // console.log('resonse', user);
-      dispatch({ type: User.UPDATE_PROFILE_SUCCESS });
+      dispatch({ type: User.UPDATE_PROFILE_SUCCESS, payload: user });
     })
     .catch(error => {
       dispatch({ type: User.UPDATE_PROFILE_FAILURE });
