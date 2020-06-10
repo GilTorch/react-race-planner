@@ -23,9 +23,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Text from '../components/CustomText';
 import { SCREEN_HEIGHT } from '../utils/dimensions';
 import PageSpinner from '../components/PageSpinner';
-import { updateUserAction } from '../redux/actions/UserActions';
+import { updateUserAction, updateUserPreferenceAction } from '../redux/actions/UserActions';
 
-const EditSettingsScreen = ({ navigation, route, updateUser }) => {
+const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreference }) => {
   navigation.setOptions({
     headerShown: false
   });
@@ -121,7 +121,14 @@ const EditSettingsScreen = ({ navigation, route, updateUser }) => {
                     if (disableCheck) return;
 
                     try {
-                      await updateUser({ data: userData, id: currentUser._id });
+                      if (key === 'privacy') {
+                        await updateUserPreference({
+                          data: { privacyStatus: privacy },
+                          id: currentUser._id
+                        });
+                      } else {
+                        await updateUser({ data: userData, id: currentUser._id });
+                      }
 
                       Toast.show('Successfully updated', {
                         duration: Toast.durations.LONG,
@@ -465,7 +472,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser }) => {
             }}>
             <TouchableOpacity
               onPress={() => {
-                // setDisableCheck(false);
+                setDisableCheck(false);
                 setUserData({ preferences: 1 });
                 setPrivacy('username');
               }}
@@ -476,7 +483,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser }) => {
             <Divider />
             <TouchableOpacity
               onPress={() => {
-                // setDisableCheck(false);
+                setDisableCheck(false);
                 setUserData({ preferences: 2 });
                 setPrivacy('username_and_full_name');
               }}
@@ -490,7 +497,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser }) => {
             <Divider />
             <TouchableOpacity
               onPress={() => {
-                // setDisableCheck(false);
+                setDisableCheck(false);
                 setUserData({ preferences: 3 });
                 setPrivacy('anonymous');
               }}
@@ -552,11 +559,13 @@ const styles = StyleSheet.create({
 EditSettingsScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   updateUser: PropTypes.func.isRequired,
+  updateUserPreference: PropTypes.func.isRequired,
   route: PropTypes.object.isRequired
 };
 
 const mapDispatchToProps = {
-  updateUser: updateUserAction
+  updateUser: updateUserAction,
+  updateUserPreference: updateUserPreferenceAction
 };
 
 export default connect(null, mapDispatchToProps)(EditSettingsScreen);

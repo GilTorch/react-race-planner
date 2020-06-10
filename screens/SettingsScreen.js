@@ -117,9 +117,11 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
   const updateDateOfBirth = async newDate => {
     if (newDate.getTime() !== dateOfBirth.getTime()) {
       try {
-        await updateUser({ id: user?._id, data: {
-          dateOfBirth: newDate
-         }});
+        await updateUser({
+          id: user?._id, data: {
+            dateOfBirth: newDate
+          }
+        });
 
         Toast.show('Successfully updated', {
           duration: Toast.durations.LONG,
@@ -164,12 +166,12 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
     }
   };
 
-  const showSuccessMessage = field => {
-    Toast.show(`Successfully ${field}`, {
-      duration: Toast.durations.LONG,
-      position: Toast.positions.BOTTOM
-    });
-  };
+  // const showSuccessMessage = field => {
+  //   Toast.show(`Successfully ${field}`, {
+  //     duration: Toast.durations.LONG,
+  //     position: Toast.positions.BOTTOM
+  //   });
+  // };
 
   // const facebookLogin = async () => {
   //   const facebookData = await Facebook.logIn();
@@ -573,7 +575,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
                   key: 'privacy',
-                  value: { preferences: user?.preferences || 'username' }
+                  value: { preferences: user?.preferences || '' }
                 })
               }
               style={styles.profileField}>
@@ -584,7 +586,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
                   alignItems: 'center'
                 }}>
                 <Text style={{ fontSize: 18, color: '#898989' }}>
-                  {user?.preferences || 'username'}
+                  {user?.preferences || ''}
                 </Text>
                 <MaterialIcons style={{ color: '#C7C7CC' }} size={22} name="keyboard-arrow-right" />
               </View>
