@@ -42,7 +42,6 @@ import persistor from './redux/store/persistor';
 // For development only. We use those when we want to
 // reset the store and pause redux-persist respectively
 // persistor.purge();
-// persistor.pause();
 
 function cacheImages(images) {
   return images.map(image => {

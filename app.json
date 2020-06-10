@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ScriptoRerum",
-    "slug": "scriptorerum",
+    "name": "ScriptoRerum Dev",
+    "slug": "scriptorerum-dev",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
@@ -33,7 +33,7 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": "The demo of the ScriptoRerum mobile app for iOS and Android.",
+    "description": "The Dev version of the ScriptoRerum mobile app for iOS and Android.\n\nWARNING: Things may break. Very hazardous in here ;)",
     "githubUrl": "https://github.com/NouKod-Haiti/sr-mobile"
   }
 }

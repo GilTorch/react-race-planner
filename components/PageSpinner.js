@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, View, ActivityIndicator, StyleSheet, Platform } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Platform } from 'react-native';
+import { Modal } from 'react-native-paper';
 
 const PageSpinner = ({ visible }) => (
   <Modal transparent visible={visible}>
