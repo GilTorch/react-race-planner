@@ -1,21 +1,30 @@
 import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome, SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
-import { Surface, Searchbar, Button } from 'react-native-paper';
+import { Surface, Searchbar, Button, ActivityIndicator } from 'react-native-paper';
+import LottieView from 'lottie-react-native';
 import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import Menu from 'react-native-material-menu';
+import debounce from 'lodash.debounce';
+import { connect, useSelector } from 'react-redux';
 import Text from '../components/CustomText';
-import { stories, genres } from '../utils/data';
+import { genres, stories } from '../utils/data';
 import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
+import { getActiveStoriesAction } from '../redux/actions/HomeActions';
+import LoaderAnimation from '../lottie/loader.json';
 
-const HomeScreen = ({ navigation, route }) => {
+const HomeScreen = ({ navigation, route, getActiveStories }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
   const [currentGenre, setCurrentGenre] = useState(genres[0]);
+  const loadingStories = useSelector(state => state.home.loadingStories);
+  const updatingStories = useSelector(state => state.home.updating);
+  // const stories = useSelector(state => state.home.stories);
+
   let menu = null;
   const setMenuRef = ref => {
     menu = ref;
@@ -40,6 +49,10 @@ const HomeScreen = ({ navigation, route }) => {
   const inprogressStories = stories.filter(
     story => story.status === 'In Progress' || story.status === 'Waiting for players'
   );
+
+  const getActiveStoriesDebounced = debounce(getActiveStories, 2000);
+
+  const onSearch = text => getActiveStoriesDebounced(text);
 
   return (
     <View style={styles.container}>
@@ -172,18 +185,29 @@ const HomeScreen = ({ navigation, route }) => {
               marginBottom: 15
             }}>
             <View style={{ flex: 8 }}>
-              <Searchbar style={{ height: 40, paddingTop: 3, elevation: 2 }} iconColor="#03A2A2" />
+              <Searchbar
+                onChangeText={onSearch}
+                style={{ height: 40, paddingTop: 3, elevation: 2 }}
+                iconColor="#03A2A2"
+              />
             </View>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}>
-              <TouchableOpacity onPress={() => setSearchBarVisible(false)}>
-                <AntDesign size={20} name="closecircleo" color="#03A2A2" />
-              </TouchableOpacity>
-            </View>
+            {loadingStories && (
+              <View style={{ marginLeft: 10 }}>
+                <ActivityIndicator color="#03A2A2" />
+              </View>
+            )}
+            {!loadingStories && (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                <TouchableOpacity onPress={() => setSearchBarVisible(false)}>
+                  <AntDesign size={20} name="closecircleo" color="#03A2A2" />
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         )}
 
@@ -249,13 +273,15 @@ const HomeScreen = ({ navigation, route }) => {
 
         <View testID="story">
           {stories.map((story, index) => (
-            <Story
-              key={Math.random()}
-              story={story}
-              index={index}
-              length={stories.length}
-              navigation={navigation}
-            />
+            <View>
+              <Story
+                key={Math.random()}
+                story={story}
+                index={index}
+                length={stories.length}
+                navigation={navigation}
+              />
+            </View>
           ))}
         </View>
 
@@ -300,4 +326,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export default HomeScreen;
+HomeScreen.propTypes = {
+  getActiveStories: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  getActiveStories: getActiveStoriesAction
+};
+
+export default connect(null, mapDispatchToProps)(HomeScreen);
