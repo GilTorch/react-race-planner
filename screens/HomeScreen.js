@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { AntDesign, FontAwesome, SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
 import { Surface, Searchbar, Button } from 'react-native-paper';
-import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
+import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView, Platform } from 'react-native';
 import PropTypes from 'prop-types';
+import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import Menu from 'react-native-material-menu';
@@ -262,7 +263,8 @@ HomeScreen.propTypes = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EEE'
+    backgroundColor: '#EEE',
+    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
   },
   btnSurface: {
     elevation: 4,

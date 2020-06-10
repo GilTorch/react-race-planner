@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
+import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView, Platform } from 'react-native';
 import { AntDesign, FontAwesome, FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
 import { Surface, Searchbar, Button } from 'react-native-paper';
 import PropTypes from 'prop-types';
+import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import Menu from 'react-native-material-menu';
@@ -235,7 +236,8 @@ const Writing = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EEE'
+    backgroundColor: '#EEE',
+    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
   },
 
   headline: { color: '#5A7582' },
