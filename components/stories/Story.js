@@ -4,10 +4,13 @@ import { Surface } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 
+import LottieView from 'lottie-react-native';
 import { genres } from '../../utils/data';
 import Text from '../CustomText';
 import { HugeAdvertisement, SmallAdvertisement } from '../advertisements';
 import BoxMenu from './BoxMenu';
+import LoaderAnimation from '../../lottie/loading-pencil.json';
+import { SCREEN_WIDTH } from '../../utils/dimensions';
 
 const Story = ({ story, index, length, navigation }) => {
   let ShowAdvertisement;
@@ -39,128 +42,169 @@ const Story = ({ story, index, length, navigation }) => {
           marginBottom: 25,
           marginHorizontal: 20,
           borderRadius: 4,
-          padding: 15,
           elevation: 2
         }}>
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('StoryScreen', { storyId: story.id });
-              }}>
-              <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
-                {story.title}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <BoxMenu parentType="story" block={story} />
-        </View>
-
-        {status === 'Completed' && (
-          <View style={styles.storyAuthorsContainer}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Image style={styles.storyAuthorsImage} source={{ uri: leadAuthor.profilePicture }} />
-              {leadAuthor.storyLead && <View style={styles.storyAuthorsSeparator} />}
-            </View>
-            {nonLeadAuthors.map(author => (
-              <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                  style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
-                  source={{ uri: author.profilePicture }}
-                />
-              </View>
-            ))}
-
-            {anonymousAuthorsCount > 0 && (
-              <View style={{ marginLeft: 5 }}>
-                <Text type="bold" style={{ fontSize: 12, color: textColor }}>
-                  +{anonymousAuthorsCount} anonymous people
-                </Text>
-              </View>
-            )}
-          </View>
-        )}
-
-        {status === 'In Progress' && authorsCount > 5 && (
-          <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
-            {authorsCount} authors
-          </Text>
-        )}
-
-        {authorsCount < 5 && (
-          <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
-            {5 - authorsCount} more people to go
-          </Text>
-        )}
-
+            backgroundColor: '#eee',
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            opacity: '1',
+            zIndex: 10000
+          }}
+        />
         <View
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            flexWrap: 'wrap'
+            width: SCREEN_WIDTH * 0.8,
+            height: 100,
+            position: 'absolute',
+            zIndex: 10000,
+            justifyContent: 'center',
+            alignSelf: 'center',
+            top: 55
           }}>
-          <Text style={{ color: textColor, fontSize: 12 }}>{story.startTime}</Text>
+          <LottieView
+            colorFilters={[
+              {
+                keypath: 'button',
+                color: '#F00000'
+              },
+              {
+                keypath: 'Sending Loader',
+                color: '#F00000'
+              }
+            ]}
+            style={{ color: 'red' }}
+            source={LoaderAnimation}
+            autoPlay
+            loop
+          />
+        </View>
+        <View style={{ padding: 15 }}>
           <View
             style={{
-              height: 15,
-              borderLeftColor: textColor,
-              borderLeftWidth: 1,
-              marginHorizontal: 8
-            }}
-          />
-          <Text style={{ color: textColor, fontSize: 12 }}>{status}</Text>
-          <View
-            style={{
-              height: 15,
-              borderLeftColor: textColor,
-              borderLeftWidth: 1,
-              marginHorizontal: 8
-            }}
-          />
-
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View
-              style={{
-                ...styles.storyGenreIconContainer,
-                backgroundColor: currentGenre.color
-              }}>
-              {currentGenre.icon(12)}
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('StoryScreen', { storyId: story.id });
+                }}>
+                <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
+                  {story.title}
+                </Text>
+              </TouchableOpacity>
             </View>
-            <Text style={{ color: textColor, fontSize: 12 }}>{currentGenre.name}</Text>
+            <BoxMenu parentType="story" block={story} />
           </View>
-        </View>
-        <View style={{ marginTop: 4 }}>
-          <Text type="bold" style={{ color: textColor }}>
-            Initially Proposed Intro
-          </Text>
-          <Text style={{ color: textColor, lineHeight: 20 }}>{story.initialIntro}</Text>
-        </View>
-        <View style={{ marginTop: 10 }}>
-          <Text type="bold" style={{ color: textColor }}>
-            Elected Intro
-          </Text>
-          {story.electedIntro && (
-            <Text style={{ color: textColor, lineHeight: 20 }}>{story.electedIntro}</Text>
+
+          {status === 'Completed' && (
+            <View style={styles.storyAuthorsContainer}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image
+                  style={styles.storyAuthorsImage}
+                  source={{ uri: leadAuthor.profilePicture }}
+                />
+                {leadAuthor.storyLead && <View style={styles.storyAuthorsSeparator} />}
+              </View>
+              {nonLeadAuthors.map(author => (
+                <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image
+                    style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
+                    source={{ uri: author.profilePicture }}
+                  />
+                </View>
+              ))}
+
+              {anonymousAuthorsCount > 0 && (
+                <View style={{ marginLeft: 5 }}>
+                  <Text type="bold" style={{ fontSize: 12, color: textColor }}>
+                    +{anonymousAuthorsCount} anonymous people
+                  </Text>
+                </View>
+              )}
+            </View>
           )}
 
-          {!story.electedIntro && (
-            <Text
-              style={{
-                color: '#ED8A18',
-                fontFamily: 'RobotoItalic',
-                fontSize: 12
-              }}>
-              Votes haven't started yet
+          {status === 'In Progress' && authorsCount > 5 && (
+            <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
+              {authorsCount} authors
             </Text>
           )}
+
+          {authorsCount < 5 && (
+            <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
+              {5 - authorsCount} more people to go
+            </Text>
+          )}
+
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              flexWrap: 'wrap'
+            }}>
+            <Text style={{ color: textColor, fontSize: 12 }}>{story.startTime}</Text>
+            <View
+              style={{
+                height: 15,
+                borderLeftColor: textColor,
+                borderLeftWidth: 1,
+                marginHorizontal: 8
+              }}
+            />
+            <Text style={{ color: textColor, fontSize: 12 }}>{status}</Text>
+            <View
+              style={{
+                height: 15,
+                borderLeftColor: textColor,
+                borderLeftWidth: 1,
+                marginHorizontal: 8
+              }}
+            />
+
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View
+                style={{
+                  ...styles.storyGenreIconContainer,
+                  backgroundColor: currentGenre.color
+                }}>
+                {currentGenre.icon(12)}
+              </View>
+              <Text style={{ color: textColor, fontSize: 12 }}>{currentGenre.name}</Text>
+            </View>
+          </View>
+          <View style={{ marginTop: 4 }}>
+            <Text type="bold" style={{ color: textColor }}>
+              Initially Proposed Intro
+            </Text>
+            <Text style={{ color: textColor, lineHeight: 20 }}>{story.initialIntro}</Text>
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <Text type="bold" style={{ color: textColor }}>
+              Elected Intro
+            </Text>
+            {story.electedIntro && (
+              <Text style={{ color: textColor, lineHeight: 20 }}>{story.electedIntro}</Text>
+            )}
+
+            {!story.electedIntro && (
+              <Text
+                style={{
+                  color: '#ED8A18',
+                  fontFamily: 'RobotoItalic',
+                  fontSize: 12
+                }}>
+                Votes haven't started yet
+              </Text>
+            )}
+          </View>
         </View>
+        {ShowEndAdvertisement}
       </Surface>
-      {ShowEndAdvertisement}
     </View>
   );
 };
