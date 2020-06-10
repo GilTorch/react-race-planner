@@ -557,7 +557,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
               borderWidth: 1,
               paddingLeft: 20
             }}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               testID="update-password-btn"
               onPress={() =>
                 navigation.navigate('EditSettingsScreen', {
@@ -568,7 +568,7 @@ const SettingsScreen = ({ navigation, logout, updateUser }) => {
               style={{ ...styles.profileField, paddingRight: 30 }}>
               <Text style={{ fontSize: 18 }}>Update Password</Text>
               <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <Divider />
             <TouchableOpacity
               testID="defaut-privacy"

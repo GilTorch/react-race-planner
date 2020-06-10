@@ -182,7 +182,7 @@ const Writing = ({ navigation }) => {
                 <TouchableOpacity
                   style={{ borderRadius: 5, padding: 5, flex: 1 }}
                   onPress={() => {
-                    navigation.navigate('FilterScreen');
+                    navigation.navigate('FilterScreen', { previousScreen: 'writing' });
                   }}>
                   <Surface
                     style={{

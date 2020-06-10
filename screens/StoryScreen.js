@@ -66,7 +66,7 @@ const StoryScreen = ({ navigation, route }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setBarStyle('dark-content');
+      StatusBar.setBarStyle('light-content');
     }, [])
   );
 

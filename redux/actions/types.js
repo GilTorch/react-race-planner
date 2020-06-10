@@ -38,3 +38,13 @@ export const User = {
   UPDATE_USER_PREFERENCE_SUCCESS: 'UPDATE_USER_PREFERENCE_SUCCESS',
   UPDATE_USER_PREFERENCE_FAILURE: 'UPDATE_USER_PREFERENCE_FAILURE'
 };
+
+export const Home = {
+  SET_FILTERS: 'SET_FILTERS'
+};
+export const Library = {
+  SET_FILTERS: 'SET_FILTERS'
+};
+export const Writing = {
+  SET_FILTERS: 'SET_FILTERS'
+};
