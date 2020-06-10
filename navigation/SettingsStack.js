@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 
 export default function SettingsStack() {
   return (
-    <Stack.Navigator initialRouteName="SettingsScreen">
+    <Stack.Navigator initialRouteName="SettingsScreen" headerMode="none">
       <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
       <Stack.Screen name="EditSettingsScreen" component={EditSettingsScreen} />
       <Stack.Screen name="WebViewScreen" component={WebViewScreen} />

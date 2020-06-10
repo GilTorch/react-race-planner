@@ -7,10 +7,12 @@ import {
   Animated,
   SafeAreaView,
   PixelRatio,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import PropTypes from 'prop-types';
+import Constants from 'expo-constants';
 import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { Button, Surface, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
@@ -64,7 +66,7 @@ const StoryScreen = ({ navigation, route }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setBarStyle('light-content');
+      StatusBar.setBarStyle('dark-content');
     }, [])
   );
 
@@ -123,7 +125,8 @@ const StoryScreen = ({ navigation, route }) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: color
+        backgroundColor: color,
+        marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
       }}>
       <Surface
         style={{

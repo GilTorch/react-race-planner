@@ -16,8 +16,10 @@ const logIn = async () => {
       const facebookData = await response.data;
       return facebookData;
     }
+    return {};
   } catch ({ message }) {
     Alert.alert(`Facebook Login Error: ${message}`);
+    return {};
   }
 };
 

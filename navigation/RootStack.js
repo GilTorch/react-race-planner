@@ -14,9 +14,9 @@ import OTPVerificationScreen from '../screens/OTPVerificationScreen';
 const Stack = createStackNavigator();
 
 export default function RootStack() {
-  const authState = useSelector(state => state.auth);
+  const user = useSelector(state => state.auth.currentUser);
 
-  const isAuthenticated = authState.currentUser?.isActive && !authState.currentUser?.isPasswordReset;
+  const isAuthenticated = user?.isActive && !user?.isPasswordReset;
 
   return (
     <Stack.Navigator mode={isAuthenticated ? 'modal' : 'card'}>
