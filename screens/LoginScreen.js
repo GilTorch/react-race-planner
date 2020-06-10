@@ -12,7 +12,7 @@ import { loginSchema } from '../utils/validators';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 // import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
-// import * as Facebook from '../utils/facebook';
+// import * as Facebook from '../services/facebook';
 // import * as Twitter from '../services/twitter';
 import { loginAction } from '../redux/actions/AuthActions';
 import PageSpinner from '../components/PageSpinner';

@@ -1,4 +1,4 @@
-import { Auth } from '../actions/types';
+import { Auth, User } from '../actions/types';
 
 const INITIAL_STATE = {
   loading: false,
@@ -76,7 +76,8 @@ export default (state = INITIAL_STATE, action) => {
     case Auth.RESEND_OTP_SUCCESS:
       return {
         ...state,
-        currentUser: { ...state.currentUser, isPasswordReset: true }
+        currentUser: { ...state.currentUser, isPasswordReset: true },
+        loading: false
       };
     case Auth.RESET_PASSWORD_VERIFY_START:
       return {
@@ -94,6 +95,11 @@ export default (state = INITIAL_STATE, action) => {
         loading: false,
         token: null, // Get rid of the temporary token
         currentUser: null // And its user data
+      };
+    case User.UPDATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        currentUser: action.payload
       };
     case Auth.LOGOUT:
       return {
