@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign, FontAwesome, SimpleLineIcons } from '@expo/vector-icons';
-import { Surface, Searchbar } from 'react-native-paper';
+import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView, Platform } from 'react-native';
+import { AntDesign, FontAwesome, SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
+import { Surface, Searchbar, Button } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
-
+import Menu from 'react-native-material-menu';
 import Text from '../components/CustomText';
 import { stories, genres } from '../utils/data';
 import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
@@ -20,64 +19,54 @@ const LibraryScreen = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setBarStyle('light-content');
+      StatusBar.setBarStyle('dark-content');
     }, [])
   );
 
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
 
+  let menu = null;
+
+  const [currentGenre, setCurrentGenre] = useState(genres[0]);
+
+  const setMenuRef = ref => {
+    menu = ref;
+  };
+
+  const showMenu = async genreIndex => {
+    setCurrentGenre(genres[genreIndex]);
+    // setMenuPosition({ top: 125, left: 35 + genreIndex * 50 });
+    menu.show();
+  };
+
   const completedStories = stories.filter(story => story.status === 'Completed');
 
   return (
     <View style={styles.container}>
       <ViewAllGenresModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
-      <Surface
-        style={{
-          elevation: 3,
-          zIndex: 1
-        }}>
-        <LinearGradient
-          colors={['#03a2a2', '#23c2c2']}
-          locations={[0.2, 1]}
+
+      <Surface style={{ paddingBottom: 20, elevation: 2, zIndex: 10 }}>
+        <SafeAreaView
           style={{
-            alignItems: 'center',
-            flexDirection: 'column',
-            paddingBottom: 44,
-            paddingTop: 44 * 2
+            marginBottom: 10,
+            marginLeft: 23,
+            flexDirection: 'row',
+            alignItems: 'center'
           }}>
-          <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
-            Library
+          <SimpleLineIcons color="#ED8A18" name="layers" size={25} />
+          <Text style={{ ...styles.headline, fontSize: 16, marginLeft: 15 }} type="medium">
+            Start a New Story
           </Text>
-        </LinearGradient>
-      </Surface>
+        </SafeAreaView>
 
-      <ScrollView>
-        <Surface style={{ paddingBottom: 20, elevation: 2 }}>
-          <View
-            style={{
-              marginTop: 20,
-              marginBottom: 10,
-              flexDirection: 'row',
-              paddingLeft: 23,
-              alignItems: 'center'
-            }}>
-            <SimpleLineIcons color="#ED8A18" name="layers" size={25} />
-            <TouchableOpacity style={{ marginLeft: 15 }}>
-              <Text style={{ ...styles.headline, fontSize: 16 }} type="medium">
-                Start a New Story
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingLeft: 23 }}>
-            {genres.map(genre => (
-              <View
-                key={Math.random()}
-                style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingLeft: 23 }}>
+          {genres.map((genre, index) => (
+            <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
+              <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
                 <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
                   {genre.icon(32)}
                 </View>
@@ -90,10 +79,66 @@ const LibraryScreen = ({ navigation }) => {
                   {genre.name}
                 </Text>
               </View>
-            ))}
-          </ScrollView>
-        </Surface>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </Surface>
+      <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
+        <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 10
+            }}>
+            <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
+              {currentGenre.name}
+            </Text>
+          </View>
+          <Text style={{ textAlign: 'center' }}>
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+            has been the industry's standard dummy text ever since the 1500s, when an unknown
+            printer took a galley of type and scrambled it to make a type specimen book. It has
+            survived not only five centuries, but also the leap into electronic typesetting,
+            remaining essentially unchanged. It was popularised in the 1960s with the release of
+            Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '65%',
+              alignSelf: 'flex-end',
+              justifyContent: 'flex-end',
+              marginTop: 15,
+              marginBottom: 20
+            }}>
+            <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
+              <Button
+                icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+                uppercase={false}
+                onPress={() => ''}
+                style={{ backgroundColor: '#03A2A2' }}>
+                <Text type="bold" style={{ color: '#FFF' }}>
+                  Go
+                </Text>
+              </Button>
+            </Surface>
+            <Surface style={styles.btnSurface}>
+              <Button
+                onPress={() => menu.hide()}
+                uppercase={false}
+                style={{ backgroundColor: '#f44336' }}>
+                <Text type="bold" style={{ color: '#fff' }}>
+                  Cancel
+                </Text>
+              </Button>
+            </Surface>
+          </View>
+        </View>
+      </Menu>
 
+      <ScrollView>
         {searchBarVisible && (
           <View
             style={{
@@ -120,15 +165,6 @@ const LibraryScreen = ({ navigation }) => {
             </View>
           </View>
         )}
-        {/* Nick removed this in a previous commit, don't know why */}
-        {/* I think we can remove this and display the modal in the start new story button above */}
-        <View style={{ paddingLeft: 23 }}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Text type="medium" style={{ fontSize: 12, marginTop: 10, color: '#03A2A2' }}>
-              View all genres
-            </Text>
-          </TouchableOpacity>
-        </View>
 
         {!searchBarVisible && (
           <View
@@ -151,7 +187,7 @@ const LibraryScreen = ({ navigation }) => {
               <TouchableOpacity
                 style={{ borderRadius: 5, padding: 5, flex: 1 }}
                 onPress={() => {
-                  navigation.push('FilterScreen');
+                  navigation.navigate('FilterScreen', { previousScreen: 'library' });
                 }}>
                 <Surface
                   style={{
@@ -210,7 +246,8 @@ LibraryScreen.propTypes = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EEE'
+    backgroundColor: '#EEE',
+    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
   },
   headline: { color: '#5A7582' },
   genreIconContainer: {

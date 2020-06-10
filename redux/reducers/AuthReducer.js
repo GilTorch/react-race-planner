@@ -1,7 +1,8 @@
-import { Auth } from '../actions/types';
+import { Auth, User } from '../actions/types';
 
 const INITIAL_STATE = {
   loading: false,
+  requestError: null,
   token: null,
   currentUser: null
 };
@@ -75,7 +76,8 @@ export default (state = INITIAL_STATE, action) => {
     case Auth.RESEND_OTP_SUCCESS:
       return {
         ...state,
-        currentUser: { ...state.currentUser, isPasswordReset: true }
+        currentUser: { ...state.currentUser, isPasswordReset: true },
+        loading: false
       };
     case Auth.RESET_PASSWORD_VERIFY_START:
       return {
@@ -94,11 +96,34 @@ export default (state = INITIAL_STATE, action) => {
         token: null, // Get rid of the temporary token
         currentUser: null // And its user data
       };
+    case User.UPDATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        currentUser: action.payload
+      };
     case Auth.LOGOUT:
       return {
         ...state,
         token: null,
         currentUser: null
+      };
+    case Auth.DELETE_ACCOUNT_START:
+      return {
+        ...state,
+        loading: true
+      };
+    case Auth.DELETE_ACCOUNT_SUCCESS:
+      return {
+        ...state,
+        currentUser: null,
+        token: null,
+        loading: false
+      };
+    case Auth.DELETE_ACCOUNT_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        requestError: action.data
       };
     default:
       return state;

@@ -1,0 +1,20 @@
+name: "sr-mobile"
+description: "This is a writing application, where authors can write stories in many genres. Users can subscripbe and participate in terms of voting, writing comments, report, and even participate in choosing stories' title"
+author: "https://github.com/nouKod-Haiti/sr-mobile/"
+
+inputs:
+  PROJECT_NAME: 
+    description: "This project was made by NouKod's Team: Nick Ramaux (project lead), Gilbert Torchon & Mac Dowell Proper (developers), Samuel Cornet (QA Automation testing), and Certil Remy (backend developer)"
+    required: true
+    default: "World"
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
+
+branding:
+  icon: "mic"
+  color: "purple"
+
+  
+
