@@ -40,10 +40,14 @@ const Story = ({ story, index, length, navigation }) => {
           marginHorizontal: 20,
           borderRadius: 4,
           padding: 15,
-          elevation: 5
+          elevation: 2
         }}>
         <View
-          style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
           <View>
             <TouchableOpacity
               onPress={() => {
@@ -94,7 +98,12 @@ const Story = ({ story, index, length, navigation }) => {
           </Text>
         )}
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            flexWrap: 'wrap'
+          }}>
           <Text style={{ color: textColor, fontSize: 12 }}>{story.startTime}</Text>
           <View
             style={{
@@ -140,7 +149,12 @@ const Story = ({ story, index, length, navigation }) => {
           )}
 
           {!story.electedIntro && (
-            <Text style={{ color: '#ED8A18', fontFamily: 'RobotoItalic', fontSize: 12 }}>
+            <Text
+              style={{
+                color: '#ED8A18',
+                fontFamily: 'RobotoItalic',
+                fontSize: 12
+              }}>
               Votes haven't started yet
             </Text>
           )}

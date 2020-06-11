@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import PropTypes from 'prop-types';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { useFocusEffect } from '@react-navigation/native';
 
+import { connect, useSelector } from 'react-redux';
 import Text from '../components/CustomText';
 import { SCREEN_WIDTH } from '../utils/dimensions';
+import { setHomeFiltersAction } from '../redux/actions/HomeActions';
+import { setWritingFiltersAction } from '../redux/actions/WritingActions';
+import { setLibraryFiltersAction } from '../redux/actions/LibraryActions';
 
-const FilterScreen = ({ navigation }) => {
-  const defaultAuthorRange = [5, 20];
-  const [multiSliderValue, setMultiSliderValue] = useState(defaultAuthorRange);
-
-  const multiSliderValuesChange = values => setMultiSliderValue(values);
+const FilterScreen = ({
+  navigation,
+  route,
+  setHomeFilters,
+  setLibraryFilters,
+  setWritingFilters
+}) => {
+  const { previousScreen } = route.params;
 
   const defaultTagData = {
     status: {
@@ -34,22 +41,58 @@ const FilterScreen = ({ navigation }) => {
         { selected: false, label: 'Essay' },
         { selected: false, label: 'Bedtime Stories' }
       ]
+    },
+    authors: [5, 20]
+  };
+
+  const tagDataHome = useSelector(state => state.home.filters);
+  const tagDataLibrary = useSelector(state => state.library.filters);
+  const tagDataWriting = useSelector(state => state.writing.filters);
+
+  let tagData = defaultTagData;
+
+  switch (previousScreen) {
+    case 'home':
+      tagData = tagDataHome;
+      break;
+    case 'library':
+      tagData = tagDataLibrary;
+      break;
+    case 'writing':
+      tagData = tagDataWriting;
+      break;
+    default:
+      tagData = tagDataHome;
+      break;
+  }
+
+  const setTagData = data => {
+    switch (previousScreen) {
+      case 'home':
+        return setHomeFilters(data);
+      case 'library':
+        return setLibraryFilters(data);
+      case 'writing':
+        return setWritingFilters(data);
+      default:
+        return setHomeFilters(data);
     }
   };
 
-  const [tagData, setTagData] = useState(defaultTagData);
+  const multiSliderValuesChange = values => {
+    setTagData({ ...tagData, authors: values });
+  };
 
   const reset = () => {
-    setMultiSliderValue(defaultAuthorRange);
     setTagData(defaultTagData);
   };
   const doneBtn = (
-    <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
+    <TouchableOpacity testID="done" onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
       <Text style={{ color: '#03A2A2', fontSize: 18 }}>Done</Text>
     </TouchableOpacity>
   );
   const resetBtn = (
-    <TouchableOpacity onPress={() => reset()} style={{ marginRight: 20 }}>
+    <TouchableOpacity testID="reset" onPress={() => reset()} style={{ marginRight: 20 }}>
       <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
     </TouchableOpacity>
   );
@@ -119,15 +162,38 @@ const FilterScreen = ({ navigation }) => {
     }, [])
   );
 
+  const filterSelector = ['select-all-part-one', 'clear-all-part-one'];
+  let selector = [];
+  if (!tagData.status.allSelected) {
+    selector.push(filterSelector[0]);
+  } else if (tagData.status.allSelected) {
+    selector = [];
+    selector.push(filterSelector[1]);
+  }
+
+  const filterSelector2 = ['select-all-part-two', 'clear-all-part-two'];
+  let selector2 = [];
+  if (!tagData.genres.allSelected) {
+    selector2.push(filterSelector2[0]);
+  } else {
+    selector2 = [];
+    selector2.push(filterSelector2[1]);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.innerWrapper}>
         <View>
-          <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View
+            style={{
+              marginTop: 10,
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}>
             <Text style={styles.filterCategory}>STATUS</Text>
-            <TouchableOpacity onPress={() => toggleSelectAll('status')}>
+            <TouchableOpacity testID={selector.join('')} onPress={() => toggleSelectAll('status')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
-                {!tagData.status.allSelected && 'Select All'}
+                {tagData.status.allSelected ? 'Clear All' : 'Select All'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -140,8 +206,13 @@ const FilterScreen = ({ navigation }) => {
               const textStyle = tag.selected ? { color: '#fff' } : { color: '#5A7582' };
 
               return (
-                <TouchableOpacity key={Math.random()} onPress={() => onSelect('status', tag)}>
-                  <View style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
+                <TouchableOpacity
+                  testID="selected-status"
+                  key={Math.random()}
+                  onPress={() => onSelect('status', tag)}>
+                  <View
+                    testID="statuses"
+                    style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
                     <Text type="bold" style={{ ...styles.text, ...textStyle }}>
                       {tag.label}
                     </Text>
@@ -152,11 +223,16 @@ const FilterScreen = ({ navigation }) => {
           </View>
         </View>
         <View>
-          <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View
+            style={{
+              marginTop: 20,
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}>
             <Text style={styles.filterCategory}>GENRES</Text>
-            <TouchableOpacity onPress={() => toggleSelectAll('genres')}>
+            <TouchableOpacity testID={selector2.join('')} onPress={() => toggleSelectAll('genres')}>
               <Text style={{ fontSize: 14, color: '#03A2A2' }}>
-                {!tagData.genres.allSelected && 'Select All'}
+                {tagData.genres.allSelected ? 'Clear All' : 'Select All'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -169,8 +245,11 @@ const FilterScreen = ({ navigation }) => {
               const textStyle = tag.selected ? { color: '#fff' } : { color: '#5A7582' };
 
               return (
-                <TouchableOpacity key={Math.random()} onPress={() => onSelect('genres', tag)}>
-                  <View style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
+                <TouchableOpacity
+                  testID="selected-genres"
+                  key={Math.random()}
+                  onPress={() => onSelect('genres', tag)}>
+                  <View testID="genres" style={{ ...styles.tagStyleContainer, ...backgroundStyle }}>
                     <Text type="bold" style={{ ...styles.text, ...textStyle }}>
                       {tag.label}
                     </Text>
@@ -190,8 +269,8 @@ const FilterScreen = ({ navigation }) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between'
               }}>
-              <Text style={{ fontSize: 14, color: '#5A7582' }}>{multiSliderValue[0]}</Text>
-              <Text style={{ fontSize: 14, color: '#5A7582' }}>{multiSliderValue[1]}</Text>
+              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authors[0]}</Text>
+              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authors[1]}</Text>
             </View>
             <MultiSlider
               trackStyle={{
@@ -207,6 +286,7 @@ const FilterScreen = ({ navigation }) => {
               markerOffsetY={5}
               customMarker={() => (
                 <View
+                  testID="authors-slider"
                   style={{
                     width: 25,
                     height: 25,
@@ -218,7 +298,7 @@ const FilterScreen = ({ navigation }) => {
                   }}
                 />
               )}
-              values={[multiSliderValue[0], multiSliderValue[1]]}
+              values={[tagData.authors[0], tagData.authors[1]]}
               sliderLength={SCREEN_WIDTH - 50}
               onValuesChange={multiSliderValuesChange}
               min={0}
@@ -229,7 +309,7 @@ const FilterScreen = ({ navigation }) => {
             />
             <View>
               <Text style={{ color: '#5A7582' }}>
-                Authors range: {multiSliderValue[0]} - {multiSliderValue[1]}
+                Authors range: {tagData.authors[0]} - {tagData.authors[1]}
               </Text>
             </View>
           </View>
@@ -239,10 +319,24 @@ const FilterScreen = ({ navigation }) => {
   );
 };
 
-export default FilterScreen;
+const mapDispatchToProps = {
+  setHomeFilters: setHomeFiltersAction,
+  setLibraryFilters: setLibraryFiltersAction,
+  setWritingFilters: setWritingFiltersAction
+};
+
+export default connect(null, mapDispatchToProps)(FilterScreen);
 
 FilterScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  route: PropTypes.shape({
+    params: PropTypes.shape({
+      previousScreen: PropTypes.string.isRequired
+    })
+  }).isRequired,
+  setHomeFilters: PropTypes.func.isRequired,
+  setWritingFilters: PropTypes.func.isRequired,
+  setLibraryFilters: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({

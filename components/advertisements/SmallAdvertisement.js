@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   container: {
     height: SCREEN_HEIGHT * 0.1,
     backgroundColor: '#fff',
-    elevation: 5,
+    elevation: 2,
     marginHorizontal: 20,
     marginBottom: 20,
     alignItems: 'center',

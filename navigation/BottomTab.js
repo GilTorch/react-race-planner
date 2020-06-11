@@ -19,7 +19,8 @@ export default function BottomTab() {
         labelPosition: 'beside-icon',
         style: {
           paddingHorizontal: 15
-        }
+        },
+        keyboardHidesTabBar: true
       }}>
       <Tab.Screen
         name="Library"
@@ -29,6 +30,7 @@ export default function BottomTab() {
             if (!focused) return null;
             const label = (
               <Text
+                testID="library"
                 style={{
                   paddingLeft: 15,
                   fontSize: 13,
@@ -44,6 +46,7 @@ export default function BottomTab() {
           tabBarIcon: ({ focused }) => {
             const icon = (
               <MaterialCommunityIcons
+                testID="library-icon"
                 style={{ fontSize: 20 }}
                 color={focused ? '#03A2A2' : '#707070'}
                 name="library"
@@ -77,10 +80,10 @@ export default function BottomTab() {
           tabBarIcon: ({ focused }) => {
             return (
               <FontAwesome5
-                testID="home-icon"
                 style={{ fontSize: 20 }}
                 color={focused ? '#03A2A2' : '#707070'}
                 name="home"
+                testID="home-icon"
               />
             );
           }

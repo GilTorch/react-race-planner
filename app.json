@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Blank Template",
-    "slug": "sr-mobile",
+    "name": "ScriptoRerum",
+    "slug": "scriptorerum",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
@@ -9,7 +9,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "sr",
@@ -18,14 +18,22 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "facebookScheme": "fb2868459866594129",
+    "facebookAppId": "2868459866594129",
+    "facebookDisplayName": "ScriptoRerum",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "com.scriptorerum.ScriptoRerum"
+    },
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "The demo of the ScriptoRerum mobile app for iOS and Android.",
+    "githubUrl": "https://github.com/NouKod-Haiti/sr-mobile"
   }
 }
