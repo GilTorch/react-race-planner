@@ -7,6 +7,7 @@ import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import { Dropdown } from 'react-native-material-dropdown';
+import TimePicker from 'react-native-24h-timepicker';
 
 import Text from '../components/CustomText';
 
@@ -29,6 +30,24 @@ const NewStoryScreen = ({ navigation, route }) => {
     { value: 'username_and_full_name' },
     { value: 'anonymous' }
   ];
+
+  const [time, setTime] = React.useState({
+    introTimeLimitSeconds: '0:00',
+    endingTimeLimitSeconds: '0:00',
+    roundTimeLimitSeconds: '0:00',
+    voteTimeLimitSeconds: '0:00'
+  });
+  const [selectedTime, setSelectedTime] = React.useState();
+  let TimePickerRef = null;
+
+  const onCancelTimePicker = () => {
+    TimePickerRef.close();
+  };
+
+  const onConfirmTimePicker = (hour, minute) => {
+    setTime({ ...time, [selectedTime]: `${hour}:${minute}` });
+    TimePickerRef.close();
+  };
 
   return (
     <View style={styles.container}>
@@ -70,7 +89,7 @@ const NewStoryScreen = ({ navigation, route }) => {
             flexDirection: 'column'
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2' }}>Title</Text>
-          <TextInput testID="edit-username" underlineColor="#C8C7CC" style={styles.input} />
+          <TextInput style={styles.input} />
         </Surface>
         <Surface
           style={{
@@ -82,13 +101,7 @@ const NewStoryScreen = ({ navigation, route }) => {
             flexDirection: 'column'
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2' }}>Genre</Text>
-          <TextInput
-            testID="edit-username"
-            underlineColor="#C8C7CC"
-            value={route.params.genre}
-            disabled
-            style={styles.input}
-          />
+          <TextInput value={route.params.genre} style={styles.input} />
         </Surface>
         <Surface
           style={{
@@ -115,15 +128,52 @@ const NewStoryScreen = ({ navigation, route }) => {
           <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
             <View>
               <Text style={{ fontSize: 16 }}>Intro</Text>
-              <TextInput keyboardType="numeric" style={styles.input} />
+              <TouchableOpacity
+                onPress={() => {
+                  TimePickerRef.open();
+                  setSelectedTime('introTimeLimitSeconds');
+                }}
+                style={{
+                  borderBottomWidth: 1,
+                  borderColor: '#C8C7CC',
+                  alignItems: 'center',
+                  marginTop: 20,
+                  width: 50
+                }}>
+                <Text>{time.introTimeLimitSeconds}</Text>
+              </TouchableOpacity>
             </View>
             <View>
               <Text style={{ fontSize: 16 }}>Ending</Text>
-              <TextInput keyboardType="numeric" style={styles.input} />
+              <TouchableOpacity
+                onPress={() => {
+                  TimePickerRef.open();
+                  setSelectedTime('endingTimeLimitSeconds');
+                }}
+                style={{
+                  borderBottomWidth: 1,
+                  borderColor: '#C8C7CC',
+                  alignItems: 'center',
+                  marginTop: 20
+                }}>
+                <Text>{time.endingTimeLimitSeconds}</Text>
+              </TouchableOpacity>
             </View>
             <View>
               <Text style={{ fontSize: 16 }}>Round</Text>
-              <TextInput keyboardType="numeric" style={styles.input} />
+              <TouchableOpacity
+                onPress={() => {
+                  TimePickerRef.open();
+                  setSelectedTime('roundTimeLimitSeconds');
+                }}
+                style={{
+                  borderBottomWidth: 1,
+                  borderColor: '#C8C7CC',
+                  alignItems: 'center',
+                  marginTop: 20
+                }}>
+                <Text>{time.roundTimeLimitSeconds}</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Surface>
@@ -136,17 +186,19 @@ const NewStoryScreen = ({ navigation, route }) => {
             paddingBottom: 40,
             flexDirection: 'column'
           }}>
-          <Text style={{ fontSize: 18, color: '#03a2a2' }}>Time for voting:</Text>
-          <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-around' }}>
-            <View>
-              <Text style={{ fontSize: 16 }}>Intro</Text>
-              <TextInput keyboardType="numeric" style={styles.input} />
-            </View>
-            <View>
-              <Text style={{ fontSize: 16 }}>Ending</Text>
-              <TextInput keyboardType="numeric" style={styles.input} />
-            </View>
-          </View>
+          <Text style={{ fontSize: 18, color: '#03a2a2' }}>Time for voting Intro/ Ending:</Text>
+          <TouchableOpacity
+            onPress={() => {
+              TimePickerRef.open();
+              setSelectedTime('voteTimeLimitSeconds');
+            }}
+            style={{
+              borderBottomWidth: 1,
+              borderColor: '#C8C7CC',
+              marginTop: 20
+            }}>
+            <Text style={{ fontSize: 18 }}>{time.voteTimeLimitSeconds}</Text>
+          </TouchableOpacity>
         </Surface>
         <Surface
           style={{
@@ -162,6 +214,15 @@ const NewStoryScreen = ({ navigation, route }) => {
           <Dropdown value="username" data={privacyData} />
         </Surface>
       </ScrollView>
+      <TimePicker
+        hourUnit=" hr"
+        minuteUnit=" mn"
+        ref={ref => {
+          TimePickerRef = ref;
+        }}
+        onCancel={onCancelTimePicker}
+        onConfirm={(hour, minute) => onConfirmTimePicker(hour, minute)}
+      />
     </View>
   );
 };
@@ -181,9 +242,7 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 18,
     minWidth: 70,
-    backgroundColor: 'white',
-    borderColor: '#000',
-    borderBottomWidth: 0.5
+    backgroundColor: 'white'
   }
 });
 
