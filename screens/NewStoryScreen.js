@@ -10,6 +10,7 @@ import { Dropdown } from 'react-native-material-dropdown';
 import TimePicker from 'react-native-24h-timepicker';
 
 import Text from '../components/CustomText';
+import { genres } from '../utils/data';
 
 const NewStoryScreen = ({ navigation, route }) => {
   useFocusEffect(
@@ -23,13 +24,25 @@ const NewStoryScreen = ({ navigation, route }) => {
     }, [])
   );
 
-  const data = [{ value: 2 }, { value: 3 }, { value: 4 }, { value: 5 }, { value: 6 }];
+  const data = [
+    { value: 2 },
+    { value: 3 },
+    { value: 4 },
+    { value: 5 },
+    { value: 6 },
+    { value: 7 },
+    { value: 8 },
+    { value: 9 },
+    { value: 10 }
+  ];
 
   const privacyData = [
-    { value: 'username' },
-    { value: 'username_and_full_name' },
-    { value: 'anonymous' }
+    { value: 'username', label: 'Username' },
+    { value: 'username_and_full_name', label: 'Username and Full Name' },
+    { value: 'anonymous', label: 'Anonymous' }
   ];
+  const genresTitle = [];
+  genres.map(genre => genresTitle.push({ value: genre.name }));
 
   const [time, setTime] = React.useState({
     introTimeLimitSeconds: '0:00',
@@ -101,7 +114,13 @@ const NewStoryScreen = ({ navigation, route }) => {
             flexDirection: 'column'
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2' }}>Genre</Text>
-          <TextInput value={route.params.genre} style={styles.input} />
+          <Dropdown
+            value={route.params.genre}
+            fontSize={16}
+            dropdownPosition={0.5}
+            data={genresTitle}
+            onChangeText={() => ''}
+          />
         </Surface>
         <Surface
           style={{
@@ -113,7 +132,13 @@ const NewStoryScreen = ({ navigation, route }) => {
             flexDirection: 'column'
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2' }}>Minimun amount of authors</Text>
-          <Dropdown value={2} data={data} />
+          <Dropdown
+            value={2}
+            fontSize={16}
+            dropdownPosition={0.5}
+            data={data}
+            onChangeText={() => ''}
+          />
         </Surface>
         <Surface
           style={{
@@ -211,7 +236,13 @@ const NewStoryScreen = ({ navigation, route }) => {
             flexDirection: 'column'
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2' }}>Privacy Preference</Text>
-          <Dropdown value="username" data={privacyData} />
+          <Dropdown
+            value="username"
+            fontSize={16}
+            dropdownPosition={0.5}
+            data={privacyData}
+            onChangeText={() => ''}
+          />
         </Surface>
       </ScrollView>
       <TimePicker
@@ -240,7 +271,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    fontSize: 18,
+    fontSize: 16,
     minWidth: 70,
     backgroundColor: 'white'
   }
