@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { Surface, TextInput } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -8,9 +9,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import { Dropdown } from 'react-native-material-dropdown';
 import TimePicker from 'react-native-24h-timepicker';
+import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 
 import Text from '../components/CustomText';
 import { genres } from '../utils/data';
+import { newStorySchema } from '../utils/validators';
 
 const NewStoryScreen = ({ navigation, route }) => {
   useFocusEffect(
@@ -24,7 +28,10 @@ const NewStoryScreen = ({ navigation, route }) => {
     }, [])
   );
 
-  const data = [
+  const user = useSelector(state => state.auth.currentUser);
+  // const types = useSelector(state => state.storyType);
+
+  const listAuthordata = [
     { value: 2 },
     { value: 3 },
     { value: 4 },
@@ -35,7 +42,6 @@ const NewStoryScreen = ({ navigation, route }) => {
     { value: 9 },
     { value: 10 }
   ];
-
   const privacyData = [
     { value: 'username', label: 'Username' },
     { value: 'username_and_full_name', label: 'Username and Full Name' },
@@ -45,13 +51,35 @@ const NewStoryScreen = ({ navigation, route }) => {
   genres.map(genre => genresTitle.push({ value: genre.name }));
 
   const [time, setTime] = React.useState({
-    introTimeLimitSeconds: '0:00',
-    endingTimeLimitSeconds: '0:00',
-    roundTimeLimitSeconds: '0:00',
-    voteTimeLimitSeconds: '0:00'
+    introTimeLimitSeconds: '0:10',
+    endingTimeLimitSeconds: '0:10',
+    roundTimeLimitSeconds: '0:10',
+    voteTimeLimitSeconds: '0:10'
   });
   const [selectedTime, setSelectedTime] = React.useState();
   let TimePickerRef = null;
+  const preselectedGenre = route.params.genre;
+
+  const { errors, handleSubmit, register, watch, setValue } = useForm({
+    validationSchema: newStorySchema,
+    defaultValues: {
+      masterAuthor: user._id,
+      type: 'typeID', // TODO:
+      status: 'in_progress',
+      isPinned: false,
+      isActive: true,
+      genre: preselectedGenre,
+      settings: {
+        introTimeLimitSeconds: 600,
+        endingTimeLimitSeconds: 600,
+        roundTimeLimitSeconds: 600,
+        voteTimeLimitSeconds: 600,
+        minimmum_participants: 2
+      },
+      privacyStatus: 'username'
+    }
+  });
+  const storySettings = watch('settings');
 
   const onCancelTimePicker = () => {
     TimePickerRef.close();
@@ -59,8 +87,34 @@ const NewStoryScreen = ({ navigation, route }) => {
 
   const onConfirmTimePicker = (hour, minute) => {
     setTime({ ...time, [selectedTime]: `${hour}:${minute}` });
+    setValue('settings', { ...storySettings, [selectedTime]: hour * 3600 + minute * 60 });
     TimePickerRef.close();
   };
+
+  const start = async data => {
+    console.log(data);
+    // try {
+    //   const story = await createStory(data);
+    //   navigation.navigate('StoryScreen', { storyId: story.id });
+    // } catch (e) {
+    //   Toast.show(e.message, {
+    //     duration: Toast.durations.SHORT,
+    //     position: Toast.positions.BOTTOM
+    //   });
+    // }
+  };
+
+  React.useEffect(() => {
+    register('masterAuthor');
+    register('type');
+    register('status');
+    register('isPinned');
+    register('isActive');
+    register('title');
+    register('genre');
+    register('settings');
+    register('privacyStatus');
+  }, [register]);
 
   return (
     <View style={styles.container}>
@@ -85,9 +139,9 @@ const NewStoryScreen = ({ navigation, route }) => {
               Start new story
             </Text>
 
-            <View>
+            <TouchableOpacity onPress={handleSubmit(start)}>
               <Text style={{ fontSize: 16, color: 'white', marginRight: 10 }}>Start</Text>
-            </View>
+            </TouchableOpacity>
           </SafeAreaView>
         </LinearGradient>
       </Surface>
@@ -102,7 +156,14 @@ const NewStoryScreen = ({ navigation, route }) => {
             flexDirection: 'column'
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2' }}>Title</Text>
-          <TextInput style={styles.input} />
+          <TextInput
+            style={[styles.input, errors.title && styles.errorInput]}
+            onChangeText={text => setValue('title', text)}
+            value={watch('title')}
+          />
+          {errors.title && (
+            <Text style={{ fontSize: 12, marginTop: 3, color: 'red' }}>{errors.title.message}</Text>
+          )}
         </Surface>
         <Surface
           style={{
@@ -115,11 +176,11 @@ const NewStoryScreen = ({ navigation, route }) => {
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2' }}>Genre</Text>
           <Dropdown
-            value={route.params.genre}
+            value={preselectedGenre}
             fontSize={16}
             dropdownPosition={0.5}
             data={genresTitle}
-            onChangeText={() => ''}
+            onChangeText={text => setValue('genre', text)}
           />
         </Surface>
         <Surface
@@ -136,8 +197,8 @@ const NewStoryScreen = ({ navigation, route }) => {
             value={2}
             fontSize={16}
             dropdownPosition={0.5}
-            data={data}
-            onChangeText={() => ''}
+            data={listAuthordata}
+            onChangeText={text => setValue('settings', { minimmum_participants: text })}
           />
         </Surface>
         <Surface
@@ -241,7 +302,7 @@ const NewStoryScreen = ({ navigation, route }) => {
             fontSize={16}
             dropdownPosition={0.5}
             data={privacyData}
-            onChangeText={() => ''}
+            onChangeText={text => setValue('privacyStatus', text)}
           />
         </Surface>
       </ScrollView>
@@ -274,6 +335,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     minWidth: 70,
     backgroundColor: 'white'
+  },
+  errorInput: {
+    borderColor: 'red',
+    borderBottomWidth: 1
   }
 });
 
