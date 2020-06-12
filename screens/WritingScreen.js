@@ -14,6 +14,17 @@ import { Story } from '../components/stories';
 import FilterBadges from '../components/FilterBadges';
 
 const Writing = ({ navigation }) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setHidden(false);
+      StatusBar.setBarStyle('dark-content');
+
+      navigation.setOptions({
+        headerShown: false
+      });
+    }, [])
+  );
+
   const [searchBarVisible, setSearchBarVisible] = useState(false);
   const [currentGenre, setCurrentGenre] = useState(genres[0]);
 
@@ -22,20 +33,10 @@ const Writing = ({ navigation }) => {
     menu = ref;
   };
 
-  navigation.setOptions({
-    headerShown: false
-  });
-
   const showMenu = async genreIndex => {
     setCurrentGenre(genres[genreIndex]);
     menu.show();
   };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      StatusBar.setBarStyle('dark-content');
-    }, [])
-  );
 
   return (
     <View style={styles.container}>
@@ -240,7 +241,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EEE',
-    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
+    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.2 : 0
   },
 
   headline: { color: '#5A7582' },

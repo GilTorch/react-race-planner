@@ -13,13 +13,14 @@ import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
 
 const LibraryScreen = ({ navigation }) => {
-  navigation.setOptions({
-    headerShown: false
-  });
-
   useFocusEffect(
     React.useCallback(() => {
+      StatusBar.setHidden(false);
       StatusBar.setBarStyle('dark-content');
+
+      navigation.setOptions({
+        headerShown: false
+      });
     }, [])
   );
 
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EEE',
-    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
+    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.2 : 0
   },
   headline: { color: '#5A7582' },
   genreIconContainer: {

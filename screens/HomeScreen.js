@@ -14,6 +14,17 @@ import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
 
 const HomeScreen = ({ navigation, route }) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setHidden(false);
+      StatusBar.setBarStyle('dark-content');
+
+      navigation.setOptions({
+        headerShown: false
+      });
+    }, [])
+  );
+
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
   const [currentGenre, setCurrentGenre] = useState(genres[0]);
@@ -26,17 +37,6 @@ const HomeScreen = ({ navigation, route }) => {
     setCurrentGenre(genres[genreIndex]);
     menu.show();
   };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      StatusBar.setHidden(false);
-      StatusBar.setBarStyle('dark-content');
-
-      navigation.setOptions({
-        headerShown: false
-      });
-    }, [])
-  );
 
   const inprogressStories = stories.filter(
     story => story.status === 'In Progress' || story.status === 'Waiting for players'
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EEE',
-    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
+    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.2 : 0
   },
   btnSurface: {
     elevation: 4,
