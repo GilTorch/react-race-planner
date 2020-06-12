@@ -1,6 +1,8 @@
 import { Home } from '../actions/types';
 
 const initialState = {
+  createStoryLoading: false,
+  stories: [], // when null I can't use spread operator on sucess
   filters: {
     status: {
       allSelected: false,
@@ -31,6 +33,16 @@ const homeReducer = (state = initialState, action) => {
   switch (action.type) {
     case Home.SET_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
+    case Home.CREATE_STORY_START:
+      return { ...state, createStoryLoading: true };
+    case Home.CREATE_STORY_FAILURE:
+      return { ...state, createStoryLoading: false };
+    case Home.CREATE_STORY_SUCCESS:
+      return {
+        ...state,
+        createStoryLoading: false,
+        stories: [...state.stories, action.story]
+      };
     default:
       return state;
   }
