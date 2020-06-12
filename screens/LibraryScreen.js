@@ -117,7 +117,10 @@ const LibraryScreen = ({ navigation }) => {
               <Button
                 icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
                 uppercase={false}
-                onPress={() => ''}
+                onPress={() => {
+                  menu.hide();
+                  navigation.navigate('NewStoryScreen', { genre: currentGenre.name });
+                }}
                 style={{ backgroundColor: '#03A2A2' }}>
                 <Text type="bold" style={{ color: '#FFF' }}>
                   Go
