@@ -1,8 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
-import { Surface, TextInput } from 'react-native-paper';
+import { Surface, TextInput, ActivityIndicator } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView, Platform } from 'react-native';
+import Toast from 'react-native-root-toast';
 import PropTypes from 'prop-types';
 import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -10,13 +11,14 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Dropdown } from 'react-native-material-dropdown';
 import TimePicker from 'react-native-24h-timepicker';
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 
 import Text from '../components/CustomText';
 import { genres } from '../utils/data';
 import { newStorySchema } from '../utils/validators';
+import { createStoryAction } from '../redux/actions/StoryAction';
 
-const NewStoryScreen = ({ navigation, route }) => {
+const NewStoryScreen = ({ navigation, route, createStory }) => {
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(false);
@@ -30,6 +32,7 @@ const NewStoryScreen = ({ navigation, route }) => {
 
   const user = useSelector(state => state.auth.currentUser);
   // const types = useSelector(state => state.storyType);
+  const loading = useSelector(state => state.home.createStoryLoading);
 
   const listAuthordata = [
     { value: 2 },
@@ -64,11 +67,11 @@ const NewStoryScreen = ({ navigation, route }) => {
     validationSchema: newStorySchema,
     defaultValues: {
       masterAuthor: user._id,
-      type: 'typeID', // TODO:
+      type: '5ee2c8ff60b50e0e46e54c74', // TODO: get and send the typeId
       status: 'in_progress',
       isPinned: false,
       isActive: true,
-      genre: preselectedGenre,
+      genre: preselectedGenre, // TODO: send the genreId instead
       settings: {
         introTimeLimitSeconds: 600,
         endingTimeLimitSeconds: 600,
@@ -91,17 +94,16 @@ const NewStoryScreen = ({ navigation, route }) => {
     TimePickerRef.close();
   };
 
-  const start = async data => {
-    console.log(data);
-    // try {
-    //   const story = await createStory(data);
-    //   navigation.navigate('StoryScreen', { storyId: story.id });
-    // } catch (e) {
-    //   Toast.show(e.message, {
-    //     duration: Toast.durations.SHORT,
-    //     position: Toast.positions.BOTTOM
-    //   });
-    // }
+  const submit = async data => {
+    try {
+      const story = await createStory(data);
+      // navigation.navigate('StoryScreen', { storyId: story._id });
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    }
   };
 
   React.useEffect(() => {
@@ -139,8 +141,18 @@ const NewStoryScreen = ({ navigation, route }) => {
               Start new story
             </Text>
 
-            <TouchableOpacity onPress={handleSubmit(start)}>
-              <Text style={{ fontSize: 16, color: 'white', marginRight: 10 }}>Start</Text>
+            <TouchableOpacity onPress={handleSubmit(submit)}>
+              {!loading && (
+                <Text style={{ fontSize: 16, color: 'white', marginRight: 10 }}>Start</Text>
+              )}
+
+              {loading && (
+                <ActivityIndicator
+                  style={{ marginRight: 10 }}
+                  color="#fff"
+                  size={Platform.OS === 'android' ? 30 : 'small'}
+                />
+              )}
             </TouchableOpacity>
           </SafeAreaView>
         </LinearGradient>
@@ -198,7 +210,9 @@ const NewStoryScreen = ({ navigation, route }) => {
             fontSize={16}
             dropdownPosition={0.5}
             data={listAuthordata}
-            onChangeText={text => setValue('settings', { minimmum_participants: text })}
+            onChangeText={text =>
+              setValue('settings', { ...storySettings, minimmum_participants: text })
+            }
           />
         </Surface>
         <Surface
@@ -319,11 +333,6 @@ const NewStoryScreen = ({ navigation, route }) => {
   );
 };
 
-NewStoryScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
-  route: PropTypes.object.isRequired
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -342,4 +351,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export default NewStoryScreen;
+NewStoryScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  route: PropTypes.object.isRequired,
+  createStory: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  createStory: createStoryAction
+};
+
+export default connect(null, mapDispatchToProps)(NewStoryScreen);
