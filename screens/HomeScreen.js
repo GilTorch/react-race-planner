@@ -152,7 +152,11 @@ const HomeScreen = ({ navigation, route }) => {
               marginBottom: 15
             }}>
             <View style={{ flex: 8 }}>
-              <Searchbar style={{ height: 40, paddingTop: 3, elevation: 2 }} iconColor="#03A2A2" />
+              <Searchbar
+                testID="random-word-search"
+                style={{ height: 40, paddingTop: 3, elevation: 2 }}
+                iconColor="#03A2A2"
+              />
             </View>
             <View
               style={{
@@ -160,7 +164,9 @@ const HomeScreen = ({ navigation, route }) => {
                 justifyContent: 'center',
                 alignItems: 'center'
               }}>
-              <TouchableOpacity onPress={() => setSearchBarVisible(false)}>
+              <TouchableOpacity
+                testID="close-search-bar"
+                onPress={() => setSearchBarVisible(false)}>
                 <AntDesign size={20} name="closecircleo" color="#03A2A2" />
               </TouchableOpacity>
             </View>
@@ -220,7 +226,7 @@ const HomeScreen = ({ navigation, route }) => {
                     justifyContent: 'center',
                     padding: 5
                   }}>
-                  <FontAwesome size={14} color="#5A7582" name="search" />
+                  <FontAwesome testID="search-icon" size={14} color="#5A7582" name="search" />
                 </Surface>
               </TouchableOpacity>
             </View>
