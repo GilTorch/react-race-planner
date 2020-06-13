@@ -51,3 +51,9 @@ export const Library = {
 export const Writing = {
   SET_FILTERS: 'SET_FILTERS'
 };
+
+export const Story = {
+  REPORT_STORY_START: 'REPORT_STORY_START',
+  REPORT_STORY_FAILURE: 'REPORT_STORY_FAILURE',
+  REPORT_STORY_SUCCESS: 'REPORT_STORY_SUCCESS'
+};
