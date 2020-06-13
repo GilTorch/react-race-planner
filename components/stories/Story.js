@@ -12,7 +12,7 @@ import BoxMenu from './BoxMenu';
 import LoaderAnimation from '../../lottie/loading-pencil.json';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
 
-const Story = ({ story, index, length, navigation }) => {
+const Story = ({ story, index, length, navigation, updating }) => {
   let ShowAdvertisement;
   let ShowEndAdvertisement;
   if (index !== 0) {
@@ -44,43 +44,47 @@ const Story = ({ story, index, length, navigation }) => {
           borderRadius: 4,
           elevation: 2
         }}>
-        <View
-          style={{
-            backgroundColor: '#eee',
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            opacity: '1',
-            zIndex: 10000
-          }}
-        />
-        <View
-          style={{
-            width: SCREEN_WIDTH * 0.8,
-            height: 100,
-            position: 'absolute',
-            zIndex: 10000,
-            justifyContent: 'center',
-            alignSelf: 'center',
-            top: 55
-          }}>
-          <LottieView
-            colorFilters={[
-              {
-                keypath: 'button',
-                color: '#F00000'
-              },
-              {
-                keypath: 'Sending Loader',
-                color: '#F00000'
-              }
-            ]}
-            style={{ color: 'red' }}
-            source={LoaderAnimation}
-            autoPlay
-            loop
-          />
-        </View>
+        {updating && (
+          <>
+            <View
+              style={{
+                backgroundColor: '#eee',
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+                opacity: '1',
+                zIndex: 10000
+              }}
+            />
+            <View
+              style={{
+                width: SCREEN_WIDTH * 0.8,
+                height: 100,
+                position: 'absolute',
+                zIndex: 10000,
+                justifyContent: 'center',
+                alignSelf: 'center',
+                top: 55
+              }}>
+              <LottieView
+                colorFilters={[
+                  {
+                    keypath: 'button',
+                    color: '#F00000'
+                  },
+                  {
+                    keypath: 'Sending Loader',
+                    color: '#F00000'
+                  }
+                ]}
+                style={{ color: 'red' }}
+                source={LoaderAnimation}
+                autoPlay
+                loop
+              />
+            </View>
+          </>
+        )}
         <View style={{ padding: 15 }}>
           <View
             style={{
@@ -213,7 +217,8 @@ Story.propTypes = {
   story: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
   length: PropTypes.number.isRequired,
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
+  updating: PropTypes.bool.isRequired
 };
 const textColor = '#5A7582';
 
