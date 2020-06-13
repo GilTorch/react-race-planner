@@ -25,19 +25,10 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
   const updatingStories = useSelector(state => state.home.updating);
   const filters = useSelector(state => state.home.filters);
   const stories = useSelector(state => state.home.stories);
-  const axiosSource = null;
 
   useEffect(() => {
     getStories('in_progress', ['mystery'], '');
   }, []);
-
-  useEffect(() => {
-    return () => {
-      if (axiosSource) {
-        axiosSource.cancel();
-      }
-    };
-  });
 
   let menu = null;
   const setMenuRef = ref => {
@@ -76,24 +67,13 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
 
   const getStories = (status, Genres, text) => {
     try {
-      // const { CancelToken } = axios;
-      // if (axiosSource) {
-      //   axiosSource.cancel();
-      // }
-      // axiosSource = CancelToken.source();
-      getActiveStoriesDebounced(
-        {
-          sq: text,
-          status,
-          genres: Genres,
-          authorsRange: filters.authorsRange
-        }
-        // ,
-        // { cancelToken: axiosSource.token }
-      );
+      getActiveStoriesDebounced({
+        sq: text,
+        status,
+        genres: Genres,
+        authorsRange: filters.authorsRange
+      });
     } catch (e) {
-      // call error handler
-      // toast
       Toast.show(e?.message, {
         duration: Toast.durations.SHORT,
         position: Toast.positions.BOTTOM
@@ -170,47 +150,6 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
         )}
         {stories && (
           <>
-            <Surface style={{ paddingBottom: 20, elevation: 2 }}>
-              <View
-                style={{
-                  marginTop: 20,
-                  marginBottom: 10,
-                  flexDirection: 'row',
-                  paddingLeft: 23,
-                  alignItems: 'center'
-                }}>
-                <SimpleLineIcons color="#ED8A18" name="layers" size={25} />
-                <TouchableOpacity style={{ marginLeft: 15 }}>
-                  <Text style={{ ...styles.headline, fontSize: 16 }} type="medium">
-                    Start a New Story
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingLeft: 23 }}>
-                {genres.map((genre, index) => (
-                  <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
-                    <View
-                      style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
-                      <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
-                        {genre.icon(32)}
-                      </View>
-                      <Text
-                        type="medium"
-                        style={{
-                          color: '#5A7582',
-                          fontSize: 14
-                        }}>
-                        {genre.name}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </Surface>
             <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
               <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
                 <View
