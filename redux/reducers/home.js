@@ -27,7 +27,7 @@ const initialState = {
         { selected: false, label: 'Bedtime Stories' }
       ]
     },
-    authors: [5, 20]
+    authorsRange: [5, 20]
   }
 };
 
