@@ -66,8 +66,17 @@ const HomeScreen = ({ navigation, route }) => {
           contentContainerStyle={{ paddingLeft: 23 }}>
           {genres.map((genre, index) => (
             <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
-              <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
-                <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: 20
+                }}>
+                <View
+                  style={{
+                    ...styles.genreIconContainer,
+                    backgroundColor: genre.color
+                  }}>
                   {genre.icon(32)}
                 </View>
                 <Text
@@ -186,10 +195,33 @@ const HomeScreen = ({ navigation, route }) => {
                 flexDirection: 'row'
               }}>
               <TouchableOpacity
+                style={{ borderRadius: 5, padding: 5, flex: 1 }}
+                onPress={() => {
+                  navigation.navigate('RoundWriting', {
+                    previousScreen: 'home'
+                  });
+                }}>
+                <Surface
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderRadius: 5,
+                    elevation: 2,
+                    padding: 5
+                  }}>
+                  <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
+                    Round Writing
+                  </Text>
+                </Surface>
+              </TouchableOpacity>
+              <TouchableOpacity
                 testID="filter-button"
                 style={{ borderRadius: 5, padding: 5, flex: 1 }}
                 onPress={() => {
-                  navigation.navigate('FilterScreen', { previousScreen: 'home' });
+                  navigation.navigate('FilterScreen', {
+                    previousScreen: 'home'
+                  });
                 }}>
                 <Surface
                   style={{
