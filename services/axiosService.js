@@ -2,11 +2,16 @@ import { Platform } from 'react-native';
 import axios from 'axios';
 import jwt from 'expo-jwt';
 import { ANDROID_BASE_URL, IOS_BASE_URL, JWT_SECRET, RERUM_KEY } from 'react-native-dotenv';
+import Constants from 'expo-constants';
+
 import { Auth } from '../redux/actions/types';
 import store from '../redux/store';
 
+const platformBaseURL = Platform.OS === 'android' ? ANDROID_BASE_URL : IOS_BASE_URL;
+
+// When it's a device, iOS and Android use the same base url
 const axiosOptions = {
-  baseURL: Platform.OS === 'android' ? ANDROID_BASE_URL : IOS_BASE_URL
+  baseURL: Constants.isDevice ? ANDROID_BASE_URL : platformBaseURL
 };
 
 const axiosService = axios.create(axiosOptions);

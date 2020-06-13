@@ -82,3 +82,20 @@ export const passwordResetVerificationAction = data => dispatch => {
 export const logoutAction = () => dispatch => {
   dispatch({ type: Auth.LOGOUT });
 };
+
+export const deleteAccountAction = currentUserId => {
+  return dispatch => {
+    dispatch({ type: Auth.DELETE_ACCOUNT_START });
+    return axios.delete(`/users/${currentUserId}`).then(
+      res => {
+        dispatch({ type: Auth.DELETE_ACCOUNT_SUCCESS, data: res.data });
+      },
+      error => {
+        dispatch({
+          type: Auth.DELETE_ACCOUNT_FAILURE,
+          data: error.response?.data || { message: 'Unexpected Error from the app' }
+        });
+      }
+    );
+  };
+};

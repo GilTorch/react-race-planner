@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, FontAwesome, SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
 import { Surface, Searchbar, Button, ActivityIndicator } from 'react-native-paper';
-import LottieView from 'lottie-react-native';
-import { ScrollView, View, StyleSheet, StatusBar } from 'react-native';
+import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView, Platform } from 'react-native';
 import PropTypes from 'prop-types';
+import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import Menu from 'react-native-material-menu';
 import debounce from 'lodash.debounce';
 import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
-import axios from '../services/axiosService';
+// import axios from '../services/axiosService';
 import Text from '../components/CustomText';
 import { genres } from '../utils/data';
 import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
@@ -53,7 +52,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(false);
-      StatusBar.setBarStyle('light-content');
+      StatusBar.setBarStyle('dark-content');
 
       navigation.setOptions({
         headerShown: false
@@ -105,24 +104,43 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
   return (
     <View style={styles.container}>
       <ViewAllGenresModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
-      <Surface
-        style={{
-          elevation: 3,
-          zIndex: 1
-        }}>
-        <LinearGradient
-          colors={['#03a2a2', '#23c2c2']}
-          locations={[0.5, 1]}
+
+      <Surface style={{ paddingBottom: 20, elevation: 2, zIndex: 10 }}>
+        <SafeAreaView
           style={{
-            alignItems: 'center',
-            flexDirection: 'column',
-            paddingBottom: 44,
-            paddingTop: 44 * 2
+            marginBottom: 10,
+            marginLeft: 23,
+            flexDirection: 'row',
+            alignItems: 'center'
           }}>
-          <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
-            ScriptoRerum
+          <SimpleLineIcons color="#ED8A18" name="layers" size={25} />
+          <Text style={{ ...styles.headline, fontSize: 16, marginLeft: 15 }} type="medium">
+            Start a New Story
           </Text>
-        </LinearGradient>
+        </SafeAreaView>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingLeft: 23 }}>
+          {genres.map((genre, index) => (
+            <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
+              <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+                <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
+                  {genre.icon(32)}
+                </View>
+                <Text
+                  type="medium"
+                  style={{
+                    color: '#5A7582',
+                    fontSize: 14
+                  }}>
+                  {genre.name}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </Surface>
 
       <ScrollView contentContainerStyle={{ flex: 1 }}>
@@ -390,7 +408,8 @@ HomeScreen.propTypes = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EEE'
+    backgroundColor: '#EEE',
+    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
   },
   btnSurface: {
     elevation: 4,

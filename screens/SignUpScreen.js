@@ -22,7 +22,7 @@ import { useSelector, connect } from 'react-redux';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
 // import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
-// import * as Facebook from '../utils/facebook';
+// import * as Facebook from '../services/facebook';
 import { signupAction } from '../redux/actions/AuthActions';
 import { signupSchema } from '../utils/validators';
 import PageSpinner from '../components/PageSpinner';
