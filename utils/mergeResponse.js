@@ -1,6 +1,6 @@
 const mergeResponse = (storedItems = [], response) =>
   response
-    .map(responseItem => {
+    ?.map(responseItem => {
       const storedItem = storedItems.find(item => item.id === responseItem.id);
 
       // If we already have this instance, update it
