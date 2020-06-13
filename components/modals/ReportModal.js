@@ -1,29 +1,46 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Modal, Portal, TextInput, Surface, Button } from 'react-native-paper';
 import PropTypes from 'prop-types';
+import { useSelector, connect } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import Toast from 'react-native-root-toast';
 
 import Text from '../CustomText';
 import { loremText } from '../../utils/data';
-import { SCREEN_HEIGHT } from '../../utils/dimensions';
+import { createReportAction } from '../../redux/actions/StoryActions';
+import { reportSchema } from '../../utils/validators';
 
-const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
-  const [padding, setPadding] = React.useState(0);
+const ReportModal = ({ visible, onDismiss, parentType, parent, createReport }) => {
+  const user = useSelector(state => state.auth.currentUser);
 
-  const keyboardDidShow = e => {
-    const add = parentType === 'story' ? -10 : SCREEN_HEIGHT * 0.15;
-    setPadding(add + e.endCoordinates.height);
+  const { errors, handleSubmit, register, watch, setValue, reset } = useForm({
+    validationSchema: reportSchema,
+    defaultValues: {
+      reporter: user._id,
+      status: 'pending',
+      documentId: 'parent.id'
+    }
+  });
+
+  const submit = async data => {
+    try {
+      await createReport(data);
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    }
   };
 
   React.useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', keyboardDidShow);
-    Keyboard.addListener('keyboardDidHide', () => setPadding(0));
-
-    return () => {
-      Keyboard.removeAllListeners('keyboardDidShow');
-      Keyboard.removeAllListeners('keyboardDidHide');
-    };
-  });
+    register('reason');
+    register('reporter');
+    register('status');
+    register('documentId');
+  }, [register]);
 
   return (
     <Portal>
@@ -95,8 +112,10 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                 </View>
                 <TextInput
                   placeholder="Your reason for reporting here..."
+                  value={watch('reason')}
                   multiline
-                  underlineColor="white"
+                  underlineColor={errors.reason ? 'red' : 'white'}
+                  onChangeText={text => setValue('reason', text)}
                   style={{
                     borderWidth: 1,
                     marginTop: 5,
@@ -104,6 +123,11 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                     backgroundColor: 'white'
                   }}
                 />
+                {errors.reason && (
+                  <Text style={{ fontSize: 12, marginTop: 3, color: 'red' }}>
+                    {errors.reason.message}
+                  </Text>
+                )}
 
                 <View
                   style={{
@@ -115,7 +139,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                   <Surface style={styles.btnSurface}>
                     <Button
                       uppercase={false}
-                      onPress={() => ''}
+                      onPress={handleSubmit(submit)}
                       style={{ backgroundColor: '#03A2A2' }}>
                       <Text type="bold" style={{ color: '#FFF' }}>
                         Report
@@ -125,7 +149,10 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                   <Surface style={styles.btnSurface}>
                     <Button
                       uppercase={false}
-                      onPress={onDismiss}
+                      onPress={() => {
+                        onDismiss();
+                        reset({ reason: '' });
+                      }}
                       style={{ backgroundColor: '#f44336' }}>
                       <Text type="bold" style={{ color: '#fff' }}>
                         Cancel
@@ -136,18 +163,10 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
               </View>
             </View>
           </TouchableWithoutFeedback>
-          <View style={{ paddingBottom: padding }} />
         </View>
       </Modal>
     </Portal>
   );
-};
-
-ReportModal.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-  parentType: PropTypes.string.isRequired,
-  parent: PropTypes.object.isRequired
 };
 
 const textColor = '#5A7582';
@@ -161,4 +180,16 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ReportModal;
+ReportModal.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  onDismiss: PropTypes.func.isRequired,
+  parentType: PropTypes.string.isRequired,
+  parent: PropTypes.object.isRequired,
+  createReport: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  createReport: createReportAction
+};
+
+export default connect(null, mapDispatchToProps)(ReportModal);
