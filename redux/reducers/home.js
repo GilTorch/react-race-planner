@@ -1,6 +1,10 @@
 import { Home } from '../actions/types';
 
 const initialState = {
+  getStoriesLoading: false,
+  getGenresLoading: false,
+  stories: null,
+  genres: null,
   filters: {
     status: {
       allSelected: false,
@@ -31,6 +35,18 @@ const homeReducer = (state = initialState, action) => {
   switch (action.type) {
     case Home.SET_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
+    case Home.GET_ALL_STORIES_START:
+      return { ...state, getStoriesLoading: true };
+    case Home.GET_ALL_STORIES_FAILURE:
+      return { ...state, getStoriesLoading: false };
+    case Home.GET_ALL_STORIES_SUCCESS:
+      return { ...state, getStoriesLoading: false, stories: action.stories };
+    case Home.GET_ALL_GENRES_START:
+      return { ...state, getGenresLoading: true };
+    case Home.GET_ALL_GENRES_FAILURE:
+      return { ...state, getGenresLoading: false };
+    case Home.GET_ALL_GENRES_SUCCESS:
+      return { ...state, getGenresLoading: false, genres: action.genres };
     default:
       return state;
   }
