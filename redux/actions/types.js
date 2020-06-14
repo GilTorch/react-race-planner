@@ -51,3 +51,9 @@ export const Library = {
 export const Writing = {
   SET_FILTERS: 'SET_FILTERS'
 };
+
+export const Story = {
+  COMMENT_ROUND_START: 'COMMENT_ROUND_START',
+  COMMENT_ROUND_FAILURE: 'COMMENT_ROUND_FAILURE',
+  COMMENT_ROUND_SUCCESS: 'COMMENT_ROUND_SUCCESS'
+};

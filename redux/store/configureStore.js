@@ -13,7 +13,7 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const middleware = [thunk, logger];
+const middleware = [thunk];
 
 const composedEnhancers = compose(applyMiddleware(...middleware));
 

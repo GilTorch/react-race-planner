@@ -6,6 +6,7 @@ import libraryReducer from './library';
 import writingReducer from './writing';
 import AuthReducer from './AuthReducer';
 import UserReducer from './UserReducer';
+import storyReducer from './story';
 
 const authPersistConfig = {
   key: 'auth',
@@ -32,12 +33,18 @@ const writingPersistConfig = {
   storage: AsyncStorage
 };
 
+const storyPersistConfig = {
+  key: 'story',
+  storage: AsyncStorage
+};
+
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, AuthReducer),
   user: persistReducer(userPersistConfig, UserReducer),
   home: persistReducer(homePersistConfig, homeReducer),
   library: persistReducer(libraryPersistConfig, libraryReducer),
-  writing: persistReducer(writingPersistConfig, writingReducer)
+  writing: persistReducer(writingPersistConfig, writingReducer),
+  story: persistReducer(storyPersistConfig, storyReducer)
 });
 
 export default rootReducer;
