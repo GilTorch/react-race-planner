@@ -385,6 +385,15 @@ const stories = [
   }
 ];
 
+const genresIcon = {
+  mystery: <MysteryIcon width={30} />,
+  run: <MaterialCommunityIcons size={32} color="white" name="run" />,
+  skull: <MaterialCommunityIcons size={32} color="white" name="skull" />,
+  alien: <MaterialCommunityIcons size={32} color="white" name="alien" />,
+  heart: <AntDesign size={32} color="white" name="heart" />,
+  'ios-bed': <Ionicons size={32} color="white" name="ios-bed" />
+};
+
 const genres = [
   {
     id: 1,
@@ -489,4 +498,4 @@ const comments = [
   }
 ];
 
-export { loremText, intros, endings, stories, comments, genres };
+export { loremText, intros, endings, stories, comments, genres, genresIcon };
