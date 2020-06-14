@@ -7,13 +7,33 @@ import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import Menu from 'react-native-material-menu';
+import { useSelector, useDispatch, connect } from 'react-redux';
 
 import Text from '../components/CustomText';
-import { stories, genres } from '../utils/data';
+import { stories, genresIcon } from '../utils/data';
 import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
+import { getAllStoriesAction, getAllGenresAction } from '../redux/actions/StoryActions';
 
-const HomeScreen = ({ navigation, route }) => {
+const HomeScreen = ({ navigation, route, getAllStories, getAllGenres }) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setHidden(false);
+      StatusBar.setBarStyle('dark-content');
+
+      navigation.setOptions({
+        headerShown: false
+      });
+    }, [])
+  );
+
+  // const stories = useSelector(state => state.home.stories);
+  const genres = useSelector(state => state.home.genres);
+  // const loadingStories = useSelector(state => state.home.getStoriesLoading);
+  // const loadingGenres = useSelector(state => state.home.getGenresLoading);
+
+  const dispatch = useDispatch();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
   const [currentGenre, setCurrentGenre] = useState(genres[0]);
@@ -27,20 +47,20 @@ const HomeScreen = ({ navigation, route }) => {
     menu.show();
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      StatusBar.setHidden(false);
-      StatusBar.setBarStyle('dark-content');
-
-      navigation.setOptions({
-        headerShown: false
-      });
-    }, [])
-  );
-
   const inprogressStories = stories.filter(
     story => story.status === 'In Progress' || story.status === 'Waiting for players'
   );
+
+  React.useEffect(() => {
+    dispatch(getAllStories);
+    dispatch(getAllGenres);
+  }, []);
+
+  React.useEffect(() => {
+    if (genres) {
+      setCurrentGenre(genres[0]);
+    }
+  }, [genres]);
 
   return (
     <View style={styles.container}>
@@ -64,23 +84,24 @@ const HomeScreen = ({ navigation, route }) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingLeft: 23 }}>
-          {genres.map((genre, index) => (
-            <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
-              <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
-                <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
-                  {genre.icon(32)}
+          {genres &&
+            genres.map((genre, index) => (
+              <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
+                  <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
+                    {genresIcon[genre.icon]}
+                  </View>
+                  <Text
+                    type="medium"
+                    style={{
+                      color: '#5A7582',
+                      fontSize: 14
+                    }}>
+                    {genre.name}
+                  </Text>
                 </View>
-                <Text
-                  type="medium"
-                  style={{
-                    color: '#5A7582',
-                    fontSize: 14
-                  }}>
-                  {genre.name}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+              </TouchableOpacity>
+            ))}
         </ScrollView>
       </Surface>
 
@@ -255,11 +276,6 @@ const HomeScreen = ({ navigation, route }) => {
   );
 };
 
-HomeScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
-  route: PropTypes.object.isRequired
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -281,4 +297,16 @@ const styles = StyleSheet.create({
   }
 });
 
-export default HomeScreen;
+HomeScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  route: PropTypes.object.isRequired,
+  getAllStories: PropTypes.func.isRequired,
+  getAllGenres: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  getAllStories: getAllStoriesAction,
+  getAllGenres: getAllGenresAction
+};
+
+export default connect(null, mapDispatchToProps)(HomeScreen);
