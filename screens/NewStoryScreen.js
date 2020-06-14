@@ -206,7 +206,10 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
             paddingBottom: 40,
             flexDirection: 'column'
           }}>
-          <Text style={{ fontSize: 18, color: '#03a2a2' }}>Minimum Amount of Authors</Text>
+          <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>
+            Minimum Amount of Authors
+          </Text>
+          <Text>How many authors are required for this story to begin</Text>
           <Dropdown
             value={2}
             fontSize={16}
@@ -288,7 +291,12 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
             paddingBottom: 40,
             flexDirection: 'column'
           }}>
-          <Text style={{ fontSize: 18, color: '#03a2a2' }}>Time for Voting Intro/Ending</Text>
+          <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>
+            Time to Vote For Intro/Ending
+          </Text>
+          <Text>
+            Here, you get to decide how long it takes for everyone to vote for an intro or an ending
+          </Text>
           <TouchableOpacity
             onPress={() => {
               TimePickerRef.open();
