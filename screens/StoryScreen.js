@@ -126,7 +126,7 @@ const StoryScreen = ({ navigation, route }) => {
       style={{
         flex: 1,
         backgroundColor: color,
-        marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
+        marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.15 : 0
       }}>
       <Surface
         style={{
@@ -149,7 +149,6 @@ const StoryScreen = ({ navigation, route }) => {
           }}>
           <SafeAreaView
             style={{
-              paddingTop: Constants.statusBarHeight * 1.7,
               alignItems: 'center',
               flexDirection: 'column'
             }}>
