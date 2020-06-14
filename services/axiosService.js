@@ -53,7 +53,7 @@ axiosService.interceptors.response.use(
     return response;
   },
   error => {
-    if (error.response.data?.token) {
+    if (error.response?.data?.token) {
       // 1. decode the token
       const decodedUser = jwt.decode(error.response.data.token, JWT_SECRET);
 
