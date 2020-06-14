@@ -430,58 +430,58 @@ const genres = [
   }
 ];
 
-const comments = [
+const dummyComments = [
   {
-    id: 0,
+    _id: 0,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '2 hours ago',
     author: stories[0].authors[0]
   },
   {
-    id: 1,
+    _id: 1,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '25 minutes ago',
     author: stories[0].authors[1]
   },
   {
-    id: 2,
+    _id: 2,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '3 hours ago',
     author: stories[0].authors[2]
   },
   {
-    id: 3,
+    _id: 3,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '45 minutes ago',
     author: stories[0].authors[0]
   },
   {
-    id: 4,
+    _id: 4,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '2 minutes ago',
     author: stories[0].authors[0]
   },
   {
-    id: 5,
+    _id: 5,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '5 minutes ago',
     author: stories[0].authors[1]
   },
   {
-    id: 6,
+    _id: 6,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '5 hours ago',
     author: stories[0].authors[2]
   },
   {
-    id: 7,
+    _id: 7,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '35 minutes ago',
@@ -489,4 +489,4 @@ const comments = [
   }
 ];
 
-export { loremText, intros, endings, stories, comments, genres };
+export { loremText, intros, endings, stories, dummyComments, genres };

@@ -12,14 +12,14 @@ import Toast from 'react-native-root-toast';
 
 import Text from '../CustomText';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
-import { comments } from '../../utils/data';
+import { dummyComments } from '../../utils/data';
 import { createCommentAction } from '../../redux/actions/StoryAction';
 import { commentSchema } from '../../utils/validators';
 
 const CommentModal = ({ visible, dismiss, parent, createComment }) => {
   const user = useSelector(state => state.auth.currentUser);
   const [margin, setMargin] = React.useState(0);
-  // const [comments, setComments] = React.useState(parent.comments);
+  const [comments, setComments] = React.useState(dummyComments.slice(0, parent.comments));
 
   const defaultValues = {
     author: user._id,
@@ -38,7 +38,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
   const submit = async data => {
     try {
       const comment = await createComment(data);
-      // setComments([...comments, comment]);
+      setComments([...comments, comment]);
       reset(defaultValues);
     } catch (e) {
       Toast.show(e.message, {
@@ -136,7 +136,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
           </View>
           <View style={{ flex: 1 }}>
             <FlatList
-              data={comments.slice(0, parent.comments)}
+              data={comments}
               renderItem={({ item, index }) => (
                 <View>
                   <View
@@ -209,7 +209,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                   )}
                 </View>
               )}
-              keyExtractor={item => `${item.id}`}
+              keyExtractor={item => `${item._id}`}
             />
             <View style={{ marginBottom: margin }}>
               <TextInput
@@ -229,7 +229,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                 placeholder="Type your comment here..."
               />
               {errors.content && (
-                <Text style={{ fontSize: 12, marginTop: 3, color: 'red' }}>
+                <Text style={{ fontSize: 12, marginVertical: 3, marginLeft: 5, color: 'red' }}>
                   {errors.content.message}
                 </Text>
               )}
