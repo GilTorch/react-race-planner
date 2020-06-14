@@ -19,6 +19,7 @@ import { commentSchema } from '../../utils/validators';
 const CommentModal = ({ visible, dismiss, parent, createComment }) => {
   const user = useSelector(state => state.auth.currentUser);
   const [margin, setMargin] = React.useState(0);
+  // const [comments, setComments] = React.useState(parent.comments);
 
   const defaultValues = {
     author: user._id,
@@ -36,7 +37,8 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
 
   const submit = async data => {
     try {
-      await createComment(data);
+      const comment = await createComment(data);
+      // setComments([...comments, comment]);
       reset(defaultValues);
     } catch (e) {
       Toast.show(e.message, {

@@ -6,7 +6,10 @@ export const createCommentAction = data => dispatch => {
 
   return axios
     .post('/comments', data)
-    .then(() => dispatch({ type: Story.COMMENT_ROUND_SUCCESS }))
+    .then(response => {
+      dispatch({ type: Story.COMMENT_ROUND_SUCCESS });
+      return response.data;
+    })
     .catch(error => {
       dispatch({ type: Story.COMMENT_ROUND_FAILURE });
 
