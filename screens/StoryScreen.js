@@ -35,7 +35,7 @@ const StoryScreen = ({ navigation, route }) => {
   const inprogress = inprogressStory || waitingStory;
   const status = inprogress ? 'In Progress' : 'Completed';
   const masterAuthorName = inprogress ? 'Anonymous 1' : masterAuthor.fullName;
-  const [headerDimensions, setHeaderDimensions] = React.useState({ height: 330 });
+  const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
 
   const scrollView = React.useRef(null);
 
@@ -70,7 +70,7 @@ const StoryScreen = ({ navigation, route }) => {
     }, [])
   );
 
-  const [scrollY] = React.useState(new Animated.Value(0));
+  const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const HEADER_MINIMUM_HEIGHT = 0;
   const HEADER_MAXIMUM_HEIGHT = SCREEN_HEIGHT * 0.25;
@@ -149,12 +149,14 @@ const StoryScreen = ({ navigation, route }) => {
           }}>
           <SafeAreaView
             style={{
+              paddingTop: Constants.statusBarHeight * 1.7,
               alignItems: 'center',
               flexDirection: 'column'
             }}>
             <Animated.View
               style={{
-                height: titleHeight
+                height: titleHeight,
+                overflow: 'hidden'
               }}>
               <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
                 ScriptoRerum
@@ -174,6 +176,7 @@ const StoryScreen = ({ navigation, route }) => {
             <Animated.View
               style={{
                 height: metaHeaderHeight,
+                marginBottom: 10,
                 opacity,
                 marginLeft: 20,
                 alignSelf: 'flex-start',
@@ -333,8 +336,7 @@ const StoryScreen = ({ navigation, route }) => {
             }
           })}
           contentContainerStyle={{
-            marginTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40),
-            paddingBottom: 350
+            paddingTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40)
           }}>
           {waitingStory && (
             <>
@@ -412,6 +414,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#5A7582',
     fontSize: 20,
+    marginTop: 20,
     marginLeft: 20
   },
   headerBtn: {
