@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { View, TouchableOpacity, FlatList, Image, Keyboard } from 'react-native';
 import { Modal, Portal, TextInput } from 'react-native-paper';
@@ -5,22 +6,73 @@ import PropTypes from 'prop-types';
 import { FontAwesome } from '@expo/vector-icons';
 import Dash from 'react-native-dash';
 import { AllHtmlEntities } from 'html-entities';
+import { useSelector, connect } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import Toast from 'react-native-root-toast';
+
 import Text from '../CustomText';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
 import { comments } from '../../utils/data';
+import { createCommentAction } from '../../redux/actions/StoryAction';
+import { commentSchema } from '../../utils/validators';
 
-const CommentModal = ({ visible, dismiss, parent }) => {
+const CommentModal = ({ visible, dismiss, parent, createComment }) => {
+  const user = useSelector(state => state.auth.currentUser);
   const [margin, setMargin] = React.useState(0);
+
+  const defaultValues = {
+    author: user._id,
+    content: '',
+    privacyStatus: 'get from settings',
+    documentPartId: 'get from the parent',
+    isReview: false,
+    isActive: true
+  };
+
+  const { errors, handleSubmit, register, watch, setValue, reset } = useForm({
+    validationSchema: commentSchema,
+    defaultValues
+  });
+
+  const submit = async data => {
+    try {
+      await createComment(data);
+      reset(defaultValues);
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    }
+  };
+
+  const onKeyboardHide = () => {
+    if (errors.content) {
+      setMargin(15);
+    } else {
+      setMargin(0);
+    }
+  };
+
+  React.useEffect(() => {
+    register('content');
+    register('author');
+    register('privacyStatus');
+    register('documentPartId');
+    register('isReview');
+    register('isActive');
+  }, [register]);
 
   React.useEffect(() => {
     Keyboard.addListener('keyboardDidShow', () => setMargin('25%'));
-    Keyboard.addListener('keyboardDidHide', () => setMargin(0));
+    Keyboard.addListener('keyboardDidHide', onKeyboardHide);
 
     return () => {
       Keyboard.removeAllListeners('keyboardDidShow');
       Keyboard.removeAllListeners('keyboardDidHide');
     };
   });
+
   return (
     <Portal>
       <Modal visible={visible}>
@@ -159,8 +211,13 @@ const CommentModal = ({ visible, dismiss, parent }) => {
             />
             <View style={{ marginBottom: margin }}>
               <TextInput
-                multiline
+                underlineColor={errors.content ? 'red' : 'white'}
+                value={watch('content')}
+                onChangeText={text => setValue('content', text)}
+                returnKeyType="send"
+                onEndEditing={handleSubmit(submit)}
                 style={{
+                  height: 40,
                   borderTopWidth: 1,
                   borderColor: '#D3CBCB',
                   backgroundColor: 'white',
@@ -169,8 +226,16 @@ const CommentModal = ({ visible, dismiss, parent }) => {
                 }}
                 placeholder="Type your comment here..."
               />
+              {errors.content && (
+                <Text style={{ fontSize: 12, marginTop: 3, color: 'red' }}>
+                  {errors.content.message}
+                </Text>
+              )}
               <TouchableOpacity
-                onPress={dismiss}
+                onPress={() => {
+                  dismiss();
+                  reset(defaultValues);
+                }}
                 style={{
                   ...styles.button,
                   backgroundColor: '#F44336'
@@ -183,12 +248,6 @@ const CommentModal = ({ visible, dismiss, parent }) => {
       </Modal>
     </Portal>
   );
-};
-
-CommentModal.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  dismiss: PropTypes.func.isRequired,
-  parent: PropTypes.object.isRequired
 };
 
 const styles = {
@@ -217,4 +276,15 @@ const styles = {
   }
 };
 
-export default CommentModal;
+CommentModal.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  dismiss: PropTypes.func.isRequired,
+  parent: PropTypes.object.isRequired,
+  createComment: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  createComment: createCommentAction
+};
+
+export default connect(null, mapDispatchToProps)(CommentModal);
