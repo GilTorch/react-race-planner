@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, FlatList, Image } from 'react-native';
+import { View, TouchableOpacity, FlatList, Image, Keyboard } from 'react-native';
 import { Modal, Portal, TextInput } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { FontAwesome } from '@expo/vector-icons';
@@ -10,6 +10,17 @@ import { SCREEN_HEIGHT } from '../../utils/dimensions';
 import { comments } from '../../utils/data';
 
 const CommentModal = ({ visible, dismiss, parent }) => {
+  const [margin, setMargin] = React.useState(0);
+
+  React.useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', () => setMargin('25%'));
+    Keyboard.addListener('keyboardDidHide', () => setMargin(0));
+
+    return () => {
+      Keyboard.removeAllListeners('keyboardDidShow');
+      Keyboard.removeAllListeners('keyboardDidHide');
+    };
+  });
   return (
     <Portal>
       <Modal visible={visible}>
@@ -146,11 +157,10 @@ const CommentModal = ({ visible, dismiss, parent }) => {
               )}
               keyExtractor={item => `${item.id}`}
             />
-            <View>
+            <View style={{ marginBottom: margin }}>
               <TextInput
+                multiline
                 style={{
-                  width: '100%',
-                  height: 40,
                   borderTopWidth: 1,
                   borderColor: '#D3CBCB',
                   backgroundColor: 'white',
