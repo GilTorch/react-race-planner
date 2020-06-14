@@ -22,7 +22,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(false);
-      StatusBar.setBarStyle('dark-content');
+      StatusBar.setBarStyle('light-content');
 
       navigation.setOptions({
         headerShown: false
@@ -123,7 +123,8 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
     <View style={styles.container}>
       <Surface
         style={{
-          elevation: 3
+          elevation: 3,
+          zIndex: 10
         }}>
         <LinearGradient colors={['#03a2a2', '#23c2c2']} locations={[0.5, 1]}>
           <SafeAreaView
@@ -139,7 +140,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
             </TouchableOpacity>
 
             <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
-              Start new story
+              Start a New Story
             </Text>
 
             <TouchableOpacity onPress={handleSubmit(submit)}>
@@ -161,7 +162,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
       <ScrollView contentContainerStyle={{ marginHorizontal: 20 }}>
         <Surface
           style={{
-            elevation: 3,
+            elevation: 2,
             backgroundColor: 'white',
             marginTop: 20,
             padding: 15,
@@ -180,7 +181,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
         </Surface>
         <Surface
           style={{
-            elevation: 3,
+            elevation: 2,
             backgroundColor: 'white',
             marginTop: 20,
             padding: 15,
@@ -198,14 +199,14 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
         </Surface>
         <Surface
           style={{
-            elevation: 3,
+            elevation: 2,
             backgroundColor: 'white',
             marginTop: 20,
             padding: 15,
             paddingBottom: 40,
             flexDirection: 'column'
           }}>
-          <Text style={{ fontSize: 18, color: '#03a2a2' }}>Minimun amount of authors</Text>
+          <Text style={{ fontSize: 18, color: '#03a2a2' }}>Minimum Amount of Authors</Text>
           <Dropdown
             value={2}
             fontSize={16}
@@ -218,14 +219,14 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
         </Surface>
         <Surface
           style={{
-            elevation: 3,
+            elevation: 2,
             backgroundColor: 'white',
             marginTop: 20,
             padding: 15,
             paddingBottom: 40,
             flexDirection: 'column'
           }}>
-          <Text style={{ fontSize: 18, color: '#03a2a2' }}>Time for writting:</Text>
+          <Text style={{ fontSize: 18, color: '#03a2a2' }}>Time for Writing</Text>
           <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
             <View>
               <Text style={{ fontSize: 16 }}>Intro</Text>
@@ -280,14 +281,14 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
         </Surface>
         <Surface
           style={{
-            elevation: 3,
+            elevation: 2,
             backgroundColor: 'white',
             marginTop: 20,
             padding: 15,
             paddingBottom: 40,
             flexDirection: 'column'
           }}>
-          <Text style={{ fontSize: 18, color: '#03a2a2' }}>Time for voting Intro/ Ending:</Text>
+          <Text style={{ fontSize: 18, color: '#03a2a2' }}>Time for Voting Intro/Ending</Text>
           <TouchableOpacity
             onPress={() => {
               TimePickerRef.open();
@@ -303,7 +304,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
         </Surface>
         <Surface
           style={{
-            elevation: 3,
+            elevation: 2,
             backgroundColor: 'white',
             marginTop: 20,
             marginBottom: 40,
@@ -311,7 +312,10 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
             paddingBottom: 40,
             flexDirection: 'column'
           }}>
-          <Text style={{ fontSize: 18, color: '#03a2a2' }}>Privacy Preference</Text>
+          <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>Privacy Status</Text>
+          <Text>
+            Determines what everyone else will see as your display name once the story is over
+          </Text>
           <Dropdown
             value="username"
             fontSize={16}
