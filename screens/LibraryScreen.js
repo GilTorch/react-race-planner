@@ -8,7 +8,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import Menu from 'react-native-material-menu';
 import Text from '../components/CustomText';
-import { stories, genres } from '../utils/data';
+import { stories, genresData } from '../utils/data';
 import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
 
@@ -19,6 +19,7 @@ const LibraryScreen = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      StatusBar.setHidden(false);
       StatusBar.setBarStyle('dark-content');
     }, [])
   );
@@ -28,14 +29,14 @@ const LibraryScreen = ({ navigation }) => {
 
   let menu = null;
 
-  const [currentGenre, setCurrentGenre] = useState(genres[0]);
+  const [currentGenre, setCurrentGenre] = useState(genresData[0]);
 
   const setMenuRef = ref => {
     menu = ref;
   };
 
   const showMenu = async genreIndex => {
-    setCurrentGenre(genres[genreIndex]);
+    setCurrentGenre(genresData[genreIndex]);
     // setMenuPosition({ top: 125, left: 35 + genreIndex * 50 });
     menu.show();
   };
@@ -64,7 +65,7 @@ const LibraryScreen = ({ navigation }) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingLeft: 23 }}>
-          {genres.map((genre, index) => (
+          {genresData.map((genre, index) => (
             <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
               <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
                 <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>

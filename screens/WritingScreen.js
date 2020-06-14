@@ -9,13 +9,13 @@ import { useFocusEffect } from '@react-navigation/native';
 import Menu from 'react-native-material-menu';
 
 import Text from '../components/CustomText';
-import { stories, genres } from '../utils/data';
+import { stories, genresData } from '../utils/data';
 import { Story } from '../components/stories';
 import FilterBadges from '../components/FilterBadges';
 
 const Writing = ({ navigation }) => {
   const [searchBarVisible, setSearchBarVisible] = useState(false);
-  const [currentGenre, setCurrentGenre] = useState(genres[0]);
+  const [currentGenre, setCurrentGenre] = useState(genresData[0]);
 
   let menu = null;
   const setMenuRef = ref => {
@@ -27,12 +27,13 @@ const Writing = ({ navigation }) => {
   });
 
   const showMenu = async genreIndex => {
-    setCurrentGenre(genres[genreIndex]);
+    setCurrentGenre(genresData[genreIndex]);
     menu.show();
   };
 
   useFocusEffect(
     React.useCallback(() => {
+      StatusBar.setHidden(false);
       StatusBar.setBarStyle('dark-content');
     }, [])
   );
@@ -57,7 +58,7 @@ const Writing = ({ navigation }) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingLeft: 23 }}>
-          {genres.map((genre, index) => (
+          {genresData.map((genre, index) => (
             <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
               <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
                 <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>

@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 
 import LottieView from 'lottie-react-native';
-import { genres } from '../../utils/data';
+import { genresData } from '../../utils/data';
 import Text from '../CustomText';
 import { HugeAdvertisement, SmallAdvertisement } from '../advertisements';
 import BoxMenu from './BoxMenu';
@@ -28,7 +28,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
   }
   const inprogress = story.status === 'In Progress' || story.status === 'Waiting for players';
   const status = inprogress ? 'In Progress' : 'Completed';
-  const currentGenre = genres.find(genre => genre.name === story.genre);
+  const currentGenre = genresData.find(genre => genre.name === story.genre);
   const nonLeadAuthors = story.authors.filter(author => !author.storyLead && !author.anonymous);
   const leadAuthor = story.authors.find(author => author.storyLead);
   const authorsCount = story.authors.length;
@@ -213,13 +213,18 @@ const Story = ({ story, index, length, navigation, updating }) => {
   );
 };
 
+Story.defaultProps = {
+  updating: false
+};
+
 Story.propTypes = {
   story: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
   length: PropTypes.number.isRequired,
   navigation: PropTypes.object.isRequired,
-  updating: PropTypes.bool.isRequired
+  updating: PropTypes.bool
 };
+
 const textColor = '#5A7582';
 
 const styles = StyleSheet.create({

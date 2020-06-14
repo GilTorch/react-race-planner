@@ -12,7 +12,7 @@ import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
 // import axios from '../services/axiosService';
 import Text from '../components/CustomText';
-import { genres } from '../utils/data';
+import { genresData } from '../utils/data';
 import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
 import { getActiveStoriesAction } from '../redux/actions/HomeActions';
@@ -20,14 +20,15 @@ import { getActiveStoriesAction } from '../redux/actions/HomeActions';
 const HomeScreen = ({ navigation, route, getActiveStories }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
-  const [currentGenre, setCurrentGenre] = useState(genres[0]);
+  const [currentGenre, setCurrentGenre] = useState(genresData[0]);
   const loadingStories = useSelector(state => state.home.loadingStories);
   const updatingStories = useSelector(state => state.home.updating);
   const filters = useSelector(state => state.home.filters);
   const stories = useSelector(state => state.home.stories);
 
   useEffect(() => {
-    getStories('in_progress', ['mystery'], '');
+    // We get the base data for this screen
+    getStories('completed');
   }, []);
 
   let menu = null;
@@ -36,7 +37,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
   };
 
   const showMenu = async genreIndex => {
-    setCurrentGenre(genres[genreIndex]);
+    setCurrentGenre(genresData[genreIndex]);
     menu.show();
   };
 
@@ -51,11 +52,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
     }, [])
   );
 
-  const inprogressStories =
-    stories &&
-    stories.filter(
-      story => story.status === 'In Progress' || story.status === 'Waiting for players'
-    );
+  const inprogressStories = stories?.filter(story => story.status === 'completed');
 
   const getActiveStoriesDebounced = debounce(getActiveStories, 2000);
 
@@ -65,12 +62,12 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
     getStories(status, Genres, text);
   };
 
-  const getStories = (status, Genres, text) => {
+  const getStories = async (status, genres, sq) => {
     try {
-      getActiveStoriesDebounced({
-        sq: text,
+      await getActiveStoriesDebounced({
+        sq,
         status,
-        genres: Genres,
+        genres,
         authorsRange: filters.authorsRange
       });
     } catch (e) {
@@ -103,7 +100,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingLeft: 23 }}>
-          {genres.map((genre, index) => (
+          {genresData.map((genre, index) => (
             <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
               <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
                 <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
@@ -133,7 +130,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
               alignItems: 'center'
             }}>
             <Text type="bold" style={{ fontSize: 24, color: '#999' }}>
-              There is no stories yet,{' '}
+              There are no stories yet
             </Text>
             <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
               <Button
@@ -324,7 +321,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
             {inprogressStories.map((story, index) => (
               <Story
                 route={route}
-                genres={genres}
+                genres={genresData}
                 key={Math.random()}
                 story={story}
                 index={index}
