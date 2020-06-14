@@ -58,8 +58,8 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
 
   const onSearch = text => {
     const status = filters.status.tags.filter(tag => tag.selected).map(tag => tag.label);
-    const Genres = filters.genres.tags.filter(tag => tag.selected).map(tag => tag.label);
-    getStories(status, Genres, text);
+    const genres = filters.genres.tags.filter(tag => tag.selected).map(tag => tag.label);
+    getStories(status, genres, text);
   };
 
   const getStories = async (status, genres, sq) => {
