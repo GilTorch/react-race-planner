@@ -96,9 +96,8 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
 
   const submit = async data => {
     try {
-      await createStory(data);
-      // const story = await createStory(data);
-      // navigation.navigate('StoryScreen', { storyId: story._id });
+      const story = await createStory(data);
+      navigation.navigate('StoryScreen', { storyId: story._id });
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
