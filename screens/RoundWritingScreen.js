@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+/* eslint-disable no-shadow */
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   Text,
   Dimensions,
+  TouchableOpacity,
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
@@ -16,6 +18,8 @@ import CNRichTextEditor, {
   getDefaultStyles,
   convertToObject
 } from 'react-native-cn-richtext-editor';
+import { Surface } from 'react-native-paper';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import {
   Menu,
@@ -33,94 +37,105 @@ const IS_IOS = Platform.OS === 'ios';
 const { width, height } = Dimensions.get('window');
 const defaultStyles = getDefaultStyles();
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.customStyles = {
-      ...defaultStyles,
-      body: { fontSize: 12 },
-      heading: { fontSize: 16 },
-      title: { fontSize: 20 },
-      ol: { fontSize: 12 },
-      ul: { fontSize: 12 },
-      bold: { fontSize: 12, fontWeight: 'bold', color: '' }
-    };
-    this.state = {
-      selectedTag: 'body',
-      selectedColor: 'default',
-      selectedHighlight: 'default',
-      colors: ['red', 'green', 'blue'],
-      highlights: ['yellow_hl', 'pink_hl', 'orange_hl', 'green_hl', 'purple_hl', 'blue_hl'],
-      selectedStyles: [],
-      // value: [getInitialObject()] get empty editor
-      value: convertToObject(
-        '<div><p><span>This is </span><span style="font-weight: bold;">bold</span><span> and </span><span style="font-style: italic;">italic </span><span>text</span></p></div>',
-        this.customStyles
-      )
-    };
+const RoundWritingScreen = ({ navigation }) => {
+  navigation.setOptions({
+    headerShown: false
+  });
+  // class App extends Component {
+  // constructor(props) {
+  //   super(props);
+  //  const customStyles =  {
+  //     ...defaultStyles,
+  //     body: { fontSize: 12 },
+  //     heading: { fontSize: 16 },
+  //     title: { fontSize: 20 },
+  //     ol: { fontSize: 12 },
+  //     ul: { fontSize: 12 },
+  //     bold: { fontSize: 12, fontWeight: "bold", color: "" },
+  //   };
+  const [customStyles, setCustomStyles] = useState({
+    ...defaultStyles,
+    body: { fontSize: 12 },
+    heading: { fontSize: 16 },
+    title: { fontSize: 20 },
+    ol: { fontSize: 12 },
+    ul: { fontSize: 12 },
+    bold: { fontSize: 12, fontWeight: 'bold', color: '' }
+  });
+  const [selectedTag, setSelectedTag] = useState('body');
+  const [selectedColor, setSelectedColor] = useState('default');
+  const [selectedHighlight, setSelectedHighlight] = useState('default');
+  const [colors, setColors] = useState(['red', 'green', 'blue']);
+  const [highlights, setHighlights] = useState([
+    'yellow_hl',
+    'pink_hl',
+    'orange_hl',
+    'green_hl',
+    'purple_hl',
+    'blue_hl'
+  ]);
+  const [selectedStyles, setSelectedStyles] = useState([]);
+  // value: [getInitialObject()] get empty editor
+  const [value, setValue] = useState(
+    convertToObject(
+      '<div><p><span>This is </span><span style="font-weight: bold;">bold</span><span> and </span><span style="font-style: italic;">italic </span><span>text</span></p></div>',
+      customStyles
+    )
+  );
+  let editor = null;
 
-    this.editor = null;
-  }
-
-  onStyleKeyPress = toolType => {
+  const onStyleKeyPress = toolType => {
+    // eslint-disable-next-line no-empty
     if (toolType === 'image') {
     } else {
-      this.editor.applyToolbar(toolType);
+      editor.applyToolbar(toolType);
     }
   };
 
-  onSelectedTagChanged = tag => {
-    this.setState({
-      selectedTag: tag
-    });
+  const onSelectedTagChanged = tag => {
+    setSelectedTag(tag);
   };
 
-  onSelectedStyleChanged = styles => {
-    const { colors } = this.state;
-    const { highlights } = this.state;
+  const onSelectedStyleChanged = styles => {
+    const colors = colors;
+    const highlights = highlights;
     const sel = styles.filter(x => colors.indexOf(x) >= 0);
 
     const hl = styles.filter(x => highlights.indexOf(x) >= 0);
-    this.setState({
-      selectedStyles: styles,
-      selectedColor: sel.length > 0 ? sel[sel.length - 1] : 'default',
-      selectedHighlight: hl.length > 0 ? hl[hl.length - 1] : 'default'
-    });
+
+    setSelectedStyles(styles);
+    setSelectedColor(sel.length > 0 ? sel[sel.length - 1] : 'default');
+    setSelectedHighlight(hl.length > 0 ? hl[hl.length - 1] : 'default');
   };
 
-  onValueChanged = value => {
-    this.setState({
-      value
-    });
+  const onValueChanged = value => {
+    setValue(value);
   };
 
-  insertImage(url) {
-    this.editor.insertImage(url);
-  }
+  const insertImage = url => {
+    editor.insertImage(url);
+  };
 
-  askPermissionsAsync = async () => {
+  const askPermissionsAsync = async () => {
     const camera = await Permissions.askAsync(Permissions.CAMERA);
     const cameraRoll = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-    this.setState({
-      hasCameraPermission: camera.status === 'granted',
-      hasCameraRollPermission: cameraRoll.status === 'granted'
-    });
+    // hasCameraPermission(camera.status === 'granted');
+    // hasCameraRollPermission(cameraRoll.status === 'granted');
   };
 
-  useLibraryHandler = async () => {
-    await this.askPermissionsAsync();
+  const useLibraryHandler = async () => {
+    await askPermissionsAsync();
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 4],
       base64: false
     });
 
-    this.insertImage(result.uri);
+    insertImage(result.uri);
   };
 
-  useCameraHandler = async () => {
-    await this.askPermissionsAsync();
+  const useCameraHandler = async () => {
+    await askPermissionsAsync();
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 4],
@@ -128,78 +143,74 @@ class App extends Component {
     });
     console.log(result);
 
-    this.insertImage(result.uri);
+    insertImage(result.uri);
   };
 
-  onImageSelectorClicked = value => {
+  const onImageSelectorClicked = value => {
     if (value === 1) {
-      this.useCameraHandler();
+      useCameraHandler();
     } else if (value === 2) {
-      this.useLibraryHandler();
+      useLibraryHandler();
     }
   };
 
-  onColorSelectorClicked = value => {
+  const onColorSelectorClicked = value => {
     if (value === 'default') {
-      this.editor.applyToolbar(this.state.selectedColor);
+      editor.applyToolbar(selectedColor);
     } else {
-      this.editor.applyToolbar(value);
+      editor.applyToolbar(value);
     }
-
-    this.setState({
-      selectedColor: value
-    });
+    setSelectedColor(value);
   };
 
-  onHighlightSelectorClicked = value => {
+  const onHighlightSelectorClicked = value => {
     if (value === 'default') {
-      this.editor.applyToolbar(this.state.selectedHighlight);
+      editor.applyToolbar(selectedHighlight);
     } else {
-      this.editor.applyToolbar(value);
+      editor.applyToolbar(value);
     }
-
-    this.setState({
-      selectedHighlight: value
-    });
+    setSelectedHighlight(value);
   };
 
-  onRemoveImage = ({ url, id }) => {
+  const onRemoveImage = ({ url, id }) => {
     // do what you have to do after removing an image
     console.log(`image removed (url : ${url})`);
   };
 
-  renderImageSelector() {
+  const renderImageSelector = () => {
     return (
-      <Menu renderer={SlideInMenu} onSelect={this.onImageSelectorClicked}>
-        <MenuTrigger>
-          <MaterialCommunityIcons name="image" size={28} color="#737373" />
-        </MenuTrigger>
-        <MenuOptions>
-          <MenuOption value={1}>
-            <Text style={styles.menuOptionText}>Take Photo</Text>
-          </MenuOption>
-          <View style={styles.divider} />
-          <MenuOption value={2}>
-            <Text style={styles.menuOptionText}>Photo Library</Text>
-          </MenuOption>
-          <View style={styles.divider} />
-          <MenuOption value={3}>
-            <Text style={styles.menuOptionText}>Cancel</Text>
-          </MenuOption>
-        </MenuOptions>
-      </Menu>
+      <View style={styles.root}>
+        <Menu renderer={SlideInMenu} onSelect={onImageSelectorClicked}>
+          <MenuTrigger>
+            <MaterialCommunityIcons name="image" size={28} color="#737373" />
+          </MenuTrigger>
+          <MenuOptions>
+            <MenuOption value={1}>
+              <Text style={styles.menuOptionText}>Take Photo</Text>
+            </MenuOption>
+            <View style={styles.divider} />
+            <MenuOption value={2}>
+              <Text style={styles.menuOptionText}>Photo Library</Text>
+            </MenuOption>
+            <View style={styles.divider} />
+            <MenuOption value={3}>
+              <Text style={styles.menuOptionText}>Cancel</Text>
+            </MenuOption>
+          </MenuOptions>
+        </Menu>
+      </View>
     );
-  }
+  };
 
-  renderColorMenuOptions = () => {
+  const renderColorMenuOptions = () => {
     let lst = [];
 
-    if (defaultStyles[this.state.selectedColor]) {
-      lst = this.state.colors.filter(x => x !== this.state.selectedColor);
+    if (defaultStyles[selectedColor]) {
+      lst = colors.filter(x => x !== selectedColor);
       lst.push('default');
-      lst.push(this.state.selectedColor);
+      lst.push(selectedColor);
     } else {
-      lst = this.state.colors.filter(x => true);
+      lst = colors.filter(x => true);
       lst.push('default');
     }
 
@@ -213,15 +224,15 @@ class App extends Component {
     });
   };
 
-  renderHighlightMenuOptions = () => {
+  const renderHighlightMenuOptions = () => {
     let lst = [];
 
-    if (defaultStyles[this.state.selectedHighlight]) {
-      lst = this.state.highlights.filter(x => x !== this.state.selectedHighlight);
+    if (defaultStyles[selectedHighlight]) {
+      lst = highlights.filter(x => x !== selectedHighlight);
       lst.push('default');
-      lst.push(this.state.selectedHighlight);
+      lst.push(selectedHighlight);
     } else {
-      lst = this.state.highlights.filter(x => true);
+      lst = highlights.filter(x => true);
       lst.push('default');
     }
 
@@ -235,14 +246,14 @@ class App extends Component {
     });
   };
 
-  renderColorSelector() {
+  const renderColorSelector = () => {
     let selectedColor = '#737373';
-    if (defaultStyles[this.state.selectedColor]) {
-      selectedColor = defaultStyles[this.state.selectedColor].color;
+    if (defaultStyles[selectedColor]) {
+      selectedColor = defaultStyles[selectedColor].color;
     }
 
     return (
-      <Menu renderer={SlideInMenu} onSelect={this.onColorSelectorClicked}>
+      <Menu renderer={SlideInMenu} onSelect={onColorSelectorClicked}>
         <MenuTrigger>
           <MaterialCommunityIcons
             name="format-color-text"
@@ -253,172 +264,218 @@ class App extends Component {
             }}
           />
         </MenuTrigger>
-        <MenuOptions customStyles={optionsStyles}>{this.renderColorMenuOptions()}</MenuOptions>
+        <MenuOptions customStyles={optionsStyles}>{renderColorMenuOptions()}</MenuOptions>
       </Menu>
     );
-  }
+  };
 
-  renderHighlight() {
+  const renderHighlight = () => {
     let selectedColor = '#737373';
-    if (defaultStyles[this.state.selectedHighlight]) {
-      selectedColor = defaultStyles[this.state.selectedHighlight].backgroundColor;
+    if (defaultStyles[selectedHighlight]) {
+      selectedColor = defaultStyles[selectedHighlight].backgroundColor;
     }
     return (
-      <Menu renderer={SlideInMenu} onSelect={this.onHighlightSelectorClicked}>
+      <Menu renderer={SlideInMenu} onSelect={onHighlightSelectorClicked}>
         <MenuTrigger>
           <MaterialCommunityIcons name="marker" color={selectedColor} size={24} style={{}} />
         </MenuTrigger>
         <MenuOptions customStyles={highlightOptionsStyles}>
-          {this.renderHighlightMenuOptions()}
+          {renderHighlightMenuOptions()}
         </MenuOptions>
       </Menu>
     );
-  }
+  };
 
-  render() {
-    return (
-      <KeyboardAvoidingView
-        behavior="padding"
-        enabled
-        keyboardVerticalOffset={IS_IOS ? 0 : 0}
-        style={styles.root}>
-        <MenuProvider style={{ flex: 1 }}>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.main}>
-              <CNRichTextEditor
-                ref={input => (this.editor = input)}
-                onSelectedTagChanged={this.onSelectedTagChanged}
-                onSelectedStyleChanged={this.onSelectedStyleChanged}
-                value={this.state.value}
-                style={styles.editor}
-                styleList={this.customStyles}
-                foreColor="dimgray" // optional (will override default fore-color)
-                onValueChanged={this.onValueChanged}
-                onRemoveImage={this.onRemoveImage}
-              />
-            </View>
-          </TouchableWithoutFeedback>
+  return (
+    <KeyboardAvoidingView
+      behavior="padding"
+      enabled
+      keyboardVerticalOffset={IS_IOS ? 0 : 0}
+      style={styles.root}>
+      <View style={styles.container}>
+        <Surface
+          style={{
+            elevation: 3,
+            zIndex: 1
+          }}>
+          <LinearGradient
+            colors={['#03a2a2', '#23c2c2']}
+            locations={[0.5, 1]}
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingBottom: 12,
+              paddingTop: 35,
+              paddingLeft: 10,
+              paddingRight: 10
+            }}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
 
-          <View style={styles.toolbarContainer}>
-            <CNToolbar
-              style={{
-                height: 35
-              }}
-              iconSetContainerStyle={{
-                flexGrow: 1,
-                justifyContent: 'space-evenly',
-                alignItems: 'center'
-              }}
-              size={28}
-              iconSet={[
-                {
-                  type: 'tool',
-                  iconArray: [
-                    {
-                      toolTypeText: 'bold',
-                      buttonTypes: 'style',
-                      iconComponent: <MaterialCommunityIcons name="format-bold" />
-                    },
-                    {
-                      toolTypeText: 'italic',
-                      buttonTypes: 'style',
-                      iconComponent: <MaterialCommunityIcons name="format-italic" />
-                    },
-                    {
-                      toolTypeText: 'underline',
-                      buttonTypes: 'style',
-                      iconComponent: <MaterialCommunityIcons name="format-underline" />
-                    },
-                    {
-                      toolTypeText: 'lineThrough',
-                      buttonTypes: 'style',
-                      iconComponent: <MaterialCommunityIcons name="format-strikethrough-variant" />
-                    }
-                  ]
-                },
-                {
-                  type: 'seperator'
-                },
-                {
-                  type: 'tool',
-                  iconArray: [
-                    {
-                      toolTypeText: 'body',
-                      buttonTypes: 'tag',
-                      iconComponent: <MaterialCommunityIcons name="format-text" />
-                    },
-                    {
-                      toolTypeText: 'title',
-                      buttonTypes: 'tag',
-                      iconComponent: <MaterialCommunityIcons name="format-header-1" />
-                    },
-                    {
-                      toolTypeText: 'heading',
-                      buttonTypes: 'tag',
-                      iconComponent: <MaterialCommunityIcons name="format-header-3" />
-                    },
-                    {
-                      toolTypeText: 'ul',
-                      buttonTypes: 'tag',
-                      iconComponent: <MaterialCommunityIcons name="format-list-bulleted" />
-                    },
-                    {
-                      toolTypeText: 'ol',
-                      buttonTypes: 'tag',
-                      iconComponent: <MaterialCommunityIcons name="format-list-numbered" />
-                    }
-                  ]
-                },
-                {
-                  type: 'seperator'
-                },
-                {
-                  type: 'tool',
-                  iconArray: [
-                    {
-                      toolTypeText: 'image',
-                      iconComponent: this.renderImageSelector()
-                    },
-                    {
-                      toolTypeText: 'color',
-                      iconComponent: this.renderColorSelector()
-                    },
-                    {
-                      toolTypeText: 'highlight',
-                      iconComponent: this.renderHighlight()
-                    }
-                  ]
-                }
-              ]}
-              selectedTag={this.state.selectedTag}
-              selectedStyles={this.state.selectedStyles}
-              onStyleKeyPress={this.onStyleKeyPress}
-              backgroundColor="aliceblue" // optional (will override default backgroundColor)
-              color="gray" // optional (will override default color)
-              selectedColor="white" // optional (will override default selectedColor)
-              selectedBackgroundColor="deepskyblue"
+            <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
+              Round Writing
+            </Text>
+            <TouchableOpacity onPress={() => alert('I am clicked!')}>
+              <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
+                Done
+              </Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        </Surface>
+      </View>
+      <MenuProvider style={{ flex: 1 }}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.main}>
+            <CNRichTextEditor
+              ref={input => (editor = input)}
+              onSelectedTagChanged={onSelectedTagChanged}
+              onSelectedStyleChanged={onSelectedStyleChanged}
+              value={value}
+              style={styles.editor}
+              styleList={customStyles}
+              foreColor="dimgray" // optional (will override default fore-color)
+              onValueChanged={onValueChanged}
+              onRemoveImage={onRemoveImage}
             />
           </View>
-        </MenuProvider>
-      </KeyboardAvoidingView>
-    );
-  }
-}
+        </TouchableWithoutFeedback>
 
-var styles = StyleSheet.create({
+        <View style={styles.toolbarContainer}>
+          <CNToolbar
+            style={{
+              height: 35
+            }}
+            iconSetContainerStyle={{
+              flexGrow: 1,
+              justifyContent: 'space-evenly',
+              alignItems: 'center'
+            }}
+            size={28}
+            iconSet={[
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'bold',
+                    buttonTypes: 'style',
+                    iconComponent: <MaterialCommunityIcons name="format-bold" />
+                  },
+                  {
+                    toolTypeText: 'italic',
+                    buttonTypes: 'style',
+                    iconComponent: <MaterialCommunityIcons name="format-italic" />
+                  },
+                  {
+                    toolTypeText: 'underline',
+                    buttonTypes: 'style',
+                    iconComponent: <MaterialCommunityIcons name="format-underline" />
+                  },
+                  {
+                    toolTypeText: 'lineThrough',
+                    buttonTypes: 'style',
+                    iconComponent: <MaterialCommunityIcons name="format-strikethrough-variant" />
+                  }
+                ]
+              },
+              {
+                type: 'seperator'
+              },
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'body',
+                    buttonTypes: 'tag',
+                    iconComponent: <MaterialCommunityIcons name="format-text" />
+                  },
+                  {
+                    toolTypeText: 'title',
+                    buttonTypes: 'tag',
+                    iconComponent: <MaterialCommunityIcons name="format-header-1" />
+                  },
+                  {
+                    toolTypeText: 'heading',
+                    buttonTypes: 'tag',
+                    iconComponent: <MaterialCommunityIcons name="format-header-3" />
+                  },
+                  {
+                    toolTypeText: 'ul',
+                    buttonTypes: 'tag',
+                    iconComponent: <MaterialCommunityIcons name="format-list-bulleted" />
+                  },
+                  {
+                    toolTypeText: 'ol',
+                    buttonTypes: 'tag',
+                    iconComponent: <MaterialCommunityIcons name="format-list-numbered" />
+                  }
+                ]
+              },
+              {
+                type: 'seperator'
+              },
+              {
+                type: 'tool',
+                iconArray: [
+                  {
+                    toolTypeText: 'image',
+                    iconComponent: renderImageSelector()
+                  },
+                  {
+                    toolTypeText: 'color',
+                    iconComponent: renderColorSelector()
+                  },
+                  {
+                    toolTypeText: 'highlight',
+                    iconComponent: renderHighlight()
+                  }
+                ]
+              }
+            ]}
+            selectedTag={selectedTag}
+            selectedStyles={selectedStyles}
+            onStyleKeyPress={onStyleKeyPress}
+            backgroundColor="aliceblue" // optional (will override default backgroundColor)
+            color="gray" // optional (will override default color)
+            selectedColor="white" // optional (will override default selectedColor)
+            selectedBackgroundColor="deepskyblue" // optional (will override default selectedBackgroundColor)
+          />
+        </View>
+      </MenuProvider>
+    </KeyboardAvoidingView>
+  );
+};
+
+const styles = StyleSheet.create({
   root: {
     flex: 1,
-    paddingTop: 20,
-    backgroundColor: '#eee',
-    flexDirection: 'column',
-    justifyContent: 'flex-end'
+    backgroundColor: '#EEE'
+
+    // flex: 1,
+    // paddingTop: 20,
+    // backgroundColor: '#eee',
+    // flexDirection: 'column',
+    // justifyContent: 'flex-end'
   },
+
+  //  headline: { color: '#5A7582' },
+  //   editor: {
+  //   paddingLeft: 20,
+  //   paddingRight: 20,
+  //   paddingTop: 20,
+  //   paddingBottom: 20,
+  //   flex: 1
+  // },
   main: {
     flex: 1,
-    marginTop: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    paddingBottom: 1,
+    // marginTop: 10,
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
     alignItems: 'stretch'
   },
   editor: {
@@ -427,11 +484,11 @@ var styles = StyleSheet.create({
   toolbarContainer: {
     minHeight: 35
   },
-  menuOptionText: {
-    textAlign: 'center',
-    paddingTop: 5,
-    paddingBottom: 5
-  },
+  // menuOptionText: {
+  //   textAlign: "center",
+  //   paddingTop: 5,
+  //   paddingBottom: 5,
+  // },
   divider: {
     marginVertical: 0,
     marginHorizontal: 0,
@@ -491,4 +548,4 @@ const highlightOptionsStyles = {
   // },
 };
 
-export default App;
+export default RoundWritingScreen;
