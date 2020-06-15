@@ -3,13 +3,13 @@ import axios from '../../services/axiosService';
 import { Story, Home } from './types';
 
 export const createReportAction = data => dispatch => {
-  dispatch({ type: Story.EPORT_STORY_START });
+  dispatch({ type: Story.REPORT_STORY_START });
 
   return axios
     .post('/reports', data)
-    .then(() => dispatch({ type: Story.EPORT_STORY_SUCCESS }))
+    .then(() => dispatch({ type: Story.REPORT_STORY_SUCCESS }))
     .catch(error => {
-      dispatch({ type: Story.EPORT_STORY_FAILURE });
+      dispatch({ type: Story.REPORT_STORY_FAILURE });
 
       throw error.response?.data;
     });
