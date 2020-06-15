@@ -149,7 +149,6 @@ const StoryScreen = ({ navigation, route }) => {
           }}>
           <SafeAreaView
             style={{
-              paddingTop: Constants.statusBarHeight * 1.7,
               alignItems: 'center',
               flexDirection: 'column'
             }}>
