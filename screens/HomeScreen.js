@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AntDesign, FontAwesome, SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
-import { Surface, Searchbar, Button } from 'react-native-paper';
+import { Surface, Searchbar, Button, ActivityIndicator } from 'react-native-paper';
 import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import Constants from 'expo-constants';
@@ -37,6 +37,8 @@ const HomeScreen = ({ navigation, route, getAllStories, getAllGenres }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
   const [currentGenre, setCurrentGenre] = useState(null);
+  const loadingGenres = useSelector(state => state.home.getGenresLoading);
+
   let menu = null;
   const setMenuRef = ref => {
     menu = ref;
@@ -52,8 +54,8 @@ const HomeScreen = ({ navigation, route, getAllStories, getAllGenres }) => {
   );
 
   React.useEffect(() => {
-    dispatch(getAllStories);
-    dispatch(getAllGenres);
+    getAllStories();
+    getAllGenres();
   }, []);
 
   React.useEffect(() => {
@@ -79,7 +81,18 @@ const HomeScreen = ({ navigation, route, getAllStories, getAllGenres }) => {
             Start a New Story
           </Text>
         </SafeAreaView>
-
+        {loadingGenres && (
+          <View style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+            <ActivityIndicator />
+          </View>
+        )}
+        {(!genres || genres.length === 0) && !loadingGenres && (
+          <View style={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+            <Text style={{ fontSize: 16, color: '#aaa' }}>
+              No genres found. You cannot start a new story yet.
+            </Text>
+          </View>
+        )}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
