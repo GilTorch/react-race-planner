@@ -36,7 +36,7 @@ const HomeScreen = ({ navigation, route, getAllStories, getAllGenres }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
-  const [currentGenre, setCurrentGenre] = useState(genres[0]);
+  const [currentGenre, setCurrentGenre] = useState(null);
   let menu = null;
   const setMenuRef = ref => {
     menu = ref;
@@ -104,61 +104,62 @@ const HomeScreen = ({ navigation, route, getAllStories, getAllGenres }) => {
             ))}
         </ScrollView>
       </Surface>
-
-      <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
-        <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 10
-            }}>
-            <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
-              {currentGenre.name}
+      {currentGenre && (
+        <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
+          <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 10
+              }}>
+              <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
+                {currentGenre.name}
+              </Text>
+            </View>
+            <Text style={{ textAlign: 'center' }}>
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+              has been the industry's standard dummy text ever since the 1500s, when an unknown
+              printer took a galley of type and scrambled it to make a type specimen book. It has
+              survived not only five centuries, but also the leap into electronic typesetting,
+              remaining essentially unchanged. It was popularised in the 1960s with the release of
+              Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
             </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '65%',
+                alignSelf: 'flex-end',
+                justifyContent: 'flex-end',
+                marginTop: 15,
+                marginBottom: 20
+              }}>
+              <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
+                <Button
+                  icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+                  uppercase={false}
+                  onPress={() => ''}
+                  style={{ backgroundColor: '#03A2A2' }}>
+                  <Text type="bold" style={{ color: '#FFF' }}>
+                    Go
+                  </Text>
+                </Button>
+              </Surface>
+              <Surface style={styles.btnSurface}>
+                <Button
+                  onPress={() => menu.hide()}
+                  uppercase={false}
+                  style={{ backgroundColor: '#f44336' }}>
+                  <Text type="bold" style={{ color: '#fff' }}>
+                    Cancel
+                  </Text>
+                </Button>
+              </Surface>
+            </View>
           </View>
-          <Text style={{ textAlign: 'center' }}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-            has been the industry's standard dummy text ever since the 1500s, when an unknown
-            printer took a galley of type and scrambled it to make a type specimen book. It has
-            survived not only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s with the release of
-            Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              width: '65%',
-              alignSelf: 'flex-end',
-              justifyContent: 'flex-end',
-              marginTop: 15,
-              marginBottom: 20
-            }}>
-            <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
-              <Button
-                icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
-                uppercase={false}
-                onPress={() => ''}
-                style={{ backgroundColor: '#03A2A2' }}>
-                <Text type="bold" style={{ color: '#FFF' }}>
-                  Go
-                </Text>
-              </Button>
-            </Surface>
-            <Surface style={styles.btnSurface}>
-              <Button
-                onPress={() => menu.hide()}
-                uppercase={false}
-                style={{ backgroundColor: '#f44336' }}>
-                <Text type="bold" style={{ color: '#fff' }}>
-                  Cancel
-                </Text>
-              </Button>
-            </Surface>
-          </View>
-        </View>
-      </Menu>
+        </Menu>
+      )}
 
       <ScrollView>
         {searchBarVisible && (
