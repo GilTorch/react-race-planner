@@ -1,5 +1,5 @@
 import { Home } from '../actions/types';
-import mergeResponse from '../../utils/mergeResponse';
+// import mergeResponse from '../../utils/mergeResponse';
 
 const initialState = {
   loadingStories: false,
@@ -42,7 +42,7 @@ const homeReducer = (state = initialState, action) => {
     case Home.GET_ACTIVE_STORIES_SUCCESS:
       return {
         ...state,
-        stories: mergeResponse(state.stories, action.data),
+        stories: action.data,
         loadingStories: false,
         updatingStories: false
       };
