@@ -45,7 +45,7 @@ const RoundWritingScreen = ({ navigation }) => {
   navigation.setOptions({
     headerShown: false
   });
- 
+
   const [customStyles, setCustomStyles] = useState({
     ...defaultStyles,
     body: { fontSize: 12 },
@@ -308,7 +308,7 @@ const RoundWritingScreen = ({ navigation }) => {
             <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
               Round Writing
             </Text>
-            <TouchableOpacity onPress={() => alert('I am clicked!')}>
+            <TouchableOpacity onPress={() => alert(value)}>
               <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
                 Done
               </Text>
