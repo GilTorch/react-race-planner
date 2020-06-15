@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-alert */
 /* eslint-disable no-return-assign */
 /* eslint-disable react/prop-types */
@@ -163,6 +164,7 @@ const RoundWritingScreen = ({ navigation }) => {
 
   const onRemoveImage = ({ url, id }) => {
     // do what you have to do after removing an image
+    // eslint-disable-next-line no-console
     console.log(`image removed (url : ${url})`);
   };
 
