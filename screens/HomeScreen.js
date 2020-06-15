@@ -7,7 +7,7 @@ import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import Menu from 'react-native-material-menu';
-import debounce from 'lodash.debounce';
+import debounce from 'debounce-async';
 import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
 // import axios from '../services/axiosService';
@@ -28,7 +28,8 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
 
   useEffect(() => {
     // We get the base data for this screen
-    getStories('completed');
+    // We set the 'leading' too true because it's a single request
+    getStories('completed', null, null, true);
   }, []);
 
   let menu = null;
@@ -54,28 +55,34 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
 
   const inprogressStories = stories?.filter(story => story.status === 'completed');
 
-  const getActiveStoriesDebounced = debounce(getActiveStories, 2000);
+  const getStories = async (status, genres, sq, leading) => {
+    const debounced = debounce(
+      async () => {
+        try {
+          await getActiveStories({
+            sq,
+            status,
+            genres,
+            authorsRange: filters.authorsRange
+          });
+        } catch (e) {
+          Toast.show(e?.message, {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM
+          });
+        }
+      },
+      2000,
+      { leading }
+    );
+
+    await debounced();
+  };
 
   const onSearch = text => {
     const status = filters.status.tags.filter(tag => tag.selected).map(tag => tag.label);
     const genres = filters.genres.tags.filter(tag => tag.selected).map(tag => tag.label);
     getStories(status, genres, text);
-  };
-
-  const getStories = async (status, genres, sq) => {
-    try {
-      await getActiveStoriesDebounced({
-        sq,
-        status,
-        genres,
-        authorsRange: filters.authorsRange
-      });
-    } catch (e) {
-      Toast.show(e?.message, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
-      });
-    }
   };
 
   return (
