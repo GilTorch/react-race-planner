@@ -38,7 +38,6 @@ export const getActiveStoriesAction = (
     // eager,
     page,
     rows,
-    // sq,
     // filter,
     // checkActive
     sq,
