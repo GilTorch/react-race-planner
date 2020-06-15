@@ -1,3 +1,7 @@
+/* eslint-disable no-alert */
+/* eslint-disable no-return-assign */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 import React, { useState } from 'react';
 import {
@@ -41,18 +45,7 @@ const RoundWritingScreen = ({ navigation }) => {
   navigation.setOptions({
     headerShown: false
   });
-  // class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  //  const customStyles =  {
-  //     ...defaultStyles,
-  //     body: { fontSize: 12 },
-  //     heading: { fontSize: 16 },
-  //     title: { fontSize: 20 },
-  //     ol: { fontSize: 12 },
-  //     ul: { fontSize: 12 },
-  //     bold: { fontSize: 12, fontWeight: "bold", color: "" },
-  //   };
+ 
   const [customStyles, setCustomStyles] = useState({
     ...defaultStyles,
     body: { fontSize: 12 },
@@ -85,9 +78,7 @@ const RoundWritingScreen = ({ navigation }) => {
   let editor = null;
 
   const onStyleKeyPress = toolType => {
-    // eslint-disable-next-line no-empty
-    if (toolType === 'image') {
-    } else {
+    if (toolType !== 'image') {
       editor.applyToolbar(toolType);
     }
   };
@@ -99,11 +90,9 @@ const RoundWritingScreen = ({ navigation }) => {
   const onSelectedStyleChanged = styles => {
     const colors = colors;
     const highlights = highlights;
-    const sel = styles.filter(x => colors.indexOf(x) >= 0);
-
-    const hl = styles.filter(x => highlights.indexOf(x) >= 0);
-
     setSelectedStyles(styles);
+    const sel = styles.filter(x => colors.indexOf(x) >= 0);
+    const hl = styles.filter(x => highlights.indexOf(x) >= 0);
     setSelectedColor(sel.length > 0 ? sel[sel.length - 1] : 'default');
     setSelectedHighlight(hl.length > 0 ? hl[hl.length - 1] : 'default');
   };
@@ -141,7 +130,7 @@ const RoundWritingScreen = ({ navigation }) => {
       aspect: [4, 4],
       base64: false
     });
-    console.log(result);
+    // console.log(result);
 
     insertImage(result.uri);
   };
@@ -453,25 +442,9 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#EEE'
-
-    // flex: 1,
-    // paddingTop: 20,
-    // backgroundColor: '#eee',
-    // flexDirection: 'column',
-    // justifyContent: 'flex-end'
   },
-
-  //  headline: { color: '#5A7582' },
-  //   editor: {
-  //   paddingLeft: 20,
-  //   paddingRight: 20,
-  //   paddingTop: 20,
-  //   paddingBottom: 20,
-  //   flex: 1
-  // },
   main: {
     flex: 1,
-    // marginTop: 10,
     paddingTop: 20,
     paddingLeft: 20,
     paddingRight: 20,
@@ -484,11 +457,6 @@ const styles = StyleSheet.create({
   toolbarContainer: {
     minHeight: 35
   },
-  // menuOptionText: {
-  //   textAlign: "center",
-  //   paddingTop: 5,
-  //   paddingBottom: 5,
-  // },
   divider: {
     marginVertical: 0,
     marginHorizontal: 0,
@@ -506,20 +474,15 @@ const optionsStyles = {
     alignItems: 'flex-end'
   },
   optionsWrapper: {
-    // width: 40,
     backgroundColor: 'white'
   },
   optionWrapper: {
-    // backgroundColor: 'yellow',
     margin: 2
   },
   optionTouchable: {
     underlayColor: 'gold',
     activeOpacity: 70
   }
-  // optionText: {
-  //   color: 'brown',
-  // },
 };
 
 const highlightOptionsStyles = {
@@ -532,20 +495,15 @@ const highlightOptionsStyles = {
     alignItems: 'flex-end'
   },
   optionsWrapper: {
-    // width: 40,
     backgroundColor: 'white'
   },
   optionWrapper: {
-    // backgroundColor: 'yellow',
     margin: 2
   },
   optionTouchable: {
     underlayColor: 'gold',
     activeOpacity: 70
   }
-  // optionText: {
-  //   color: 'brown',
-  // },
 };
 
 export default RoundWritingScreen;
