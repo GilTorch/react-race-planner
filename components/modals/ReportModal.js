@@ -27,6 +27,10 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport }) =
   const submit = async data => {
     try {
       await createReport(data);
+      Toast.show('Report sent', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
