@@ -42,7 +42,7 @@ const FilterScreen = ({
         { selected: false, label: 'Bedtime Stories' }
       ]
     },
-    authors: [5, 20]
+    authorsRange: [5, 20]
   };
 
   const tagDataHome = useSelector(state => state.home.filters);
@@ -80,7 +80,7 @@ const FilterScreen = ({
   };
 
   const multiSliderValuesChange = values => {
-    setTagData({ ...tagData, authors: values });
+    setTagData({ ...tagData, authorsRange: values });
   };
 
   const reset = () => {
@@ -269,8 +269,8 @@ const FilterScreen = ({
                 flexDirection: 'row',
                 justifyContent: 'space-between'
               }}>
-              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authors[0]}</Text>
-              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authors[1]}</Text>
+              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authorsRange[0]}</Text>
+              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authorsRange[1]}</Text>
             </View>
             <MultiSlider
               trackStyle={{
@@ -298,7 +298,7 @@ const FilterScreen = ({
                   }}
                 />
               )}
-              values={[tagData.authors[0], tagData.authors[1]]}
+              values={[tagData.authorsRange[0], tagData.authorsRange[1]]}
               sliderLength={SCREEN_WIDTH - 50}
               onValuesChange={multiSliderValuesChange}
               min={0}
@@ -309,7 +309,7 @@ const FilterScreen = ({
             />
             <View>
               <Text style={{ color: '#5A7582' }}>
-                Authors range: {tagData.authors[0]} - {tagData.authors[1]}
+                Authors range: {tagData.authorsRange[0]} - {tagData.authorsRange[1]}
               </Text>
             </View>
           </View>
