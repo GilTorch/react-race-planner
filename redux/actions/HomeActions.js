@@ -56,12 +56,12 @@ export const getActiveStoriesAction = (
       });
       dispatch({
         type: Home.GET_ACTIVE_STORIES_SUCCESS,
-        data: response.data
+        data: response.stories
       });
     })
     .catch(error => {
       dispatch({ type: Home.GET_ACTIVE_STORIES_FAILURE });
-      console.error(error);
+
       // if (axios.isCancel(error)) throw Error('Cancelled');
 
       throw error?.response?.data || { message: 'Something unexpected happened' };
