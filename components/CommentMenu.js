@@ -14,10 +14,13 @@ import { deleteCommentAction } from '../redux/actions/StoryActions';
 
 const CommentMenu = ({ comment, deleteComment }) => {
   // const loading = useSelector(state => state.story.loading);
+  const user = useSelector(state => state.auth.currentUser); // TODO: use the id instead of the email
 
   const [showMenu, setshowMenu] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+
+  const ownComment = user.email === comment.author.email;
 
   const showReportModal = () => {
     setshowMenu(false);
@@ -120,13 +123,17 @@ const CommentMenu = ({ comment, deleteComment }) => {
           visible={showMenu}
           anchor={<Feather name="more-vertical" size={18} color="#5A7582" />}
           onDismiss={() => setshowMenu(false)}>
-          <TouchableOpacity onPress={showDeleteModal} style={styles.menuItem}>
-            <FontAwesome name="trash" size={18} color="#F44336" style={{ marginRight: 10 }} />
-            <Text type="regular" style={{ color: '#5A7582' }}>
-              Delete
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={showReportModal} style={{ ...styles.menuItem, marginTop: 10 }}>
+          {ownComment && (
+            <TouchableOpacity onPress={showDeleteModal} style={styles.menuItem}>
+              <FontAwesome name="trash" size={18} color="#F44336" style={{ marginRight: 10 }} />
+              <Text type="regular" style={{ color: '#5A7582' }}>
+                Delete
+              </Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            onPress={showReportModal}
+            style={{ ...styles.menuItem, marginTop: ownComment ? 10 : 0 }}>
             <FontAwesome name="flag" size={16} color="#F44336" style={{ marginRight: 10 }} />
             <Text type="regular" style={{ color: '#5A7582' }}>
               Report
