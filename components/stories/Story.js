@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 
+import moment from 'moment';
 import MysteryIcon from '../svg/icons/MysteryIcon';
 import { getUserProfileUri } from '../../utils/functions';
 import Text from '../CustomText';
@@ -186,7 +187,9 @@ const Story = ({ story, index, length, navigation, updating }) => {
               flexWrap: 'wrap'
             }}>
             {/* TODO: Use the `createdAt` of the first round */}
-            <Text style={{ color: textColor, fontSize: 12 }}>{story.createdAt}</Text>
+            <Text style={{ color: textColor, fontSize: 12 }}>
+              {moment(story.createdAt).fromNow()}
+            </Text>
             <View
               style={{
                 height: 15,
