@@ -270,13 +270,12 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
                   }}>
                   <TouchableOpacity
                     testID="filter-button"
-                    style={{ borderRadius: 5, padding: 5, flex: 1 }}
+                    style={{ borderRadius: 5, padding: 5 }}
                     onPress={() => {
                       navigation.navigate('FilterScreen', { previousScreen: 'home' });
                     }}>
                     <Surface
                       style={{
-                        flex: 1,
                         flexDirection: 'row',
                         alignItems: 'center',
                         borderRadius: 5,
@@ -291,14 +290,14 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={{ borderRadius: 5, flex: 1, padding: 5 }}
+                    style={{ borderRadius: 5, padding: 5, flex: 1 }}
                     onPress={() => setSearchBarVisible(true)}>
                     <Surface
                       style={{
                         borderRadius: 5,
                         elevation: 2,
-                        paddingHorizontal: 9,
                         flex: 1,
+                        paddingHorizontal: 9,
                         alignItems: 'center',
                         justifyContent: 'center',
                         padding: 5
