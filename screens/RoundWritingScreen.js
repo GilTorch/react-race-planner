@@ -4,7 +4,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -46,6 +46,16 @@ const RoundWritingScreen = ({ navigation }) => {
   navigation.setOptions({
     headerShown: false
   });
+  useEffect(() => {
+    const parent = navigation.dangerouslyGetParent();
+    parent.setOptions({
+      tabBarVisible: false
+    });
+    return () =>
+      parent.setOptions({
+        tabBarVisible: true
+      });
+  }, []);
 
   const [customStyles, setCustomStyles] = useState({
     ...defaultStyles,
@@ -173,7 +183,7 @@ const RoundWritingScreen = ({ navigation }) => {
       <View style={styles.root}>
         <Menu renderer={SlideInMenu} onSelect={onImageSelectorClicked}>
           <MenuTrigger>
-            <MaterialCommunityIcons name="image" size={28} color="#737373" />
+            <MaterialCommunityIcons name="image" size={28} color="#03a2a2" />
           </MenuTrigger>
           <MenuOptions>
             <MenuOption value={1}>
@@ -248,7 +258,7 @@ const RoundWritingScreen = ({ navigation }) => {
         <MenuTrigger>
           <MaterialCommunityIcons
             name="format-color-text"
-            color={selectedColor}
+            color="#03a2a2"
             size={28}
             style={{
               top: 2
@@ -261,7 +271,7 @@ const RoundWritingScreen = ({ navigation }) => {
   };
 
   const renderHighlight = () => {
-    let selectedColor = '#737373';
+    let selectedColor = '#03a2a2';
     if (defaultStyles[selectedHighlight]) {
       selectedColor = defaultStyles[selectedHighlight].backgroundColor;
     }
@@ -302,16 +312,16 @@ const RoundWritingScreen = ({ navigation }) => {
               paddingRight: 10
             }}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
+              <Text type="bold" style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
                 Cancel
               </Text>
             </TouchableOpacity>
 
-            <Text type="bold" style={{ color: 'white', fontSize: 18 }}>
+            <Text type="bold" style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
               Round Writing
             </Text>
             <TouchableOpacity onPress={() => alert(value)}>
-              <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
+              <Text type="bold" style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
                 Done
               </Text>
             </TouchableOpacity>
@@ -430,9 +440,9 @@ const RoundWritingScreen = ({ navigation }) => {
             selectedStyles={selectedStyles}
             onStyleKeyPress={onStyleKeyPress}
             backgroundColor="aliceblue" // optional (will override default backgroundColor)
-            color="gray" // optional (will override default color)
+            color="#03a2a2" // optional (will override default color)
             selectedColor="white" // optional (will override default selectedColor)
-            selectedBackgroundColor="deepskyblue" // optional (will override default selectedBackgroundColor)
+            selectedBackgroundColor="#03a2a2" // optional (will override default selectedBackgroundColor)
           />
         </View>
       </MenuProvider>
@@ -469,7 +479,7 @@ const styles = StyleSheet.create({
 
 const optionsStyles = {
   optionsContainer: {
-    backgroundColor: 'yellow',
+    backgroundColor: '#03a2a2',
     padding: 0,
     width: 40,
     marginLeft: width - 40 - 30,
