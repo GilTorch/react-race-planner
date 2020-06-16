@@ -223,14 +223,14 @@ const Story = ({ story, index, length, navigation, updating }) => {
               <Text style={{ color: textColor, fontSize: 12 }}>{currentGenre.name}</Text>
             </View>
           </View>
-          <View style={{ marginTop: 4 }}>
-            <Text type="bold" style={{ color: textColor }}>
+          <View>
+            <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
               Initially Proposed Intro
             </Text>
             <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro.content}</Text>
           </View>
           <View style={{ marginTop: 10 }}>
-            <Text type="bold" style={{ color: textColor }}>
+            <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
               Elected Intro
             </Text>
             {story.electedIntro && (
@@ -272,6 +272,7 @@ const textColor = '#5A7582';
 const styles = StyleSheet.create({
   storyAuthorsContainer: {
     marginTop: 5,
+    marginBottom: 7,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center'
