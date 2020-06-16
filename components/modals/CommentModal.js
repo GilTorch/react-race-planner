@@ -5,9 +5,11 @@ import PropTypes from 'prop-types';
 import { FontAwesome } from '@expo/vector-icons';
 import Dash from 'react-native-dash';
 import { AllHtmlEntities } from 'html-entities';
+
 import Text from '../CustomText';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
 import { comments } from '../../utils/data';
+import CommentMenu from '../CommentMenu';
 
 const CommentModal = ({ visible, dismiss, parent }) => {
   return (
@@ -109,7 +111,12 @@ const CommentModal = ({ visible, dismiss, parent }) => {
                       </View>
                     )}
                     <View style={{ flex: 3 }}>
-                      <View style={{ marginBottom: 10, flexDirection: 'row' }}>
+                      <View
+                        style={{
+                          marginBottom: 10,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between'
+                        }}>
                         <View>
                           <Text>
                             {item.author.anonymous && (
@@ -131,6 +138,7 @@ const CommentModal = ({ visible, dismiss, parent }) => {
                             {item.startTime}
                           </Text>
                         </View>
+                        <CommentMenu comment={item} />
                       </View>
                       <Text style={{ color: '#5A7582', lineHeight: 17 }}>
                         Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy

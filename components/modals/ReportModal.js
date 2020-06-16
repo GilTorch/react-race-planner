@@ -9,6 +9,7 @@ import { SCREEN_HEIGHT } from '../../utils/dimensions';
 
 const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
   const [padding, setPadding] = React.useState(0);
+  const rounds = parentType === 'round' || parentType === 'Ending' || parentType === 'Intro';
 
   const keyboardDidShow = e => {
     const add = parentType === 'story' ? -10 : SCREEN_HEIGHT * 0.15;
@@ -48,9 +49,16 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                   alignItems: 'center',
                   marginVertical: 10
                 }}>
-                <Text type="bold" style={{ fontSize: 24, color: textColor }}>
-                  Report This {parentType === 'story' ? 'Story' : 'Round'}
-                </Text>
+                {parentType === 'comment' && (
+                  <Text type="bold" style={{ fontSize: 24, color: textColor }}>
+                    Report This Comment
+                  </Text>
+                )}
+                {parentType !== 'comment' && (
+                  <Text type="bold" style={{ fontSize: 24, color: textColor }}>
+                    Report This {parentType === 'story' ? 'Story' : 'Round'}
+                  </Text>
+                )}
               </View>
 
               <View style={{ marginHorizontal: 20 }}>
@@ -76,7 +84,19 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                     </View>
                   </>
                 )}
-                {parentType !== 'story' && (
+                {rounds && (
+                  <>
+                    <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+                      <Text style={styles.text}>Author: </Text>
+                      <Text type="bold" style={styles.text}>
+                        Anonymous 1
+                      </Text>
+                    </View>
+                    <Text style={{ ...styles.text, paddingBottom: 2 }}>Content: </Text>
+                    <Text style={{ color: textColor, lineHeight: 17 }}>{loremText}</Text>
+                  </>
+                )}
+                {parentType === 'comment' && (
                   <>
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
                       <Text style={styles.text}>Author: </Text>

@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 
 import Text from './CustomText';
-import { ReportModal } from './modals';
+import ReportModal from './modals/ReportModal';
 
 const CommentMenu = ({ comment }) => {
   const [showMenu, setshowMenu] = useState(false);

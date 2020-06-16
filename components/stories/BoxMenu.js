@@ -6,7 +6,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 
 import Text from '../CustomText';
-import { ReportModal, CommentModal, VotingModal } from '../modals';
+import { CommentModal, VotingModal } from '../modals';
+import ReportModal from '../modals/ReportModal';
 
 const BoxMenu = ({ parentType, block }) => {
   const [showMenu, setshowMenu] = useState(false);
