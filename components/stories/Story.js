@@ -1,16 +1,21 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { Surface } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
-
+import { MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
-import { genresData } from '../../utils/data';
+
+import MysteryIcon from '../svg/icons/MysteryIcon';
+import { getUserProfileUri } from '../../utils/functions';
 import Text from '../CustomText';
 import { HugeAdvertisement, SmallAdvertisement } from '../advertisements';
 import BoxMenu from './BoxMenu';
 import LoaderAnimation from '../../lottie/loading-pencil.json';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
+
+const avatarGenerator = username => `https://api.adorable.io/avatars/${username}.png`;
 
 const Story = ({ story, index, length, navigation, updating }) => {
   let ShowAdvertisement;
@@ -26,13 +31,36 @@ const Story = ({ story, index, length, navigation, updating }) => {
   if (length === 1) {
     ShowEndAdvertisement = <SmallAdvertisement />;
   }
-  const inprogress = story.status === 'In Progress' || story.status === 'Waiting for players';
-  const status = inprogress ? 'In Progress' : 'Completed';
-  const currentGenre = genresData.find(genre => genre.name === story.genre);
-  const nonLeadAuthors = story.authors.filter(author => !author.storyLead && !author.anonymous);
-  const leadAuthor = story.authors.find(author => author.storyLead);
-  const authorsCount = story.authors.length;
-  const anonymousAuthorsCount = authorsCount - (nonLeadAuthors.length + 1);
+
+  const { masterAuthor } = story;
+  const inProgress = story.status === 'in_progress' || story.status === 'waiting_for_players';
+  const status = inProgress ? 'In Progress' : 'Completed';
+  const currentGenre = story.genre;
+  const otherAuthors = story.parts.map(p => p.author);
+  const authorsCount = otherAuthors.length + 1;
+  const anonymousAuthorsCount = inProgress
+    ? authorsCount
+    : story.parts.filter(p => p.privacyStatus === 'anonymous');
+  let GenreIconLibrary;
+  const initialIntro = story.parts.find(sp => sp.isIntro && sp.author?._id === masterAuthor?._id);
+  const electedIntro = story.parts.find(sp => sp.isintro && sp.isElected);
+
+  switch (currentGenre.iconLibraryName) {
+    case 'MaterialCommunityIcons':
+      GenreIconLibrary = MaterialCommunityIcons;
+      break;
+    case 'MysteryIcon':
+      GenreIconLibrary = MysteryIcon;
+      break;
+    case 'AntDesign':
+      GenreIconLibrary = AntDesign;
+      break;
+    case 'Ionicons':
+      GenreIconLibrary = Ionicons;
+      break;
+    default:
+      GenreIconLibrary = MaterialCommunityIcons;
+  }
 
   return (
     <View key={Math.random()}>
@@ -110,15 +138,21 @@ const Story = ({ story, index, length, navigation, updating }) => {
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   style={styles.storyAuthorsImage}
-                  source={{ uri: leadAuthor.profilePicture }}
+                  source={{
+                    uri:
+                      getUserProfileUri(masterAuthor.picture) ||
+                      avatarGenerator(masterAuthor.username)
+                  }}
                 />
-                {leadAuthor.storyLead && <View style={styles.storyAuthorsSeparator} />}
+                {masterAuthor._id === story.masterAuthor._id && (
+                  <View style={styles.storyAuthorsSeparator} />
+                )}
               </View>
-              {nonLeadAuthors.map(author => (
+              {otherAuthors.map(author => (
                 <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image
                     style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
-                    source={{ uri: author.profilePicture }}
+                    source={{ uri: author.picture }}
                   />
                 </View>
               ))}
@@ -151,7 +185,8 @@ const Story = ({ story, index, length, navigation, updating }) => {
               alignItems: 'center',
               flexWrap: 'wrap'
             }}>
-            <Text style={{ color: textColor, fontSize: 12 }}>{story.startTime}</Text>
+            {/* TODO: Use the `createdAt` of the first round */}
+            <Text style={{ color: textColor, fontSize: 12 }}>{story.createdAt}</Text>
             <View
               style={{
                 height: 15,
@@ -176,7 +211,11 @@ const Story = ({ story, index, length, navigation, updating }) => {
                   ...styles.storyGenreIconContainer,
                   backgroundColor: currentGenre.color
                 }}>
-                {currentGenre.icon(12)}
+                {currentGenre.iconLibraryName === 'MysteryIcon' && <GenreIconLibrary width={12} />}
+
+                {currentGenre.iconLibraryName !== 'MysteryIcon' && (
+                  <GenreIconLibrary size={12} color="#fff" name={currentGenre.icon} />
+                )}
               </View>
               <Text style={{ color: textColor, fontSize: 12 }}>{currentGenre.name}</Text>
             </View>
@@ -185,14 +224,14 @@ const Story = ({ story, index, length, navigation, updating }) => {
             <Text type="bold" style={{ color: textColor }}>
               Initially Proposed Intro
             </Text>
-            <Text style={{ color: textColor, lineHeight: 20 }}>{story.initialIntro}</Text>
+            <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro.content}</Text>
           </View>
           <View style={{ marginTop: 10 }}>
             <Text type="bold" style={{ color: textColor }}>
               Elected Intro
             </Text>
             {story.electedIntro && (
-              <Text style={{ color: textColor, lineHeight: 20 }}>{story.electedIntro}</Text>
+              <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
             )}
 
             {!story.electedIntro && (
@@ -207,8 +246,8 @@ const Story = ({ story, index, length, navigation, updating }) => {
             )}
           </View>
         </View>
-        {ShowEndAdvertisement}
       </Surface>
+      {ShowEndAdvertisement}
     </View>
   );
 };
