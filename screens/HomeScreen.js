@@ -312,10 +312,9 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
 
             <View testID="story">
               {stories.map((story, index) => (
-                <View>
+                <View key={Math.random()}>
                   <Story
                     updating={updatingStories}
-                    key={Math.random()}
                     story={story}
                     index={index}
                     length={stories.length}
