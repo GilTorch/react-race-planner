@@ -1,14 +1,20 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Menu, Surface, Portal, Modal, Divider, Button, TextInput } from 'react-native-paper';
+import { Menu, Surface, Portal, Modal, Button } from 'react-native-paper';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
+import { useSelector, connect } from 'react-redux';
+import Toast from 'react-native-root-toast';
 
 import Text from './CustomText';
 import ReportModal from './modals/ReportModal';
+import { deleteCommentAction } from '../redux/actions/StoryActions';
 
-const CommentMenu = ({ comment }) => {
+const CommentMenu = ({ comment, deleteComment }) => {
+  // const loading = useSelector(state => state.story.loading);
+
   const [showMenu, setshowMenu] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -23,9 +29,23 @@ const CommentMenu = ({ comment }) => {
     setShowDelete(true);
   };
 
-  // const handleDeleteComment = () => {
+  const hideDeleteModal = () => {
+    setShowDelete(false);
+  };
 
-  // };
+  const handleDeleteComment = async () => {
+    try {
+      // await deleteComment(comment._id);
+      await deleteComment('5ee5a45f52279b147a7576fd');
+      hideDeleteModal();
+    } catch (e) {
+      hideDeleteModal();
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    }
+  };
 
   const dismissReport = () => setShowReport(false);
 
@@ -68,7 +88,7 @@ const CommentMenu = ({ comment }) => {
             }}>
             <Surface style={styles.btnSurface}>
               <Button
-                onPress={() => 'handleDeleteComment()'}
+                onPress={handleDeleteComment}
                 testID="delete-account"
                 style={{ backgroundColor: '#f44336' }}>
                 <Text type="bold" style={{ color: '#fff' }}>
@@ -118,10 +138,6 @@ const CommentMenu = ({ comment }) => {
   );
 };
 
-CommentMenu.propTypes = {
-  comment: PropTypes.object.isRequired
-};
-
 const styles = StyleSheet.create({
   menuItem: {
     flexDirection: 'row',
@@ -131,4 +147,17 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CommentMenu;
+CommentMenu.propTypes = {
+  comment: PropTypes.object.isRequired,
+  deleteComment: PropTypes.func
+};
+
+CommentMenu.defaultProps = {
+  deleteComment: () => ''
+};
+
+const mapDispatchToProps = {
+  deleteComment: deleteCommentAction
+};
+
+export default connect(null, mapDispatchToProps)(CommentMenu);
