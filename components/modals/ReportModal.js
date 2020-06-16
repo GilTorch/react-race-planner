@@ -65,7 +65,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
                       <Text style={styles.text}>Genre: </Text>
                       <Text type="bold" style={styles.text}>
-                        {parent.genre}
+                        {parent.genre.name}
                       </Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
