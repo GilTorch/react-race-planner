@@ -16,6 +16,10 @@ import Constants from 'expo-constants';
 import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { Button, Surface, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
+import Toast from 'react-native-root-toast';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import { Dropdown } from 'react-native-material-dropdown';
+
 import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
@@ -38,6 +42,7 @@ const StoryScreen = ({ navigation, route }) => {
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
 
   const scrollView = React.useRef(null);
+  const refRBSheet = React.useRef();
 
   let coAuthors;
   if (inprogressStory) {
@@ -59,6 +64,12 @@ const StoryScreen = ({ navigation, route }) => {
   const [listMode, setListMode] = React.useState(false);
   const icon = listMode ? 'eye-slash' : 'eye';
   const color = listMode ? '#FFF' : '#EEE';
+
+  const privacyData = [
+    { value: 'username', label: 'Username' },
+    { value: 'username_and_full_name', label: 'Username and Full Name' },
+    { value: 'anonymous', label: 'Anonymous' }
+  ];
 
   navigation.setOptions({
     headerShown: false
@@ -121,12 +132,25 @@ const StoryScreen = ({ navigation, route }) => {
     rawScrollPosition = e.nativeEvent.contentOffset.y;
   };
 
+  const joinOrLeave = () => {
+    refRBSheet.current.open();
+    // Toast.show('You cannot join a completed story', {
+    //   duration: Toast.durations.SHORT,
+    //   position: Toast.positions.BOTTOM
+    // });
+    if (user) {
+      // leaveStory();
+    } else {
+      // refRBSheet.current.open();
+    }
+  };
+
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: color,
-        marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
+        marginTop: Platform.OS === 'android' ? Constants.statusBarHeight : 0
       }}>
       <Surface
         style={{
@@ -149,7 +173,6 @@ const StoryScreen = ({ navigation, route }) => {
           }}>
           <SafeAreaView
             style={{
-              paddingTop: Constants.statusBarHeight * 1.7,
               alignItems: 'center',
               flexDirection: 'column'
             }}>
@@ -194,6 +217,7 @@ const StoryScreen = ({ navigation, route }) => {
             <View style={styles.headerBtn}>
               <Surface style={styles.surface}>
                 <Button
+                  onPress={joinOrLeave}
                   mode="contained"
                   uppercase={false}
                   style={{ backgroundColor: firstBtnColor }}
@@ -406,6 +430,61 @@ const StoryScreen = ({ navigation, route }) => {
           </Surface>
         </View>
       )}
+      <RBSheet
+        ref={refRBSheet}
+        height={400}
+        closeOnDragDown
+        // closeOnPressMask={false}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'rgba(0, 0, 0, 0.6)'
+          },
+          draggableIcon: {
+            backgroundColor: '#000'
+          }
+        }}>
+        <View style={{ marginHorizontal: 25 }}>
+          <Text style={{ fontSize: 16, color: '#F44336' }}>
+            Minimum and maximum authors allowed
+          </Text>
+          <Text type="bold" style={{ marginVertical: 5 }}>
+            2 to 10
+          </Text>
+          <Text style={{ fontSize: 16, color: '#F44336' }}>
+            Time for writing and voting for the intro
+          </Text>
+          <Text type="bold" style={{ marginVertical: 5 }}>
+            10mins
+          </Text>
+          <Text style={{ fontSize: 16, color: '#F44336' }}>
+            Time for writing and voting for the ending
+          </Text>
+          <Text type="bold" style={{ marginVertical: 5 }}>
+            1hr 10 mins
+          </Text>
+          <Text style={{ fontSize: 16, color: '#F44336' }}>Time for writing a round</Text>
+          <Text type="bold" style={{ marginVertical: 5 }}>
+            50mins
+          </Text>
+          <Text style={{ fontSize: 16, color: '#F44336', marginBottom: -20 }}>Privacy Status</Text>
+          <Dropdown
+            value="username"
+            fontSize={16}
+            dropdownPosition={0.1}
+            // onChangeText={text => setValue('privacyStatus', text)}
+            data={privacyData}
+          />
+          <Surface style={{ ...styles.surface, marginTop: 20, marginBottom: 30 }}>
+            <Button
+              mode="contained"
+              uppercase={false}
+              style={{ backgroundColor: firstBtnColor }}
+              labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
+              Join Story
+            </Button>
+          </Surface>
+        </View>
+      </RBSheet>
     </View>
   );
 };
