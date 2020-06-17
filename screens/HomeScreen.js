@@ -53,6 +53,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
     }, [])
   );
 
+  // TODO: Set to 'in_progress' for this screen
   const inprogressStories = stories?.filter(story => story.status === 'completed');
 
   const getStories = async (status, genres, sq, leading) => {
@@ -310,7 +311,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
             )}
 
             <View testID="story">
-              {stories.map((story, index) => (
+              {inprogressStories.map((story, index) => (
                 <View key={Math.random()}>
                   <Story
                     updating={updatingStories}
@@ -322,18 +323,6 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
                 </View>
               ))}
             </View>
-
-            {inprogressStories.map((story, index) => (
-              <Story
-                route={route}
-                genres={genresData}
-                key={Math.random()}
-                story={story}
-                index={index}
-                length={inprogressStories.length}
-                navigation={navigation}
-              />
-            ))}
           </>
         )}
       </ScrollView>
