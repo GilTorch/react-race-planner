@@ -54,6 +54,7 @@ export const getActiveStoriesAction = (
         type: Home.UPDATE_ACTIVE_STORIES,
         data: true
       });
+
       dispatch({
         type: Home.GET_ACTIVE_STORIES_SUCCESS,
         data: response.stories
