@@ -128,7 +128,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
         </ScrollView>
       </Surface>
 
-      <ScrollView contentContainerStyle={{ flex: 1 }}>
+      <ScrollView>
         {!stories && (
           <View
             style={{
