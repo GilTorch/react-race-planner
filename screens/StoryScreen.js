@@ -19,15 +19,20 @@ import { useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-root-toast';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Dropdown } from 'react-native-material-dropdown';
+import { connect } from 'react-redux';
 
 import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../utils/dimensions';
 import { stories } from '../utils/data';
+import { joinStoryAction } from '../redux/actions/StoryAction';
 
-const StoryScreen = ({ navigation, route }) => {
+const StoryScreen = ({ navigation, route, joinStory }) => {
   const { storyId } = route.params;
+  // const stories = useSelector(state => state.home.stories);
+  // const story = stories.find(st => st.id === storyId);
+
   const story = stories.find(st => st.id === storyId) || stories[3];
   const masterAuthor = story.authors.find(author => author.storyLead);
   const authorsCount = story.authors.length;
@@ -62,6 +67,7 @@ const StoryScreen = ({ navigation, route }) => {
   }
 
   const [listMode, setListMode] = React.useState(false);
+  const [privacyStatus, setPrivacyStatus] = React.useState(); // TODO: get the default user privacystatus from state.setting
   const icon = listMode ? 'eye-slash' : 'eye';
   const color = listMode ? '#FFF' : '#EEE';
 
@@ -133,7 +139,7 @@ const StoryScreen = ({ navigation, route }) => {
   };
 
   const joinOrLeave = () => {
-    refRBSheet.current.open();
+    // TODO: check if the max authors is reached
     // Toast.show('You cannot join a completed story', {
     //   duration: Toast.durations.SHORT,
     //   position: Toast.positions.BOTTOM
@@ -141,7 +147,19 @@ const StoryScreen = ({ navigation, route }) => {
     if (user) {
       // leaveStory();
     } else {
-      // refRBSheet.current.open();
+      refRBSheet.current.open();
+    }
+  };
+
+  const handleJoinStory = async () => {
+    try {
+      // await joinStory({ privacyStatus });
+      refRBSheet.current.close();
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
     }
   };
 
@@ -471,12 +489,13 @@ const StoryScreen = ({ navigation, route }) => {
             value="username"
             fontSize={16}
             dropdownPosition={0.1}
-            // onChangeText={text => setValue('privacyStatus', text)}
+            onChangeText={text => setPrivacyStatus(text)}
             data={privacyData}
           />
           <Surface style={{ ...styles.surface, marginTop: 20, marginBottom: 30 }}>
             <Button
               mode="contained"
+              onPress={handleJoinStory}
               uppercase={false}
               style={{ backgroundColor: firstBtnColor }}
               labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
@@ -526,7 +545,12 @@ const styles = StyleSheet.create({
 
 StoryScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  route: PropTypes.object.isRequired
+  route: PropTypes.object.isRequired,
+  joinStory: PropTypes.func.isRequired
 };
 
-export default StoryScreen;
+const mapDispatchToProps = {
+  joinStory: joinStoryAction
+};
+
+export default connect(null, mapDispatchToProps)(StoryScreen);
