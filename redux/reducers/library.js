@@ -8,22 +8,22 @@ const initialState = {
     status: {
       allSelected: false,
       tags: [
-        { selected: true, label: 'In Progress' },
-        { selected: false, label: 'Waiting for players' },
-        { selected: false, label: 'Completed' },
-        { selected: false, label: 'Started by me' }
+        { selected: false, label: 'In Progress', slug: 'in_progress' },
+        { selected: false, label: 'Waiting for players', slug: 'waiting_for_authors' },
+        { selected: true, label: 'Completed', slug: 'completed' },
+        { selected: false, label: 'Started by me', slug: 'includes_me' }
       ]
     },
     genres: {
-      allSelected: false,
+      allSelected: true,
       tags: [
-        { selected: true, label: 'Mystery' },
-        { selected: false, label: 'Action' },
-        { selected: false, label: 'Thriller' },
-        { selected: false, label: 'Scifi' },
-        { selected: false, label: 'Romance' },
-        { selected: false, label: 'Essay' },
-        { selected: false, label: 'Bedtime Stories' }
+        { selected: true, label: 'Mystery', slug: 'mystery' },
+        { selected: true, label: 'Action', slug: 'action' },
+        { selected: true, label: 'Thriller', slug: 'thriller' },
+        { selected: true, label: 'Scifi', slug: 'scifi' },
+        { selected: true, label: 'Romance', slug: 'romance' },
+        { selected: true, label: 'Essay', slug: 'essay' },
+        { selected: true, label: 'Bedtime Stories', slug: 'bedtime_stories' }
       ]
     },
     authorsRange: [5, 20]
@@ -34,6 +34,19 @@ const libraryReducer = (state = initialState, action) => {
   switch (action.type) {
     case Library.SET_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
+    case Library.GET_COMPLETED_STORIES_START:
+      return { ...state, loadingStories: true };
+    case Library.UPDATE_COMPLETED_STORIES:
+      return { ...state, updatingStories: action.data };
+    case Library.GET_COMPLETED_STORIES_SUCCESS:
+      return {
+        ...state,
+        stories: action.data,
+        loadingStories: false,
+        updatingStories: false
+      };
+    case Library.GET_COMPLETED_STORIES_FAILURE:
+      return { ...state, loadingStories: false, updatingStories: false };
     default:
       return state;
   }
