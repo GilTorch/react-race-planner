@@ -23,8 +23,8 @@ export const getCompletedStoriesAction = (
     // For synchronization: To allow clients to request to check the 'active'
     // state of one or multiple instances that the client already has
     checkActive = undefined
-  } = {},
-  { cancelToken = undefined } = { cancelToken: undefined }
+  } = {}
+  // { cancelToken = undefined } = { cancelToken: undefined }
 ) => dispatch => {
   dispatch({ type: Library.GET_COMPLETED_STORIES_START });
 
@@ -39,20 +39,23 @@ export const getCompletedStoriesAction = (
     checkActive
   });
 
-  return axios
-    .get(url, { cancelToken })
-    .then(response => response.data)
-    .then(response => {
-      dispatch({
-        type: Library.GET_COMPLETED_STORIES_SUCCESS,
-        data: response.data
-      });
-    })
-    .catch(error => {
-      dispatch({ type: Library.GET_COMPLETED_STORIES_FAILURE });
+  return (
+    axios
+      // .get(url, { cancelToken })
+      .get(url)
+      .then(response => response.data)
+      .then(response => {
+        dispatch({
+          type: Library.GET_COMPLETED_STORIES_SUCCESS,
+          data: response.data
+        });
+      })
+      .catch(error => {
+        dispatch({ type: Library.GET_COMPLETED_STORIES_FAILURE });
 
-      if (axios.isCancel(error)) throw Error('Cancelled');
+        // if (axios.isCancel(error)) throw Error('Cancelled');
 
-      throw error?.response?.data || { message: 'Something unexpected happened' };
-    });
+        throw error?.response?.data || { message: 'Something unexpected happened' };
+      })
+  );
 };
