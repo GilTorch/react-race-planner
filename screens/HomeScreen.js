@@ -15,9 +15,9 @@ import Text from '../components/CustomText';
 import { genresData } from '../utils/data';
 import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
-import { getActiveStoriesAction } from '../redux/actions/HomeActions';
+import { getStoriesAction } from '../redux/actions/getStoriesAction';
 
-const HomeScreen = ({ navigation, route, getActiveStories }) => {
+const HomeScreen = ({ navigation, getStories }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchBarVisible, setSearchBarVisible] = useState(false);
   const [currentGenre, setCurrentGenre] = useState(genresData[0]);
@@ -25,11 +25,13 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
   const updatingStories = useSelector(state => state.home.updating);
   const filters = useSelector(state => state.home.filters);
   const stories = useSelector(state => state.home.stories);
+  const status = filters.status.tags.filter(tag => tag.selected).map(tag => tag.slug);
+  const genres = filters.genres.tags.filter(tag => tag.selected).map(tag => tag.slug);
 
   useEffect(() => {
     // We get the base data for this screen
     // We set the 'leading' too true because it's a single request
-    getStories('completed', null, null, true);
+    getInProgressStories(null, true);
   }, []);
 
   let menu = null;
@@ -53,14 +55,11 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
     }, [])
   );
 
-  // TODO: Set to 'in_progress' for this screen
-  const inprogressStories = stories?.filter(story => story.status === 'completed');
-
-  const getStories = async (status, genres, sq, leading) => {
+  const getInProgressStories = async (sq, leading) => {
     const debounced = debounce(
       async () => {
         try {
-          await getActiveStories({
+          await getStories({
             sq,
             status,
             genres,
@@ -81,9 +80,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
   };
 
   const onSearch = text => {
-    const status = filters.status.tags.filter(tag => tag.selected).map(tag => tag.label);
-    const genres = filters.genres.tags.filter(tag => tag.selected).map(tag => tag.label);
-    getStories(status, genres, text);
+    getInProgressStories(text);
   };
 
   return (
@@ -311,7 +308,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
             )}
 
             <View testID="story">
-              {inprogressStories.map((story, index) => (
+              {stories?.map((story, index) => (
                 <View key={Math.random()}>
                   <Story
                     updating={updatingStories}
@@ -331,8 +328,7 @@ const HomeScreen = ({ navigation, route, getActiveStories }) => {
 };
 
 HomeScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
-  route: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
@@ -357,11 +353,11 @@ const styles = StyleSheet.create({
 });
 
 HomeScreen.propTypes = {
-  getActiveStories: PropTypes.func.isRequired
+  getStories: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = {
-  getActiveStories: getActiveStoriesAction
+  getStories: getStoriesAction
 };
 
 export default connect(null, mapDispatchToProps)(HomeScreen);
