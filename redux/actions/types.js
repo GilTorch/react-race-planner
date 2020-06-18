@@ -51,3 +51,9 @@ export const Library = {
 export const Writing = {
   SET_FILTERS: 'SET_FILTERS'
 };
+
+export const Story = {
+  JOIN_STORY_START: 'JOIN_STORY_START',
+  JOIN_STORY_FAILURE: 'JOIN_STORY_FAILURE',
+  JOIN_STORY_SUCCESS: 'JOIN_STORY_SUCCESS'
+};
