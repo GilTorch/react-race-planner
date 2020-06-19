@@ -32,7 +32,7 @@ const libraryReducer = (state = initialState, action) => {
   const { data: stories } = action;
 
   switch (action.type) {
-    case Library.SET_FILTERS:
+    case Library.SET_COMPLETED_STORIES_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
     case Library.GET_COMPLETED_STORIES_START:
       return { ...state, loadingStories: true };

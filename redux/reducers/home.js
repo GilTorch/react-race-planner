@@ -34,7 +34,7 @@ const homeReducer = (state = initialState, action) => {
   const { data: stories } = action;
 
   switch (action.type) {
-    case Home.SET_FILTERS:
+    case Home.SET_ACTIVE_STORIES_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
     case Home.GET_ACTIVE_STORIES_START:
       return { ...state, loadingStories: true };

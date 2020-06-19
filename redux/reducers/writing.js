@@ -34,7 +34,7 @@ const writingReducer = (state = initialState, action) => {
   const { data: stories } = action;
 
   switch (action.type) {
-    case Writing.SET_FILTERS:
+    case Writing.SET_SELF_STORIES_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
     case Writing.GET_SELF_STORIES_START:
       return { ...state, loadingStories: true };
