@@ -9,7 +9,7 @@ const initialState = {
       allSelected: false,
       tags: [
         { selected: true, label: 'Completed', slug: 'completed' },
-        { selected: false, label: 'Include me', slug: 'include_me' }
+        { selected: false, label: 'Include me', slug: 'include_self' }
       ]
     },
     genres: {

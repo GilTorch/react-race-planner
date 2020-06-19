@@ -27,7 +27,7 @@ const FilterScreen = ({
         { selected: true, label: 'In Progress', slug: 'in_progress' },
         { selected: false, label: 'Waiting for players', slug: 'waiting_for_authors' },
         { selected: false, label: 'Completed', slug: 'completed' },
-        { selected: false, label: 'Include me', slug: 'include_me' }
+        { selected: false, label: 'Include me', slug: 'include_self' }
       ]
     },
     genres: {
