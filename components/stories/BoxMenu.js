@@ -61,7 +61,7 @@ const BoxMenu = ({ parentType, block }) => {
             elevation: 3
           }}
           visible={showMenu}
-          anchor={<Feather name="more-vertical" size={18} color="#5A7582" />}
+          anchor={<Feather name="more-vertical" size={23} color="#5A7582" />}
           onDismiss={() => setshowMenu(false)}>
           <TouchableOpacity onPress={showReportModal} style={styles.menuItem}>
             <FontAwesome name="flag" size={16} color="#F44336" style={{ marginRight: 10 }} />
