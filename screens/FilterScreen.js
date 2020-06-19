@@ -86,11 +86,13 @@ const FilterScreen = ({
   const reset = () => {
     setTagData(defaultTagData);
   };
+
   const doneBtn = (
     <TouchableOpacity testID="done" onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
       <Text style={{ color: '#03A2A2', fontSize: 18 }}>Done</Text>
     </TouchableOpacity>
   );
+
   const resetBtn = (
     <TouchableOpacity testID="reset" onPress={() => reset()} style={{ marginRight: 20 }}>
       <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
