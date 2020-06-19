@@ -123,7 +123,11 @@ const WritingScreen = ({ navigation, getStories }) => {
 
       {!stories && (
         <>
-          <SearchAndFilter navigation={navigation} onSearch={getUserStories} />
+          <SearchAndFilter
+            previousScreen="writing"
+            navigation={navigation}
+            onSearch={getUserStories}
+          />
           <View
             style={{
               flex: 1,
@@ -133,7 +137,7 @@ const WritingScreen = ({ navigation, getStories }) => {
             <Text
               type="bold"
               style={{ fontSize: 24, color: '#999', textAlign: 'center', paddingHorizontal: 10 }}>
-              You haven't been part of stories with those filters yet
+              You haven't participated in stories with those filters yet
             </Text>
             <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
               <Button
@@ -152,7 +156,11 @@ const WritingScreen = ({ navigation, getStories }) => {
 
       {stories && (
         <ScrollView>
-          <SearchAndFilter navigation={navigation} onSearch={getUserStories} />
+          <SearchAndFilter
+            previousScreen="writing"
+            navigation={navigation}
+            onSearch={getUserStories}
+          />
           <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
             <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
               <View
