@@ -31,6 +31,8 @@ const initialState = {
 };
 
 const homeReducer = (state = initialState, action) => {
+  const { data: stories } = action;
+
   switch (action.type) {
     case Home.SET_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
@@ -41,7 +43,7 @@ const homeReducer = (state = initialState, action) => {
     case Home.GET_ACTIVE_STORIES_SUCCESS:
       return {
         ...state,
-        stories: action.data,
+        stories: stories?.length ? stories : null,
         loadingStories: false,
         updatingStories: false
       };
