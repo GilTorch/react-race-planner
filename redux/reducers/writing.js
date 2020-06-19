@@ -6,24 +6,24 @@ const initialState = {
   updatingStories: false,
   filters: {
     status: {
-      allSelected: false,
+      allSelected: true,
       tags: [
-        { selected: true, label: 'In Progress' },
-        { selected: false, label: 'Waiting for players' },
-        { selected: false, label: 'Completed' },
-        { selected: false, label: 'Started by me' }
+        { selected: true, label: 'In Progress', slug: 'in_progress' },
+        { selected: true, label: 'Waiting for players', slug: 'waiting_for_authors' },
+        { selected: true, label: 'Completed', slug: 'completed' },
+        { selected: true, label: 'Started by me', slug: 'includes_me' }
       ]
     },
     genres: {
-      allSelected: false,
+      allSelected: true,
       tags: [
-        { selected: true, label: 'Mystery' },
-        { selected: false, label: 'Action' },
-        { selected: false, label: 'Thriller' },
-        { selected: false, label: 'Scifi' },
-        { selected: false, label: 'Romance' },
-        { selected: false, label: 'Essay' },
-        { selected: false, label: 'Bedtime Stories' }
+        { selected: true, label: 'Mystery', slug: 'mystery' },
+        { selected: true, label: 'Action', slug: 'action' },
+        { selected: true, label: 'Thriller', slug: 'thriller' },
+        { selected: true, label: 'Scifi', slug: 'scifi' },
+        { selected: true, label: 'Romance', slug: 'romance' },
+        { selected: true, label: 'Essay', slug: 'essay' },
+        { selected: true, label: 'Bedtime Stories', slug: 'bedtime_stories' }
       ]
     },
     authorsRange: [5, 20]
