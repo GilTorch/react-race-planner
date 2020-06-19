@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
 import { Surface, Button } from 'react-native-paper';
 import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView, Platform } from 'react-native';
@@ -27,12 +27,6 @@ const WritingScreen = ({ navigation, getStories }) => {
   const status = filters.status.tags.filter(tag => tag.selected).map(tag => tag.slug);
   const genres = filters.genres.tags.filter(tag => tag.selected).map(tag => tag.slug);
 
-  useEffect(() => {
-    // We get the base data for this screen
-    // We set the 'leading' to true because it's a single request
-    getUserStories(null, true);
-  }, []);
-
   let menu = null;
   const setMenuRef = ref => {
     menu = ref;
@@ -52,6 +46,28 @@ const WritingScreen = ({ navigation, getStories }) => {
         headerShown: false
       });
     }, [])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchStories = async () => {
+        try {
+          await getStories({
+            status,
+            genres,
+            authorsRange: filters.authorsRange,
+            screen: 'writing'
+          });
+        } catch (e) {
+          Toast.show(e?.message, {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM
+          });
+        }
+      };
+
+      fetchStories();
+    }, [filters])
   );
 
   const getUserStories = async (sq, leading) => {
