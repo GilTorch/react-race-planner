@@ -1,5 +1,5 @@
 import qUrl from 'quick-url';
-import { Home, Library } from './types';
+import { Home, Library, Writing } from './types';
 import axios from '../../services/axiosService';
 
 export const getStoriesAction = (
@@ -10,6 +10,8 @@ export const getStoriesAction = (
     dispatch({ type: Home.GET_ACTIVE_STORIES_START });
   } else if (screen === 'library') {
     dispatch({ type: Library.GET_COMPLETED_STORIES_START });
+  } else {
+    dispatch({ type: Writing.GET_SELF_STORIES_START });
   }
 
   const url = qUrl.buildUrl(['/documents'], {
@@ -45,13 +47,25 @@ export const getStoriesAction = (
           type: Library.GET_COMPLETED_STORIES_SUCCESS,
           data: response.stories
         });
+      } else {
+        dispatch({
+          type: Writing.UPDATE_SELF_STORIES,
+          data: true
+        });
+
+        dispatch({
+          type: Writing.GET_SELF_STORIES_SUCCESS,
+          data: response.stories
+        });
       }
     })
     .catch(error => {
       if (screen === 'home') {
         dispatch({ type: Home.GET_ACTIVE_STORIES_FAILURE });
       } else if (screen === 'library') {
-        dispatch({ type: Home.GET_COMPLETED_STORIES_FAILURE });
+        dispatch({ type: Library.GET_COMPLETED_STORIES_FAILURE });
+      } else {
+        dispatch({ type: Writing.GET_SELF_STORIES_FAILURE });
       }
 
       // if (axios.isCancel(error)) throw Error('Cancelled');
