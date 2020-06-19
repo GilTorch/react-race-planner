@@ -9,9 +9,9 @@ const initialState = {
       allSelected: true,
       tags: [
         { selected: true, label: 'In Progress', slug: 'in_progress' },
-        { selected: true, label: 'Waiting for players', slug: 'waiting_for_authors' },
+        // { selected: true, label: 'Waiting for players', slug: 'waiting_for_authors' },
         { selected: true, label: 'Completed', slug: 'completed' },
-        { selected: true, label: 'Started by me', slug: 'includes_me' }
+        { selected: true, label: 'Include me', slug: 'include_me' }
       ]
     },
     genres: {
