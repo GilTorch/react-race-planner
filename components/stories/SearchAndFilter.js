@@ -9,9 +9,9 @@ import { connect, useSelector } from 'react-redux';
 
 import Text from '../CustomText';
 
-const SearchAndFilter = ({ navigation, onSearch }) => {
+const SearchAndFilter = ({ navigation, onSearch, previousScreen }) => {
   const [searchBarVisible, setSearchBarVisible] = useState(false);
-  const loadingStories = useSelector(state => state.writing.loadingStories);
+  const loadingStories = useSelector(state => state[previousScreen].loadingStories);
 
   return (
     <>
@@ -71,11 +71,13 @@ const SearchAndFilter = ({ navigation, onSearch }) => {
             style={{
               flexDirection: 'row'
             }}>
+            {loadingStories && <ActivityIndicator />}
+
             <TouchableOpacity
               testID="filter-button"
               style={{ borderRadius: 5, padding: 5 }}
               onPress={() => {
-                navigation.navigate('FilterScreen', { previousScreen: 'writing' });
+                navigation.navigate('FilterScreen', { previousScreen });
               }}>
               <Surface
                 style={{
@@ -148,7 +150,8 @@ const styles = StyleSheet.create({
 });
 
 SearchAndFilter.propTypes = {
-  onSearch: PropTypes.func.isRequired
+  onSearch: PropTypes.func.isRequired,
+  previousScreen: PropTypes.string.isRequired
 };
 
 export default connect()(SearchAndFilter);
