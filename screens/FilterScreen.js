@@ -20,36 +20,11 @@ const FilterScreen = ({
 }) => {
   const { previousScreen } = route.params;
 
-  const defaultTagData = {
-    status: {
-      allSelected: false,
-      tags: [
-        { selected: true, label: 'In Progress', slug: 'in_progress' },
-        { selected: false, label: 'Waiting for players', slug: 'waiting_for_authors' },
-        { selected: false, label: 'Completed', slug: 'completed' },
-        { selected: false, label: "Stories that I'm part of", slug: 'include_self' }
-      ]
-    },
-    genres: {
-      allSelected: true,
-      tags: [
-        { selected: true, label: 'Mystery', slug: 'mystery' },
-        { selected: true, label: 'Action', slug: 'action' },
-        { selected: true, label: 'Thriller', slug: 'thriller' },
-        { selected: true, label: 'Scifi', slug: 'scifi' },
-        { selected: true, label: 'Romance', slug: 'romance' },
-        { selected: true, label: 'Essay', slug: 'essay' },
-        { selected: true, label: 'Bedtime Stories', slug: 'bedtime_stories' }
-      ]
-    },
-    authorsRange: [5, 20]
-  };
-
   const tagDataHome = useSelector(state => state.home.filters);
   const tagDataLibrary = useSelector(state => state.library.filters);
   const tagDataWriting = useSelector(state => state.writing.filters);
 
-  let tagData = defaultTagData;
+  let tagData;
 
   switch (previousScreen) {
     case 'home':
@@ -83,9 +58,9 @@ const FilterScreen = ({
     setTagData({ ...tagData, authorsRange: values });
   };
 
-  const reset = () => {
-    setTagData(defaultTagData);
-  };
+  // const reset = () => {
+  //   setTagData();
+  // };
 
   const doneBtn = (
     <TouchableOpacity testID="done" onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
@@ -93,17 +68,17 @@ const FilterScreen = ({
     </TouchableOpacity>
   );
 
-  const resetBtn = (
-    <TouchableOpacity testID="reset" onPress={() => reset()} style={{ marginRight: 20 }}>
-      <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
-    </TouchableOpacity>
-  );
+  // const resetBtn = (
+  //   <TouchableOpacity testID="reset" onPress={() => reset()} style={{ marginRight: 20 }}>
+  //     <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
+  //   </TouchableOpacity>
+  // );
 
   navigation.setOptions({
     headerLeft: () => doneBtn,
     headerTitleAlign: 'center',
     title: 'Filter',
-    headerRight: () => resetBtn
+    headerRight: () => null
   });
 
   const validCategoryNames = ['status', 'genres'];
