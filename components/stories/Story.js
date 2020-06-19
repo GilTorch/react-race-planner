@@ -227,14 +227,14 @@ const Story = ({ story, index, length, navigation, updating }) => {
             <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
               Initially Proposed Intro
             </Text>
-            <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro.content}</Text>
+            <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro?.content}</Text>
           </View>
           <View style={{ marginTop: 10 }}>
             <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
               Elected Intro
             </Text>
             {story.electedIntro && (
-              <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
+              <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro?.content}</Text>
             )}
 
             {!story.electedIntro && (
