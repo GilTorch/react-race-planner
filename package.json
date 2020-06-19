@@ -43,7 +43,7 @@
     "expo-permissions": "~8.0.0",
     "expo-web-browser": "~8.0.0",
     "html-entities": "^1.2.1",
-    "lottie-react-native": "^3.4.0",
+    "lottie-react-native": "~2.6.1",
     "moment": "^2.25.0",
     "prop-types": "^15.7.2",
     "quick-url": "0.0.4",
