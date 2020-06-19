@@ -126,32 +126,34 @@ const WritingScreen = ({ navigation, getStories }) => {
         </ScrollView>
       </Surface>
 
-      <ScrollView>
-        {!stories && (
-          <View
-            style={{
-              flex: 1,
-              // backgroundColor: 'red',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>
-            <Text type="bold" style={{ fontSize: 24, color: '#999' }}>
-              There are no stories yet
-            </Text>
-            <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
-              <Button
-                icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
-                uppercase={false}
-                onPress={() => ''}
-                style={{ backgroundColor: '#03A2A2' }}>
-                <Text type="bold" style={{ color: '#FFF' }}>
-                  Create Your Own
-                </Text>
-              </Button>
-            </Surface>
-          </View>
-        )}
-        {stories && (
+      {!stories && (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+          <Text
+            type="bold"
+            style={{ fontSize: 24, color: '#999', textAlign: 'center', paddingHorizontal: 10 }}>
+            You haven't been part of any story yet
+          </Text>
+          <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
+            <Button
+              icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+              uppercase={false}
+              onPress={() => ''}
+              style={{ backgroundColor: '#03A2A2' }}>
+              <Text type="bold" style={{ color: '#FFF' }}>
+                Create Your Own
+              </Text>
+            </Button>
+          </Surface>
+        </View>
+      )}
+
+      {stories && (
+        <ScrollView>
           <>
             <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
               <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
@@ -329,8 +331,8 @@ const WritingScreen = ({ navigation, getStories }) => {
               ))}
             </View>
           </>
-        )}
-      </ScrollView>
+        </ScrollView>
+      )}
     </View>
   );
 };
