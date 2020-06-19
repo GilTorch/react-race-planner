@@ -8,8 +8,6 @@ const initialState = {
     status: {
       allSelected: false,
       tags: [
-        { selected: false, label: 'In Progress', slug: 'in_progress' },
-        { selected: false, label: 'Waiting for players', slug: 'waiting_for_authors' },
         { selected: true, label: 'Completed', slug: 'completed' },
         { selected: false, label: 'Started by me', slug: 'includes_me' }
       ]
@@ -37,7 +35,7 @@ const libraryReducer = (state = initialState, action) => {
     case Library.GET_COMPLETED_STORIES_START:
       return { ...state, loadingStories: true };
     case Library.UPDATE_COMPLETED_STORIES:
-      return { ...state, updatingStories: action.data };
+      return { ...state, updatingStories: true };
     case Library.GET_COMPLETED_STORIES_SUCCESS:
       return {
         ...state,
