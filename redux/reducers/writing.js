@@ -11,7 +11,7 @@ const initialState = {
         { selected: true, label: 'In Progress', slug: 'in_progress' },
         // { selected: true, label: 'Waiting for players', slug: 'waiting_for_authors' },
         { selected: true, label: 'Completed', slug: 'completed' },
-        { selected: true, label: 'Include me', slug: 'include_self' }
+        { selected: true, label: "Stories that I'm part of", slug: 'include_self' }
       ]
     },
     genres: {
