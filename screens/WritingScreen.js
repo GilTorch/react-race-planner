@@ -136,7 +136,7 @@ const WritingScreen = ({ navigation, getStories }) => {
           <Text
             type="bold"
             style={{ fontSize: 24, color: '#999', textAlign: 'center', paddingHorizontal: 10 }}>
-            You haven't been part of any story yet
+            You haven't been part of stories with those filters yet
           </Text>
           <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
             <Button
@@ -145,7 +145,7 @@ const WritingScreen = ({ navigation, getStories }) => {
               onPress={() => ''}
               style={{ backgroundColor: '#03A2A2' }}>
               <Text type="bold" style={{ color: '#FFF' }}>
-                Create Your Own
+                Create one using those filters
               </Text>
             </Button>
           </Surface>
