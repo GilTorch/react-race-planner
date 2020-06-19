@@ -64,6 +64,7 @@ const HomeScreen = ({ navigation, getStories }) => {
             status,
             genres,
             authorsRange: filters.authorsRange
+            // the 'screen' prop is 'home' by default
           });
         } catch (e) {
           Toast.show(e?.message, {
