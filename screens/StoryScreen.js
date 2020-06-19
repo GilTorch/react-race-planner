@@ -153,7 +153,7 @@ const StoryScreen = ({ navigation, route, joinStory }) => {
 
   const handleJoinStory = async () => {
     try {
-      // await joinStory({ privacyStatus });
+      await joinStory({ privacyStatus });
       refRBSheet.current.close();
     } catch (e) {
       Toast.show(e.message, {
