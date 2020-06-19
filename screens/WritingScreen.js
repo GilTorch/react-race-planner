@@ -10,7 +10,7 @@ import Menu from 'react-native-material-menu';
 import debounce from 'debounce-async';
 import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
-// import axios from '../services/axiosService';
+
 import Text from '../components/CustomText';
 import { genresData } from '../utils/data';
 import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
