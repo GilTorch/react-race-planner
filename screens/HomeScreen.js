@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { AntDesign, FontAwesome, SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
-import { Surface, Searchbar, Button, ActivityIndicator } from 'react-native-paper';
+import React, { useState } from 'react';
+import { SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
+import { Surface, Button } from 'react-native-paper';
 import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import Constants from 'expo-constants';
@@ -10,29 +10,22 @@ import Menu from 'react-native-material-menu';
 import debounce from 'debounce-async';
 import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
-// import axios from '../services/axiosService';
+
 import Text from '../components/CustomText';
 import { genresData } from '../utils/data';
 import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
 import { getStoriesAction } from '../redux/actions/getStoriesAction';
+import SearchAndFilter from '../components/stories/SearchAndFilter';
 
 const HomeScreen = ({ navigation, getStories }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [searchBarVisible, setSearchBarVisible] = useState(false);
   const [currentGenre, setCurrentGenre] = useState(genresData[0]);
-  const loadingStories = useSelector(state => state.home.loadingStories);
   const updatingStories = useSelector(state => state.home.updating);
   const filters = useSelector(state => state.home.filters);
   const stories = useSelector(state => state.home.stories);
   const status = filters.status.tags.filter(tag => tag.selected).map(tag => tag.slug);
   const genres = filters.genres.tags.filter(tag => tag.selected).map(tag => tag.slug);
-
-  useEffect(() => {
-    // We get the base data for this screen
-    // We set the 'leading' too true because it's a single request
-    getInProgressStories(null, true);
-  }, []);
 
   let menu = null;
   const setMenuRef = ref => {
@@ -55,6 +48,28 @@ const HomeScreen = ({ navigation, getStories }) => {
     }, [])
   );
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchStories = async () => {
+        try {
+          await getStories({
+            status,
+            genres,
+            authorsRange: filters.authorsRange,
+            screen: 'home'
+          });
+        } catch (e) {
+          Toast.show(e?.message, {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM
+          });
+        }
+      };
+
+      fetchStories();
+    }, [filters])
+  );
+
   const getInProgressStories = async (sq, leading) => {
     const debounced = debounce(
       async () => {
@@ -63,8 +78,8 @@ const HomeScreen = ({ navigation, getStories }) => {
             sq,
             status,
             genres,
-            authorsRange: filters.authorsRange
-            // the 'screen' prop is 'home' by default
+            authorsRange: filters.authorsRange,
+            screen: 'home'
           });
         } catch (e) {
           Toast.show(e?.message, {
@@ -78,10 +93,6 @@ const HomeScreen = ({ navigation, getStories }) => {
     );
 
     await debounced();
-  };
-
-  const onSearch = text => {
-    getInProgressStories(text);
   };
 
   return (
@@ -127,210 +138,121 @@ const HomeScreen = ({ navigation, getStories }) => {
       </Surface>
 
       {!stories && (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
-          <Text
-            type="bold"
-            style={{ fontSize: 24, color: '#999', textAlign: 'center', paddingHorizontal: 10 }}>
-            There are no stories with those filters yet
-          </Text>
-          <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
-            <Button
-              icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
-              uppercase={false}
-              onPress={() => ''}
-              style={{ backgroundColor: '#03A2A2' }}>
-              <Text type="bold" style={{ color: '#FFF' }}>
-                Create one using those filters
-              </Text>
-            </Button>
-          </Surface>
-        </View>
+        <>
+          <SearchAndFilter
+            previousScreen="home"
+            navigation={navigation}
+            onSearch={getInProgressStories}
+          />
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+            <Text
+              type="bold"
+              style={{ fontSize: 24, color: '#999', textAlign: 'center', paddingHorizontal: 10 }}>
+              There are no stories with those filters yet
+            </Text>
+            <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
+              <Button
+                icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+                uppercase={false}
+                onPress={() => ''}
+                style={{ backgroundColor: '#03A2A2' }}>
+                <Text type="bold" style={{ color: '#FFF' }}>
+                  Create one using those filters
+                </Text>
+              </Button>
+            </Surface>
+          </View>
+        </>
       )}
 
       {stories && (
         <ScrollView>
-          <>
-            <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
-              <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginBottom: 10
-                  }}>
-                  <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
-                    {currentGenre.name}
-                  </Text>
-                </View>
-                <Text style={{ textAlign: 'center' }}>
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                  Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                  unknown printer took a galley of type and scrambled it to make a type specimen
-                  book. It has survived not only five centuries, but also the leap into electronic
-                  typesetting, remaining essentially unchanged. It was popularised in the 1960s with
-                  the release of Letraset sheets containing Lorem Ipsum passages, and more recently
-                  with desktop
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    width: '65%',
-                    alignSelf: 'flex-end',
-                    justifyContent: 'flex-end',
-                    marginTop: 15,
-                    marginBottom: 20
-                  }}>
-                  <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
-                    <Button
-                      icon={({ size }) => (
-                        <FontAwesome5 size={size} color="#fff" name="pen-fancy" />
-                      )}
-                      uppercase={false}
-                      onPress={() => ''}
-                      style={{ backgroundColor: '#03A2A2' }}>
-                      <Text type="bold" style={{ color: '#FFF' }}>
-                        Go
-                      </Text>
-                    </Button>
-                  </Surface>
-                  <Surface style={styles.btnSurface}>
-                    <Button
-                      onPress={() => menu.hide()}
-                      uppercase={false}
-                      style={{ backgroundColor: '#f44336' }}>
-                      <Text type="bold" style={{ color: '#fff' }}>
-                        Cancel
-                      </Text>
-                    </Button>
-                  </Surface>
-                </View>
-              </View>
-            </Menu>
-
-            {searchBarVisible && (
+          <SearchAndFilter
+            previousScreen="home"
+            navigation={navigation}
+            onSearch={getInProgressStories}
+          />
+          <Menu style={{ width: '100%', marginLeft: 10 }} ref={setMenuRef}>
+            <View style={{ paddingTop: 20, paddingLeft: 20, paddingRight: 20 }}>
               <View
                 style={{
                   flexDirection: 'row',
-                  justifyContent: 'space-around',
+                  justifyContent: 'center',
                   alignItems: 'center',
-                  marginTop: 20,
-                  marginLeft: 20,
-                  marginRight: 20,
-                  marginBottom: 15
+                  marginBottom: 10
                 }}>
-                <View style={{ flex: 8 }}>
-                  <Searchbar
-                    onChangeText={onSearch}
-                    style={{ height: 40, paddingTop: 3, elevation: 2 }}
-                    iconColor="#03A2A2"
-                  />
-                </View>
-                {loadingStories && (
-                  <View style={{ marginLeft: 10 }}>
-                    <ActivityIndicator color="#03A2A2" />
-                  </View>
-                )}
-                {!loadingStories && (
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}>
-                    <TouchableOpacity onPress={() => setSearchBarVisible(false)}>
-                      <AntDesign size={20} name="closecircleo" color="#03A2A2" />
-                    </TouchableOpacity>
-                  </View>
-                )}
+                <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
+                  {currentGenre.name}
+                </Text>
               </View>
-            )}
-
-            {!searchBarVisible && (
+              <Text style={{ textAlign: 'center' }}>
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                unknown printer took a galley of type and scrambled it to make a type specimen book.
+                It has survived not only five centuries, but also the leap into electronic
+                typesetting, remaining essentially unchanged. It was popularised in the 1960s with
+                the release of Letraset sheets containing Lorem Ipsum passages, and more recently
+                with desktop
+              </Text>
               <View
                 style={{
-                  marginLeft: 20,
-                  marginRight: 15,
-                  marginTop: 20,
-                  marginBottom: 15,
                   flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
+                  width: '65%',
+                  alignSelf: 'flex-end',
+                  justifyContent: 'flex-end',
+                  marginTop: 15,
+                  marginBottom: 20
                 }}>
-                <Text type="medium" style={{ ...styles.headline, fontSize: 18 }}>
-                  All Stories
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row'
-                  }}>
-                  <TouchableOpacity
-                    testID="filter-button"
-                    style={{ borderRadius: 5, padding: 5 }}
-                    onPress={() => {
-                      navigation.navigate('FilterScreen', { previousScreen: 'home' });
-                    }}>
-                    <Surface
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        borderRadius: 5,
-                        elevation: 2,
-                        padding: 5
-                      }}>
-                      <AntDesign color="#5A7582" size={18} name="filter" />
-                      <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
-                        FILTER
-                      </Text>
-                    </Surface>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={{ borderRadius: 5, padding: 5, flex: 1 }}
-                    onPress={() => setSearchBarVisible(true)}>
-                    <Surface
-                      style={{
-                        borderRadius: 5,
-                        elevation: 2,
-                        flex: 1,
-                        paddingHorizontal: 9,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: 5
-                      }}>
-                      <FontAwesome size={14} color="#5A7582" name="search" />
-                    </Surface>
-                  </TouchableOpacity>
-                </View>
+                <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
+                  <Button
+                    icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+                    uppercase={false}
+                    onPress={() => ''}
+                    style={{ backgroundColor: '#03A2A2' }}>
+                    <Text type="bold" style={{ color: '#FFF' }}>
+                      Go
+                    </Text>
+                  </Button>
+                </Surface>
+                <Surface style={styles.btnSurface}>
+                  <Button
+                    onPress={() => menu.hide()}
+                    uppercase={false}
+                    style={{ backgroundColor: '#f44336' }}>
+                    <Text type="bold" style={{ color: '#fff' }}>
+                      Cancel
+                    </Text>
+                  </Button>
+                </Surface>
               </View>
-            )}
+            </View>
+          </Menu>
 
-            {/* TODO: Display the filter badges correctly */}
-            {/* <View style={{ marginBottom: 20 }}>
+          {/* TODO: Display the filter badges correctly */}
+          {/* <View style={{ marginBottom: 20 }}>
               <FilterBadges labels={['In Progress']} />
               <FilterBadges labels={['Mystery', 'Action', 'Romance']} />
               <FilterBadges labels={['Authors: 3 - 100']} />
             </View> */}
 
-            <View testID="story">
-              {stories?.map((story, index) => (
-                <View key={Math.random()}>
-                  <Story
-                    updating={updatingStories}
-                    story={story}
-                    index={index}
-                    length={stories.length}
-                    navigation={navigation}
-                  />
-                </View>
-              ))}
-            </View>
-          </>
+          <View testID="story">
+            {stories?.map((story, index) => (
+              <View key={Math.random()}>
+                <Story
+                  updating={updatingStories}
+                  story={story}
+                  index={index}
+                  length={stories.length}
+                  navigation={navigation}
+                />
+              </View>
+            ))}
+          </View>
         </ScrollView>
       )}
     </View>
