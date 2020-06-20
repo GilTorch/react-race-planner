@@ -32,7 +32,7 @@ const StoryScreen = ({ navigation, route }) => {
   const authorsCount = story.parts.filter(p => !p.isIntro && !p.isOutro).length;
   const missingAuthorsCount = 5 - authorsCount;
   const currentUser = useSelector(state => state.auth.currentUser);
-  const includesSelf = !!story.parts.find(p => p.author._id === currentUser._id);
+  const includesSelf = story.parts.some(p => p.author._id === currentUser._id);
   const inprogressStory = story.status === 'in_progress';
   const waitingStory = authorsCount < 5;
   const completedStory = story.status === 'completed';
