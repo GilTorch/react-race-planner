@@ -22,3 +22,5 @@ export const getUserProfileUri = userPicture => {
     // TODO: Fix this annoying prettier/prettier warning
     }/${USER_AVATAR_UPLOAD_LOCATION}/${userPicture}`;
 };
+
+export const avatarGenerator = username => `https://api.adorable.io/avatars/${username}.png`;
