@@ -1,8 +1,10 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Surface, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import Text from '../CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
@@ -10,13 +12,14 @@ import BoxMenu from './BoxMenu';
 
 const Round = ({ round, totalRound, listMode, style }) => {
   const roundStatus = round.status;
-  const inprogressRound = roundStatus === 'In Progress' || roundStatus === 'Pendding';
-  const userTurn = round.author === 'You';
-  const height = roundStatus === 'In Progress' && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
+  const currentUser = useSelector(state => state.auth.currentUser);
+  const inprogressRound = roundStatus === 'in_progress';
+  const userTurn = round.author?._id === currentUser._id;
+  const height = roundStatus === 'in_progress' && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
 
   const roundBody = (
     <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
-      {round.body || ''}
+      {round.content || ''}
     </Text>
   );
 
@@ -70,7 +73,7 @@ const Round = ({ round, totalRound, listMode, style }) => {
   const listRound = (
     <View style={{ marginHorizontal: 35, marginBottom: 20, ...style }}>
       <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
-        {round.body || ''}
+        {round.content || ''}
       </Text>
     </View>
   );
@@ -84,7 +87,7 @@ const Round = ({ round, totalRound, listMode, style }) => {
       <Surface style={{ ...styles.round, minHeight: height }}>
         <View style={styles.boxHeader}>
           <Text type="bold" style={styles.subTitle}>
-            By {round.author || ''}
+            By {round.author.username || ''}
           </Text>
           <BoxMenu parentType="round" block={round} />
         </View>
@@ -100,7 +103,7 @@ const Round = ({ round, totalRound, listMode, style }) => {
               <View style={styles.displayRow}>
                 <FontAwesome name="commenting" size={20} color="#0277BD" />
                 <Text type="bold" style={styles.boxFooter}>
-                  Comments: {round.comments}
+                  Comments: {round.comments.length}
                 </Text>
               </View>
             </View>

@@ -6,8 +6,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
-
 import moment from 'moment';
+
 import MysteryIcon from '../svg/icons/MysteryIcon';
 import { getUserProfileUri } from '../../utils/functions';
 import Text from '../CustomText';
@@ -124,7 +124,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('StoryScreen', { storyId: story.id });
+                  navigation.navigate('StoryScreen', { storyId: story._id });
                 }}>
                 <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
                   {story.title}

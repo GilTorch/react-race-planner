@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import * as React from 'react';
 import {
   StyleSheet,
@@ -16,25 +17,28 @@ import Constants from 'expo-constants';
 import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { Button, Surface, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+
 import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../utils/dimensions';
-import { stories } from '../utils/data';
+import { SCREEN_HEIGHT } from '../utils/dimensions';
 
 const StoryScreen = ({ navigation, route }) => {
   const { storyId } = route.params;
-  const story = stories.find(st => st.id === storyId) || stories[3];
-  const masterAuthor = story.authors.find(author => author.storyLead);
-  const authorsCount = story.authors.length;
+  const stories = useSelector(state => state.library.stories);
+  const story = stories.find(st => st._id === storyId);
+  const { masterAuthor } = story;
+  const authorsCount = story.parts.filter(p => !p.isIntro && !p.isOutro).length;
   const missingAuthorsCount = 5 - authorsCount;
-  const user = story.authors.find(author => author.username === 'johndoe');
-  const inprogressStory = story.status === 'In Progress';
-  const waitingStory = story.status === 'Waiting for players';
-  const completedStory = story.status === 'Completed';
+  const currentUser = useSelector(state => state.auth.currentUser);
+  const includesSelf = !!story.parts.find(p => p.author._id === currentUser._id);
+  const inprogressStory = story.status === 'in_progress';
+  const waitingStory = authorsCount < 5;
+  const completedStory = story.status === 'completed';
   const inprogress = inprogressStory || waitingStory;
   const status = inprogress ? 'In Progress' : 'Completed';
-  const masterAuthorName = inprogress ? 'Anonymous 1' : masterAuthor.fullName;
+  const masterAuthorName = inprogress ? 'Anonymous 1' : masterAuthor.username;
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
 
   const scrollView = React.useRef(null);
@@ -48,9 +52,9 @@ const StoryScreen = ({ navigation, route }) => {
     coAuthors = `+${authorsCount - 1} anonymous authors`;
   }
   let firstBtnColor;
-  if (user && inprogress) {
+  if (includesSelf && inprogress) {
     firstBtnColor = '#F44336';
-  } else if (!user && waitingStory) {
+  } else if (!includesSelf && waitingStory) {
     firstBtnColor = '#ED8A18';
   } else {
     firstBtnColor = '#A39F9F';
@@ -183,7 +187,7 @@ const StoryScreen = ({ navigation, route }) => {
                 alignSelf: 'flex-start',
                 justifyContent: 'space-between'
               }}>
-              <MetaData label="Genre" value={story.genre} />
+              <MetaData label="Genre" value={story.genre?.name} />
               <MetaData label="Status" value={status} />
               <MetaData label="Master Author" value={masterAuthorName} />
               <MetaData label="Intro Maximum Words" value="50" />
@@ -199,7 +203,7 @@ const StoryScreen = ({ navigation, route }) => {
                   uppercase={false}
                   style={{ backgroundColor: firstBtnColor }}
                   labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
-                  {user ? 'Leave Story' : 'Join Story'}
+                  {includesSelf ? 'Leave Story' : 'Join Story'}
                 </Button>
               </Surface>
 
@@ -344,22 +348,27 @@ const StoryScreen = ({ navigation, route }) => {
               <Text type="medium" style={styles.title}>
                 All Proposed Intros
               </Text>
-              <Text type="bold-italic" style={styles.penddingText}>
+              <Text type="bold-italic" style={styles.pendingText}>
                 Waiting for {missingAuthorsCount} more players.
               </Text>
 
               <HugeAdvertisement />
             </>
           )}
+
           {!waitingStory && (
             <>
-              <ProposedSection type="Intro" proposedBlocks={story.intros} listMode={listMode} />
+              <ProposedSection
+                type="Intro"
+                proposedBlocks={story.parts.filter(p => p.isIntro)}
+                listMode={listMode}
+              />
               <SmallAdvertisement />
             </>
           )}
 
           {!waitingStory &&
-            story.rounds.map((round, index) => {
+            story.parts.map((round, index) => {
               const bigAdd = [4, 10];
               const add = [6];
               return (
@@ -370,42 +379,26 @@ const StoryScreen = ({ navigation, route }) => {
                 </View>
               );
             })}
+
           {inprogressStory && (
             <>
               <Text type="bold" style={{ ...styles.title, marginTop: 0 }}>
                 All Proposed Endings
               </Text>
-              <Text type="bold-italic" style={{ ...styles.penddingText, fontSize: 13 }}>
-                Pendding
+              <Text type="bold-italic" style={{ ...styles.pendingText, fontSize: 13 }}>
+                Pending
               </Text>
             </>
           )}
+
           {completedStory && (
-            <ProposedSection type="Ending" proposedBlocks={story.endings} listMode={listMode} />
+            <ProposedSection
+              type="Ending"
+              proposedBlocks={story.parts.filter(p => p.isOutro)}
+              listMode={listMode}
+            />
           )}
         </ScrollView>
-      )}
-      {false && !listMode && !waitingStory && (
-        <View
-          style={{
-            position: 'absolute',
-            width: SCREEN_WIDTH * 0.25,
-            bottom: 25,
-            right: 10
-          }}>
-          <Surface style={styles.floatingNav}>
-            <FontAwesome name="chevron-up" size={20} color="#5A7582" />
-            <Text type="bold" style={{ color: '#5A7582' }}>
-              FIRST
-            </Text>
-          </Surface>
-          <Surface style={{ ...styles.floatingNav, marginTop: 10 }}>
-            <FontAwesome name="chevron-down" size={20} color="#5A7582" />
-            <Text type="bold" style={{ color: '#5A7582' }}>
-              LAST
-            </Text>
-          </Surface>
-        </View>
       )}
     </View>
   );
@@ -430,7 +423,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     elevation: 2
   },
-  penddingText: {
+  pendingText: {
     color: '#ED8A18',
     marginLeft: 20,
     marginVertical: 20
