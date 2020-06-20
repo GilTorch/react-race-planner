@@ -10,7 +10,7 @@ import Text from '../CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 
-const Round = ({ round, totalRound, listMode, style }) => {
+const Round = ({ round, totalRound, roundIdx, listMode, style }) => {
   const roundStatus = round.status;
   const currentUser = useSelector(state => state.auth.currentUser);
   const inprogressRound = roundStatus === 'in_progress';
@@ -81,7 +81,7 @@ const Round = ({ round, totalRound, listMode, style }) => {
   const cardRound = (
     <View style={{ marginBottom: 20 }}>
       <Text type="medium" style={styles.title}>
-        Round {round.order}/{totalRound} {userTurn && '(Your Turn)'}
+        Round {roundIdx}/{totalRound} {userTurn && '(Your Turn)'}
       </Text>
 
       <Surface style={{ ...styles.round, minHeight: height }}>

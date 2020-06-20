@@ -368,17 +368,24 @@ const StoryScreen = ({ navigation, route }) => {
           )}
 
           {!waitingStory &&
-            story.parts.map((round, index) => {
-              const bigAdd = [4, 10];
-              const add = [6];
-              return (
-                <View key={Math.random()}>
-                  {bigAdd.includes(index) && <HugeAdvertisement />}
-                  {add.includes(index) && <SmallAdvertisement />}
-                  <Round round={round} totalRound={story.totalRound} listMode={listMode} />
-                </View>
-              );
-            })}
+            story.parts
+              .filter(s => !s.isIntro && !s.isOutro)
+              .map((round, index, arr) => {
+                const bigAdd = [4, 10];
+                const add = [6];
+                return (
+                  <View key={Math.random()}>
+                    {bigAdd.includes(index) && <HugeAdvertisement />}
+                    {add.includes(index) && <SmallAdvertisement />}
+                    <Round
+                      round={round}
+                      roundIdx={index + 1}
+                      totalRound={arr.length}
+                      listMode={listMode}
+                    />
+                  </View>
+                );
+              })}
 
           {inprogressStory && (
             <>
