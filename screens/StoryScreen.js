@@ -387,17 +387,6 @@ const StoryScreen = ({ navigation, route }) => {
                 );
               })}
 
-          {inprogressStory && (
-            <>
-              <Text type="bold" style={{ ...styles.title, marginTop: 0 }}>
-                All Proposed Endings
-              </Text>
-              <Text type="bold-italic" style={{ ...styles.pendingText, fontSize: 13 }}>
-                Pending
-              </Text>
-            </>
-          )}
-
           {completedStory && (
             <ProposedSection
               type="Ending"
