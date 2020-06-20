@@ -38,7 +38,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
                 <BoxMenu parentType={type} block={{ ...proposedBlock, hasElected }} />
               </View>
               <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
-                {loremText}
+                {proposedBlock.content}
               </Text>
               <View style={{ marginTop: 'auto' }}>
                 <Text style={styles.separator}>---</Text>
