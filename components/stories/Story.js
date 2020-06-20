@@ -44,7 +44,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
     : story.parts.filter(p => p.privacyStatus === 'anonymous');
   let GenreIconLibrary;
   const initialIntro = story.parts.find(sp => sp.isIntro && sp.author?._id === masterAuthor?._id);
-  const electedIntro = story.parts.find(sp => sp.isintro && sp.isElected);
+  const electedIntro = story.parts.find(sp => sp.isIntro && sp.isElected);
 
   switch (currentGenre.iconLibraryName) {
     case 'MaterialCommunityIcons':
@@ -233,11 +233,11 @@ const Story = ({ story, index, length, navigation, updating }) => {
             <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
               Elected Intro
             </Text>
-            {story.electedIntro && (
-              <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro?.content}</Text>
+            {electedIntro && (
+              <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
             )}
 
-            {!story.electedIntro && (
+            {!electedIntro && (
               <Text
                 style={{
                   color: '#ED8A18',
