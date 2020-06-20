@@ -13,7 +13,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
   const listElected = (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
       <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
-        {electedBlock?.content}
+        {electedBlock?.content || `No elected ${type} yet`}
       </Text>
     </View>
   );
