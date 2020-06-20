@@ -18,17 +18,17 @@ const userPersistConfig = {
 };
 
 const homePersistConfig = {
-  key: 'user',
+  key: 'home',
   storage: AsyncStorage
 };
 
 const libraryPersistConfig = {
-  key: 'user',
+  key: 'library',
   storage: AsyncStorage
 };
 
 const writingPersistConfig = {
-  key: 'user',
+  key: 'writing',
   storage: AsyncStorage
 };
 

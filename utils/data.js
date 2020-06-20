@@ -385,7 +385,7 @@ const stories = [
   }
 ];
 
-const genres = [
+const genresData = [
   {
     id: 1,
     name: 'Mystery',
@@ -489,4 +489,4 @@ const comments = [
   }
 ];
 
-export { loremText, intros, endings, stories, comments, genres };
+export { loremText, intros, endings, stories, comments, genresData };

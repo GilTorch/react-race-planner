@@ -60,6 +60,7 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      StatusBar.setHidden(false);
       StatusBar.setBarStyle('dark-content');
     }, [])
   );

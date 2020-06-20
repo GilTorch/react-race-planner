@@ -20,36 +20,11 @@ const FilterScreen = ({
 }) => {
   const { previousScreen } = route.params;
 
-  const defaultTagData = {
-    status: {
-      allSelected: false,
-      tags: [
-        { selected: true, label: 'In Progress' },
-        { selected: false, label: 'Waiting for players' },
-        { selected: false, label: 'Completed' },
-        { selected: false, label: 'Started by me' }
-      ]
-    },
-    genres: {
-      allSelected: false,
-      tags: [
-        { selected: true, label: 'Mystery' },
-        { selected: false, label: 'Action' },
-        { selected: false, label: 'Thriller' },
-        { selected: false, label: 'Scifi' },
-        { selected: false, label: 'Romance' },
-        { selected: false, label: 'Essay' },
-        { selected: false, label: 'Bedtime Stories' }
-      ]
-    },
-    authors: [5, 20]
-  };
-
   const tagDataHome = useSelector(state => state.home.filters);
   const tagDataLibrary = useSelector(state => state.library.filters);
   const tagDataWriting = useSelector(state => state.writing.filters);
 
-  let tagData = defaultTagData;
+  let tagData;
 
   switch (previousScreen) {
     case 'home':
@@ -80,28 +55,30 @@ const FilterScreen = ({
   };
 
   const multiSliderValuesChange = values => {
-    setTagData({ ...tagData, authors: values });
+    setTagData({ ...tagData, authorsRange: values });
   };
 
-  const reset = () => {
-    setTagData(defaultTagData);
-  };
+  // const reset = () => {
+  //   setTagData();
+  // };
+
   const doneBtn = (
     <TouchableOpacity testID="done" onPress={() => navigation.goBack()} style={{ marginLeft: 20 }}>
       <Text style={{ color: '#03A2A2', fontSize: 18 }}>Done</Text>
     </TouchableOpacity>
   );
-  const resetBtn = (
-    <TouchableOpacity testID="reset" onPress={() => reset()} style={{ marginRight: 20 }}>
-      <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
-    </TouchableOpacity>
-  );
+
+  // const resetBtn = (
+  //   <TouchableOpacity testID="reset" onPress={() => reset()} style={{ marginRight: 20 }}>
+  //     <Text style={{ color: '#03A2A2', fontSize: 18 }}>Reset</Text>
+  //   </TouchableOpacity>
+  // );
 
   navigation.setOptions({
     headerLeft: () => doneBtn,
     headerTitleAlign: 'center',
     title: 'Filter',
-    headerRight: () => resetBtn
+    headerRight: () => null
   });
 
   const validCategoryNames = ['status', 'genres'];
@@ -269,8 +246,8 @@ const FilterScreen = ({
                 flexDirection: 'row',
                 justifyContent: 'space-between'
               }}>
-              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authors[0]}</Text>
-              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authors[1]}</Text>
+              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authorsRange[0]}</Text>
+              <Text style={{ fontSize: 14, color: '#5A7582' }}>{tagData.authorsRange[1]}</Text>
             </View>
             <MultiSlider
               trackStyle={{
@@ -298,7 +275,7 @@ const FilterScreen = ({
                   }}
                 />
               )}
-              values={[tagData.authors[0], tagData.authors[1]]}
+              values={[tagData.authorsRange[0], tagData.authorsRange[1]]}
               sliderLength={SCREEN_WIDTH - 50}
               onValuesChange={multiSliderValuesChange}
               min={0}
@@ -309,7 +286,7 @@ const FilterScreen = ({
             />
             <View>
               <Text style={{ color: '#5A7582' }}>
-                Authors range: {tagData.authors[0]} - {tagData.authors[1]}
+                Authors range: {tagData.authorsRange[0]} - {tagData.authorsRange[1]}
               </Text>
             </View>
           </View>
