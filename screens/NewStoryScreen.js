@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
 
 import Text from '../components/CustomText';
-import { genres } from '../utils/data';
+import { genresData } from '../utils/data';
 import { newStorySchema } from '../utils/validators';
 import { createStoryAction } from '../redux/actions/StoryAction';
 
@@ -50,8 +50,9 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
     { value: 'username_and_full_name', label: 'Username and Full Name' },
     { value: 'anonymous', label: 'Anonymous' }
   ];
+
   const genresTitle = [];
-  genres.map(genre => genresTitle.push({ value: genre.name }));
+  genresData.forEach(genre => genresTitle.push({ value: genre.name }));
 
   const [time, setTime] = React.useState({
     introTimeLimitSeconds: '0:15',
@@ -94,11 +95,9 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
 
   const submit = async data => {
     try {
-      const {
-        story: { _id: storyId }
-      } = await createStory(data);
+      const { story } = await createStory(data);
 
-      navigation.navigate('StoryScreen', { storyId });
+      navigation.navigate('StoryScreen', { story });
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,

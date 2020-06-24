@@ -1,19 +1,42 @@
 import React, { useState } from 'react';
-import { AntDesign, FontAwesome, SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
-import { Surface, Searchbar, Button } from 'react-native-paper';
+import { SimpleLineIcons, FontAwesome5 } from '@expo/vector-icons';
+import { Surface, Button } from 'react-native-paper';
 import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import Menu from 'react-native-material-menu';
+import debounce from 'debounce-async';
+import { connect, useSelector } from 'react-redux';
+import Toast from 'react-native-root-toast';
 
 import Text from '../components/CustomText';
-import { stories, genres } from '../utils/data';
+import { genresData } from '../utils/data';
 import ViewAllGenresModal from '../components/modals/ViewAllGenresModal';
 import Story from '../components/stories/Story';
+import { getStoriesAction } from '../redux/actions/getStoriesAction';
+import SearchAndFilter from '../components/stories/SearchAndFilter';
 
-const HomeScreen = ({ navigation, route }) => {
+const HomeScreen = ({ navigation, getStories }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentGenre, setCurrentGenre] = useState(genresData[0]);
+  const updatingStories = useSelector(state => state.home.updating);
+  const filters = useSelector(state => state.home.filters);
+  const stories = useSelector(state => state.home.stories);
+  const status = filters.status.tags.filter(tag => tag.selected).map(tag => tag.slug);
+  const genres = filters.genres.tags.filter(tag => tag.selected).map(tag => tag.slug);
+
+  let menu = null;
+  const setMenuRef = ref => {
+    menu = ref;
+  };
+
+  const showMenu = async genreIndex => {
+    setCurrentGenre(genresData[genreIndex]);
+    menu.show();
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(false);
@@ -25,22 +48,52 @@ const HomeScreen = ({ navigation, route }) => {
     }, [])
   );
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [searchBarVisible, setSearchBarVisible] = useState(false);
-  const [currentGenre, setCurrentGenre] = useState(genres[0]);
-  let menu = null;
-  const setMenuRef = ref => {
-    menu = ref;
-  };
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchStories = async () => {
+        try {
+          await getStories({
+            status,
+            genres,
+            authorsRange: filters.authorsRange,
+            screen: 'home'
+          });
+        } catch (e) {
+          Toast.show(e?.message, {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM
+          });
+        }
+      };
 
-  const showMenu = async genreIndex => {
-    setCurrentGenre(genres[genreIndex]);
-    menu.show();
-  };
-
-  const inprogressStories = stories.filter(
-    story => story.status === 'In Progress' || story.status === 'Waiting for players'
+      fetchStories();
+    }, [filters])
   );
+
+  const getInProgressStories = async (sq, leading) => {
+    const debounced = debounce(
+      async () => {
+        try {
+          await getStories({
+            sq,
+            status,
+            genres,
+            authorsRange: filters.authorsRange,
+            screen: 'home'
+          });
+        } catch (e) {
+          Toast.show(e?.message, {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM
+          });
+        }
+      },
+      2000,
+      { leading }
+    );
+
+    await debounced();
+  };
 
   return (
     <View style={styles.container}>
@@ -64,7 +117,7 @@ const HomeScreen = ({ navigation, route }) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingLeft: 23 }}>
-          {genres.map((genre, index) => (
+          {genresData.map((genre, index) => (
             <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
               <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
                 <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
@@ -136,124 +189,71 @@ const HomeScreen = ({ navigation, route }) => {
       </Menu>
 
       <ScrollView>
-        {searchBarVisible && (
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              alignItems: 'center',
-              marginTop: 20,
-              marginLeft: 20,
-              marginRight: 20,
-              marginBottom: 15
-            }}>
-            <View style={{ flex: 8 }}>
-              <Searchbar style={{ height: 40, paddingTop: 3, elevation: 2 }} iconColor="#03A2A2" />
-            </View>
+        <SearchAndFilter
+          previousScreen="home"
+          navigation={navigation}
+          onSearch={getInProgressStories}
+        />
+
+        {!stories && (
+          <>
             <View
               style={{
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center'
               }}>
-              <TouchableOpacity onPress={() => setSearchBarVisible(false)}>
-                <AntDesign size={20} name="closecircleo" color="#03A2A2" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-
-        {!searchBarVisible && (
-          <View
-            style={{
-              marginLeft: 20,
-              marginRight: 15,
-              marginTop: 20,
-              marginBottom: 15,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-            <Text type="medium" style={{ ...styles.headline, fontSize: 18 }}>
-              All Stories
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row'
-              }}>
-              <TouchableOpacity
-                testID="filter-button"
-                style={{ borderRadius: 5, padding: 5, flex: 1 }}
-                onPress={() => {
-                  navigation.navigate('FilterScreen', { previousScreen: 'home' });
-                }}>
-                <Surface
-                  style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    borderRadius: 5,
-                    elevation: 2,
-                    padding: 5
-                  }}>
-                  <AntDesign color="#5A7582" size={18} name="filter" />
-                  <Text type="bold" style={{ fontSize: 12, color: '#5A7582' }}>
-                    FILTER
+              <Text
+                type="bold"
+                style={{ fontSize: 24, color: '#999', textAlign: 'center', paddingHorizontal: 10 }}>
+                There are no stories with those filters yet
+              </Text>
+              <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
+                <Button
+                  icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+                  uppercase={false}
+                  onPress={() => ''}
+                  style={{ backgroundColor: '#03A2A2' }}>
+                  <Text type="bold" style={{ color: '#FFF' }}>
+                    Create one using those filters
                   </Text>
-                </Surface>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{ borderRadius: 5, flex: 1, padding: 5 }}
-                onPress={() => setSearchBarVisible(true)}>
-                <Surface
-                  style={{
-                    borderRadius: 5,
-                    elevation: 2,
-                    paddingHorizontal: 9,
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 5
-                  }}>
-                  <FontAwesome size={14} color="#5A7582" name="search" />
-                </Surface>
-              </TouchableOpacity>
+                </Button>
+              </Surface>
             </View>
-          </View>
+          </>
         )}
 
-        <View testID="story">
-          {stories.map((story, index) => (
-            <Story
-              key={Math.random()}
-              story={story}
-              index={index}
-              length={stories.length}
-              navigation={navigation}
-            />
-          ))}
-        </View>
+        {stories && (
+          <>
+            {/* TODO: Display the filter badges correctly */}
+            {/* <View style={{ marginBottom: 20 }}>
+              <FilterBadges labels={['In Progress']} />
+              <FilterBadges labels={['Mystery', 'Action', 'Romance']} />
+              <FilterBadges labels={['Authors: 3 - 100']} />
+            </View> */}
 
-        {inprogressStories.map((story, index) => (
-          <Story
-            route={route}
-            genres={genres}
-            key={Math.random()}
-            story={story}
-            index={index}
-            length={inprogressStories.length}
-            navigation={navigation}
-          />
-        ))}
+            <View testID="story">
+              {stories?.map((story, index) => (
+                <View key={Math.random()}>
+                  <Story
+                    updating={updatingStories}
+                    story={story}
+                    index={index}
+                    length={stories.length}
+                    navigation={navigation}
+                  />
+                </View>
+              ))}
+            </View>
+          </>
+        )}
       </ScrollView>
     </View>
   );
 };
 
 HomeScreen.propTypes = {
-  navigation: PropTypes.object.isRequired,
-  route: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
@@ -277,4 +277,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export default HomeScreen;
+HomeScreen.propTypes = {
+  getStories: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = {
+  getStories: getStoriesAction
+};
+
+export default connect(null, mapDispatchToProps)(HomeScreen);

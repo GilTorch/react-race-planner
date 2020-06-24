@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import * as React from 'react';
 import {
   StyleSheet,
@@ -16,26 +17,27 @@ import Constants from 'expo-constants';
 import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { Button, Surface, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+
 import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../utils/dimensions';
-import { stories } from '../utils/data';
+import { SCREEN_HEIGHT } from '../utils/dimensions';
 
 const StoryScreen = ({ navigation, route }) => {
-  const { storyId } = route.params;
-  const story = stories.find(st => st.id === storyId) || stories[3];
-  const masterAuthor = story.authors.find(author => author.storyLead);
-  const authorsCount = story.authors.length;
-  const missingAuthorsCount = 5 - authorsCount;
-  const user = story.authors.find(author => author.username === 'johndoe');
-  const inprogressStory = story.status === 'In Progress';
-  const waitingStory = story.status === 'Waiting for players';
-  const completedStory = story.status === 'Completed';
+  const { story } = route.params;
+  const { masterAuthor } = story;
+  const authorsCount = story.parts?.filter(p => !p.isIntro && !p.isOutro).length;
+  const missingAuthorsCount = story.settings.minimum_participants - authorsCount;
+  const currentUser = useSelector(state => state.auth.currentUser);
+  const includesSelf = story.parts?.some(p => p.author?._id === currentUser._id);
+  const inprogressStory = story.status === 'in_progress';
+  const waitingStory = authorsCount < story.settings.minimum_participants;
+  const completedStory = story.status === 'completed';
   const inprogress = inprogressStory || waitingStory;
   const status = inprogress ? 'In Progress' : 'Completed';
-  const masterAuthorName = inprogress ? 'Anonymous 1' : masterAuthor.fullName;
-  const [headerDimensions, setHeaderDimensions] = React.useState({ height: 330 });
+  const masterAuthorName = inprogress ? 'Anonymous 1' : masterAuthor.username;
+  const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
 
   const scrollView = React.useRef(null);
 
@@ -48,9 +50,9 @@ const StoryScreen = ({ navigation, route }) => {
     coAuthors = `+${authorsCount - 1} anonymous authors`;
   }
   let firstBtnColor;
-  if (user && inprogress) {
+  if (includesSelf && inprogress) {
     firstBtnColor = '#F44336';
-  } else if (!user && waitingStory) {
+  } else if (!includesSelf && waitingStory) {
     firstBtnColor = '#ED8A18';
   } else {
     firstBtnColor = '#A39F9F';
@@ -66,11 +68,12 @@ const StoryScreen = ({ navigation, route }) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      StatusBar.setHidden(false);
       StatusBar.setBarStyle('light-content');
     }, [])
   );
 
-  const [scrollY] = React.useState(new Animated.Value(0));
+  const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const HEADER_MINIMUM_HEIGHT = 0;
   const HEADER_MAXIMUM_HEIGHT = SCREEN_HEIGHT * 0.25;
@@ -149,12 +152,14 @@ const StoryScreen = ({ navigation, route }) => {
           }}>
           <SafeAreaView
             style={{
+              paddingTop: Constants.statusBarHeight * 1.7,
               alignItems: 'center',
               flexDirection: 'column'
             }}>
             <Animated.View
               style={{
-                height: titleHeight
+                height: titleHeight,
+                overflow: 'hidden'
               }}>
               <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
                 ScriptoRerum
@@ -174,17 +179,18 @@ const StoryScreen = ({ navigation, route }) => {
             <Animated.View
               style={{
                 height: metaHeaderHeight,
+                marginBottom: 10,
                 opacity,
                 marginLeft: 20,
                 alignSelf: 'flex-start',
                 justifyContent: 'space-between'
               }}>
-              <MetaData label="Genre" value={story.genre} />
+              <MetaData label="Genre" value={story.genre?.name} />
               <MetaData label="Status" value={status} />
               <MetaData label="Master Author" value={masterAuthorName} />
-              <MetaData label="Intro Maximum Words" value="50" />
-              <MetaData label="Ending Maximum Words" value="50" />
-              <MetaData label="Words per Round" value="100 max" />
+              <MetaData label="Intro Maximum Words" value={`${story.settings.introMaxWords}`} />
+              <MetaData label="Ending Maximum Words" value={`${story.settings.outroMaxWords}`} />
+              <MetaData label="Words per Round" value={`${story.settings.roundMaxWords} max`} />
               <MetaData label="Co-Authors" value={coAuthors} />
             </Animated.View>
 
@@ -195,7 +201,7 @@ const StoryScreen = ({ navigation, route }) => {
                   uppercase={false}
                   style={{ backgroundColor: firstBtnColor }}
                   labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
-                  {user ? 'Leave Story' : 'Join Story'}
+                  {includesSelf ? 'Leave Story' : 'Join Story'}
                 </Button>
               </Surface>
 
@@ -333,76 +339,71 @@ const StoryScreen = ({ navigation, route }) => {
             }
           })}
           contentContainerStyle={{
-            marginTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40),
-            paddingBottom: 350
+            paddingTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40)
           }}>
           {waitingStory && (
             <>
               <Text type="medium" style={styles.title}>
                 All Proposed Intros
               </Text>
-              <Text type="bold-italic" style={styles.penddingText}>
-                Waiting for {missingAuthorsCount} more players.
+              <Text type="bold-italic" style={styles.pendingText}>
+                Waiting for {missingAuthorsCount} more player{missingAuthorsCount !== 1 && 's'}.
               </Text>
 
               <HugeAdvertisement />
             </>
           )}
+
           {!waitingStory && (
             <>
-              <ProposedSection type="Intro" proposedBlocks={story.intros} listMode={listMode} />
+              <ProposedSection
+                type="Intro"
+                proposedBlocks={story.parts?.filter(p => p.isIntro)}
+                listMode={listMode}
+              />
               <SmallAdvertisement />
             </>
           )}
 
           {!waitingStory &&
-            story.rounds.map((round, index) => {
-              const bigAdd = [4, 10];
-              const add = [6];
-              return (
-                <View key={Math.random()}>
-                  {bigAdd.includes(index) && <HugeAdvertisement />}
-                  {add.includes(index) && <SmallAdvertisement />}
-                  <Round round={round} totalRound={story.totalRound} listMode={listMode} />
-                </View>
-              );
-            })}
+            story.parts
+              .filter(s => !s.isIntro && !s.isOutro)
+              .map((round, index, arr) => {
+                const bigAdd = [4, 10];
+                const add = [6];
+                return (
+                  <View key={Math.random()}>
+                    {bigAdd.includes(index) && <HugeAdvertisement />}
+                    {add.includes(index) && <SmallAdvertisement />}
+                    <Round
+                      round={round}
+                      roundIdx={index + 1}
+                      totalRound={arr.length}
+                      listMode={listMode}
+                    />
+                  </View>
+                );
+              })}
+
           {inprogressStory && (
             <>
               <Text type="bold" style={{ ...styles.title, marginTop: 0 }}>
                 All Proposed Endings
               </Text>
-              <Text type="bold-italic" style={{ ...styles.penddingText, fontSize: 13 }}>
-                Pendding
+              <Text type="bold-italic" style={{ ...styles.pendingText, fontSize: 13 }}>
+                Pending
               </Text>
             </>
           )}
+
           {completedStory && (
-            <ProposedSection type="Ending" proposedBlocks={story.endings} listMode={listMode} />
+            <ProposedSection
+              type="Ending"
+              proposedBlocks={story.parts?.filter(p => p.isOutro)}
+              listMode={listMode}
+            />
           )}
         </ScrollView>
-      )}
-      {false && !listMode && !waitingStory && (
-        <View
-          style={{
-            position: 'absolute',
-            width: SCREEN_WIDTH * 0.25,
-            bottom: 25,
-            right: 10
-          }}>
-          <Surface style={styles.floatingNav}>
-            <FontAwesome name="chevron-up" size={20} color="#5A7582" />
-            <Text type="bold" style={{ color: '#5A7582' }}>
-              FIRST
-            </Text>
-          </Surface>
-          <Surface style={{ ...styles.floatingNav, marginTop: 10 }}>
-            <FontAwesome name="chevron-down" size={20} color="#5A7582" />
-            <Text type="bold" style={{ color: '#5A7582' }}>
-              LAST
-            </Text>
-          </Surface>
-        </View>
       )}
     </View>
   );
@@ -412,6 +413,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#5A7582',
     fontSize: 20,
+    marginTop: 20,
     marginLeft: 20
   },
   headerBtn: {
@@ -426,7 +428,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     elevation: 2
   },
-  penddingText: {
+  pendingText: {
     color: '#ED8A18',
     marginLeft: 20,
     marginVertical: 20
