@@ -5,7 +5,6 @@ import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
 import Text from '../CustomText';
-import { loremText } from '../../utils/data';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 
@@ -13,10 +12,10 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
   const { length } = proposedBlocks;
   const hasElected = proposedBlocks.some(block => block.isElected);
   const electedBlock = proposedBlocks.find(block => block.isElected);
-  const listElected = (
+  const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
       <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
-        {electedBlock.content}
+        {electedBlock?.content}
       </Text>
     </View>
   );

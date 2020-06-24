@@ -7,10 +7,7 @@ const initialState = {
   filters: {
     status: {
       allSelected: false,
-      tags: [
-        { selected: true, label: 'Completed', slug: 'completed' },
-        { selected: false, label: "Stories that I'm part of", slug: 'include_self' }
-      ]
+      tags: [{ selected: true, label: 'Completed', slug: 'completed' }]
     },
     genres: {
       allSelected: true,

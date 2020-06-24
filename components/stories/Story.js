@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 import MysteryIcon from '../svg/icons/MysteryIcon';
 import { getUserProfileUri } from '../../utils/functions';
@@ -33,20 +34,40 @@ const Story = ({ story, index, length, navigation, updating }) => {
     ShowEndAdvertisement = <SmallAdvertisement />;
   }
 
+  const currentUser = useSelector(state => state.auth.currentUser);
   const { masterAuthor } = story;
-  const inProgress = story.status === 'in_progress' || story.status === 'waiting_for_players';
+  const inProgressStatuses = [
+    'waiting_for_players',
+    'waiting_for_intros',
+    'intro_voting',
+    'round_writing',
+    'waiting_for_outros',
+    'outro_voting'
+  ];
+  const inProgress = inProgressStatuses.includes(story.status);
   const status = inProgress ? 'In Progress' : 'Completed';
   const currentGenre = story.genre;
-  const otherAuthors = story.parts.map(p => p.author);
+  const otherAuthors =
+    story.parts?.filter(
+      p =>
+        !p.isIntro &&
+        !p.isOutro &&
+        p.author?._id !== masterAuthor?._id &&
+        p.privacyStatus !== 'anonymous'
+    ) || [];
   const authorsCount = otherAuthors.length + 1;
-  const anonymousAuthorsCount = inProgress
-    ? authorsCount
-    : story.parts.filter(p => p.privacyStatus === 'anonymous');
+  const anonymousAuthorsCount = story.parts?.filter(
+    p =>
+      !p.isIntro &&
+      !p.isOutro &&
+      p.author?._id !== masterAuthor?._id &&
+      p.privacyStatus === 'anonymous'
+  ).length;
   let GenreIconLibrary;
-  const initialIntro = story.parts.find(sp => sp.isIntro && sp.author?._id === masterAuthor?._id);
-  const electedIntro = story.parts.find(sp => sp.isIntro && sp.isElected);
+  const initialIntro = story.parts?.find(sp => sp.isIntro && sp.author?._id === masterAuthor?._id);
+  const electedIntro = story.parts?.find(sp => sp.isIntro && sp.isElected);
 
-  switch (currentGenre.iconLibraryName) {
+  switch (currentGenre?.iconLibraryName) {
     case 'MaterialCommunityIcons':
       GenreIconLibrary = MaterialCommunityIcons;
       break;
@@ -124,10 +145,10 @@ const Story = ({ story, index, length, navigation, updating }) => {
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('StoryScreen', { storyId: story._id });
+                  navigation.navigate('StoryScreen', { story });
                 }}>
                 <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
-                  {story.title}
+                  {story.title || 'Story Title'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -141,19 +162,21 @@ const Story = ({ story, index, length, navigation, updating }) => {
                   style={styles.storyAuthorsImage}
                   source={{
                     uri:
-                      getUserProfileUri(masterAuthor.picture) ||
-                      avatarGenerator(masterAuthor.username)
+                      getUserProfileUri(masterAuthor?.picture) ||
+                      avatarGenerator(masterAuthor?.username)
                   }}
                 />
-                {masterAuthor._id === story.masterAuthor._id && (
-                  <View style={styles.storyAuthorsSeparator} />
-                )}
+
+                <View style={styles.storyAuthorsSeparator} />
               </View>
+
               {otherAuthors.map(author => (
                 <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image
                     style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
-                    source={{ uri: author.picture }}
+                    source={{
+                      uri: getUserProfileUri(author.picture) || avatarGenerator(author.username)
+                    }}
                   />
                 </View>
               ))}
@@ -161,22 +184,24 @@ const Story = ({ story, index, length, navigation, updating }) => {
               {anonymousAuthorsCount > 0 && (
                 <View style={{ marginLeft: 5 }}>
                   <Text type="bold" style={{ fontSize: 12, color: textColor }}>
-                    +{anonymousAuthorsCount} anonymous people
+                    +{anonymousAuthorsCount} anonymous{' '}
+                    {anonymousAuthorsCount === 1 ? 'person' : 'people'}
                   </Text>
                 </View>
               )}
             </View>
           )}
 
-          {status === 'In Progress' && authorsCount > 5 && (
+          {status === 'In Progress' && authorsCount > story.settings?.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
               {authorsCount} authors
             </Text>
           )}
 
-          {authorsCount < 5 && (
+          {authorsCount < story.settings?.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
-              {5 - authorsCount} more people to go
+              {story.settings?.minimumParticipants - authorsCount} more{' '}
+              {story.settings?.minimumParticipants - authorsCount === 1 ? 'person' : 'people'} to go
             </Text>
           )}
 
@@ -212,27 +237,45 @@ const Story = ({ story, index, length, navigation, updating }) => {
               <View
                 style={{
                   ...styles.storyGenreIconContainer,
-                  backgroundColor: currentGenre.color
+                  backgroundColor: currentGenre?.color
                 }}>
-                {currentGenre.iconLibraryName === 'MysteryIcon' && <GenreIconLibrary width={12} />}
+                {currentGenre?.iconLibraryName === 'MysteryIcon' && <GenreIconLibrary width={12} />}
 
-                {currentGenre.iconLibraryName !== 'MysteryIcon' && (
-                  <GenreIconLibrary size={12} color="#fff" name={currentGenre.icon} />
+                {currentGenre?.iconLibraryName !== 'MysteryIcon' && (
+                  <GenreIconLibrary size={12} color="#fff" name={currentGenre?.icon} />
                 )}
               </View>
-              <Text style={{ color: textColor, fontSize: 12 }}>{currentGenre.name}</Text>
+              <Text style={{ color: textColor, fontSize: 12 }}>
+                {currentGenre?.name || 'Story Genre'}
+              </Text>
             </View>
           </View>
           <View>
             <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
               Initially Proposed Intro
             </Text>
-            <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro?.content}</Text>
+
+            {initialIntro && (
+              <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro.content}</Text>
+            )}
+
+            {!initialIntro && (
+              <Text
+                style={{
+                  color: '#ED8A18',
+                  fontFamily: 'RobotoItalic',
+                  fontSize: 12
+                }}>
+                Waiting for {masterAuthor?._id === currentUser._id ? 'your' : "the master author's"}{' '}
+                intro
+              </Text>
+            )}
           </View>
           <View style={{ marginTop: 10 }}>
             <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
               Elected Intro
             </Text>
+
             {electedIntro && (
               <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
             )}

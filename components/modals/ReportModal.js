@@ -58,19 +58,19 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
                       <Text style={styles.text}>Title: </Text>
                       <Text type="bold" style={styles.text}>
-                        {parent.title}
+                        {parent.title || 'Story Title'}
                       </Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
                       <Text style={styles.text}>Genre: </Text>
                       <Text type="bold" style={styles.text}>
-                        {parent.genre.name}
+                        {parent.genre?.name || 'Story Genre'}
                       </Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
                       <Text style={styles.text}>Status: </Text>
                       <Text type="bold" style={styles.text}>
-                        {parent.status}
+                        {parent.status || 'Story Status'}
                       </Text>
                     </View>
                   </>
@@ -80,11 +80,13 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
                       <Text style={styles.text}>Author: </Text>
                       <Text type="bold" style={styles.text}>
-                        {parent.author.username}
+                        {parent.author?.username || 'Round Author'}
                       </Text>
                     </View>
                     <Text style={{ ...styles.text, paddingBottom: 2 }}>Content: </Text>
-                    <Text style={{ color: textColor, lineHeight: 17 }}>{parent.content}</Text>
+                    <Text style={{ color: textColor, lineHeight: 17 }}>
+                      {parent.content || 'Round Content'}
+                    </Text>
                   </>
                 )}
                 <View style={{ marginTop: 30 }}>

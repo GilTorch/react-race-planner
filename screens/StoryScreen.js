@@ -25,16 +25,14 @@ import { HugeAdvertisement, SmallAdvertisement } from '../components/advertiseme
 import { SCREEN_HEIGHT } from '../utils/dimensions';
 
 const StoryScreen = ({ navigation, route }) => {
-  const { storyId } = route.params;
-  const stories = useSelector(state => state.library.stories);
-  const story = stories.find(st => st._id === storyId);
+  const { story } = route.params;
   const { masterAuthor } = story;
-  const authorsCount = story.parts.filter(p => !p.isIntro && !p.isOutro).length;
-  const missingAuthorsCount = 5 - authorsCount;
+  const authorsCount = story.parts?.filter(p => !p.isIntro && !p.isOutro).length;
+  const missingAuthorsCount = story.settings?.minimumParticipants - authorsCount;
   const currentUser = useSelector(state => state.auth.currentUser);
-  const includesSelf = story.parts.some(p => p.author._id === currentUser._id);
+  const includesSelf = story.parts?.some(p => p.author?._id === currentUser._id);
   const inprogressStory = story.status === 'in_progress';
-  const waitingStory = authorsCount < 5;
+  const waitingStory = authorsCount < story.settings?.minimumParticipants;
   const completedStory = story.status === 'completed';
   const inprogress = inprogressStory || waitingStory;
   const status = inprogress ? 'In Progress' : 'Completed';
@@ -190,9 +188,9 @@ const StoryScreen = ({ navigation, route }) => {
               <MetaData label="Genre" value={story.genre?.name} />
               <MetaData label="Status" value={status} />
               <MetaData label="Master Author" value={masterAuthorName} />
-              <MetaData label="Intro Maximum Words" value="50" />
-              <MetaData label="Ending Maximum Words" value="50" />
-              <MetaData label="Words per Round" value="100 max" />
+              <MetaData label="Intro Maximum Words" value={`${story.settings?.introMaxWords}`} />
+              <MetaData label="Ending Maximum Words" value={`${story.settings?.outroMaxWords}`} />
+              <MetaData label="Words per Round" value={`${story.settings?.roundMaxWords} max`} />
               <MetaData label="Co-Authors" value={coAuthors} />
             </Animated.View>
 
@@ -349,7 +347,7 @@ const StoryScreen = ({ navigation, route }) => {
                 All Proposed Intros
               </Text>
               <Text type="bold-italic" style={styles.pendingText}>
-                Waiting for {missingAuthorsCount} more players.
+                Waiting for {missingAuthorsCount} more player{missingAuthorsCount !== 1 && 's'}.
               </Text>
 
               <HugeAdvertisement />
@@ -360,7 +358,7 @@ const StoryScreen = ({ navigation, route }) => {
             <>
               <ProposedSection
                 type="Intro"
-                proposedBlocks={story.parts.filter(p => p.isIntro)}
+                proposedBlocks={story.parts?.filter(p => p.isIntro)}
                 listMode={listMode}
               />
               <SmallAdvertisement />
@@ -401,7 +399,7 @@ const StoryScreen = ({ navigation, route }) => {
           {completedStory && (
             <ProposedSection
               type="Ending"
-              proposedBlocks={story.parts.filter(p => p.isOutro)}
+              proposedBlocks={story.parts?.filter(p => p.isOutro)}
               listMode={listMode}
             />
           )}
