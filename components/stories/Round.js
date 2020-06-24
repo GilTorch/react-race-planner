@@ -22,7 +22,7 @@ const Round = ({ round, totalRound, roundIdx, listMode, style }) => {
     'outro_voting'
   ];
   const inprogressRound = inProgressStatuses.includes(roundStatus);
-  const userTurn = round.author?._id === currentUser._id;
+  const userTurn = round.author?._id === currentUser?._id;
   const height = inprogressRound && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
 
   const roundBody = (
