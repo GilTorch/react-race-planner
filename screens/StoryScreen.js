@@ -28,11 +28,11 @@ const StoryScreen = ({ navigation, route }) => {
   const { story } = route.params;
   const { masterAuthor } = story;
   const authorsCount = story.parts?.filter(p => !p.isIntro && !p.isOutro).length;
-  const missingAuthorsCount = story.settings.minimum_participants - authorsCount;
+  const missingAuthorsCount = story.settings.minimumParticipants - authorsCount;
   const currentUser = useSelector(state => state.auth.currentUser);
   const includesSelf = story.parts?.some(p => p.author?._id === currentUser._id);
   const inprogressStory = story.status === 'in_progress';
-  const waitingStory = authorsCount < story.settings.minimum_participants;
+  const waitingStory = authorsCount < story.settings.minimumParticipants;
   const completedStory = story.status === 'completed';
   const inprogress = inprogressStory || waitingStory;
   const status = inprogress ? 'In Progress' : 'Completed';

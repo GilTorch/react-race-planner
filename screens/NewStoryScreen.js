@@ -76,7 +76,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
         endingTimeLimitSeconds: 900,
         roundTimeLimitSeconds: 900,
         voteTimeLimitSeconds: 900,
-        minimum_participants: 2
+        minimumParticipants: 2
       },
       privacyStatus: 'username'
     }
@@ -215,7 +215,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
             dropdownPosition={0.5}
             data={listAuthordata}
             onChangeText={text =>
-              setValue('settings', { ...storySettings, minimum_participants: text })
+              setValue('settings', { ...storySettings, minimumParticipants: text })
             }
           />
         </Surface>
