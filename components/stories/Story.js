@@ -45,11 +45,22 @@ const Story = ({ story, index, length, navigation, updating }) => {
   const inProgress = inProgressStatuses.includes(story.status);
   const status = inProgress ? 'In Progress' : 'Completed';
   const currentGenre = story.genre;
-  const otherAuthors = story.parts?.map(p => p.author?._id !== masterAuthor?._id) || [];
-  const authorsCount = otherAuthors.length;
-  const anonymousAuthorsCount = inProgress
-    ? authorsCount
-    : story.parts?.filter(p => p.privacyStatus === 'anonymous');
+  const otherAuthors =
+    story.parts?.filter(
+      p =>
+        !p.isIntro &&
+        !p.isOutro &&
+        p.author?._id !== masterAuthor?._id &&
+        p.privacyStatus !== 'anonymous'
+    ) || [];
+  const authorsCount = otherAuthors.length + 1;
+  const anonymousAuthorsCount = story.parts?.filter(
+    p =>
+      !p.isIntro &&
+      !p.isOutro &&
+      p.author?._id !== masterAuthor?._id &&
+      p.privacyStatus === 'anonymous'
+  ).length;
   let GenreIconLibrary;
   const initialIntro = story.parts?.find(sp => sp.isIntro && sp.author?._id === masterAuthor?._id);
   const electedIntro = story.parts?.find(sp => sp.isIntro && sp.isElected);
@@ -156,11 +167,14 @@ const Story = ({ story, index, length, navigation, updating }) => {
 
                 <View style={styles.storyAuthorsSeparator} />
               </View>
+
               {otherAuthors.map(author => (
                 <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image
                     style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
-                    source={{ uri: author.picture }}
+                    source={{
+                      uri: getUserProfileUri(author.picture) || avatarGenerator(author.username)
+                    }}
                   />
                 </View>
               ))}
@@ -168,20 +182,21 @@ const Story = ({ story, index, length, navigation, updating }) => {
               {anonymousAuthorsCount > 0 && (
                 <View style={{ marginLeft: 5 }}>
                   <Text type="bold" style={{ fontSize: 12, color: textColor }}>
-                    +{anonymousAuthorsCount} anonymous people
+                    +{anonymousAuthorsCount} anonymous{' '}
+                    {anonymousAuthorsCount === 1 ? 'person' : 'people'}
                   </Text>
                 </View>
               )}
             </View>
           )}
 
-          {status === 'In Progress' && authorsCount > 5 && (
+          {status === 'In Progress' && authorsCount > story.settings.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
               {authorsCount} authors
             </Text>
           )}
 
-          {authorsCount < 5 && (
+          {authorsCount < story.settings.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
               {authorsCount} more {authorsCount === 1 ? 'person' : 'people'} to go
             </Text>
