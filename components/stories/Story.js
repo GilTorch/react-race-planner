@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 import MysteryIcon from '../svg/icons/MysteryIcon';
 import { getUserProfileUri } from '../../utils/functions';
@@ -33,6 +34,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
     ShowEndAdvertisement = <SmallAdvertisement />;
   }
 
+  const currentUser = useSelector(state => state.auth.currentUser);
   const { masterAuthor } = story;
   const inProgressStatuses = [
     'waiting_for_players',
@@ -263,7 +265,8 @@ const Story = ({ story, index, length, navigation, updating }) => {
                   fontFamily: 'RobotoItalic',
                   fontSize: 12
                 }}>
-                Waiting for the master author's intro
+                Waiting for {masterAuthor._id === currentUser._id ? 'your' : "the master author's"}{' '}
+                intro
               </Text>
             )}
           </View>
