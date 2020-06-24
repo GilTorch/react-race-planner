@@ -54,10 +54,10 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
   genres.map(genre => genresTitle.push({ value: genre.name }));
 
   const [time, setTime] = React.useState({
-    introTimeLimitSeconds: '0:10',
-    endingTimeLimitSeconds: '0:10',
-    roundTimeLimitSeconds: '0:10',
-    voteTimeLimitSeconds: '0:10'
+    introTimeLimitSeconds: '0:15',
+    endingTimeLimitSeconds: '0:15',
+    roundTimeLimitSeconds: '0:15',
+    voteTimeLimitSeconds: '0:15'
   });
   const [selectedTime, setSelectedTime] = React.useState();
   let TimePickerRef = null;
@@ -73,10 +73,10 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
       isActive: true,
       genre: preselectedGenre, // TODO: send the genreId instead
       settings: {
-        introTimeLimitSeconds: 600,
-        endingTimeLimitSeconds: 600,
-        roundTimeLimitSeconds: 600,
-        voteTimeLimitSeconds: 600,
+        introTimeLimitSeconds: 900,
+        endingTimeLimitSeconds: 900,
+        roundTimeLimitSeconds: 900,
+        voteTimeLimitSeconds: 900,
         minimmum_participants: 2
       },
       privacyStatus: 'username'
@@ -335,6 +335,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
       <TimePicker
         hourUnit=" hr"
         minuteUnit=" mn"
+        selectedMinute="15" // TODO: set depending on the `selectedTime`
         ref={ref => {
           TimePickerRef = ref;
         }}
