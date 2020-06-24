@@ -192,15 +192,16 @@ const Story = ({ story, index, length, navigation, updating }) => {
             </View>
           )}
 
-          {status === 'In Progress' && authorsCount > story.settings.minimumParticipants && (
+          {status === 'In Progress' && authorsCount > story.settings?.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
               {authorsCount} authors
             </Text>
           )}
 
-          {authorsCount < story.settings.minimumParticipants && (
+          {authorsCount < story.settings?.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
-              {authorsCount} more {authorsCount === 1 ? 'person' : 'people'} to go
+              {story.settings?.minimumParticipants - authorsCount} more{' '}
+              {story.settings?.minimumParticipants - authorsCount === 1 ? 'person' : 'people'} to go
             </Text>
           )}
 
@@ -265,7 +266,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
                   fontFamily: 'RobotoItalic',
                   fontSize: 12
                 }}>
-                Waiting for {masterAuthor._id === currentUser._id ? 'your' : "the master author's"}{' '}
+                Waiting for {masterAuthor?._id === currentUser._id ? 'your' : "the master author's"}{' '}
                 intro
               </Text>
             )}
