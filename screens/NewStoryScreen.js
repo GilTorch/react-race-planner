@@ -60,7 +60,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
     roundTimeLimitSeconds: '0:15',
     voteTimeLimitSeconds: '0:15'
   });
-  const [selectedTime, setSelectedTime] = React.useState();
+  const [selectedTime] = React.useState();
   let TimePickerRef = null;
   const preselectedGenre = route.params.genre;
 
@@ -220,7 +220,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
             }
           />
         </Surface>
-        <Surface
+        {/* <Surface
           style={{
             elevation: 2,
             backgroundColor: 'white',
@@ -309,7 +309,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
             }}>
             <Text style={{ fontSize: 18 }}>{time.voteTimeLimitSeconds}</Text>
           </TouchableOpacity>
-        </Surface>
+        </Surface> */}
         <Surface
           style={{
             elevation: 2,
