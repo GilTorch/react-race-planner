@@ -170,6 +170,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2' }}>Title</Text>
           <TextInput
+            autoCapitalize="words"
             style={[styles.input, errors.title && styles.errorInput]}
             onChangeText={text => setValue('title', text)}
             value={watch('title')}
