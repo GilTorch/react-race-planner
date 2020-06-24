@@ -67,17 +67,15 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
     validationSchema: newStorySchema,
     defaultValues: {
       masterAuthor: user._id,
-      type: '5ee2c8ff60b50e0e46e54c74', // TODO: get and send the typeId
-      status: 'in_progress',
-      isPinned: false,
-      isActive: true,
+      type: 'story', // TODO: get and send the typeId
+      status: 'waiting_for_players',
       genre: preselectedGenre, // TODO: send the genreId instead
       settings: {
         introTimeLimitSeconds: 900,
         endingTimeLimitSeconds: 900,
         roundTimeLimitSeconds: 900,
         voteTimeLimitSeconds: 900,
-        minimmum_participants: 2
+        minimum_participants: 2
       },
       privacyStatus: 'username'
     }
@@ -215,7 +213,7 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
             dropdownPosition={0.5}
             data={listAuthordata}
             onChangeText={text =>
-              setValue('settings', { ...storySettings, minimmum_participants: text })
+              setValue('settings', { ...storySettings, minimum_participants: text })
             }
           />
         </Surface>
