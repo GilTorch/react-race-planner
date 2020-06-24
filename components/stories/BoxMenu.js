@@ -13,7 +13,15 @@ const BoxMenu = ({ parentType, block }) => {
   const [showReport, setShowReport] = useState(false);
   const [showVoting, setShowVoting] = React.useState(false);
   const [showComment, setShowComment] = React.useState(false);
-  const penddingStatus = block.status === 'in_progress';
+  const inProgressStatuses = [
+    'waiting_for_players',
+    'waiting_for_intros',
+    'intro_voting',
+    'round_writing',
+    'waiting_for_outros',
+    'outro_voting'
+  ];
+  const penddingStatus = inProgressStatuses.includes(block.status);
   const introEnding = parentType === 'Intro' || parentType === 'Ending';
 
   const showReportModal = () => {

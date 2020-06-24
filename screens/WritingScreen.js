@@ -150,14 +150,7 @@ const WritingScreen = ({ navigation, getStories }) => {
               {currentGenre.name}
             </Text>
           </View>
-          <Text style={{ textAlign: 'center' }}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-            has been the industry's standard dummy text ever since the 1500s, when an unknown
-            printer took a galley of type and scrambled it to make a type specimen book. It has
-            survived not only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s with the release of
-            Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
-          </Text>
+          <Text style={{ textAlign: 'center' }}>{currentGenre.description}</Text>
           <View
             style={{
               flexDirection: 'row',
@@ -171,7 +164,10 @@ const WritingScreen = ({ navigation, getStories }) => {
               <Button
                 icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
                 uppercase={false}
-                onPress={() => ''}
+                onPress={() => {
+                  menu.hide();
+                  navigation.navigate('NewStoryScreen', { genre: currentGenre.name });
+                }}
                 style={{ backgroundColor: '#03A2A2' }}>
                 <Text type="bold" style={{ color: '#FFF' }}>
                   Go
@@ -264,7 +260,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EEE',
-    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
+    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.2 : 0
   },
   btnSurface: {
     elevation: 4,
