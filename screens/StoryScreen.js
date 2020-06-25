@@ -30,7 +30,7 @@ const StoryScreen = ({ navigation, route }) => {
   const authorsCount = story.parts?.filter(p => !p.isIntro && !p.isOutro).length;
   const missingAuthorsCount = story.settings?.minimumParticipants - authorsCount;
   const currentUser = useSelector(state => state.auth.currentUser);
-  const includesSelf = story.parts?.some(p => p.author?._id === currentUser._id);
+  const includesSelf = story.parts?.some(p => p.author?._id === currentUser?._id);
   const inprogressStory = story.status === 'in_progress';
   const waitingStory = authorsCount < story.settings?.minimumParticipants;
   const completedStory = story.status === 'completed';
@@ -384,17 +384,6 @@ const StoryScreen = ({ navigation, route }) => {
                   </View>
                 );
               })}
-
-          {inprogressStory && (
-            <>
-              <Text type="bold" style={{ ...styles.title, marginTop: 0 }}>
-                All Proposed Endings
-              </Text>
-              <Text type="bold-italic" style={{ ...styles.pendingText, fontSize: 13 }}>
-                Pending
-              </Text>
-            </>
-          )}
 
           {completedStory && (
             <ProposedSection

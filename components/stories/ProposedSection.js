@@ -9,13 +9,11 @@ import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 
 const ProposedSection = ({ type, proposedBlocks, listMode }) => {
-  const { length } = proposedBlocks;
-  const hasElected = proposedBlocks.some(block => block.isElected);
   const electedBlock = proposedBlocks.find(block => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
       <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
-        {electedBlock?.content}
+        {electedBlock.content || `No elected ${type} yet`}
       </Text>
     </View>
   );
@@ -23,7 +21,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
   const cardsSection = (
     <>
       <Text type="medium" style={{ ...styles.title, marginTop: type === 'Ending' ? 0 : 20 }}>
-        All Proposed {type}s ({length})
+        All Proposed {type}s ({proposedBlocks.length})
       </Text>
       <ScrollView horizontal style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
         {proposedBlocks.map((proposedBlock, index) => {
@@ -34,7 +32,10 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
                 <Text type="bold" style={styles.subTitle}>
                   By {proposedBlock.author.username}
                 </Text>
-                <BoxMenu parentType={type} block={{ ...proposedBlock, hasElected }} />
+                <BoxMenu
+                  parentType={type}
+                  block={{ ...proposedBlock, hasElected: !!electedBlock }}
+                />
               </View>
               <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
                 {proposedBlock.content}

@@ -266,8 +266,8 @@ const Story = ({ story, index, length, navigation, updating }) => {
                   fontFamily: 'RobotoItalic',
                   fontSize: 12
                 }}>
-                Waiting for {masterAuthor?._id === currentUser._id ? 'your' : "the master author's"}{' '}
-                intro
+                Waiting for{' '}
+                {masterAuthor?._id === currentUser?._id ? 'your' : "the master author's"} intro
               </Text>
             )}
           </View>
