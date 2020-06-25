@@ -33,6 +33,8 @@ const writingPersistConfig = {
   storage: AsyncStorage
 };
 
+// TODO: Get rid of this, we do it at the stack level
+// and actually save the intended data in 'writing' above
 const storyPersistConfig = {
   key: 'story',
   storage: AsyncStorage
