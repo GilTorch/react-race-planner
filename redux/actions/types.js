@@ -53,6 +53,10 @@ export const User = {
 };
 
 export const Home = {
+  // Notice that only the Home one has the following 3 types.
+  // That's because a story is automatically set to in progress
+  // (waiting_for_players to be exact) upon creation. So they can only
+  // be shown up on the Home screen for now
   CREATE_STORY_START: 'CREATE_STORY_START',
   CREATE_STORY_SUCCESS: 'CREATE_STORY_SUCCESS',
   CREATE_STORY_FAILURE: 'CREATE_STORY_FAILURE',
