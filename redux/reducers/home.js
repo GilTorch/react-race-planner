@@ -2,6 +2,7 @@ import { Home } from '../actions/types';
 // import mergeResponse from '../../utils/mergeResponse';
 
 const initialState = {
+  createStoryLoading: false,
   loadingStories: false,
   stories: null,
   updatingStories: false,
@@ -9,9 +10,12 @@ const initialState = {
     status: {
       allSelected: false,
       tags: [
-        { selected: true, label: 'In Progress', slug: 'in_progress' },
-        // { selected: true, label: 'Waiting for players', slug: 'waiting_for_authors' },
-        { selected: false, label: "Stories that I'm part of", slug: 'include_self' }
+        { selected: true, label: 'Waiting for Players', slug: 'waiting_for_players' },
+        { selected: true, label: 'Waiting for Intros', slug: 'waiting_for_intros' },
+        { selected: true, label: 'Waiting for Intro Votes', slug: 'intro_voting' },
+        { selected: true, label: 'Rounds in Progress', slug: 'round_writing' },
+        { selected: true, label: 'Waiting for Endings', slug: 'waiting_for_outros' },
+        { selected: true, label: 'Waiting for Outro Votes', slug: 'outro_voting' }
       ]
     },
     genres: {
@@ -36,6 +40,16 @@ const homeReducer = (state = initialState, action) => {
   switch (action.type) {
     case Home.SET_ACTIVE_STORIES_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
+    case Home.CREATE_STORY_START:
+      return { ...state, createStoryLoading: true };
+    case Home.CREATE_STORY_FAILURE:
+      return { ...state, createStoryLoading: false };
+    case Home.CREATE_STORY_SUCCESS:
+      return {
+        ...state,
+        createStoryLoading: false,
+        stories: state.stories ? [...state.stories, action.story] : [action.story]
+      };
     case Home.GET_ACTIVE_STORIES_START:
       return { ...state, loadingStories: true };
     case Home.UPDATE_ACTIVE_STORIES:

@@ -8,10 +8,14 @@ const initialState = {
     status: {
       allSelected: true,
       tags: [
-        { selected: true, label: 'In Progress', slug: 'in_progress' },
-        // { selected: true, label: 'Waiting for players', slug: 'waiting_for_authors' },
+        { selected: true, label: 'Waiting for Players', slug: 'waiting_for_players' },
+        { selected: true, label: 'Waiting for Intros', slug: 'waiting_for_intros' },
+        { selected: true, label: 'Waiting for Intro Votes', slug: 'intro_voting' },
+        { selected: true, label: 'Rounds in Progress', slug: 'round_writing' },
+        { selected: true, label: 'Waiting for Endings', slug: 'waiting_for_outros' },
+        { selected: true, label: 'Waiting for Outro Votes', slug: 'outro_voting' },
         { selected: true, label: 'Completed', slug: 'completed' },
-        { selected: true, label: "Stories that I'm part of", slug: 'include_self' }
+        { selected: true, label: "Stories That I'm Part of", slug: 'include_self' }
       ]
     },
     genres: {

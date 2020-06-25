@@ -13,9 +13,17 @@ import BoxMenu from './BoxMenu';
 const Round = ({ round, totalRound, roundIdx, listMode, style }) => {
   const roundStatus = round.status;
   const currentUser = useSelector(state => state.auth.currentUser);
-  const inprogressRound = roundStatus === 'in_progress';
-  const userTurn = round.author?._id === currentUser._id;
-  const height = roundStatus === 'in_progress' && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
+  const inProgressStatuses = [
+    'waiting_for_players',
+    'waiting_for_intros',
+    'intro_voting',
+    'round_writing',
+    'waiting_for_outros',
+    'outro_voting'
+  ];
+  const inprogressRound = inProgressStatuses.includes(roundStatus);
+  const userTurn = round.author?._id === currentUser?._id;
+  const height = inprogressRound && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
 
   const roundBody = (
     <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>

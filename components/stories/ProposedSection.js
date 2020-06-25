@@ -10,10 +10,10 @@ import BoxMenu from './BoxMenu';
 
 const ProposedSection = ({ type, proposedBlocks, listMode }) => {
   const electedBlock = proposedBlocks.find(block => block.isElected);
-  const listElected = (
+  const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
       <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
-        {electedBlock?.content || `No elected ${type} yet`}
+        {electedBlock.content || `No elected ${type} yet`}
       </Text>
     </View>
   );
