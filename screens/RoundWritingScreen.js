@@ -14,7 +14,8 @@ import {
   Dimensions,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  StatusBar
 } from 'react-native';
 import { Permissions, ImagePicker } from 'expo';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -35,6 +36,7 @@ import {
   MenuProvider,
   renderers
 } from 'react-native-popup-menu';
+import { useFocusEffect } from '@react-navigation/native';
 
 const { SlideInMenu } = renderers;
 
@@ -46,6 +48,7 @@ const RoundWritingScreen = ({ navigation }) => {
   navigation.setOptions({
     headerShown: false
   });
+
   useEffect(() => {
     const parent = navigation.dangerouslyGetParent();
     parent.setOptions({
@@ -57,6 +60,16 @@ const RoundWritingScreen = ({ navigation }) => {
       });
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      if (Platform.OS === 'android') {
+        StatusBar.setHidden(true);
+      } else {
+        StatusBar.setBarStyle('light-content');
+      }
+    }, [])
+  );
+
   const [customStyles, setCustomStyles] = useState({
     ...defaultStyles,
     body: { fontSize: 12 },
@@ -66,6 +79,7 @@ const RoundWritingScreen = ({ navigation }) => {
     ul: { fontSize: 12 },
     bold: { fontSize: 12, fontWeight: 'bold', color: '' }
   });
+
   const [selectedTag, setSelectedTag] = useState('body');
   const [selectedColor, setSelectedColor] = useState('default');
   const [selectedHighlight, setSelectedHighlight] = useState('default');
@@ -78,6 +92,7 @@ const RoundWritingScreen = ({ navigation }) => {
     'purple_hl',
     'blue_hl'
   ]);
+
   const [selectedStyles, setSelectedStyles] = useState([]);
   // value: [getInitialObject()] get empty editor
   const [value, setValue] = useState(
@@ -86,6 +101,7 @@ const RoundWritingScreen = ({ navigation }) => {
       customStyles
     )
   );
+
   let editor = null;
 
   const onStyleKeyPress = toolType => {
