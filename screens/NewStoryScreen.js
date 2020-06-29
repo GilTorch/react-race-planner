@@ -93,11 +93,23 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
     TimePickerRef.close();
   };
 
-  const submit = async data => {
-    try {
-      const { story } = await createStory(data);
+  // This is for RoundWritingScreen
+  // const submit = async data => {
+  //   try {
+  //     const { story } = await createStory(data);
 
-      navigation.navigate('StoryScreen', { story });
+  //     navigation.navigate('StoryScreen', { story });
+  //   } catch (e) {
+  //     Toast.show(e.message, {
+  //       duration: Toast.durations.SHORT,
+  //       position: Toast.positions.BOTTOM
+  //     });
+  //   }
+  // };
+
+  const submit = async story => {
+    try {
+      navigation.navigate('RoundWriting', { story });
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
