@@ -1,9 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-alert */
-/* eslint-disable no-return-assign */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -11,13 +5,13 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Text,
-  Dimensions,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   StatusBar
 } from 'react-native';
-import { Permissions, ImagePicker } from 'expo';
+import { MenuProvider } from 'react-native-popup-menu';
+import PropTypes from 'prop-types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import CNRichTextEditor, {
   CNToolbar,
@@ -26,25 +20,16 @@ import CNRichTextEditor, {
 } from 'react-native-cn-richtext-editor';
 import { Surface } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
-
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-  MenuContext,
-  MenuProvider,
-  renderers
-} from 'react-native-popup-menu';
 import { useFocusEffect } from '@react-navigation/native';
+import { connect } from 'react-redux';
+import Toast from 'react-native-root-toast';
 
-const { SlideInMenu } = renderers;
+import { createStoryAction } from '../redux/actions/StoryAction';
 
 const IS_IOS = Platform.OS === 'ios';
-const { width, height } = Dimensions.get('window');
 const defaultStyles = getDefaultStyles();
 
-const RoundWritingScreen = ({ navigation }) => {
+const RoundWritingScreen = ({ navigation, route, createStory }) => {
   navigation.setOptions({
     headerShown: false
   });
@@ -70,7 +55,7 @@ const RoundWritingScreen = ({ navigation }) => {
     }, [])
   );
 
-  const [customStyles, setCustomStyles] = useState({
+  const [customStyles] = useState({
     ...defaultStyles,
     body: { fontSize: 12 },
     heading: { fontSize: 16 },
@@ -81,20 +66,8 @@ const RoundWritingScreen = ({ navigation }) => {
   });
 
   const [selectedTag, setSelectedTag] = useState('body');
-  const [selectedColor, setSelectedColor] = useState('default');
-  const [selectedHighlight, setSelectedHighlight] = useState('default');
-  const [colors, setColors] = useState(['red', 'green', 'blue']);
-  const [highlights, setHighlights] = useState([
-    'yellow_hl',
-    'pink_hl',
-    'orange_hl',
-    'green_hl',
-    'purple_hl',
-    'blue_hl'
-  ]);
 
   const [selectedStyles, setSelectedStyles] = useState([]);
-  // value: [getInitialObject()] get empty editor
   const [value, setValue] = useState(
     convertToObject(
       '<div><p><span>This is </span><span style="font-weight: bold;">bold</span><span> and </span><span style="font-style: italic;">italic </span><span>text</span></p></div>',
@@ -105,9 +78,7 @@ const RoundWritingScreen = ({ navigation }) => {
   let editor = null;
 
   const onStyleKeyPress = toolType => {
-    if (toolType !== 'image') {
-      editor.applyToolbar(toolType);
-    }
+    editor.applyToolbar(toolType);
   };
 
   const onSelectedTagChanged = tag => {
@@ -115,192 +86,27 @@ const RoundWritingScreen = ({ navigation }) => {
   };
 
   const onSelectedStyleChanged = styles => {
-    const colors = colors;
-    const highlights = highlights;
     setSelectedStyles(styles);
-    const sel = styles.filter(x => colors.indexOf(x) >= 0);
-    const hl = styles.filter(x => highlights.indexOf(x) >= 0);
-    setSelectedColor(sel.length > 0 ? sel[sel.length - 1] : 'default');
-    setSelectedHighlight(hl.length > 0 ? hl[hl.length - 1] : 'default');
   };
 
-  const onValueChanged = value => {
-    setValue(value);
+  const onValueChanged = newVal => {
+    setValue(newVal);
   };
 
-  const insertImage = url => {
-    editor.insertImage(url);
-  };
+  const submitRound = async () => {
+    try {
+      const { story } = await createStory({
+        ...route.params.story,
+        intro: value
+      });
 
-  const askPermissionsAsync = async () => {
-    const camera = await Permissions.askAsync(Permissions.CAMERA);
-    const cameraRoll = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    // hasCameraPermission(camera.status === 'granted');
-    // hasCameraRollPermission(cameraRoll.status === 'granted');
-  };
-
-  const useLibraryHandler = async () => {
-    await askPermissionsAsync();
-    const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 4],
-      base64: false
-    });
-
-    insertImage(result.uri);
-  };
-
-  const useCameraHandler = async () => {
-    await askPermissionsAsync();
-    const result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 4],
-      base64: false
-    });
-    // console.log(result);
-
-    insertImage(result.uri);
-  };
-
-  const onImageSelectorClicked = value => {
-    if (value === 1) {
-      useCameraHandler();
-    } else if (value === 2) {
-      useLibraryHandler();
+      navigation.navigate('StoryScreen', { story });
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
     }
-  };
-
-  const onColorSelectorClicked = value => {
-    if (value === 'default') {
-      editor.applyToolbar(selectedColor);
-    } else {
-      editor.applyToolbar(value);
-    }
-    setSelectedColor(value);
-  };
-
-  const onHighlightSelectorClicked = value => {
-    if (value === 'default') {
-      editor.applyToolbar(selectedHighlight);
-    } else {
-      editor.applyToolbar(value);
-    }
-    setSelectedHighlight(value);
-  };
-
-  const onRemoveImage = ({ url, id }) => {
-    // do what you have to do after removing an image
-    // eslint-disable-next-line no-console
-    console.log(`image removed (url : ${url})`);
-  };
-
-  const renderImageSelector = () => {
-    return (
-      <View style={styles.root}>
-        <Menu renderer={SlideInMenu} onSelect={onImageSelectorClicked}>
-          <MenuTrigger>
-            <MaterialCommunityIcons name="image" size={28} color="#03a2a2" />
-          </MenuTrigger>
-          <MenuOptions>
-            <MenuOption value={1}>
-              <Text style={styles.menuOptionText}>Take Photo</Text>
-            </MenuOption>
-            <View style={styles.divider} />
-            <MenuOption value={2}>
-              <Text style={styles.menuOptionText}>Photo Library</Text>
-            </MenuOption>
-            <View style={styles.divider} />
-            <MenuOption value={3}>
-              <Text style={styles.menuOptionText}>Cancel</Text>
-            </MenuOption>
-          </MenuOptions>
-        </Menu>
-      </View>
-    );
-  };
-
-  const renderColorMenuOptions = () => {
-    let lst = [];
-
-    if (defaultStyles[selectedColor]) {
-      lst = colors.filter(x => x !== selectedColor);
-      lst.push('default');
-      lst.push(selectedColor);
-    } else {
-      lst = colors.filter(x => true);
-      lst.push('default');
-    }
-
-    return lst.map(item => {
-      const color = defaultStyles[item] ? defaultStyles[item].color : 'black';
-      return (
-        <MenuOption value={item} key={item}>
-          <MaterialCommunityIcons name="format-color-text" color={color} size={28} />
-        </MenuOption>
-      );
-    });
-  };
-
-  const renderHighlightMenuOptions = () => {
-    let lst = [];
-
-    if (defaultStyles[selectedHighlight]) {
-      lst = highlights.filter(x => x !== selectedHighlight);
-      lst.push('default');
-      lst.push(selectedHighlight);
-    } else {
-      lst = highlights.filter(x => true);
-      lst.push('default');
-    }
-
-    return lst.map(item => {
-      const bgColor = defaultStyles[item] ? defaultStyles[item].backgroundColor : 'black';
-      return (
-        <MenuOption value={item} key={item}>
-          <MaterialCommunityIcons name="marker" color={bgColor} size={26} />
-        </MenuOption>
-      );
-    });
-  };
-
-  const renderColorSelector = () => {
-    let selectedColor = '#737373';
-    if (defaultStyles[selectedColor]) {
-      selectedColor = defaultStyles[selectedColor].color;
-    }
-
-    return (
-      <Menu renderer={SlideInMenu} onSelect={onColorSelectorClicked}>
-        <MenuTrigger>
-          <MaterialCommunityIcons
-            name="format-color-text"
-            color="#03a2a2"
-            size={28}
-            style={{
-              top: 2
-            }}
-          />
-        </MenuTrigger>
-        <MenuOptions customStyles={optionsStyles}>{renderColorMenuOptions()}</MenuOptions>
-      </Menu>
-    );
-  };
-
-  const renderHighlight = () => {
-    let selectedColor = '#03a2a2';
-    if (defaultStyles[selectedHighlight]) {
-      selectedColor = defaultStyles[selectedHighlight].backgroundColor;
-    }
-    return (
-      <Menu renderer={SlideInMenu} onSelect={onHighlightSelectorClicked}>
-        <MenuTrigger>
-          <MaterialCommunityIcons name="marker" color={selectedColor} size={24} style={{}} />
-        </MenuTrigger>
-        <MenuOptions customStyles={highlightOptionsStyles}>
-          {renderHighlightMenuOptions()}
-        </MenuOptions>
-      </Menu>
-    );
   };
 
   return (
@@ -336,7 +142,7 @@ const RoundWritingScreen = ({ navigation }) => {
             <Text type="bold" style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
               Round Writing
             </Text>
-            <TouchableOpacity onPress={() => alert(value)}>
+            <TouchableOpacity onPress={() => submitRound()}>
               <Text type="bold" style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
                 Done
               </Text>
@@ -348,7 +154,9 @@ const RoundWritingScreen = ({ navigation }) => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.main}>
             <CNRichTextEditor
-              ref={input => (editor = input)}
+              ref={input => {
+                editor = input;
+              }}
               onSelectedTagChanged={onSelectedTagChanged}
               onSelectedStyleChanged={onSelectedStyleChanged}
               value={value}
@@ -357,7 +165,6 @@ const RoundWritingScreen = ({ navigation }) => {
               styleList={customStyles}
               foreColor="dimgray" // optional (will override default fore-color)
               onValueChanged={onValueChanged}
-              onRemoveImage={onRemoveImage}
             />
           </View>
         </TouchableWithoutFeedback>
@@ -457,45 +264,14 @@ const styles = StyleSheet.create({
   }
 });
 
-const optionsStyles = {
-  optionsContainer: {
-    backgroundColor: '#03a2a2',
-    padding: 0,
-    width: 40,
-    marginLeft: width - 40 - 30,
-    alignItems: 'flex-end'
-  },
-  optionsWrapper: {
-    backgroundColor: 'white'
-  },
-  optionWrapper: {
-    margin: 2
-  },
-  optionTouchable: {
-    underlayColor: 'gold',
-    activeOpacity: 70
-  }
+RoundWritingScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  route: PropTypes.object.isRequired,
+  createStory: PropTypes.func.isRequired
 };
 
-const highlightOptionsStyles = {
-  optionsContainer: {
-    backgroundColor: 'transparent',
-    padding: 0,
-    width: 40,
-    marginLeft: width - 40,
-
-    alignItems: 'flex-end'
-  },
-  optionsWrapper: {
-    backgroundColor: 'white'
-  },
-  optionWrapper: {
-    margin: 2
-  },
-  optionTouchable: {
-    underlayColor: 'gold',
-    activeOpacity: 70
-  }
+const mapDispatchToProps = {
+  createStory: createStoryAction
 };
 
-export default RoundWritingScreen;
+export default connect(null, mapDispatchToProps)(RoundWritingScreen);
