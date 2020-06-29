@@ -352,6 +352,7 @@ const RoundWritingScreen = ({ navigation }) => {
               onSelectedTagChanged={onSelectedTagChanged}
               onSelectedStyleChanged={onSelectedStyleChanged}
               value={value}
+              placeholder="Write your story intro here..."
               style={styles.editor}
               styleList={customStyles}
               foreColor="dimgray" // optional (will override default fore-color)
@@ -473,10 +474,8 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
-    paddingTop: 20,
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingBottom: 20,
+    padding: 15,
+    backgroundColor: '#fff',
     alignItems: 'stretch'
   },
   editor: {
