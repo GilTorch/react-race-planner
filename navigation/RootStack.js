@@ -10,6 +10,7 @@ import LoginScreen from '../screens/LoginScreen';
 import ResetPasswordScreen from '../screens/ResetPasswordScreen';
 import ResetPasswordTwoScreen from '../screens/ResetPasswordTwoScreen';
 import OTPVerificationScreen from '../screens/OTPVerificationScreen';
+import NewStoryScreen from '../screens/NewStoryScreen';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,7 @@ export default function RootStack() {
           <>
             <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }} />
             <Stack.Screen name="FilterScreen" component={FilterScreen} />
+            <Stack.Screen name="NewStoryScreen" component={NewStoryScreen} />
           </>
         )}
     </Stack.Navigator>
