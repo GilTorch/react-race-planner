@@ -406,21 +406,6 @@ const RoundWritingScreen = ({ navigation }) => {
                 type: 'tool',
                 iconArray: [
                   {
-                    toolTypeText: 'body',
-                    buttonTypes: 'tag',
-                    iconComponent: <MaterialCommunityIcons name="format-text" />
-                  },
-                  {
-                    toolTypeText: 'title',
-                    buttonTypes: 'tag',
-                    iconComponent: <MaterialCommunityIcons name="format-header-1" />
-                  },
-                  {
-                    toolTypeText: 'heading',
-                    buttonTypes: 'tag',
-                    iconComponent: <MaterialCommunityIcons name="format-header-3" />
-                  },
-                  {
                     toolTypeText: 'ul',
                     buttonTypes: 'tag',
                     iconComponent: <MaterialCommunityIcons name="format-list-bulleted" />
@@ -429,26 +414,6 @@ const RoundWritingScreen = ({ navigation }) => {
                     toolTypeText: 'ol',
                     buttonTypes: 'tag',
                     iconComponent: <MaterialCommunityIcons name="format-list-numbered" />
-                  }
-                ]
-              },
-              {
-                type: 'seperator'
-              },
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'image',
-                    iconComponent: renderImageSelector()
-                  },
-                  {
-                    toolTypeText: 'color',
-                    iconComponent: renderColorSelector()
-                  },
-                  {
-                    toolTypeText: 'highlight',
-                    iconComponent: renderHighlight()
                   }
                 ]
               }
