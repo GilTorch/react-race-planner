@@ -1,8 +1,10 @@
-import { Home } from '../actions/types';
+import { Home, Story } from '../actions/types';
 // import mergeResponse from '../../utils/mergeResponse';
 
 const initialState = {
   createStoryLoading: false,
+  leaveStoryLoading: false,
+  deleteStoryLoading: false,
   loadingStories: false,
   stories: null,
   updatingStories: false,
@@ -40,16 +42,28 @@ const homeReducer = (state = initialState, action) => {
   switch (action.type) {
     case Home.SET_ACTIVE_STORIES_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
-    case Home.CREATE_STORY_START:
+    case Story.CREATE_STORY_START:
       return { ...state, createStoryLoading: true };
-    case Home.CREATE_STORY_FAILURE:
+    case Story.CREATE_STORY_FAILURE:
       return { ...state, createStoryLoading: false };
-    case Home.CREATE_STORY_SUCCESS:
+    case Story.CREATE_STORY_SUCCESS:
       return {
         ...state,
         createStoryLoading: false,
         stories: state.stories ? [...state.stories, action.story] : [action.story]
       };
+    case Story.LEAVE_STORY_START:
+      return { ...state, leaveStoryLoading: true };
+    case Story.LEAVE_STORY_FAILURE:
+      return { ...state, leaveStoryLoading: false };
+    case Story.LEAVE_STORY_SUCCESS:
+      return { ...state, leaveStoryLoading: false };
+    case Story.DELETE_STORY_START:
+      return { ...state, deleteStoryLoading: true };
+    case Story.DELETE_STORY_FAILURE:
+      return { ...state, deleteStoryLoading: false };
+    case Story.DELETE_STORY_SUCCESS:
+      return { ...state, deleteStoryLoading: false };
     case Home.GET_ACTIVE_STORIES_START:
       return { ...state, loadingStories: true };
     case Home.UPDATE_ACTIVE_STORIES:

@@ -18,7 +18,7 @@ import { genresData } from '../utils/data';
 import { newStorySchema } from '../utils/validators';
 import { createStoryAction } from '../redux/actions/StoryAction';
 
-const NewStoryScreen = ({ navigation, route, createStory }) => {
+const NewStoryScreen = ({ navigation, route }) => {
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(false);
@@ -93,11 +93,9 @@ const NewStoryScreen = ({ navigation, route, createStory }) => {
     TimePickerRef.close();
   };
 
-  const submit = async data => {
+  const submit = async story => {
     try {
-      const { story } = await createStory(data);
-
-      navigation.navigate('StoryScreen', { story });
+      navigation.navigate('RoundWriting', { story });
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
@@ -367,8 +365,7 @@ const styles = StyleSheet.create({
 
 NewStoryScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  route: PropTypes.object.isRequired,
-  createStory: PropTypes.func.isRequired
+  route: PropTypes.object.isRequired
 };
 
 const mapDispatchToProps = {
