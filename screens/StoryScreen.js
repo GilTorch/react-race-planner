@@ -341,29 +341,12 @@ const StoryScreen = ({ navigation, route }) => {
           contentContainerStyle={{
             paddingTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40)
           }}>
-          {waitingStory && (
-            <>
-              <Text type="medium" style={styles.title}>
-                All Proposed Intros
-              </Text>
-              <Text type="bold-italic" style={styles.pendingText}>
-                Waiting for {missingAuthorsCount} more player{missingAuthorsCount !== 1 && 's'}.
-              </Text>
-
-              <HugeAdvertisement />
-            </>
-          )}
-
-          {!waitingStory && (
-            <>
-              <ProposedSection
-                type="Intro"
-                proposedBlocks={story.parts?.filter(p => p.isIntro)}
-                listMode={listMode}
-              />
-              <SmallAdvertisement />
-            </>
-          )}
+          <ProposedSection
+            type="Intro"
+            proposedBlocks={story.parts?.filter(p => p.isIntro)}
+            listMode={listMode}
+          />
+          <SmallAdvertisement />
 
           {!waitingStory &&
             story.parts
