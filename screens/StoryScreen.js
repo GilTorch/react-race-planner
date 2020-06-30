@@ -28,7 +28,8 @@ import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 const StoryScreen = ({ navigation, route }) => {
   const { story } = route.params;
   const { masterAuthor } = story;
-  const authorsCount = story.parts?.filter(p => !p.isIntro && !p.isOutro).length;
+  // We handle the case where it's a dummy data and we don't have a hidden part for the master author
+  const authorsCount = story.parts?.filter(p => !p.isIntro && !p.isOutro).length || 1;
   const missingAuthorsCount = story.settings?.minimumParticipants - authorsCount;
   const currentUser = useSelector(state => state.auth.currentUser);
   const isMasterAuthor = currentUser._id === masterAuthor._id;
