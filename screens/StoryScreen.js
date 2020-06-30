@@ -23,6 +23,7 @@ import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
 import { SCREEN_HEIGHT } from '../utils/dimensions';
+import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 
 const StoryScreen = ({ navigation, route }) => {
   const { story } = route.params;
@@ -30,6 +31,7 @@ const StoryScreen = ({ navigation, route }) => {
   const authorsCount = story.parts?.filter(p => !p.isIntro && !p.isOutro).length;
   const missingAuthorsCount = story.settings?.minimumParticipants - authorsCount;
   const currentUser = useSelector(state => state.auth.currentUser);
+  const isMasterAuthor = currentUser._id === masterAuthor._id;
   const includesSelf = story.parts?.some(p => p.author?._id === currentUser?._id);
   const inprogressStory = story.status === 'in_progress';
   const waitingStory = authorsCount < story.settings?.minimumParticipants;
@@ -38,6 +40,7 @@ const StoryScreen = ({ navigation, route }) => {
   const status = inprogress ? 'In Progress' : 'Completed';
   const masterAuthorName = inprogress ? 'Anonymous 1' : masterAuthor.username;
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
+  const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
 
   const scrollView = React.useRef(null);
 
@@ -131,6 +134,13 @@ const StoryScreen = ({ navigation, route }) => {
         backgroundColor: color,
         marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
       }}>
+      <LeaveStoryModal
+        isMasterAuthor={isMasterAuthor}
+        dismiss={() => setIsLeaveStoryModalVisible(false)}
+        visible={isLeaveStoryModalVisible}
+        storyId={story._id}
+        navigation={navigation}
+      />
       <Surface
         style={{
           borderBottomLeftRadius: 13,
@@ -198,10 +208,13 @@ const StoryScreen = ({ navigation, route }) => {
               <Surface style={styles.surface}>
                 <Button
                   mode="contained"
+                  onPress={() => setIsLeaveStoryModalVisible(true)}
                   uppercase={false}
                   style={{ backgroundColor: firstBtnColor }}
                   labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
-                  {includesSelf ? 'Leave Story' : 'Join Story'}
+                  {includesSelf && isMasterAuthor && 'Delete Story'}
+                  {includesSelf && !isMasterAuthor && 'Leave Story'}
+                  {!includesSelf && 'Join Story'}
                 </Button>
               </Surface>
 
