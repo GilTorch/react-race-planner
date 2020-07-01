@@ -8,6 +8,7 @@ import { MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons'
 import LottieView from 'lottie-react-native';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
+import { AllHtmlEntities } from 'html-entities';
 
 import MysteryIcon from '../svg/icons/MysteryIcon';
 import { getUserProfileUri } from '../../utils/functions';
@@ -194,7 +195,8 @@ const Story = ({ story, index, length, navigation, updating }) => {
 
           {status === 'In Progress' && authorsCount > story.settings?.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
-              {authorsCount} authors
+              {authorsCount + anonymousAuthorsCount} authors | {authorsCount} public{' '}
+              {new AllHtmlEntities().decode('&middot;')} {anonymousAuthorsCount} anonymous
             </Text>
           )}
 
