@@ -22,6 +22,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { Dropdown } from 'react-native-material-dropdown';
 import { connect, useSelector } from 'react-redux';
 
+import moment from 'moment';
 import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
@@ -462,7 +463,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
 
       <RBSheet
         ref={refRBSheet}
-        height={400}
+        height={SCREEN_HEIGHT * 0.6}
         closeOnDragDown
         // closeOnPressMask={false}
         customStyles={{
@@ -474,31 +475,57 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
           }
         }}>
         <View style={{ marginHorizontal: 25 }}>
-          <Text style={{ fontSize: 16, color: '#F44336' }}>
+          <Text style={{ fontSize: 16, color: '#03a2a2' }}>
             Minimum and maximum authors allowed
           </Text>
-          <Text type="bold" style={{ marginVertical: 5 }}>
-            2 to 10
+          <Text style={{ marginTop: 5, marginBottom: 10 }}>
+            {story.settings?.minimumParticipants} to 100
           </Text>
-          <Text style={{ fontSize: 16, color: '#F44336' }}>
+          <Text style={{ fontSize: 16, color: '#03a2a2' }}>
             Time for writing and voting for the intro
           </Text>
-          <Text type="bold" style={{ marginVertical: 5 }}>
-            10mins
+          <Text style={{ marginTop: 5, marginBottom: 10 }}>
+            {moment()
+              .startOf('day')
+              .seconds(story.settings?.introTimeLimitSeconds)
+              .format('H:mm')}{' '}
+            to write{' & '}
+            {moment()
+              .startOf('day')
+              .seconds(story.settings?.voteTimeLimitSeconds)
+              .format('H:mm')}{' '}
+            to vote
           </Text>
-          <Text style={{ fontSize: 16, color: '#F44336' }}>
+          <Text style={{ fontSize: 16, color: '#03a2a2' }}>
             Time for writing and voting for the ending
           </Text>
-          <Text type="bold" style={{ marginVertical: 5 }}>
-            1hr 10 mins
+          <Text style={{ marginTop: 5, marginBottom: 10 }}>
+            {moment()
+              .startOf('day')
+              .seconds(story.settings?.outroTimeLimitSeconds)
+              .format('H:mm')}{' '}
+            to write{' & '}
+            {moment()
+              .startOf('day')
+              .seconds(story.settings?.voteTimeLimitSeconds)
+              .format('H:mm')}{' '}
+            to vote
           </Text>
-          <Text style={{ fontSize: 16, color: '#F44336' }}>Time for writing a round</Text>
-          <Text type="bold" style={{ marginVertical: 5 }}>
-            50mins
+          <Text style={{ fontSize: 16, color: '#03a2a2' }}>Time for writing a round</Text>
+          <Text style={{ marginTop: 5, marginBottom: 10 }}>
+            {moment()
+              .startOf('day')
+              .seconds(story.settings?.roundTimeLimitSeconds)
+              .format('H:mm')}{' '}
           </Text>
-          <Text style={{ fontSize: 16, color: '#F44336', marginBottom: -20 }}>Privacy Status</Text>
+          <Text style={{ fontSize: 16, color: '#03a2a2' }}>Privacy Status</Text>
+
+          <Text style={{ fontSize: 12, marginBottom: -20 }}>
+            Decide what other people will see as your handle throughout this story
+          </Text>
+
           <Dropdown
-            value="username"
+            value={story.privacyStatus}
             fontSize={16}
             dropdownPosition={0.1}
             onChangeText={text => setPrivacyStatus(text)}
@@ -509,7 +536,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
               mode="contained"
               onPress={handleJoinStory}
               uppercase={false}
-              style={{ backgroundColor: firstBtnColor }}
+              style={{ backgroundColor: '#ED8A18' }}
               labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
               Join Story
             </Button>
@@ -538,11 +565,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 5,
     elevation: 2
-  },
-  pendingText: {
-    color: '#ED8A18',
-    marginLeft: 20,
-    marginVertical: 20
   },
   floatingNav: {
     flexDirection: 'row',
