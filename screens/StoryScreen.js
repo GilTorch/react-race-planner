@@ -26,36 +26,57 @@ import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
 import { SCREEN_HEIGHT } from '../utils/dimensions';
-import { joinStoryAction } from '../redux/actions/StoryAction';
+import { joinStoryAction, leaveStoryAction } from '../redux/actions/StoryAction';
+import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 
-const StoryScreen = ({ navigation, route, joinStory }) => {
+const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
   const { story } = route.params;
   const { masterAuthor } = story;
-  const authorsCount = story.parts?.filter(p => !p.isIntro && !p.isOutro).length;
+  const inProgressStatuses = [
+    'waiting_for_players',
+    'waiting_for_intros',
+    'intro_voting',
+    'round_writing',
+    'waiting_for_outros',
+    'outro_voting'
+  ];
+  const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(story.status);
+  // We handle the case where it's a dummy data and we don't have a hidden part for the master author
+  const authorsCount = story.parts?.filter(p => !p.isIntro && !p.isOutro).length || 1;
   const missingAuthorsCount = story.settings?.minimumParticipants - authorsCount;
+  const anonymousAuthorsCount = story.parts?.filter(
+    p =>
+      !p.isIntro &&
+      !p.isOutro &&
+      p.author?._id !== masterAuthor?._id &&
+      p.privacyStatus === 'anonymous'
+  ).length;
   const currentUser = useSelector(state => state.auth.currentUser);
   const userIsAParticipant = story.parts?.some(p => p.author?._id === currentUser?._id);
-  const inprogressStory = story.status === 'in_progress';
+  const isMasterAuthor = currentUser._id === masterAuthor._id;
   const waitingStory = authorsCount < story.settings?.minimumParticipants;
   const completedStory = story.status === 'completed';
-  const inprogress = inprogressStory || waitingStory;
-  const status = inprogress ? 'In Progress' : 'Completed';
-  const masterAuthorName = inprogress ? 'Anonymous 1' : masterAuthor.username;
+  const inProgress = inProgressStatuses.includes(story.status);
+  const status = inProgress ? 'In Progress' : 'Completed';
+  const masterAuthorName = inProgress ? 'Anonymous 1' : masterAuthor.username;
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
+  const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
 
   const scrollView = React.useRef(null);
   const refRBSheet = React.useRef();
 
   let coAuthors;
-  if (inprogressStory) {
+  if (completedStory) {
     coAuthors = `${authorsCount - 1}/${authorsCount}`;
   } else if (waitingStory) {
     coAuthors = `${missingAuthorsCount} more to start`;
   } else {
-    coAuthors = `+${authorsCount - 1} anonymous authors`;
+    coAuthors = `${authorsCount -
+      anonymousAuthorsCount -
+      1} public & ${anonymousAuthorsCount} anonymous`;
   }
   let firstBtnColor;
-  if (userIsAParticipant && inprogress) {
+  if (userIsAParticipant && inProgress) {
     firstBtnColor = '#F44336';
   } else if (!userIsAParticipant && waitingStory) {
     firstBtnColor = '#ED8A18';
@@ -136,15 +157,33 @@ const StoryScreen = ({ navigation, route, joinStory }) => {
     rawScrollPosition = e.nativeEvent.contentOffset.y;
   };
 
-  const joinOrLeave = () => {
-    // TODO: check if the max authors is reached
-    if (completedStory) {
+  const joinOrLeave = async () => {
+    if (userIsAParticipant) {
+      try {
+        await leaveStory(story._id, currentUser._id);
+
+        navigation.goBack();
+      } catch (e) {
+        Toast.show(e.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM
+        });
+      }
+    } else if (completedStory) {
       Toast.show('You cannot join a completed story', {
-        duration: Toast.durations.SHORT,
+        duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM
       });
-    } else if (userIsAParticipant) {
-      // leaveStory();
+    } else if (authorsCount === 100) {
+      Toast.show('The maximum amount of participants has been reached', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
+    } else if (tooLateToJoin && story.genre?.slug !== 'bedtime_stories') {
+      Toast.show("It's too late to join this story now", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
     } else {
       refRBSheet.current.open();
     }
@@ -156,7 +195,7 @@ const StoryScreen = ({ navigation, route, joinStory }) => {
       refRBSheet.current.close();
     } catch (e) {
       Toast.show(e.message, {
-        duration: Toast.durations.SHORT,
+        duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM
       });
     }
@@ -169,6 +208,13 @@ const StoryScreen = ({ navigation, route, joinStory }) => {
         backgroundColor: color,
         marginTop: Platform.OS === 'android' ? Constants.statusBarHeight : 0
       }}>
+      <LeaveStoryModal
+        isMasterAuthor={isMasterAuthor}
+        dismiss={() => setIsLeaveStoryModalVisible(false)}
+        visible={isLeaveStoryModalVisible}
+        storyId={story._id}
+        navigation={navigation}
+      />
       <Surface
         style={{
           borderBottomLeftRadius: 13,
@@ -255,7 +301,7 @@ const StoryScreen = ({ navigation, route, joinStory }) => {
                 </Button>
               </Surface>
 
-              {!inprogress && (
+              {!inProgress && (
                 <Surface style={styles.surface}>
                   <TouchableRipple onPress={() => setListMode(!listMode)} style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'row', paddingHorizontal: 5 }}>
@@ -379,29 +425,12 @@ const StoryScreen = ({ navigation, route, joinStory }) => {
           contentContainerStyle={{
             paddingTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40)
           }}>
-          {waitingStory && (
-            <>
-              <Text type="medium" style={styles.title}>
-                All Proposed Intros
-              </Text>
-              <Text type="bold-italic" style={styles.pendingText}>
-                Waiting for {missingAuthorsCount} more player{missingAuthorsCount !== 1 && 's'}.
-              </Text>
-
-              <HugeAdvertisement />
-            </>
-          )}
-
-          {!waitingStory && (
-            <>
-              <ProposedSection
-                type="Intro"
-                proposedBlocks={story.parts?.filter(p => p.isIntro)}
-                listMode={listMode}
-              />
-              <SmallAdvertisement />
-            </>
-          )}
+          <ProposedSection
+            type="Intro"
+            proposedBlocks={story.parts?.filter(p => p.isIntro)}
+            listMode={listMode}
+          />
+          <SmallAdvertisement />
 
           {!waitingStory &&
             story.parts
@@ -423,13 +452,11 @@ const StoryScreen = ({ navigation, route, joinStory }) => {
                 );
               })}
 
-          {completedStory && (
-            <ProposedSection
-              type="Ending"
-              proposedBlocks={story.parts?.filter(p => p.isOutro)}
-              listMode={listMode}
-            />
-          )}
+          <ProposedSection
+            type="Ending"
+            proposedBlocks={story.parts?.filter(p => p.isOutro)}
+            listMode={listMode}
+          />
         </ScrollView>
       )}
 
@@ -531,11 +558,13 @@ const styles = StyleSheet.create({
 StoryScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
-  joinStory: PropTypes.func.isRequired
+  joinStory: PropTypes.func.isRequired,
+  leaveStory: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = {
-  joinStory: joinStoryAction
+  joinStory: joinStoryAction,
+  leaveStory: leaveStoryAction
 };
 
 export default connect(null, mapDispatchToProps)(StoryScreen);

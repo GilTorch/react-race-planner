@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import axios from '../../services/axiosService';
-import { Story, Home } from './types';
+import { Story } from './types';
 
 export const joinStoryAction = data => dispatch => {
   dispatch({ type: Story.JOIN_STORY_START });
@@ -19,16 +19,47 @@ export const joinStoryAction = data => dispatch => {
 };
 
 export const createStoryAction = data => dispatch => {
-  dispatch({ type: Home.CREATE_STORY_START });
+  dispatch({ type: Story.CREATE_STORY_START });
 
   return axios
     .post('/documents', data)
     .then(response => {
-      dispatch({ type: Home.CREATE_STORY_SUCCESS, story: response.data });
+      dispatch({ type: Story.CREATE_STORY_SUCCESS, story: response.data });
       return response.data;
     })
     .catch(error => {
-      dispatch({ type: Home.CREATE_STORY_FAILURE });
+      dispatch({ type: Story.CREATE_STORY_FAILURE });
+
+      throw error.response?.data;
+    });
+};
+
+export const leaveStoryAction = (storyId, userId) => dispatch => {
+  dispatch({ type: Story.LEAVE_STORY_START });
+
+  // Delete all parts for this author
+  return axios
+    .delete(`/documents/${storyId}/authors/${userId}`)
+    .then(() => {
+      dispatch({ type: Story.LEAVE_STORY_SUCCESS });
+    })
+    .catch(error => {
+      dispatch({ type: Story.LEAVE_STORY_FAILURE });
+
+      throw error.response?.data;
+    });
+};
+
+export const deleteStoryAction = storyId => dispatch => {
+  dispatch({ type: Story.DELETE_STORY_START });
+
+  return axios
+    .delete(`/documents/${storyId}`)
+    .then(() => {
+      dispatch({ type: Story.DELETE_STORY_SUCCESS });
+    })
+    .catch(error => {
+      dispatch({ type: Story.DELETE_STORY_FAILURE });
 
       throw error.response?.data;
     });

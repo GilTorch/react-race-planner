@@ -23,6 +23,19 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
       <Text type="medium" style={{ ...styles.title, marginTop: type === 'Ending' ? 0 : 20 }}>
         All Proposed {type}s ({proposedBlocks.length})
       </Text>
+
+      {!proposedBlocks?.length && (
+        <Text
+          style={{
+            color: '#ed8a18',
+            marginLeft: 20,
+            marginBottom: 20,
+            marginTop: 10
+          }}>
+          No endings yet
+        </Text>
+      )}
+
       <ScrollView horizontal style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
         {proposedBlocks.map((proposedBlock, index) => {
           const margin = index === 0 ? 20 : 0;

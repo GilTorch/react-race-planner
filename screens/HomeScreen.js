@@ -119,8 +119,17 @@ const HomeScreen = ({ navigation, getStories }) => {
           contentContainerStyle={{ paddingLeft: 23 }}>
           {genresData.map((genre, index) => (
             <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
-              <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
-                <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: 20
+                }}>
+                <View
+                  style={{
+                    ...styles.genreIconContainer,
+                    backgroundColor: genre.color
+                  }}>
                   {genre.icon(32)}
                 </View>
                 <Text
