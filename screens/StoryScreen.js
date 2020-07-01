@@ -28,33 +28,49 @@ import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 const StoryScreen = ({ navigation, route }) => {
   const { story } = route.params;
   const { masterAuthor } = story;
+  const inProgressStatuses = [
+    'waiting_for_players',
+    'waiting_for_intros',
+    'intro_voting',
+    'round_writing',
+    'waiting_for_outros',
+    'outro_voting'
+  ];
   // We handle the case where it's a dummy data and we don't have a hidden part for the master author
   const authorsCount = story.parts?.filter(p => !p.isIntro && !p.isOutro).length || 1;
   const missingAuthorsCount = story.settings?.minimumParticipants - authorsCount;
+  const anonymousAuthorsCount = story.parts?.filter(
+    p =>
+      !p.isIntro &&
+      !p.isOutro &&
+      p.author?._id !== masterAuthor?._id &&
+      p.privacyStatus === 'anonymous'
+  ).length;
   const currentUser = useSelector(state => state.auth.currentUser);
   const isMasterAuthor = currentUser._id === masterAuthor._id;
   const includesSelf = story.parts?.some(p => p.author?._id === currentUser?._id);
-  const inprogressStory = story.status === 'in_progress';
   const waitingStory = authorsCount < story.settings?.minimumParticipants;
   const completedStory = story.status === 'completed';
-  const inprogress = inprogressStory || waitingStory;
-  const status = inprogress ? 'In Progress' : 'Completed';
-  const masterAuthorName = inprogress ? 'Anonymous 1' : masterAuthor.username;
+  const inProgress = inProgressStatuses.includes(story.status);
+  const status = inProgress ? 'In Progress' : 'Completed';
+  const masterAuthorName = inProgress ? 'Anonymous 1' : masterAuthor.username;
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
   const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
 
   const scrollView = React.useRef(null);
 
   let coAuthors;
-  if (inprogressStory) {
+  if (completedStory) {
     coAuthors = `${authorsCount - 1}/${authorsCount}`;
   } else if (waitingStory) {
     coAuthors = `${missingAuthorsCount} more to start`;
   } else {
-    coAuthors = `+${authorsCount - 1} anonymous authors`;
+    coAuthors = `${authorsCount -
+      anonymousAuthorsCount -
+      1} public & ${anonymousAuthorsCount} anonymous`;
   }
   let firstBtnColor;
-  if (includesSelf && inprogress) {
+  if (includesSelf && inProgress) {
     firstBtnColor = '#F44336';
   } else if (!includesSelf && waitingStory) {
     firstBtnColor = '#ED8A18';
@@ -231,7 +247,7 @@ const StoryScreen = ({ navigation, route }) => {
                 </Button>
               </Surface>
 
-              {!inprogress && (
+              {!inProgress && (
                 <Surface style={styles.surface}>
                   <TouchableRipple onPress={() => setListMode(!listMode)} style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'row', paddingHorizontal: 5 }}>
@@ -382,13 +398,11 @@ const StoryScreen = ({ navigation, route }) => {
                 );
               })}
 
-          {completedStory && (
-            <ProposedSection
-              type="Ending"
-              proposedBlocks={story.parts?.filter(p => p.isOutro)}
-              listMode={listMode}
-            />
-          )}
+          <ProposedSection
+            type="Ending"
+            proposedBlocks={story.parts?.filter(p => p.isOutro)}
+            listMode={listMode}
+          />
         </ScrollView>
       )}
     </View>
