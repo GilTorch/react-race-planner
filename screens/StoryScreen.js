@@ -54,7 +54,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
   ).length;
   const currentUser = useSelector(state => state.auth.currentUser);
   const userIsAParticipant = story.parts?.some(p => p.author?._id === currentUser?._id);
-  const isMasterAuthor = currentUser._id === masterAuthor._id;
+  const isMasterAuthor = currentUser?._id === masterAuthor?._id;
   const waitingStory = authorsCount < story.settings?.minimumParticipants;
   const completedStory = story.status === 'completed';
   const inProgress = inProgressStatuses.includes(story.status);
@@ -161,7 +161,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
   const joinOrLeave = async () => {
     if (userIsAParticipant) {
       try {
-        await leaveStory(story._id, currentUser._id);
+        await leaveStory(story?._id, currentUser?._id);
 
         navigation.goBack();
       } catch (e) {
