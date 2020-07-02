@@ -272,7 +272,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
           </View>
           <View>
             <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
-              Initially Proposed Intro
+              Initially Proposed Intro {initialIntro.author._id === currentUser._id && '(Yours)'}
             </Text>
 
             {initialIntro && (
