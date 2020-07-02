@@ -74,14 +74,23 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
   const refRBSheet = React.useRef();
 
   let coAuthors;
-  if (completedStory) {
-    coAuthors = `${storedStory.coAuthors.length}/${authorsCount}`;
-  } else if (waitingStory) {
+  if (waitingStory) {
     coAuthors = `${missingAuthorsCount} more to start`;
   } else {
-    coAuthors = `${authorsCount -
-      anonymousAuthorsCount -
-      1} public & ${anonymousAuthorsCount} anonymous`;
+    // We deduct 1 because authorsCount is counting the master author as well
+    const publicAuthorsCount = authorsCount - anonymousAuthorsCount - 1;
+
+    if (publicAuthorsCount) {
+      coAuthors = `${publicAuthorsCount} public`;
+    }
+
+    if (anonymousAuthorsCount) {
+      if (publicAuthorsCount) {
+        coAuthors = `${coAuthors} & ${anonymousAuthorsCount} anonymous`;
+      } else {
+        coAuthors = `${anonymousAuthorsCount} anonymous`;
+      }
+    }
   }
   let firstBtnColor;
   if (userIsAParticipant && inProgress) {
@@ -174,9 +183,9 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             position: Toast.positions.BOTTOM
           });
         } else {
-        await leaveStory(story?._id, currentUser?._id);
+          await leaveStory(story?._id, currentUser?._id);
 
-        navigation.goBack();
+          navigation.goBack();
         }
       } catch (e) {
         Toast.show(e.message, {
