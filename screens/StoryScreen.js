@@ -168,9 +168,16 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
   const joinOrLeave = async () => {
     if (userIsAParticipant) {
       try {
+        if (completedStory) {
+          Toast.show("It's too late to leave this story now", {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.BOTTOM
+          });
+        } else {
         await leaveStory(story?._id, currentUser?._id);
 
         navigation.goBack();
+        }
       } catch (e) {
         Toast.show(e.message, {
           duration: Toast.durations.SHORT,
