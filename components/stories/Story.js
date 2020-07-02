@@ -48,22 +48,9 @@ const Story = ({ story, index, length, navigation, updating }) => {
   const inProgress = inProgressStatuses.includes(story.status);
   const status = inProgress ? 'In Progress' : 'Completed';
   const currentGenre = story.genre;
-  const otherAuthors =
-    story.parts?.filter(
-      p =>
-        !p.isIntro &&
-        !p.isOutro &&
-        p.author?._id !== masterAuthor?._id &&
-        p.privacyStatus !== 'anonymous'
-    ) || [];
-  const authorsCount = otherAuthors.length + 1;
-  const anonymousAuthorsCount = story.parts?.filter(
-    p =>
-      !p.isIntro &&
-      !p.isOutro &&
-      p.author?._id !== masterAuthor?._id &&
-      p.privacyStatus === 'anonymous'
-  ).length;
+  const authorsCount = story.coAuthors?.length + 1;
+  const anonymousAuthorsCount = story.coAuthors?.filter(ca => ca.privacyStatus === 'anonymous')
+    .length;
   let GenreIconLibrary;
   const initialIntro = story.parts?.find(sp => sp.isIntro && sp.author?._id === masterAuthor?._id);
   const electedIntro = story.parts?.find(sp => sp.isIntro && sp.isElected);
