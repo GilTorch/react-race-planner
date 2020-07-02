@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import { Surface } from 'react-native-paper';
+import { Surface, Button } from 'react-native-paper';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
@@ -8,7 +8,7 @@ import Text from '../CustomText';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 
-const ProposedSection = ({ type, proposedBlocks, listMode }) => {
+const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose }) => {
   const electedBlock = proposedBlocks.find(block => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -23,6 +23,25 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
       <Text type="medium" style={{ ...styles.title, marginTop: type === 'Ending' ? 0 : 20 }}>
         All Proposed {type}s ({proposedBlocks.length})
       </Text>
+
+      {userCanPropose && (
+        <View
+          style={{
+            flex: 1,
+            marginLeft: 20,
+            marginTop: 10
+          }}>
+          <Button
+            icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+            uppercase={false}
+            onPress={() => onPropose()}
+            style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5 }}>
+            <Text type="bold" style={{ color: '#FFF' }}>
+              Propose an {type}
+            </Text>
+          </Button>
+        </View>
+      )}
 
       {!proposedBlocks?.length && (
         <Text
@@ -88,7 +107,9 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
 ProposedSection.propTypes = {
   type: PropTypes.string.isRequired,
   proposedBlocks: PropTypes.array.isRequired,
-  listMode: PropTypes.bool
+  listMode: PropTypes.bool,
+  userCanPropose: PropTypes.bool,
+  onPropose: PropTypes.func.isRequired
 };
 
 ProposedSection.defaultProps = {
