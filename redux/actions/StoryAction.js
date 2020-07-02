@@ -2,20 +2,17 @@
 import axios from '../../services/axiosService';
 import { Story } from './types';
 
-export const joinStoryAction = data => dispatch => {
+export const joinStoryAction = (storyId, userId, privacyStatus) => dispatch => {
   dispatch({ type: Story.JOIN_STORY_START });
 
-  return (
-    axios
-      .put('/documents', data) // TODO: create the endpoint
-      // TODO: Save the new story data to the writing reducer
-      .then(() => dispatch({ type: Story.JOIN_STORY_SUCCESS }))
-      .catch(error => {
-        dispatch({ type: Story.JOIN_STORY_FAILURE });
+  return axios
+    .post(`/documents/${storyId}/authors/${userId}`, { privacyStatus })
+    .then(response => dispatch({ type: Story.JOIN_STORY_SUCCESS, story: response.data.story }))
+    .catch(error => {
+      dispatch({ type: Story.JOIN_STORY_FAILURE });
 
-        throw error.response?.data;
-      })
-  );
+      throw error.response?.data;
+    });
 };
 
 export const createStoryAction = data => dispatch => {
