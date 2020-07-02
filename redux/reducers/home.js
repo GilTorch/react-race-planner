@@ -38,6 +38,13 @@ const initialState = {
 
 const homeReducer = (state = initialState, action) => {
   const { data: stories } = action;
+  const updatedStories = state.stories?.map(s => {
+    if (s?._id === action.story?._id) {
+      return action.story;
+    }
+
+    return s;
+  });
 
   switch (action.type) {
     case Home.SET_ACTIVE_STORIES_FILTERS:
@@ -64,6 +71,8 @@ const homeReducer = (state = initialState, action) => {
       return { ...state, deleteStoryLoading: false };
     case Story.DELETE_STORY_SUCCESS:
       return { ...state, deleteStoryLoading: false };
+    case Story.JOIN_STORY_SUCCESS:
+      return { ...state, stories: updatedStories };
     case Home.GET_ACTIVE_STORIES_START:
       return { ...state, loadingStories: true };
     case Home.UPDATE_ACTIVE_STORIES:
