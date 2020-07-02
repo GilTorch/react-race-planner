@@ -158,12 +158,14 @@ const Story = ({ story, index, length, navigation, updating }) => {
                 <View style={styles.storyAuthorsSeparator} />
               </View>
 
-              {otherAuthors.map(author => (
+              {story.coAuthors?.map(author => (
                 <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image
                     style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
                     source={{
-                      uri: getUserProfileUri(author.picture) || avatarGenerator(author.username)
+                      uri:
+                        getUserProfileUri(author.profile.picture) ||
+                        avatarGenerator(author.profile.username)
                     }}
                   />
                 </View>
@@ -173,7 +175,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
                 <View style={{ marginLeft: 5 }}>
                   <Text type="bold" style={{ fontSize: 12, color: textColor }}>
                     +{anonymousAuthorsCount} anonymous{' '}
-                    {anonymousAuthorsCount === 1 ? 'person' : 'people'}
+                    {anonymousAuthorsCount === 1 ? 'author' : 'authors'}
                   </Text>
                 </View>
               )}
@@ -182,7 +184,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
 
           {status === 'In Progress' && authorsCount > story.settings?.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
-              {authorsCount + anonymousAuthorsCount} authors | {authorsCount} public{' '}
+              {authorsCount} authors | {authorsCount - anonymousAuthorsCount} public{' '}
               {new AllHtmlEntities().decode('&middot;')} {anonymousAuthorsCount} anonymous
             </Text>
           )}
@@ -190,7 +192,8 @@ const Story = ({ story, index, length, navigation, updating }) => {
           {authorsCount < story.settings?.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
               {story.settings?.minimumParticipants - authorsCount} more{' '}
-              {story.settings?.minimumParticipants - authorsCount === 1 ? 'person' : 'people'} to go
+              {story.settings?.minimumParticipants - authorsCount === 1 ? 'author' : 'authors'} to
+              go
             </Text>
           )}
 
@@ -202,7 +205,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
             }}>
             {/* TODO: Use the `createdAt` of the first round */}
             <Text style={{ color: textColor, fontSize: 12 }}>
-              {moment(story.createdAt).fromNow()}
+              {moment(story.startedAt || story.createdAt).fromNow()}
             </Text>
             <View
               style={{
