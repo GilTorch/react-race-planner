@@ -32,7 +32,16 @@ import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 
 const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
   const { story } = route.params;
+  const inProgresstories = useSelector(state => state.home.stories) || [];
+  const completedStories = useSelector(state => state.library.stories) || [];
+  const myStories = useSelector(state => state.writing.stories) || [];
   const { masterAuthor } = story;
+
+  const storedStory = [...myStories, ...inProgresstories, ...completedStories].find(
+    s => s._id === story?._id
+  );
+  // We make sure they are in the order of the story lifecycle - https://app.clickup.com/2351815/v/dc/16z6a-777/27rp7-735
+  // so that we can properly use this variable later
   const inProgressStatuses = [
     'waiting_for_players',
     'waiting_for_intros',
@@ -41,34 +50,32 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
     'waiting_for_outros',
     'outro_voting'
   ];
-  const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(story.status);
+  const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(storedStory.status);
   // We handle the case where it's a dummy data and we don't have a hidden part for the master author
-  const authorsCount = story.parts?.filter(p => !p.isIntro && !p.isOutro).length || 1;
-  const missingAuthorsCount = story.settings?.minimumParticipants - authorsCount;
-  const anonymousAuthorsCount = story.parts?.filter(
-    p =>
-      !p.isIntro &&
-      !p.isOutro &&
-      p.author?._id !== masterAuthor?._id &&
-      p.privacyStatus === 'anonymous'
+  const authorsCount = storedStory.coAuthors?.length + 1;
+  const anonymousAuthorsCount = storedStory.coAuthors?.filter(
+    ca => ca.privacyStatus === 'anonymous'
   ).length;
+  const missingAuthorsCount = storedStory.settings?.minimumParticipants - authorsCount;
   const currentUser = useSelector(state => state.auth.currentUser);
-  const userIsAParticipant = story.parts?.some(p => p.author?._id === currentUser?._id);
   const isMasterAuthor = currentUser?._id === masterAuthor?._id;
-  const waitingStory = authorsCount < story.settings?.minimumParticipants;
-  const completedStory = story.status === 'completed';
-  const inProgress = inProgressStatuses.includes(story.status);
+  const userIsAParticipant =
+    storedStory.coAuthors.find(ca => ca.profile._id === currentUser?._id) || isMasterAuthor;
+  const tooLateForOutro = storedStory.status === 'outro_voting';
+  const waitingStory = authorsCount < storedStory.settings?.minimumParticipants;
+  const completedStory = storedStory.status === 'completed';
+  const inProgress = inProgressStatuses.includes(storedStory.status);
   const status = inProgress ? 'In Progress' : 'Completed';
   const masterAuthorName = inProgress ? 'Anonymous 1' : masterAuthor.username;
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
   const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
-
+  const reachedEnding = !inProgressStatuses.slice(0, 4).includes(storedStory.status);
   const scrollView = React.useRef(null);
   const refRBSheet = React.useRef();
 
   let coAuthors;
   if (completedStory) {
-    coAuthors = `${authorsCount - 1}/${authorsCount}`;
+    coAuthors = `${storedStory.coAuthors.length}/${authorsCount}`;
   } else if (waitingStory) {
     coAuthors = `${missingAuthorsCount} more to start`;
   } else {
@@ -180,7 +187,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM
       });
-    } else if (tooLateToJoin && story.genre?.slug !== 'bedtime_stories') {
+    } else if (tooLateToJoin && storedStory.genre?.slug !== 'bedtime_stories') {
       Toast.show("It's too late to join this story now", {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM
@@ -192,7 +199,8 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
 
   const handleJoinStory = async () => {
     try {
-      await joinStory({ privacyStatus });
+      await joinStory(story?._id, currentUser?._id, privacyStatus);
+
       refRBSheet.current.close();
     } catch (e) {
       Toast.show(e.message, {
@@ -200,6 +208,10 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
         position: Toast.positions.BOTTOM
       });
     }
+  };
+
+  const handleRoundWriting = () => {
+    navigation.navigate('RoundWriting', { storedStory, isNewStory: false });
   };
 
   return (
@@ -257,7 +269,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
                 textAlign: 'center',
                 fontSize: 18
               }}>
-              {story.title}
+              {storedStory.title}
             </Animated.Text>
 
             <Animated.View
@@ -269,12 +281,21 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
                 alignSelf: 'flex-start',
                 justifyContent: 'space-between'
               }}>
-              <MetaData label="Genre" value={story.genre?.name} />
+              <MetaData label="Genre" value={storedStory.genre?.name} />
               <MetaData label="Status" value={status} />
               <MetaData label="Master Author" value={masterAuthorName} />
-              <MetaData label="Intro Maximum Words" value={`${story.settings?.introMaxWords}`} />
-              <MetaData label="Ending Maximum Words" value={`${story.settings?.outroMaxWords}`} />
-              <MetaData label="Words per Round" value={`${story.settings?.roundMaxWords} max`} />
+              <MetaData
+                label="Intro Maximum Words"
+                value={`${storedStory.settings?.introMaxWords}`}
+              />
+              <MetaData
+                label="Ending Maximum Words"
+                value={`${storedStory.settings?.outroMaxWords}`}
+              />
+              <MetaData
+                label="Words per Round"
+                value={`${storedStory.settings?.roundMaxWords} max`}
+              />
               <MetaData label="Co-Authors" value={coAuthors} />
             </Animated.View>
 
@@ -427,14 +448,16 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             paddingTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40)
           }}>
           <ProposedSection
+            onPropose={handleRoundWriting}
+            userCanPropose={userIsAParticipant && !tooLateToJoin}
             type="Intro"
-            proposedBlocks={story.parts?.filter(p => p.isIntro)}
+            proposedBlocks={storedStory.parts?.filter(p => p.isIntro)}
             listMode={listMode}
           />
           <SmallAdvertisement />
 
           {!waitingStory &&
-            story.parts
+            storedStory.parts
               .filter(s => !s.isIntro && !s.isOutro)
               .map((round, index, arr) => {
                 const bigAdd = [4, 10];
@@ -453,11 +476,15 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
                 );
               })}
 
-          <ProposedSection
-            type="Ending"
-            proposedBlocks={story.parts?.filter(p => p.isOutro)}
-            listMode={listMode}
-          />
+          {reachedEnding && (
+            <ProposedSection
+              onPropose={handleRoundWriting}
+              userCanPropose={userIsAParticipant && tooLateForOutro}
+              type="Ending"
+              proposedBlocks={storedStory.parts?.filter(p => p.isOutro)}
+              listMode={listMode}
+            />
+          )}
         </ScrollView>
       )}
 
@@ -479,7 +506,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             Minimum and maximum authors allowed
           </Text>
           <Text style={{ marginTop: 5, marginBottom: 10 }}>
-            {story.settings?.minimumParticipants} to 100
+            {storedStory.settings?.minimumParticipants} to 100
           </Text>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>
             Time for writing and voting for the intro
@@ -487,12 +514,12 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
           <Text style={{ marginTop: 5, marginBottom: 10 }}>
             {moment()
               .startOf('day')
-              .seconds(story.settings?.introTimeLimitSeconds)
+              .seconds(storedStory.settings?.introTimeLimitSeconds)
               .format('H:mm')}{' '}
             to write{' & '}
             {moment()
               .startOf('day')
-              .seconds(story.settings?.voteTimeLimitSeconds)
+              .seconds(storedStory.settings?.voteTimeLimitSeconds)
               .format('H:mm')}{' '}
             to vote
           </Text>
@@ -502,12 +529,12 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
           <Text style={{ marginTop: 5, marginBottom: 10 }}>
             {moment()
               .startOf('day')
-              .seconds(story.settings?.outroTimeLimitSeconds)
+              .seconds(storedStory.settings?.outroTimeLimitSeconds)
               .format('H:mm')}{' '}
             to write{' & '}
             {moment()
               .startOf('day')
-              .seconds(story.settings?.voteTimeLimitSeconds)
+              .seconds(storedStory.settings?.voteTimeLimitSeconds)
               .format('H:mm')}{' '}
             to vote
           </Text>
@@ -515,17 +542,17 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
           <Text style={{ marginTop: 5, marginBottom: 10 }}>
             {moment()
               .startOf('day')
-              .seconds(story.settings?.roundTimeLimitSeconds)
+              .seconds(storedStory.settings?.roundTimeLimitSeconds)
               .format('H:mm')}{' '}
           </Text>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>Privacy Status</Text>
 
-          <Text style={{ fontSize: 12, marginBottom: -20 }}>
+          <Text style={{ fontSize: 13, marginBottom: -20 }}>
             Decide what other people will see as your handle throughout this story
           </Text>
 
           <Dropdown
-            value={story.privacyStatus}
+            value={storedStory.privacyStatus}
             fontSize={16}
             dropdownPosition={0.1}
             onChangeText={text => setPrivacyStatus(text)}

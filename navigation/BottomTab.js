@@ -8,6 +8,7 @@ import MainStack from './MainStack';
 import WritingStack from './WritingStack';
 import SettingsStack from './SettingsStack';
 import LibraryStack from './LibraryStack';
+import RoundWritingScreen from '../screens/RoundWritingScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -87,6 +88,14 @@ export default function BottomTab() {
               />
             );
           }
+        }}
+      />
+
+      <Tab.Screen
+        name="RoundWritingScreen"
+        component={RoundWritingScreen}
+        options={{
+          showLabel: 
         }}
       />
 
