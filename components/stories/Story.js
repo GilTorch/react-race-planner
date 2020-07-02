@@ -188,17 +188,17 @@ const Story = ({ story, index, length, navigation, updating }) => {
               {story.coAuthors
                 ?.filter(ca => ca.privacyStatus !== 'anonymous')
                 .map(author => (
-                <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image
-                    style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
-                    source={{
-                      uri:
-                        getUserProfileUri(author.profile.picture) ||
-                        avatarGenerator(author.profile.username)
-                    }}
-                  />
-                </View>
-              ))}
+                  <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image
+                      style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
+                      source={{
+                        uri:
+                          getUserProfileUri(author.profile.picture) ||
+                          avatarGenerator(author.profile.username)
+                      }}
+                    />
+                  </View>
+                ))}
 
               {anonymousAuthorsCount > 0 && (
                 <View style={{ marginLeft: 5 }}>
@@ -300,7 +300,18 @@ const Story = ({ story, index, length, navigation, updating }) => {
               <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
             )}
 
-            {!electedIntro && (
+            {!electedIntro && story.status === 'intro_voting' && (
+              <Text
+                style={{
+                  color: '#ED8A18',
+                  fontFamily: 'RobotoItalic',
+                  fontSize: 12
+                }}>
+                Votes are in progress
+              </Text>
+            )}
+
+            {!electedIntro && story.status !== 'intro_voting' && (
               <Text
                 style={{
                   color: '#ED8A18',
