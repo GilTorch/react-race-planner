@@ -72,6 +72,33 @@ const Story = ({ story, index, length, navigation, updating }) => {
       GenreIconLibrary = MaterialCommunityIcons;
   }
 
+  const displayAuthorsMeta = () => {
+    let publicauthorsCount = authorsCount - anonymousAuthorsCount;
+    let final;
+    // We count the master author as public depending on what they picked during
+    // story creation
+    if (story.privacyStatus !== 'anonymous') {
+      // eslint-disable-next-line no-plusplus
+      publicauthorsCount++;
+    }
+
+    if (publicauthorsCount) {
+      final = `${publicauthorsCount} public`;
+    }
+
+    if (anonymousAuthorsCount) {
+      if (publicauthorsCount) {
+        final = `${final} ${new AllHtmlEntities().decode(
+          '&middot;'
+        )} ${anonymousAuthorsCount} anonymous`;
+      } else {
+        final = `${anonymousAuthorsCount} anonymous`;
+      }
+    }
+
+    return final;
+  };
+
   return (
     <View key={Math.random()}>
       {ShowAdvertisement}
@@ -186,8 +213,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
 
           {status === 'In Progress' && authorsCount > story.settings?.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
-              {authorsCount} authors | {authorsCount - anonymousAuthorsCount} public{' '}
-              {new AllHtmlEntities().decode('&middot;')} {anonymousAuthorsCount} anonymous
+              {authorsCount} authors | {displayAuthorsMeta()}
             </Text>
           )}
 
