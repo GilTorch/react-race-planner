@@ -158,7 +158,9 @@ const Story = ({ story, index, length, navigation, updating }) => {
                 <View style={styles.storyAuthorsSeparator} />
               </View>
 
-              {story.coAuthors?.map(author => (
+              {story.coAuthors
+                ?.filter(ca => ca.privacyStatus !== 'anonymous')
+                .map(author => (
                 <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image
                     style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
