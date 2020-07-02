@@ -314,7 +314,9 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
                   uppercase={false}
                   style={{ backgroundColor: firstBtnColor }}
                   labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
-                  {userIsAParticipant ? 'Leave Story' : 'Join Story'}
+                  {userIsAParticipant && isMasterAuthor && 'Delete Story'}
+                  {userIsAParticipant && !isMasterAuthor && 'Leave Story'}
+                  {!userIsAParticipant && 'Join Story'}
                 </Button>
               </Surface>
 
