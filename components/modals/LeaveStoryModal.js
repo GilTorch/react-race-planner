@@ -17,8 +17,8 @@ const LeaveStoryModal = ({
   deleteStory,
   navigation
 }) => {
-  const deleteStoryLoading = useSelector(state => state.home.deleteStoryLoading);
-  const leaveStoryLoading = useSelector(state => state.home.leaveStoryLoading);
+  const deleteStoryLoading = useSelector(state => state.story.deleteStoryLoading);
+  const leaveStoryLoading = useSelector(state => state.story.leaveStoryLoading);
 
   const confirmDelete = async () => {
     try {

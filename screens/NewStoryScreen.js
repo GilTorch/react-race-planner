@@ -32,7 +32,7 @@ const NewStoryScreen = ({ navigation, route }) => {
 
   const user = useSelector(state => state.auth.currentUser);
   // const types = useSelector(state => state.storyType);
-  const loading = useSelector(state => state.home.createStoryLoading);
+  const loading = useSelector(state => state.story.createStoryLoading);
 
   const listAuthordata = [
     { value: 2 },
