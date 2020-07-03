@@ -21,7 +21,7 @@ export const createStoryAction = data => dispatch => {
   return axios
     .post('/documents', data)
     .then(response => {
-      dispatch({ type: Story.CREATE_STORY_SUCCESS, story: response.data });
+      dispatch({ type: Story.CREATE_STORY_SUCCESS, story: response.data.story });
       return response.data;
     })
     .catch(error => {
