@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  StatusBar
+  SafeAreaView
 } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import PropTypes from 'prop-types';
@@ -115,7 +115,6 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
       enabled
       keyboardVerticalOffset={IS_IOS ? 0 : 0}
       style={styles.root}>
-      <View style={styles.container}>
         <Surface
           style={{
             elevation: 3,
@@ -125,31 +124,32 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
             colors={['#03a2a2', '#23c2c2']}
             locations={[0.5, 1]}
             style={{
+            paddingHorizontal: 10
+          }}>
+          <SafeAreaView
+            style={{
               alignItems: 'center',
               flexDirection: 'row',
-              justifyContent: 'space-between',
-              paddingBottom: 12,
-              paddingTop: 35,
-              paddingLeft: 10,
-              paddingRight: 10
+              justifyContent: 'space-between'
             }}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Text type="bold" style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
+              <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
                 Cancel
               </Text>
             </TouchableOpacity>
 
-            <Text type="bold" style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
-              Round Writing
+            <Text type="bold" style={{ color: 'white', fontSize: 18, marginVertical: 15 }}>
+              {`${route.params.entity.charAt(0).toUpperCase()}${route.params.entity.slice(1)}`}{' '}
+              Writing
             </Text>
             <TouchableOpacity onPress={() => submitRound()}>
-              <Text type="bold" style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
+              <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
                 Done
               </Text>
             </TouchableOpacity>
+          </SafeAreaView>
           </LinearGradient>
         </Surface>
-      </View>
       <MenuProvider style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.main}>
@@ -160,7 +160,7 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
               onSelectedTagChanged={onSelectedTagChanged}
               onSelectedStyleChanged={onSelectedStyleChanged}
               value={value}
-              placeholder="Write your story intro here..."
+              placeholder={`Write your story ${route.params.entity} here...`}
               style={styles.editor}
               styleList={customStyles}
               foreColor="dimgray" // optional (will override default fore-color)
