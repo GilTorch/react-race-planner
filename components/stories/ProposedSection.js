@@ -50,6 +50,15 @@ const ProposedSection = ({
         </View>
       )}
 
+      {story?.status === 'waiting_for_intros' && story.startedAt && (
+        <Text style={{ color: '#F44336', marginLeft: 20, marginTop: 7 }}>
+          Submitting intros ends{' '}
+          {moment().to(
+            moment(story.startedAt).add(story.settings?.introTimeLimitSeconds, 'seconds')
+          )}{' '}
+        </Text>
+      )}
+
       {!proposedBlocks?.length && (
         <Text
           style={{
