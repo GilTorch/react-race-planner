@@ -49,7 +49,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
   const status = inProgress ? 'In Progress' : 'Completed';
   const currentGenre = story.genre;
   const authorsCount = story.coAuthors?.length + 1;
-  const anonymousAuthorsCount = story.coAuthors?.filter(ca => ca.privacyStatus === 'anonymous')
+  let anonymousAuthorsCount = story.coAuthors?.filter(ca => ca.privacyStatus === 'anonymous')
     .length;
   // eslint-disable-next-line no-plusplus
   if (story.privacyStatus === 'anonymous') anonymousAuthorsCount++;
@@ -175,18 +175,18 @@ const Story = ({ story, index, length, navigation, updating }) => {
           {status === 'Completed' && (
             <View style={styles.storyAuthorsContainer}>
               {story.privacyStatus !== 'anonymous' && (
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                  style={styles.storyAuthorsImage}
-                  source={{
-                    uri:
-                      getUserProfileUri(masterAuthor?.picture) ||
-                      avatarGenerator(masterAuthor?.username)
-                  }}
-                />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image
+                    style={styles.storyAuthorsImage}
+                    source={{
+                      uri:
+                        getUserProfileUri(masterAuthor?.picture) ||
+                        avatarGenerator(masterAuthor?.username)
+                    }}
+                  />
 
-                <View style={styles.storyAuthorsSeparator} />
-              </View>
+                  <View style={styles.storyAuthorsSeparator} />
+                </View>
               )}
 
               {story.coAuthors
@@ -276,7 +276,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
           </View>
           <View>
             <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
-              Initially Proposed Intro {initialIntro.author._id === currentUser._id && '(Yours)'}
+              Initially Proposed Intro {initialIntro?.author?._id === currentUser?._id && '(Yours)'}
             </Text>
 
             {initialIntro && (
