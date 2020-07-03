@@ -52,10 +52,10 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
         type === 'Intro' &&
         story.startedAt &&
         moment().isBefore(introSubmittingEndsAt) && (
-        <Text style={{ color: '#F44336', marginLeft: 20, marginTop: 7 }}>
+          <Text style={{ color: '#F44336', marginLeft: 20, marginTop: 7 }}>
             Submitting intros ends {moment().to(introSubmittingEndsAt)}{' '}
-        </Text>
-      )}
+          </Text>
+        )}
 
       {!proposedBlocks?.length && (
         <Text
