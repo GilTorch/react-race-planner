@@ -474,7 +474,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             type="Intro"
             proposedBlocks={storedStory?.parts?.filter(p => p.isIntro)}
             listMode={listMode}
-            isCompletedStory={completedStory}
+            story={storedStory}
           />
           <SmallAdvertisement />
 
@@ -506,8 +506,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
               userCanPropose={userIsAParticipant && tooLateForOutro}
               type="Ending"
               proposedBlocks={storedStory?.parts?.filter(p => p.isOutro)}
-              listMode={listMode}
-              isCompletedStory={completedStory}
+              story={storedStory}
             />
           )}
         </ScrollView>
