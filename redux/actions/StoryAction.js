@@ -31,6 +31,21 @@ export const createStoryAction = data => dispatch => {
     });
 };
 
+export const createRoundAction = (data, storyId) => dispatch => {
+  dispatch({ type: Story.CREATE_ROUND_START });
+
+  return axios
+    .post(`/documents/${storyId}/document-parts`, data)
+    .then(response => {
+      dispatch({ type: Story.CREATE_ROUND_SUCCESS, story: response.data.story });
+    })
+    .catch(error => {
+      dispatch({ type: Story.CREATE_ROUND_FAILURE });
+
+      throw error.response?.data;
+    });
+};
+
 export const leaveStoryAction = (storyId, userId) => dispatch => {
   dispatch({ type: Story.LEAVE_STORY_START });
 
