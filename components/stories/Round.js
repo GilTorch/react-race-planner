@@ -24,7 +24,7 @@ const Round = ({
   const inprogressRound = roundStatus === 'in_progress';
   const userTurn = round?.author?._id === currentUser?._id;
   const height = inprogressRound && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
-  let authorName = isMasterAuthorRound ? 'Master Author' : 'Anonymous Author';
+  let authorName = isMasterAuthorRound ? 'the Master Author' : 'an Anonymous Author';
 
   if (isCompletedStory) {
     if (round.privacyStatus === 'username') {

@@ -291,7 +291,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
                   fontSize: 12
                 }}>
                 Waiting for{' '}
-                {masterAuthor?._id === currentUser?._id ? 'your' : "the master author's"} intro
+                {masterAuthor?._id === currentUser?._id ? 'your' : "the Master Author's"} intro
               </Text>
             )}
           </View>

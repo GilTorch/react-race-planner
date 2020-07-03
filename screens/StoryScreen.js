@@ -480,7 +480,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
 
           {!waitingStory &&
             storedStory?.parts
-              .filter(s => !s.isIntro && !s.isOutro)
+              ?.filter(s => !s.isIntro && !s.isOutro)
               .map((round, index, arr) => {
                 const bigAdd = [4, 10];
                 const add = [6];

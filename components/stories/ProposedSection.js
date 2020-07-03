@@ -72,7 +72,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
       <ScrollView horizontal style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
         {proposedBlocks.map((proposedBlock, index) => {
           const margin = index === 0 ? 20 : 0;
-          let authorName = index === 0 ? 'Master Author' : 'Anonymous Author';
+          let authorName = index === 0 ? 'the Master Author' : 'an Anonymous Author';
 
           if (story.status === 'completed') {
             if (proposedBlock.privacyStatus === 'username') {
