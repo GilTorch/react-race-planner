@@ -203,7 +203,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM
       });
-    } else if (tooLateToJoin && storedStory.genre?.slug !== 'bedtime_stories') {
+    } else if (tooLateToJoin && storedStory?.genre?.slug !== 'bedtime_stories') {
       Toast.show("It's too late to join this story now", {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM
