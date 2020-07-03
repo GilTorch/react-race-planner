@@ -51,6 +51,8 @@ const Story = ({ story, index, length, navigation, updating }) => {
   const authorsCount = story.coAuthors?.length + 1;
   const anonymousAuthorsCount = story.coAuthors?.filter(ca => ca.privacyStatus === 'anonymous')
     .length;
+  // eslint-disable-next-line no-plusplus
+  if (story.privacyStatus === 'anonymous') anonymousAuthorsCount++;
   let GenreIconLibrary;
   const initialIntro = story.parts?.find(sp => sp.isIntro && sp.author?._id === masterAuthor?._id);
   const electedIntro = story.parts?.find(sp => sp.isIntro && sp.isElected);
@@ -172,6 +174,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
 
           {status === 'Completed' && (
             <View style={styles.storyAuthorsContainer}>
+              {story.privacyStatus !== 'anonymous' && (
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
                   style={styles.storyAuthorsImage}
@@ -184,13 +187,14 @@ const Story = ({ story, index, length, navigation, updating }) => {
 
                 <View style={styles.storyAuthorsSeparator} />
               </View>
+              )}
 
               {story.coAuthors
                 ?.filter(ca => ca.privacyStatus !== 'anonymous')
-                .map(author => (
+                .map((author, idx) => (
                   <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Image
-                      style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
+                      style={{ ...styles.storyAuthorsImage, marginLeft: idx === 0 ? 0 : -8 }}
                       source={{
                         uri:
                           getUserProfileUri(author.profile.picture) ||
