@@ -95,7 +95,7 @@ const NewStoryScreen = ({ navigation, route }) => {
 
   const submit = async story => {
     try {
-      navigation.navigate('RoundWriting', { story });
+      navigation.navigate('RoundWriting', { story, entity: 'intro', isNewstory: true });
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
