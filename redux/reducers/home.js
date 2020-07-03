@@ -1,10 +1,7 @@
 import { Home, Story } from '../actions/types';
-// import mergeResponse from '../../utils/mergeResponse';
+import mergeResponse from '../../utils/mergeResponse';
 
 const initialState = {
-  createStoryLoading: false,
-  leaveStoryLoading: false,
-  deleteStoryLoading: false,
   loadingStories: false,
   stories: null,
   updatingStories: false,
@@ -38,41 +35,22 @@ const initialState = {
 
 const homeReducer = (state = initialState, action) => {
   const { data: stories } = action;
-  const updatedStories = state.stories?.map(s => {
-    if (s?._id === action.story?._id) {
-      return action.story;
-    }
-
-    return s;
-  });
 
   switch (action.type) {
     case Home.SET_ACTIVE_STORIES_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
-    case Story.CREATE_STORY_START:
-      return { ...state, createStoryLoading: true };
-    case Story.CREATE_STORY_FAILURE:
-      return { ...state, createStoryLoading: false };
     case Story.CREATE_STORY_SUCCESS:
       return {
         ...state,
-        createStoryLoading: false,
-        stories: state.stories ? [...state.stories, action.story] : [action.story]
+        stories: state.stories ? [action.story, ...state.stories] : [action.story]
       };
-    case Story.LEAVE_STORY_START:
-      return { ...state, leaveStoryLoading: true };
-    case Story.LEAVE_STORY_FAILURE:
-      return { ...state, leaveStoryLoading: false };
-    case Story.LEAVE_STORY_SUCCESS:
-      return { ...state, leaveStoryLoading: false };
-    case Story.DELETE_STORY_START:
-      return { ...state, deleteStoryLoading: true };
-    case Story.DELETE_STORY_FAILURE:
-      return { ...state, deleteStoryLoading: false };
-    case Story.DELETE_STORY_SUCCESS:
-      return { ...state, deleteStoryLoading: false };
+    case Story.CREATE_ROUND_SUCCESS:
+      return {
+        ...state,
+        stories: mergeResponse(state.stories, [action.story])
+      };
     case Story.JOIN_STORY_SUCCESS:
-      return { ...state, stories: updatedStories };
+      return { ...state, stories: mergeResponse(state.stories, [action.story]) };
     case Home.GET_ACTIVE_STORIES_START:
       return { ...state, loadingStories: true };
     case Home.UPDATE_ACTIVE_STORIES:
