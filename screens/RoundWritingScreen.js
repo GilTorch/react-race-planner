@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
   SafeAreaView
 } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
@@ -95,12 +96,38 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
 
   const submitRound = async () => {
     try {
-      const { story } = await createStory({
-        ...route.params.story,
-        intro: value
-      });
+      if (route.params.isNewStory) {
+        const { story } = await createStory({
+          ...route.params.story,
+          intro: value
+        });
 
-      navigation.navigate('StoryScreen', { story });
+        // navigation.navigate('StoryScreen', { story });
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'StoryScreen' }],
+          route: { params: { story } }
+        });
+      } else {
+        const finalObj = {
+          content: value
+        };
+
+        if (route.params.entity === 'intro') {
+          finalObj.isIntro = true;
+        }
+
+        if (route.params.entity === 'outro') {
+          finalObj.isOutro = true;
+        }
+
+        // TODO: Create this action
+        // Send data as is and finish round creation remotely
+        // Then return the new story to replace locally
+        await createRound(finalObj);
+
+        navigation.goBack();
+      }
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
@@ -115,15 +142,15 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
       enabled
       keyboardVerticalOffset={IS_IOS ? 0 : 0}
       style={styles.root}>
-        <Surface
+      <Surface
+        style={{
+          elevation: 3,
+          zIndex: 1
+        }}>
+        <LinearGradient
+          colors={['#03a2a2', '#23c2c2']}
+          locations={[0.5, 1]}
           style={{
-            elevation: 3,
-            zIndex: 1
-          }}>
-          <LinearGradient
-            colors={['#03a2a2', '#23c2c2']}
-            locations={[0.5, 1]}
-            style={{
             paddingHorizontal: 10
           }}>
           <SafeAreaView
@@ -148,8 +175,8 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
               </Text>
             </TouchableOpacity>
           </SafeAreaView>
-          </LinearGradient>
-        </Surface>
+        </LinearGradient>
+      </Surface>
       <MenuProvider style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.main}>
