@@ -18,6 +18,10 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
       </Text>
     </View>
   );
+  const introSubmittingEndsAt = moment(story.startedAt).add(
+    story.settings?.introTimeLimitSeconds,
+    'seconds'
+  );
 
   const cardsSection = (
     <>
