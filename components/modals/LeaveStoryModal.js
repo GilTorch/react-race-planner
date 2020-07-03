@@ -18,6 +18,7 @@ const LeaveStoryModal = ({
   navigation
 }) => {
   const deleteStoryLoading = useSelector(state => state.home.deleteStoryLoading);
+  const leaveStoryLoading = useSelector(state => state.home.leaveStoryLoading);
 
   const confirmDelete = async () => {
     try {
@@ -105,9 +106,14 @@ const LeaveStoryModal = ({
                   style={{
                     ...styles.button,
                     backgroundColor: '#EC8918',
-                    flex: 2,
-                    marginRight: 10
+                    flex: 1,
+                    marginLeft: 20,
+                    marginRight: 10,
+                    flexDirection: 'row'
                   }}>
+                  {leaveStoryLoading && (
+                    <ActivityIndicator style={{ marginRight: 10 }} size={18} color="#fff" />
+                  )}
                   <Text style={{ ...styles.buttonText }}>Just Leave</Text>
                 </TouchableOpacity>
               )}

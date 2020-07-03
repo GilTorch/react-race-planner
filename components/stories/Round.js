@@ -10,20 +10,29 @@ import Text from '../CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 
-const Round = ({ round, totalRound, roundIdx, listMode, style }) => {
+const Round = ({
+  round,
+  totalRound,
+  roundIdx,
+  listMode,
+  style,
+  isMasterAuthorRound,
+  isCompletedStory
+}) => {
   const roundStatus = round.status;
   const currentUser = useSelector(state => state.auth.currentUser);
-  const inProgressStatuses = [
-    'waiting_for_players',
-    'waiting_for_intros',
-    'intro_voting',
-    'round_writing',
-    'waiting_for_outros',
-    'outro_voting'
-  ];
-  const inprogressRound = inProgressStatuses.includes(roundStatus);
+  const inprogressRound = roundStatus === 'in_progress';
   const userTurn = round?.author?._id === currentUser?._id;
   const height = inprogressRound && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
+  let authorName = isMasterAuthorRound ? 'Master Author' : 'Anonymous Author';
+
+  if (isCompletedStory) {
+    if (round.privacyStatus === 'username') {
+      authorName = round.author.username;
+    } else if (round.privacyStatus === 'username_and_full_name') {
+      authorName = `${round.author.firstName} ${round.author.lastName} (${round.author.username})`;
+    }
+  }
 
   const roundBody = (
     <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
@@ -95,7 +104,7 @@ const Round = ({ round, totalRound, roundIdx, listMode, style }) => {
       <Surface style={{ ...styles.round, minHeight: height }}>
         <View style={styles.boxHeader}>
           <Text type="bold" style={styles.subTitle}>
-            By {round?.author?.username || ''}
+            By {authorName}
           </Text>
           <BoxMenu parentType="round" block={round} />
         </View>
@@ -128,12 +137,16 @@ Round.propTypes = {
   round: PropTypes.object.isRequired,
   totalRound: PropTypes.number,
   listMode: PropTypes.bool.isRequired,
-  style: PropTypes.object
+  style: PropTypes.object,
+  isMasterAuthorRound: PropTypes.bool,
+  isCompletedStory: PropTypes.bool
 };
 
 Round.defaultProps = {
   style: {},
-  totalRound: 11
+  totalRound: 11,
+  isMasterAuthorRound: false,
+  isCompletedStory: false
 };
 
 const styles = StyleSheet.create({

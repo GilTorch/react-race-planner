@@ -48,22 +48,11 @@ const Story = ({ story, index, length, navigation, updating }) => {
   const inProgress = inProgressStatuses.includes(story.status);
   const status = inProgress ? 'In Progress' : 'Completed';
   const currentGenre = story.genre;
-  const otherAuthors =
-    story.parts?.filter(
-      p =>
-        !p.isIntro &&
-        !p.isOutro &&
-        p.author?._id !== masterAuthor?._id &&
-        p.privacyStatus !== 'anonymous'
-    ) || [];
-  const authorsCount = otherAuthors.length + 1;
-  const anonymousAuthorsCount = story.parts?.filter(
-    p =>
-      !p.isIntro &&
-      !p.isOutro &&
-      p.author?._id !== masterAuthor?._id &&
-      p.privacyStatus === 'anonymous'
-  ).length;
+  const authorsCount = story.coAuthors?.length + 1;
+  let anonymousAuthorsCount = story.coAuthors?.filter(ca => ca.privacyStatus === 'anonymous')
+    .length;
+  // eslint-disable-next-line no-plusplus
+  if (story.privacyStatus === 'anonymous') anonymousAuthorsCount++;
   let GenreIconLibrary;
   const initialIntro = story.parts?.find(sp => sp.isIntro && sp.author?._id === masterAuthor?._id);
   const electedIntro = story.parts?.find(sp => sp.isIntro && sp.isElected);
@@ -84,6 +73,33 @@ const Story = ({ story, index, length, navigation, updating }) => {
     default:
       GenreIconLibrary = MaterialCommunityIcons;
   }
+
+  const displayAuthorsMeta = () => {
+    let publicauthorsCount = authorsCount - anonymousAuthorsCount;
+    let final;
+    // We count the master author as public depending on what they picked during
+    // story creation
+    if (story.privacyStatus !== 'anonymous') {
+      // eslint-disable-next-line no-plusplus
+      publicauthorsCount++;
+    }
+
+    if (publicauthorsCount) {
+      final = `${publicauthorsCount} public`;
+    }
+
+    if (anonymousAuthorsCount) {
+      if (publicauthorsCount) {
+        final = `${final} ${new AllHtmlEntities().decode(
+          '&middot;'
+        )} ${anonymousAuthorsCount} anonymous`;
+      } else {
+        final = `${anonymousAuthorsCount} anonymous`;
+      }
+    }
+
+    return final;
+  };
 
   return (
     <View key={Math.random()}>
@@ -158,35 +174,41 @@ const Story = ({ story, index, length, navigation, updating }) => {
 
           {status === 'Completed' && (
             <View style={styles.storyAuthorsContainer}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image
-                  style={styles.storyAuthorsImage}
-                  source={{
-                    uri:
-                      getUserProfileUri(masterAuthor?.picture) ||
-                      avatarGenerator(masterAuthor?.username)
-                  }}
-                />
-
-                <View style={styles.storyAuthorsSeparator} />
-              </View>
-
-              {otherAuthors.map(author => (
-                <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {story.privacyStatus !== 'anonymous' && (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image
-                    style={{ ...styles.storyAuthorsImage, marginLeft: -8 }}
+                    style={styles.storyAuthorsImage}
                     source={{
-                      uri: getUserProfileUri(author.picture) || avatarGenerator(author.username)
+                      uri:
+                        getUserProfileUri(masterAuthor?.picture) ||
+                        avatarGenerator(masterAuthor?.username)
                     }}
                   />
+
+                  <View style={styles.storyAuthorsSeparator} />
                 </View>
-              ))}
+              )}
+
+              {story.coAuthors
+                ?.filter(ca => ca.privacyStatus !== 'anonymous')
+                .map((author, idx) => (
+                  <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image
+                      style={{ ...styles.storyAuthorsImage, marginLeft: idx === 0 ? 0 : -8 }}
+                      source={{
+                        uri:
+                          getUserProfileUri(author.profile.picture) ||
+                          avatarGenerator(author.profile.username)
+                      }}
+                    />
+                  </View>
+                ))}
 
               {anonymousAuthorsCount > 0 && (
                 <View style={{ marginLeft: 5 }}>
                   <Text type="bold" style={{ fontSize: 12, color: textColor }}>
                     +{anonymousAuthorsCount} anonymous{' '}
-                    {anonymousAuthorsCount === 1 ? 'person' : 'people'}
+                    {anonymousAuthorsCount === 1 ? 'author' : 'authors'}
                   </Text>
                 </View>
               )}
@@ -195,15 +217,15 @@ const Story = ({ story, index, length, navigation, updating }) => {
 
           {status === 'In Progress' && authorsCount > story.settings?.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
-              {authorsCount + anonymousAuthorsCount} authors | {authorsCount} public{' '}
-              {new AllHtmlEntities().decode('&middot;')} {anonymousAuthorsCount} anonymous
+              {authorsCount} authors | {displayAuthorsMeta()}
             </Text>
           )}
 
           {authorsCount < story.settings?.minimumParticipants && (
             <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
               {story.settings?.minimumParticipants - authorsCount} more{' '}
-              {story.settings?.minimumParticipants - authorsCount === 1 ? 'person' : 'people'} to go
+              {story.settings?.minimumParticipants - authorsCount === 1 ? 'author' : 'authors'} to
+              go
             </Text>
           )}
 
@@ -215,7 +237,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
             }}>
             {/* TODO: Use the `createdAt` of the first round */}
             <Text style={{ color: textColor, fontSize: 12 }}>
-              {moment(story.createdAt).fromNow()}
+              {moment(story.startedAt || story.createdAt).fromNow()}
             </Text>
             <View
               style={{
@@ -254,7 +276,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
           </View>
           <View>
             <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
-              Initially Proposed Intro
+              Initially Proposed Intro {initialIntro?.author?._id === currentUser?._id && '(Yours)'}
             </Text>
 
             {initialIntro && (
@@ -282,7 +304,18 @@ const Story = ({ story, index, length, navigation, updating }) => {
               <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
             )}
 
-            {!electedIntro && (
+            {!electedIntro && story.status === 'intro_voting' && (
+              <Text
+                style={{
+                  color: '#ED8A18',
+                  fontFamily: 'RobotoItalic',
+                  fontSize: 12
+                }}>
+                Votes are in progress
+              </Text>
+            )}
+
+            {!electedIntro && story.status !== 'intro_voting' && (
               <Text
                 style={{
                   color: '#ED8A18',

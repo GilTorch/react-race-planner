@@ -1,11 +1,25 @@
+/* eslint-disable no-underscore-dangle */
 import axios from '../../services/axiosService';
 import { Story } from './types';
+
+export const joinStoryAction = (storyId, userId, privacyStatus) => dispatch => {
+  dispatch({ type: Story.JOIN_STORY_START });
+
+  return axios
+    .post(`/documents/${storyId}/authors/${userId}`, { privacyStatus })
+    .then(response => dispatch({ type: Story.JOIN_STORY_SUCCESS, story: response.data.story }))
+    .catch(error => {
+      dispatch({ type: Story.JOIN_STORY_FAILURE });
+
+      throw error.response?.data;
+    });
+};
 
 export const createStoryAction = data => dispatch => {
   dispatch({ type: Story.CREATE_STORY_START });
 
   return axios
-    .post('/documents/', data)
+    .post('/documents', data)
     .then(response => {
       dispatch({ type: Story.CREATE_STORY_SUCCESS, story: response.data });
       return response.data;
@@ -17,11 +31,12 @@ export const createStoryAction = data => dispatch => {
     });
 };
 
-export const leaveStoryAction = storyId => dispatch => {
+export const leaveStoryAction = (storyId, userId) => dispatch => {
   dispatch({ type: Story.LEAVE_STORY_START });
 
+  // Delete all parts for this author
   return axios
-    .put(`/documents/${storyId}/author`)
+    .delete(`/documents/${storyId}/authors/${userId}`)
     .then(() => {
       dispatch({ type: Story.LEAVE_STORY_SUCCESS });
     })

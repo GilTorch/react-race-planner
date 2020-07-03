@@ -208,7 +208,8 @@ const WritingScreen = ({ navigation, getStories }) => {
                 style={{ fontSize: 24, color: '#999', textAlign: 'center', paddingHorizontal: 10 }}>
                 You are not part of stories with those filters yet
               </Text>
-              <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
+              {/*  We disable this button for now */}
+              {/* <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
                 <Button
                   icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
                   uppercase={false}
@@ -218,7 +219,7 @@ const WritingScreen = ({ navigation, getStories }) => {
                     Create one using those filters
                   </Text>
                 </Button>
-              </Surface>
+              </Surface> */}
             </View>
           </>
         )}
