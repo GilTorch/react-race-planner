@@ -25,7 +25,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
         All Proposed {type}s ({proposedBlocks.length})
       </Text>
 
-      {userCanPropose && (
+      {userCanPropose && type === 'Intro' && moment().isBefore(introSubmittingEndsAt) && (
         <View
           style={{
             flex: 1,
@@ -38,18 +38,18 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
             onPress={() => onPropose()}
             style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
             <Text type="bold" style={{ color: '#FFF' }}>
-              Propose an {type}
+              Propose an Intro
             </Text>
           </Button>
         </View>
       )}
 
-      {story?.status === 'waiting_for_intros' && story.startedAt && (
+      {story?.status === 'waiting_for_intros' &&
+        type === 'Intro' &&
+        story.startedAt &&
+        moment().isBefore(introSubmittingEndsAt) && (
         <Text style={{ color: '#F44336', marginLeft: 20, marginTop: 7 }}>
-          Submitting intros ends{' '}
-          {moment().to(
-            moment(story.startedAt).add(story.settings?.introTimeLimitSeconds, 'seconds')
-          )}{' '}
+            Submitting intros ends {moment().to(introSubmittingEndsAt)}{' '}
         </Text>
       )}
 
