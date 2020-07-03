@@ -25,12 +25,12 @@ import { useFocusEffect } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import Toast from 'react-native-root-toast';
 
-import { createStoryAction } from '../redux/actions/StoryAction';
+import { createStoryAction, createRoundAction } from '../redux/actions/StoryAction';
 
 const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();
 
-const RoundWritingScreen = ({ navigation, route, createStory }) => {
+const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => {
   navigation.setOptions({
     headerShown: false
   });
@@ -121,10 +121,8 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
           finalObj.isOutro = true;
         }
 
-        // TODO: Create this action
         // Send data as is and finish round creation remotely
-        // Then return the new story to replace locally
-        await createRound(finalObj);
+        await createRound(finalObj, route.params.story?._id);
 
         navigation.goBack();
       }
@@ -294,11 +292,13 @@ const styles = StyleSheet.create({
 RoundWritingScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
-  createStory: PropTypes.func.isRequired
+  createStory: PropTypes.func.isRequired,
+  createRound: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = {
-  createStory: createStoryAction
+  createStory: createStoryAction,
+  createRound: createRoundAction
 };
 
 export default connect(null, mapDispatchToProps)(RoundWritingScreen);
