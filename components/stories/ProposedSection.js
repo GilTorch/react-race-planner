@@ -4,18 +4,12 @@ import { Surface, Button } from 'react-native-paper';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
+import moment from 'moment';
 import Text from '../CustomText';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 
-const ProposedSection = ({
-  type,
-  proposedBlocks,
-  listMode,
-  userCanPropose,
-  onPropose,
-  isCompletedStory
-}) => {
+const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose, story }) => {
   const electedBlock = proposedBlocks.find(block => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -42,7 +36,7 @@ const ProposedSection = ({
             icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
             uppercase={false}
             onPress={() => onPropose()}
-            style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5 }}>
+            style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
             <Text type="bold" style={{ color: '#FFF' }}>
               Propose an {type}
             </Text>
@@ -76,7 +70,7 @@ const ProposedSection = ({
           const margin = index === 0 ? 20 : 0;
           let authorName = index === 0 ? 'Master Author' : 'Anonymous Author';
 
-          if (isCompletedStory) {
+          if (story.status === 'completed') {
             if (proposedBlock.privacyStatus === 'username') {
               authorName = proposedBlock.author.username;
             } else if (proposedBlock.privacyStatus === 'username_and_full_name') {
