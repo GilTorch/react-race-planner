@@ -8,7 +8,14 @@ import Text from '../CustomText';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 
-const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose }) => {
+const ProposedSection = ({
+  type,
+  proposedBlocks,
+  listMode,
+  userCanPropose,
+  onPropose,
+  isCompletedStory
+}) => {
   const electedBlock = proposedBlocks.find(block => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -58,11 +65,21 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
       <ScrollView horizontal style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
         {proposedBlocks.map((proposedBlock, index) => {
           const margin = index === 0 ? 20 : 0;
+          let authorName = index === 0 ? 'Master Author' : 'Anonymous Author';
+
+          if (isCompletedStory) {
+            if (proposedBlock.privacyStatus === 'username') {
+              authorName = proposedBlock.author.username;
+            } else if (proposedBlock.privacyStatus === 'username_and_full_name') {
+              authorName = `${proposedBlock.author.firstName} ${proposedBlock.author.lastName} (${proposedBlock.author.username})`;
+            }
+          }
+
           return (
             <Surface key={Math.random()} style={{ ...styles.intros, marginLeft: margin }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text type="bold" style={styles.subTitle}>
-                  By {proposedBlock.author.username}
+                  By {authorName}
                 </Text>
                 <BoxMenu
                   parentType={type}
