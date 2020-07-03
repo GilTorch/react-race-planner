@@ -229,8 +229,8 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
     }
   };
 
-  const handleRoundWriting = () => {
-    navigation.navigate('RoundWriting', { storedStory, isNewStory: false });
+  const handleRoundWriting = entity => () => {
+    navigation.navigate('RoundWriting', { story: storedStory, entity });
   };
 
   return (
@@ -469,7 +469,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             paddingTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40)
           }}>
           <ProposedSection
-            onPropose={handleRoundWriting}
+            onPropose={handleRoundWriting('intro')}
             userCanPropose={userIsAParticipant && !tooLateToJoin}
             type="Intro"
             proposedBlocks={storedStory?.parts?.filter(p => p.isIntro)}
@@ -502,7 +502,9 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
 
           {reachedEnding && (
             <ProposedSection
-              onPropose={handleRoundWriting}
+              // We use 'ending' instead of 'outro'
+              // because we're gonna be using that on the UI
+              onPropose={handleRoundWriting('ending')}
               userCanPropose={userIsAParticipant && tooLateForOutro}
               type="Ending"
               proposedBlocks={storedStory?.parts?.filter(p => p.isOutro)}
