@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import Toast from 'react-native-root-toast';
 
 import Text from '../CustomText';
-import { loremText } from '../../utils/data';
 import { createReportAction } from '../../redux/actions/StoryActions';
 import { reportSchema } from '../../utils/validators';
 
@@ -80,19 +79,19 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport }) =
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
                       <Text style={styles.text}>Title: </Text>
                       <Text type="bold" style={styles.text}>
-                        {parent.title}
+                        {parent.title || 'Story Title'}
                       </Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
                       <Text style={styles.text}>Genre: </Text>
                       <Text type="bold" style={styles.text}>
-                        {parent.genre}
+                        {parent.genre?.name || 'Story Genre'}
                       </Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
                       <Text style={styles.text}>Status: </Text>
                       <Text type="bold" style={styles.text}>
-                        {parent.status}
+                        {parent.status || 'Story Status'}
                       </Text>
                     </View>
                   </>
@@ -102,11 +101,13 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport }) =
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
                       <Text style={styles.text}>Author: </Text>
                       <Text type="bold" style={styles.text}>
-                        Anonymous 1
+                        {parent.author?.username || 'Round Author'}
                       </Text>
                     </View>
                     <Text style={{ ...styles.text, paddingBottom: 2 }}>Content: </Text>
-                    <Text style={{ color: textColor, lineHeight: 17 }}>{loremText}</Text>
+                    <Text style={{ color: textColor, lineHeight: 17 }}>
+                      {parent.content || 'Round Content'}
+                    </Text>
                   </>
                 )}
                 <View style={{ marginTop: 30 }}>

@@ -69,3 +69,7 @@ export const passwordResetVerificationSchema = yup.object().shape({
 export const reportSchema = yup.object().shape({
   reason: yup.string().required('Please enter the reason')
 });
+
+export const newStorySchema = yup.object().shape({
+  title: yup.string().required('Enter a title for the story')
+});

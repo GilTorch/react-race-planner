@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import * as React from 'react';
 import {
   StyleSheet,
@@ -16,49 +17,103 @@ import Constants from 'expo-constants';
 import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { Button, Surface, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
+import Toast from 'react-native-root-toast';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import { Dropdown } from 'react-native-material-dropdown';
+import { connect, useSelector } from 'react-redux';
+
+import moment from 'moment';
 import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../utils/dimensions';
-import { stories } from '../utils/data';
+import { SCREEN_HEIGHT } from '../utils/dimensions';
+import { joinStoryAction, leaveStoryAction } from '../redux/actions/StoryAction';
+import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 
-const StoryScreen = ({ navigation, route }) => {
-  const { storyId } = route.params;
-  const story = stories.find(st => st.id === storyId) || stories[3];
-  const masterAuthor = story.authors.find(author => author.storyLead);
-  const authorsCount = story.authors.length;
-  const missingAuthorsCount = 5 - authorsCount;
-  const user = story.authors.find(author => author.username === 'johndoe');
-  const inprogressStory = story.status === 'In Progress';
-  const waitingStory = story.status === 'Waiting for players';
-  const completedStory = story.status === 'Completed';
-  const inprogress = inprogressStory || waitingStory;
-  const status = inprogress ? 'In Progress' : 'Completed';
-  const masterAuthorName = inprogress ? 'Anonymous 1' : masterAuthor.fullName;
+const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
+  const { story } = route.params;
+  const inProgresstories = useSelector(state => state.home.stories) || [];
+  const completedStories = useSelector(state => state.library.stories) || [];
+  const myStories = useSelector(state => state.writing.stories) || [];
+  const { masterAuthor } = story;
+
+  const storedStory =
+    [...myStories, ...inProgresstories, ...completedStories].find(s => s._id === story?._id) || {};
+  // We make sure they are in the order of the story lifecycle - https://app.clickup.com/2351815/v/dc/16z6a-777/27rp7-735
+  // so that we can properly use this variable later
+  const inProgressStatuses = [
+    'waiting_for_players',
+    'waiting_for_intros',
+    'intro_voting',
+    'round_writing',
+    'waiting_for_outros',
+    'outro_voting'
+  ];
+  const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(storedStory?.status);
+  const authorsCount = storedStory?.coAuthors?.length + 1;
+  const anonymousAuthorsCount = storedStory?.coAuthors?.filter(
+    ca => ca.privacyStatus === 'anonymous'
+  ).length;
+  const missingAuthorsCount = storedStory?.settings?.minimumParticipants - authorsCount;
+  const currentUser = useSelector(state => state.auth.currentUser);
+  const isMasterAuthor = currentUser?._id === masterAuthor?._id;
+  const userIsAParticipant =
+    storedStory?.coAuthors?.find(ca => ca.profile._id === currentUser?._id) || isMasterAuthor;
+  const tooLateForOutro = storedStory?.status === 'outro_voting';
+  const waitingStory = authorsCount < storedStory?.settings?.minimumParticipants;
+  const completedStory = storedStory?.status === 'completed';
+  const inProgress = inProgressStatuses.includes(storedStory?.status);
+  const status = inProgress ? 'In Progress' : 'Completed';
+  let masterAuthorName =
+    storedStory?.privacyStatus === 'anonymous' ? 'Anonymous' : masterAuthor.username;
+
+  if (storedStory?.privacyStatus === 'username_and_full_name') {
+    masterAuthorName = `${masterAuthor.firstName} ${masterAuthor.lastName} (${masterAuthor.username})`;
+  }
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
-
+  const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
+  const reachedEnding = !inProgressStatuses.slice(0, 4).includes(storedStory?.status);
   const scrollView = React.useRef(null);
+  const refRBSheet = React.useRef();
 
   let coAuthors;
-  if (inprogressStory) {
-    coAuthors = `${authorsCount - 1}/${authorsCount}`;
-  } else if (waitingStory) {
+  if (waitingStory) {
     coAuthors = `${missingAuthorsCount} more to start`;
   } else {
-    coAuthors = `+${authorsCount - 1} anonymous authors`;
+    // We deduct 1 because authorsCount is counting the master author as well
+    const publicAuthorsCount = authorsCount - anonymousAuthorsCount - 1;
+
+    if (publicAuthorsCount) {
+      coAuthors = `${publicAuthorsCount} public`;
+    }
+
+    if (anonymousAuthorsCount) {
+      if (publicAuthorsCount) {
+        coAuthors = `${coAuthors} & ${anonymousAuthorsCount} anonymous`;
+      } else {
+        coAuthors = `${anonymousAuthorsCount} anonymous`;
+      }
+    }
   }
   let firstBtnColor;
-  if (user && inprogress) {
+  if (userIsAParticipant && inProgress) {
     firstBtnColor = '#F44336';
-  } else if (!user && waitingStory) {
+  } else if (!userIsAParticipant && waitingStory) {
     firstBtnColor = '#ED8A18';
   } else {
     firstBtnColor = '#A39F9F';
   }
 
   const [listMode, setListMode] = React.useState(false);
+  const [privacyStatus, setPrivacyStatus] = React.useState(); // TODO: get the default user privacystatus from state.setting
   const icon = listMode ? 'eye-slash' : 'eye';
   const color = listMode ? '#FFF' : '#EEE';
+
+  const privacyData = [
+    { value: 'username', label: 'Username' },
+    { value: 'username_and_full_name', label: 'Username and Full Name' },
+    { value: 'anonymous', label: 'Anonymous' }
+  ];
 
   navigation.setOptions({
     headerShown: false
@@ -66,6 +121,7 @@ const StoryScreen = ({ navigation, route }) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      StatusBar.setHidden(false);
       StatusBar.setBarStyle('light-content');
     }, [])
   );
@@ -121,13 +177,76 @@ const StoryScreen = ({ navigation, route }) => {
     rawScrollPosition = e.nativeEvent.contentOffset.y;
   };
 
+  const joinOrLeave = async () => {
+    if (userIsAParticipant) {
+      try {
+        if (completedStory) {
+          Toast.show("It's too late to leave this story now", {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.BOTTOM
+          });
+        } else {
+          await leaveStory(story?._id, currentUser?._id);
+
+          navigation.goBack();
+        }
+      } catch (e) {
+        Toast.show(e.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM
+        });
+      }
+    } else if (completedStory) {
+      Toast.show('You cannot join a completed story', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
+    } else if (authorsCount === 100) {
+      Toast.show('The maximum amount of participants has been reached', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
+    } else if (tooLateToJoin && storedStory?.genre?.slug !== 'bedtime_stories') {
+      Toast.show("It's too late to join this story now", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
+    } else {
+      refRBSheet.current.open();
+    }
+  };
+
+  const handleJoinStory = async () => {
+    try {
+      await joinStory(story?._id, currentUser?._id, privacyStatus);
+
+      refRBSheet.current.close();
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
+    }
+  };
+
+  const handleRoundWriting = entity => () => {
+    navigation.navigate('RoundWriting', { story: storedStory, entity });
+  };
+
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: color,
-        marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
+        marginTop: Platform.OS === 'android' ? Constants.statusBarHeight : 0
       }}>
+      <LeaveStoryModal
+        isMasterAuthor={isMasterAuthor}
+        dismiss={() => setIsLeaveStoryModalVisible(false)}
+        visible={isLeaveStoryModalVisible}
+        storyId={story._id}
+        navigation={navigation}
+      />
       <Surface
         style={{
           borderBottomLeftRadius: 13,
@@ -149,7 +268,6 @@ const StoryScreen = ({ navigation, route }) => {
           }}>
           <SafeAreaView
             style={{
-              paddingTop: Constants.statusBarHeight * 1.7,
               alignItems: 'center',
               flexDirection: 'column'
             }}>
@@ -170,7 +288,7 @@ const StoryScreen = ({ navigation, route }) => {
                 textAlign: 'center',
                 fontSize: 18
               }}>
-              {story.title}
+              {storedStory?.title}
             </Animated.Text>
 
             <Animated.View
@@ -182,23 +300,35 @@ const StoryScreen = ({ navigation, route }) => {
                 alignSelf: 'flex-start',
                 justifyContent: 'space-between'
               }}>
-              <MetaData label="Genre" value={story.genre} />
+              <MetaData label="Genre" value={storedStory?.genre?.name} />
               <MetaData label="Status" value={status} />
-              <MetaData label="Master Author" value={masterAuthorName} />
-              <MetaData label="Intro Maximum Words" value="50" />
-              <MetaData label="Ending Maximum Words" value="50" />
-              <MetaData label="Words per Round" value="100 max" />
+              {completedStory && <MetaData label="Master Author" value={masterAuthorName} />}
+              <MetaData
+                label="Intro Maximum Words"
+                value={`${storedStory?.settings?.introMaxWords}`}
+              />
+              <MetaData
+                label="Ending Maximum Words"
+                value={`${storedStory?.settings?.outroMaxWords}`}
+              />
+              <MetaData
+                label="Words per Round"
+                value={`${storedStory?.settings?.roundMaxWords} max`}
+              />
               <MetaData label="Co-Authors" value={coAuthors} />
             </Animated.View>
 
             <View style={styles.headerBtn}>
               <Surface style={styles.surface}>
                 <Button
+                  onPress={joinOrLeave}
                   mode="contained"
                   uppercase={false}
                   style={{ backgroundColor: firstBtnColor }}
                   labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
-                  {user ? 'Leave Story' : 'Join Story'}
+                  {userIsAParticipant && isMasterAuthor && 'Delete Story'}
+                  {userIsAParticipant && !isMasterAuthor && 'Leave Story'}
+                  {!userIsAParticipant && 'Join Story'}
                 </Button>
               </Surface>
 
@@ -214,7 +344,7 @@ const StoryScreen = ({ navigation, route }) => {
                 </Button>
               </Surface>
 
-              {!inprogress && (
+              {!inProgress && (
                 <Surface style={styles.surface}>
                   <TouchableRipple onPress={() => setListMode(!listMode)} style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'row', paddingHorizontal: 5 }}>
@@ -338,74 +468,134 @@ const StoryScreen = ({ navigation, route }) => {
           contentContainerStyle={{
             paddingTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40)
           }}>
-          {waitingStory && (
-            <>
-              <Text type="medium" style={styles.title}>
-                All Proposed Intros
-              </Text>
-              <Text type="bold-italic" style={styles.penddingText}>
-                Waiting for {missingAuthorsCount} more players.
-              </Text>
-
-              <HugeAdvertisement />
-            </>
-          )}
-          {!waitingStory && (
-            <>
-              <ProposedSection type="Intro" proposedBlocks={story.intros} listMode={listMode} />
-              <SmallAdvertisement />
-            </>
-          )}
+          <ProposedSection
+            onPropose={handleRoundWriting('intro')}
+            userCanPropose={userIsAParticipant && !tooLateToJoin}
+            type="Intro"
+            proposedBlocks={storedStory?.parts?.filter(p => p.isIntro)}
+            listMode={listMode}
+            story={storedStory}
+          />
+          <SmallAdvertisement />
 
           {!waitingStory &&
-            story.rounds.map((round, index) => {
-              const bigAdd = [4, 10];
-              const add = [6];
-              return (
-                <View key={Math.random()}>
-                  {bigAdd.includes(index) && <HugeAdvertisement />}
-                  {add.includes(index) && <SmallAdvertisement />}
-                  <Round round={round} totalRound={story.totalRound} listMode={listMode} />
-                </View>
-              );
-            })}
-          {inprogressStory && (
-            <>
-              <Text type="bold" style={{ ...styles.title, marginTop: 0 }}>
-                All Proposed Endings
-              </Text>
-              <Text type="bold-italic" style={{ ...styles.penddingText, fontSize: 13 }}>
-                Pendding
-              </Text>
-            </>
-          )}
-          {completedStory && (
-            <ProposedSection type="Ending" proposedBlocks={story.endings} listMode={listMode} />
+            storedStory?.parts
+              ?.filter(s => !s.isIntro && !s.isOutro)
+              .map((round, index, arr) => {
+                const bigAdd = [4, 10];
+                const add = [6];
+                return (
+                  <View key={Math.random()}>
+                    {bigAdd.includes(index) && <HugeAdvertisement />}
+                    {add.includes(index) && <SmallAdvertisement />}
+                    <Round
+                      round={round}
+                      roundIdx={index + 1}
+                      totalRound={arr.length}
+                      listMode={listMode}
+                      isMasterAuthorRound={round.author?._id === masterAuthor?._id}
+                      isCompletedStory={completedStory}
+                    />
+                  </View>
+                );
+              })}
+
+          {reachedEnding && (
+            <ProposedSection
+              // We use 'ending' instead of 'outro'
+              // because we're gonna be using that on the UI
+              onPropose={handleRoundWriting('ending')}
+              userCanPropose={userIsAParticipant && tooLateForOutro}
+              type="Ending"
+              proposedBlocks={storedStory?.parts?.filter(p => p.isOutro)}
+              story={storedStory}
+            />
           )}
         </ScrollView>
       )}
-      {false && !listMode && !waitingStory && (
-        <View
-          style={{
-            position: 'absolute',
-            width: SCREEN_WIDTH * 0.25,
-            bottom: 25,
-            right: 10
-          }}>
-          <Surface style={styles.floatingNav}>
-            <FontAwesome name="chevron-up" size={20} color="#5A7582" />
-            <Text type="bold" style={{ color: '#5A7582' }}>
-              FIRST
-            </Text>
-          </Surface>
-          <Surface style={{ ...styles.floatingNav, marginTop: 10 }}>
-            <FontAwesome name="chevron-down" size={20} color="#5A7582" />
-            <Text type="bold" style={{ color: '#5A7582' }}>
-              LAST
-            </Text>
+
+      <RBSheet
+        ref={refRBSheet}
+        height={SCREEN_HEIGHT * 0.6}
+        closeOnDragDown
+        // closeOnPressMask={false}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'rgba(0, 0, 0, 0.6)'
+          },
+          draggableIcon: {
+            backgroundColor: '#000'
+          }
+        }}>
+        <View style={{ marginHorizontal: 25 }}>
+          <Text style={{ fontSize: 16, color: '#03a2a2' }}>
+            Minimum and maximum authors allowed
+          </Text>
+          <Text style={{ marginTop: 5, marginBottom: 10 }}>
+            {storedStory?.settings?.minimumParticipants} to 100
+          </Text>
+          <Text style={{ fontSize: 16, color: '#03a2a2' }}>
+            Time for writing and voting for the intro
+          </Text>
+          <Text style={{ marginTop: 5, marginBottom: 10 }}>
+            {moment()
+              .startOf('day')
+              .seconds(storedStory?.settings?.introTimeLimitSeconds)
+              .format('H:mm')}{' '}
+            to write{' & '}
+            {moment()
+              .startOf('day')
+              .seconds(storedStory?.settings?.voteTimeLimitSeconds)
+              .format('H:mm')}{' '}
+            to vote
+          </Text>
+          <Text style={{ fontSize: 16, color: '#03a2a2' }}>
+            Time for writing and voting for the ending
+          </Text>
+          <Text style={{ marginTop: 5, marginBottom: 10 }}>
+            {moment()
+              .startOf('day')
+              .seconds(storedStory?.settings?.outroTimeLimitSeconds)
+              .format('H:mm')}{' '}
+            to write{' & '}
+            {moment()
+              .startOf('day')
+              .seconds(storedStory?.settings?.voteTimeLimitSeconds)
+              .format('H:mm')}{' '}
+            to vote
+          </Text>
+          <Text style={{ fontSize: 16, color: '#03a2a2' }}>Time for writing a round</Text>
+          <Text style={{ marginTop: 5, marginBottom: 10 }}>
+            {moment()
+              .startOf('day')
+              .seconds(storedStory?.settings?.roundTimeLimitSeconds)
+              .format('H:mm')}{' '}
+          </Text>
+          <Text style={{ fontSize: 16, color: '#03a2a2' }}>Privacy Status</Text>
+
+          <Text style={{ fontSize: 13, marginBottom: -20 }}>
+            Decide what other people will see as your handle throughout this story
+          </Text>
+
+          <Dropdown
+            value={storedStory?.privacyStatus}
+            fontSize={16}
+            dropdownPosition={0.1}
+            onChangeText={text => setPrivacyStatus(text)}
+            data={privacyData}
+          />
+          <Surface style={{ ...styles.surface, marginTop: 20, marginBottom: 30 }}>
+            <Button
+              mode="contained"
+              onPress={handleJoinStory}
+              uppercase={false}
+              style={{ backgroundColor: '#ED8A18' }}
+              labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium', color: '#fff' }}>
+              Join Story
+            </Button>
           </Surface>
         </View>
-      )}
+      </RBSheet>
     </View>
   );
 };
@@ -429,11 +619,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     elevation: 2
   },
-  penddingText: {
-    color: '#ED8A18',
-    marginLeft: 20,
-    marginVertical: 20
-  },
   floatingNav: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -447,7 +632,14 @@ const styles = StyleSheet.create({
 
 StoryScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  route: PropTypes.object.isRequired
+  route: PropTypes.object.isRequired,
+  joinStory: PropTypes.func.isRequired,
+  leaveStory: PropTypes.func.isRequired
 };
 
-export default StoryScreen;
+const mapDispatchToProps = {
+  joinStory: joinStoryAction,
+  leaveStory: leaveStoryAction
+};
+
+export default connect(null, mapDispatchToProps)(StoryScreen);

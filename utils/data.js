@@ -394,7 +394,8 @@ const genresIcon = {
   'ios-bed': <Ionicons size={32} color="white" name="ios-bed" />
 };
 
-const genres = [
+// const genres = [
+const genresData = [
   {
     id: 1,
     name: 'Mystery',
@@ -498,4 +499,5 @@ const comments = [
   }
 ];
 
-export { loremText, intros, endings, stories, comments, genres, genresIcon };
+// export { loremText, intros, endings, stories, comments, genres, genresIcon };
+export { loremText, intros, endings, stories, comments, genresData, genresIcon };

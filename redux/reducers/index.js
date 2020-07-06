@@ -19,20 +19,22 @@ const userPersistConfig = {
 };
 
 const homePersistConfig = {
-  key: 'user',
+  key: 'home',
   storage: AsyncStorage
 };
 
 const libraryPersistConfig = {
-  key: 'user',
+  key: 'library',
   storage: AsyncStorage
 };
 
 const writingPersistConfig = {
-  key: 'user',
+  key: 'writing',
   storage: AsyncStorage
 };
 
+// TODO: Get rid of this, we do it at the stack level
+// and actually save the intended data in 'writing' above
 const storyPersistConfig = {
   key: 'story',
   storage: AsyncStorage
