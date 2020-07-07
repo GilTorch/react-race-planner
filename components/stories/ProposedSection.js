@@ -57,7 +57,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
           </Text>
         )}
 
-      {!proposedBlocks?.length && (
+      {!proposedBlocks?.length && type === 'Ending' && (
         <Text
           style={{
             color: '#ed8a18',
