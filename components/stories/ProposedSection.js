@@ -52,8 +52,15 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
         type === 'Intro' &&
         story.startedAt &&
         moment().isBefore(introSubmittingEndsAt) && (
-          <Text style={{ color: '#F44336', marginLeft: 20, marginTop: 7 }}>
-            Submitting intros ends {moment().to(introSubmittingEndsAt)}{' '}
+      {story?.status === 'intro_voting' &&
+        type === 'Intro' &&
+        story.introVotingStartedAt &&
+        moment().isBefore(introSubmittingEndsAt) && (
+          <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
+            Votes for the story intro are currently in progress. Ending{' '}
+            {moment().to(introVotingEndsAt)}
+          </Text>
+        )}
           </Text>
         )}
 
