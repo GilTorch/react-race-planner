@@ -9,17 +9,18 @@ import { AllHtmlEntities } from 'html-entities';
 import { useSelector, connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import Toast from 'react-native-root-toast';
+import moment from 'moment';
 
+import { getUserProfileUri, avatarGenerator } from '../../utils/functions';
 import Text from '../CustomText';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
-import { dummyComments } from '../../utils/data';
 import { createCommentAction } from '../../redux/actions/StoryAction';
 import { commentSchema } from '../../utils/validators';
 
 const CommentModal = ({ visible, dismiss, parent, createComment }) => {
   const user = useSelector(state => state.auth.currentUser);
   const [margin, setMargin] = React.useState(0);
-  const [comments, setComments] = React.useState(dummyComments.slice(0, parent.comments));
+  // const [comments, setComments] = React.useState(dummyComments.slice(0, parent.comments));
 
   const defaultValues = {
     author: user._id,
@@ -114,14 +115,14 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
             <View style={{ paddingLeft: 20, flexDirection: 'row' }}>
               <Text style={styles.label}>Author: </Text>
               <Text type="bold" style={styles.label}>
-                {parent.author || ''}
+                {parent.author?.username || ''}
               </Text>
             </View>
             <View style={{ marginLeft: 20, marginTop: 10 }}>
               <Text style={styles.label}>Content:</Text>
             </View>
             <View style={{ marginTop: 10, paddingLeft: 20, paddingRight: 20 }}>
-              <Text style={styles.text}>{parent.body || ''}</Text>
+              <Text style={styles.text}>{parent.content || ''}</Text>
             </View>
             <View
               style={{
@@ -130,13 +131,13 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                 paddingTop: 20
               }}>
               <Text type="bold" style={styles.label}>
-                Comments ({parent.comments})
+                Comments ({parent.comments?.length})
               </Text>
             </View>
           </View>
           <View style={{ flex: 1 }}>
             <FlatList
-              data={comments}
+              data={parent.comments}
               renderItem={({ item, index }) => (
                 <View>
                   <View
@@ -148,7 +149,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                       padding: 10,
                       marginVertical: 10
                     }}>
-                    {item.author.anonymous && (
+                    {item.privacyStatus === 'anonymous' && (
                       <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                         <View
                           style={{
@@ -164,12 +165,16 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                       </View>
                     )}
 
-                    {!item.author.anonymous && (
+                    {item.privacyStatus !== 'anonymous' && (
                       <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                         <Image
                           resizeMode="contain"
                           style={{ height: 50, width: 50, borderRadius: 100 }}
-                          source={{ uri: item.author.profilePicture }}
+                          source={{
+                            uri:
+                              getUserProfileUri(item.author.picture) ||
+                              avatarGenerator(item.author.username)
+                          }}
                         />
                       </View>
                     )}
@@ -177,13 +182,13 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                       <View style={{ marginBottom: 10, flexDirection: 'row' }}>
                         <View>
                           <Text>
-                            {item.author.anonymous && (
+                            {item.privacyStatus === 'anonymous' && (
                               <Text type="bold" style={{ color: '#03A2A2' }}>
                                 Anonymous {index}
                               </Text>
                             )}
 
-                            {!item.author.anonymous && (
+                            {item.privacyStatus !== 'anonymous' && (
                               <Text type="bold" style={{ color: '#03A2A2' }}>
                                 {item.author.firstName} {item.author.lastName}
                               </Text>
@@ -193,18 +198,14 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                         <Text> {new AllHtmlEntities().decode('&middot;')} </Text>
                         <View>
                           <Text type="bold" style={{ color: '#5A7582' }}>
-                            {item.startTime}
+                            {moment(item.createdAt).fromNow()}
                           </Text>
                         </View>
                       </View>
-                      <Text style={{ color: '#5A7582', lineHeight: 17 }}>
-                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-                        eirmod tempor invidunt ut labore. Lorem ipsum dolor sit amet, consetetur
-                        sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.
-                      </Text>
+                      <Text style={{ color: '#5A7582', lineHeight: 17 }}>{item.content}</Text>
                     </View>
                   </View>
-                  {comments.length !== index + 1 && (
+                  {parent.comments?.length !== index + 1 && (
                     <Dash dashThickness={0.5} dashColor="#707070" style={{ width: '100%' }} />
                   )}
                 </View>

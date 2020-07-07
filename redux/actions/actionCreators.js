@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import {
   SET_HOME_STORY_FILTERS,
   SET_LIBRARY_STORY_FILTERS,

@@ -4,7 +4,7 @@ import { Modal, Portal } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
-import { genres } from '../../utils/data';
+import { genresData } from '../../utils/data';
 import Genre from '../Genre';
 import Text from '../CustomText';
 
@@ -38,7 +38,7 @@ const ViewAllGenresModal = ({ visible, dismiss }) => {
           </View>
           <FlatList
             style={{ overflow: 'hidden' }}
-            data={genres}
+            data={genresData}
             keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => <Genre genre={item} />}
           />
