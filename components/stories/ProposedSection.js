@@ -22,6 +22,18 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
     story.settings?.introTimeLimitSeconds,
     'seconds'
   );
+  const introVotingEndsAt = moment(story.introVotingStartedAt).add(
+    story.settings?.voteTimeLimitSeconds,
+    'seconds'
+  );
+  const outroSubmittingEndsAt = moment(story.outroSubmittingStartedAt).add(
+    story.settings?.outroTimeLimitSeconds,
+    'seconds'
+  );
+  const outroVotingEndsAt = moment(story.outroVotingStartedAt).add(
+    story.settings?.voteTimeLimitSeconds,
+    'seconds'
+  );
 
   const cardsSection = (
     <>
@@ -66,6 +78,42 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
             {moment().to(introVotingEndsAt)}
           </Text>
         )}
+
+      {userCanPropose && type === 'Ending' && moment().isBefore(outroSubmittingEndsAt) && (
+        <View
+          style={{
+            flex: 1,
+            marginLeft: 20,
+            marginTop: 10
+          }}>
+          <Button
+            icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+            uppercase={false}
+            onPress={() => onPropose()}
+            style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
+            <Text type="bold" style={{ color: '#FFF' }}>
+              Propose an Ending
+            </Text>
+          </Button>
+        </View>
+      )}
+
+      {story?.status === 'waiting_for_outros' &&
+        type === 'Ending' &&
+        story.startedAt &&
+        moment().isBefore(outroSubmittingEndsAt) && (
+          <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
+            Submitting endings ends {moment().to(outroSubmittingEndsAt)}
+          </Text>
+        )}
+
+      {story?.status === 'outro_voting' &&
+        type === 'Ending' &&
+        story.outroVotingStartedAt &&
+        moment().isBefore(outroSubmittingEndsAt) && (
+          <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
+            Votes for the story ending are currently in progress. Ending{' '}
+            {moment().to(outroVotingEndsAt)}
           </Text>
         )}
 
