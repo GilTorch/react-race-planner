@@ -1,7 +1,7 @@
 import { Story } from '../actions/types';
 
 const INITIAL_STATE = {
-  loading: false,
+  createReportLoading: false,
   joinStoryLoading: false,
   createStoryLoading: false,
   leaveStoryLoading: false,
@@ -13,11 +13,11 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case Story.REPORT_STORY_START:
-      return { ...state, loading: true };
+      return { ...state, createReportLoading: true };
     case Story.REPORT_STORY_FAILURE:
-      return { ...state, loading: false };
+      return { ...state, createReportLoading: false };
     case Story.REPORT_STORY_SUCCESS:
-      return { ...state, loading: false };
+      return { ...state, createReportLoading: false };
     case Story.JOIN_STORY_START:
       return { ...state, joinStoryLoading: true };
     case Story.JOIN_STORY_FAILURE:

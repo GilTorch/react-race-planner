@@ -8,24 +8,31 @@ import { useForm } from 'react-hook-form';
 import Toast from 'react-native-root-toast';
 
 import Text from '../CustomText';
-import { createReportAction } from '../../redux/actions/StoryActions';
+import { createReportAction } from '../../redux/actions/StoryAction';
 import { reportSchema } from '../../utils/validators';
 
 const ReportModal = ({ visible, onDismiss, parentType, parent, createReport }) => {
   const user = useSelector(state => state.auth.currentUser);
+  const loading = useSelector(state => state.story.createReportLoading);
 
   const { errors, handleSubmit, register, watch, setValue, reset } = useForm({
     validationSchema: reportSchema,
     defaultValues: {
       reporter: user._id,
       status: 'pending',
-      documentId: 'parent.id'
+      documentId: parent._id
     }
   });
+
+  const hideModal = () => {
+    onDismiss();
+    reset({ reason: '' });
+  };
 
   const submit = async data => {
     try {
       await createReport(data);
+      hideModal();
       Toast.show('Report sent', {
         duration: Toast.durations.SHORT,
         position: Toast.positions.BOTTOM
@@ -144,6 +151,8 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport }) =
                   <Surface style={styles.btnSurface}>
                     <Button
                       uppercase={false}
+                      loading={loading}
+                      disabled={loading}
                       onPress={handleSubmit(submit)}
                       style={{ backgroundColor: '#03A2A2' }}>
                       <Text type="bold" style={{ color: '#FFF' }}>
@@ -154,10 +163,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport }) =
                   <Surface style={styles.btnSurface}>
                     <Button
                       uppercase={false}
-                      onPress={() => {
-                        onDismiss();
-                        reset({ reason: '' });
-                      }}
+                      onPress={hideModal}
                       style={{ backgroundColor: '#f44336' }}>
                       <Text type="bold" style={{ color: '#fff' }}>
                         Cancel
