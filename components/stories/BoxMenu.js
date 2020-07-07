@@ -14,7 +14,15 @@ const BoxMenu = ({ parentType, block }) => {
   const [showReport, setShowReport] = useState(false);
   const [showVoting, setShowVoting] = React.useState(false);
   const [showComment, setShowComment] = React.useState(false);
-  const penddingStatus = block.status === 'In Progress' || block.status === 'Pendding';
+  const inProgressStatuses = [
+    'waiting_for_players',
+    'waiting_for_intros',
+    'intro_voting',
+    'round_writing',
+    'waiting_for_outros',
+    'outro_voting'
+  ];
+  const penddingStatus = inProgressStatuses.includes(block.status);
   const introEnding = parentType === 'Intro' || parentType === 'Ending';
 
   const showReportModal = () => {
@@ -62,7 +70,7 @@ const BoxMenu = ({ parentType, block }) => {
             elevation: 3
           }}
           visible={showMenu}
-          anchor={<Feather name="more-vertical" size={18} color="#5A7582" />}
+          anchor={<Feather name="more-vertical" size={23} color="#5A7582" />}
           onDismiss={() => setshowMenu(false)}>
           <TouchableOpacity onPress={showReportModal} style={styles.menuItem}>
             <FontAwesome name="flag" size={16} color="#F44336" style={{ marginRight: 10 }} />

@@ -34,14 +34,14 @@ const VotingModal = ({ visible, dismiss, parentType, parent }) => {
             <View style={{ paddingLeft: 20, flexDirection: 'row' }}>
               <Text style={styles.label}>Author: </Text>
               <Text type="bold" style={styles.label}>
-                {parent.author}
+                {parent.author.username}
               </Text>
             </View>
             <View style={{ marginLeft: 20, marginTop: 10 }}>
               <Text style={styles.label}>Content:</Text>
             </View>
             <View style={{ marginTop: 10, paddingLeft: 20, paddingRight: 20 }}>
-              <Text style={styles.text}>{parent.body}</Text>
+              <Text style={styles.text}>{parent.content}</Text>
             </View>
             <View style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 20 }}>
               <Text type="bold" style={styles.label}>

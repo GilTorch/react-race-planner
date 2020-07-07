@@ -124,10 +124,10 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
                       if (key === 'privacy') {
                         await updateUserPreference({
                           data: { privacyStatus: privacy },
-                          id: currentUser._id
+                          id: currentUser?._id
                         });
                       } else {
-                        await updateUser({ data: userData, id: currentUser._id });
+                        await updateUser({ data: userData, id: currentUser?._id });
                       }
 
                       Toast.show('Successfully updated', {
