@@ -1,14 +1,24 @@
 import React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { Modal, Portal, TextInput, Surface, Button } from 'react-native-paper';
+import { Modal, Portal, TextInput, Surface, Button, ActivityIndicator } from 'react-native-paper';
+import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-
+import { useForm } from 'react-hook-form';
+import Toast from 'react-native-root-toast';
+import { createReportAction, reportCommentAction } from '../../redux/actions/StoryActions';
 import Text from '../CustomText';
+import { newReportSchema } from '../../utils/validators';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
 
-const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
+const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, reportComment }) => {
   const [padding, setPadding] = React.useState(0);
   const rounds = parentType === 'round' || parentType === 'Ending' || parentType === 'Intro';
+  const loadingCreateReport = useSelector(state => state.story.loadingCreateReport);
+  const loadingReportComment = useSelector(state => state.story.loadingReportComment);
+
+  const { errors, handleSubmit, register, setValue } = useForm({
+    validationSchema: newReportSchema
+  });
 
   const keyboardDidShow = e => {
     const add = parentType === 'story' ? -10 : SCREEN_HEIGHT * 0.15;
@@ -16,14 +26,39 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
   };
 
   React.useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', keyboardDidShow);
+    register('status');
+    register('isActive');
+    register('reason');
     Keyboard.addListener('keyboardDidHide', () => setPadding(0));
-
+    Keyboard.addListener('keyboardDidShow', keyboardDidShow);
     return () => {
       Keyboard.removeAllListeners('keyboardDidShow');
       Keyboard.removeAllListeners('keyboardDidHide');
     };
   });
+
+  const loremText = 'some text';
+
+  const onSubmit = async data => {
+    try {
+      const report = await createReport(data);
+      let toastMessage = 'Report successfully sent';
+      if (parentType === 'comment') {
+        // eslint-disable-next-line no-underscore-dangle
+        await reportComment({ commentId: parent._id, reportId: report._id });
+        toastMessage = 'Comment successfully reported';
+      }
+      Toast.show(toastMessage, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    } catch (error) {
+      Toast.show('Something unexpected happened', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+    }
+  };
 
   return (
     <Portal>
@@ -116,6 +151,9 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                 </View>
                 <TextInput
                   placeholder="Your reason for reporting here..."
+                  onChangeText={text => {
+                    setValue('reason', text);
+                  }}
                   multiline
                   underlineColor="white"
                   style={{
@@ -125,7 +163,11 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                     backgroundColor: 'white'
                   }}
                 />
-
+                {errors.reason && (
+                  <Text style={{ marginTop: 10, marginBottom: 10, color: 'red' }}>
+                    {errors.reason.message}
+                  </Text>
+                )}
                 <View
                   style={{
                     flexDirection: 'row',
@@ -136,10 +178,15 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                   <Surface style={styles.btnSurface}>
                     <Button
                       uppercase={false}
-                      onPress={() => ''}
+                      onPress={handleSubmit(onSubmit)}
                       style={{ backgroundColor: '#03A2A2' }}>
                       <Text type="bold" style={{ color: '#FFF' }}>
                         Report
+                        {(loadingCreateReport || loadingCreateReport) && (
+                          <Text type="bold" style={{ color: '#fff' }}>
+                            ing...
+                          </Text>
+                        )}
                       </Text>
                     </Button>
                   </Surface>
@@ -168,7 +215,9 @@ ReportModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   onDismiss: PropTypes.func.isRequired,
   parentType: PropTypes.string.isRequired,
-  parent: PropTypes.object.isRequired
+  parent: PropTypes.object.isRequired,
+  reportComment: PropTypes.func.isRequired,
+  createReport: PropTypes.func.isRequired
 };
 
 const textColor = '#5A7582';
@@ -182,4 +231,9 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ReportModal;
+const mapDispatchToProps = {
+  reportComment: reportCommentAction,
+  createReport: createReportAction
+};
+
+export default connect(null, mapDispatchToProps)(ReportModal);

@@ -27,7 +27,7 @@ import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
 import { SCREEN_HEIGHT } from '../utils/dimensions';
-import { joinStoryAction, leaveStoryAction } from '../redux/actions/StoryAction';
+import { joinStoryAction, leaveStoryAction } from '../redux/actions/StoryActions';
 import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 
 const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
