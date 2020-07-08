@@ -35,6 +35,40 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
     'seconds'
   );
 
+  // const [introSubmittingEndDate, setIntroSubmittingEndDate] = React.useState(introSubmittingEndsAt);
+  // const [introVotingEndDate, setIntroVotingEndDate] = React.useState(introVotingEndsAt);
+  // const [outroSubmittingEndDate, setOutroSubmittingEndDate] = React.useState(outroSubmittingEndsAt);
+  // const [outroVotingEndDate, setOutroVotingEndDate] = React.useState(outroVotingEndsAt);
+
+  // const tick = () => {
+  //   setIntroSubmittingEndDate(
+  //     moment(story.startedAt).add(story.settings?.introTimeLimitSeconds, 'seconds')
+  //   );
+
+  //   setIntroVotingEndDate(
+  //     moment(story.introVotingStartedAt).add(story.settings?.voteTimeLimitSeconds, 'seconds')
+  //   );
+
+  //   setOutroSubmittingEndDate(
+  //     moment(story.outroSubmittingStartedAt).add(story.settings?.outroTimeLimitSeconds, 'seconds')
+  //   );
+
+  //   setOutroVotingEndDate(
+  //     moment(story.outroVotingStartedAt).add(story.settings?.voteTimeLimitSeconds, 'seconds')
+  //   );
+  // };
+
+  // React.useEffect(() => {
+  //   let timer = setInterval(tick, 1000);
+
+  //   return () => {
+  //     if (timer) {
+  //       clearInterval(timer);
+  //       timer = null;
+  //     }
+  //   };
+  // }, []);
+
   const cardsSection = (
     <>
       <Text type="medium" style={{ ...styles.title, marginTop: type === 'Ending' ? 0 : 20 }}>
