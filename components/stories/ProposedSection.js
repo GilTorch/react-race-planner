@@ -3,6 +3,7 @@ import { StyleSheet, View, ScrollView } from 'react-native';
 import { Surface, Button } from 'react-native-paper';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import moment from 'moment';
 import Text from '../CustomText';
@@ -10,6 +11,8 @@ import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 
 const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose, story }) => {
+  const currentUser = useSelector(state => state.auth.currentUser);
+
   const electedBlock = proposedBlocks.find(block => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -174,6 +177,11 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
             } else if (proposedBlock.privacyStatus === 'username_and_full_name') {
               authorName = `${proposedBlock.author.firstName} ${proposedBlock.author.lastName} (${proposedBlock.author.username})`;
             }
+          }
+
+          // eslint-disable-next-line no-underscore-dangle
+          if (currentUser._id === proposedBlock.author._id) {
+            authorName = 'You';
           }
 
           return (
