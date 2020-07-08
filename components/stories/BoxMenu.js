@@ -5,6 +5,8 @@ import { Feather, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 
+import Toast from 'react-native-root-toast';
+import moment from 'moment';
 import Text from '../CustomText';
 import { ReportModal, CommentModal, VotingModal } from '../modals';
 
@@ -22,6 +24,7 @@ const BoxMenu = ({ parentType, block }) => {
     'outro_voting'
   ];
   const penddingStatus = inProgressStatuses.includes(block.status);
+  const tooLatetoVote = inProgressStatuses.slice(3).includes(block.status);
   const introEnding = parentType === 'Intro' || parentType === 'Ending';
 
   const showReportModal = () => {
@@ -35,6 +38,28 @@ const BoxMenu = ({ parentType, block }) => {
   };
 
   const showVotingModal = () => {
+    const introVotingEndsAt = moment(block.introVotingStartedAt).add(
+      block.settings?.voteTimeLimitSeconds,
+      'seconds'
+    );
+
+    if (block.status !== 'intro_voting') {
+      setshowMenu(false);
+
+      let message = "It's not time to vote yet";
+
+      if (tooLatetoVote || moment().isAfter(introVotingEndsAt)) {
+        message = "It's too late to vote now";
+      }
+
+      Toast.show(message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
+
+      return;
+    }
+
     setshowMenu(false);
     setShowVoting(true);
   };
