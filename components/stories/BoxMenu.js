@@ -10,7 +10,7 @@ import moment from 'moment';
 import Text from '../CustomText';
 import { ReportModal, CommentModal, VotingModal } from '../modals';
 
-const BoxMenu = ({ parentType, block }) => {
+const BoxMenu = ({ parentType, block, storyStatus, userIsAuthor }) => {
   const [showMenu, setshowMenu] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [showVoting, setShowVoting] = React.useState(false);
@@ -23,9 +23,22 @@ const BoxMenu = ({ parentType, block }) => {
     'waiting_for_outros',
     'outro_voting'
   ];
-  const penddingStatus = inProgressStatuses.includes(block.status);
-  const tooLatetoVote = inProgressStatuses.slice(3).includes(block.status);
+  const penddingStatus = inProgressStatuses.includes(storyStatus);
+  const tooLatetoVoteForIntro = inProgressStatuses.slice(3).includes(storyStatus);
   const introEnding = parentType === 'Intro' || parentType === 'Ending';
+  let votingMessage = "It's not time to vote yet";
+  if (storyStatus === 'completed') {
+    votingMessage = 'Voting is over for endings';
+  }
+  if (parentType === 'Intro' && tooLatetoVoteForIntro) {
+    votingMessage = 'Voting is over for intros';
+  }
+  if (
+    (parentType === 'Intro' && storyStatus === 'intro_voting') ||
+    (parentType === 'Ending' && storyStatus === 'outro_voting')
+  ) {
+    votingMessage = 'Voting is in progress';
+  }
 
   const showReportModal = () => {
     setshowMenu(false);
@@ -43,12 +56,21 @@ const BoxMenu = ({ parentType, block }) => {
       'seconds'
     );
 
-    if (block.status !== 'intro_voting') {
+    if (userIsAuthor) {
+      Toast.show(`You cannot vote for your own ${parentType.toLowerCase()}`, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM
+      });
+
+      return;
+    }
+
+    if (storyStatus !== 'intro_voting') {
       setshowMenu(false);
 
       let message = "It's not time to vote yet";
 
-      if (tooLatetoVote || moment().isAfter(introVotingEndsAt)) {
+      if (tooLatetoVoteForIntro || moment().isAfter(introVotingEndsAt)) {
         message = "It's too late to vote now";
       }
 
@@ -151,7 +173,7 @@ const BoxMenu = ({ parentType, block }) => {
                     Vote
                   </Text>
                   <Text type="regular" style={{ color: '#EC8918', fontSize: 8 }}>
-                    {block.hasElected ? 'Voting is over' : 'Votes end in 34 minutes'}
+                    {votingMessage}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -165,7 +187,14 @@ const BoxMenu = ({ parentType, block }) => {
 
 BoxMenu.propTypes = {
   parentType: PropTypes.string.isRequired,
-  block: PropTypes.object.isRequired
+  block: PropTypes.object.isRequired,
+  storyStatus: PropTypes.string,
+  userIsAuthor: PropTypes.bool
+};
+
+BoxMenu.defaultProps = {
+  storyStatus: 'waiting_for_players',
+  userIsAuthor: false
 };
 
 const styles = StyleSheet.create({
