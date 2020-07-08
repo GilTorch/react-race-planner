@@ -5,7 +5,8 @@ const INITIAL_STATE = {
   createStoryLoading: false,
   leaveStoryLoading: false,
   deleteStoryLoading: false,
-
+  loadingCreateReport: false,
+  loadingReportComment: false,
   createRoundLoading: false
 };
 
@@ -41,6 +42,18 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, createRoundLoading: false };
     case Story.CREATE_ROUND_SUCCESS:
       return { ...state, createRoundLoading: false };
+    case Story.CREATE_REPORT_START:
+      return { ...state, loadingCreateReport: true };
+    case Story.CREATE_REPORT_FAILURE:
+      return { ...state, loadingCreateReport: false };
+    case Story.CREATE_REPORT_SUCCESS:
+      return { ...state, loadingCreateReport: false };
+    case Story.REPORT_COMMENT_START:
+      return { ...state, loadingReportComment: true };
+    case Story.REPORT_COMMENT_FAILURE:
+      return { ...state, loadingReportComment: false };
+    case Story.REPORT_COMMENT_SUCCESS:
+      return { ...state, loadingReportComment: false };
     default:
       return state;
   }
