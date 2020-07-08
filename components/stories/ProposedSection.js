@@ -1,8 +1,10 @@
+/* eslint-disable consistent-return */
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Surface } from 'react-native-paper';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+import HTMLView from 'react-native-htmlview';
 
 import Text from '../CustomText';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
@@ -17,6 +19,16 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
       </Text>
     </View>
   );
+
+  const renderNode = (node, index) => {
+    if (node.name === 'iframe') {
+      return (
+        <View key={index} style={{ width: 200, height: 200 }}>
+          <Text>{node.attribs.src}</Text>
+        </View>
+      );
+    }
+  };
 
   const cardsSection = (
     <>
@@ -41,7 +53,11 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
           const margin = index === 0 ? 20 : 0;
           return (
             <Surface key={Math.random()} style={{ ...styles.intros, marginLeft: margin }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between'
+                }}>
                 <Text type="bold" style={styles.subTitle}>
                   By {proposedBlock.author.username}
                 </Text>
@@ -50,9 +66,14 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
                   block={{ ...proposedBlock, hasElected: !!electedBlock }}
                 />
               </View>
-              <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
-                {proposedBlock.content}
-              </Text>
+
+              <HTMLView
+                value={proposedBlock.content}
+                type="regular"
+                style={{ color: textColor, lineHeight: 20 }}
+                renderNode={renderNode}
+              />
+
               <View style={{ marginTop: 'auto' }}>
                 <Text style={styles.separator}>---</Text>
                 {proposedBlock.isElected && (
