@@ -192,7 +192,10 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
                 </Text>
                 <BoxMenu
                   parentType={type}
-                  block={{ ...proposedBlock, hasElected: !!electedBlock }}
+                  block={{ proposedBlock }}
+                  storyStatus={story.status}
+                  // eslint-disable-next-line no-underscore-dangle
+                  userIsAuthor={currentUser._id === proposedBlock.author._id}
                 />
               </View>
               <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
