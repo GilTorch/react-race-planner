@@ -10,7 +10,6 @@ import moment from 'moment';
 import { getUserProfileUri, avatarGenerator } from '../../utils/functions';
 import Text from '../CustomText';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
-import { comments } from '../../utils/data';
 import CommentMenu from '../CommentMenu';
 
 const CommentModal = ({ visible, dismiss, parent }) => {
