@@ -38,8 +38,7 @@ const CommentMenu = ({ comment, deleteComment }) => {
 
   const handleDeleteComment = async () => {
     try {
-      // await deleteComment(comment._id);
-      await deleteComment('5ee5a45f52279b147a7576fd');
+      await deleteComment(comment._id);
       hideDeleteModal();
     } catch (e) {
       hideDeleteModal();
