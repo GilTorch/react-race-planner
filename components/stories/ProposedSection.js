@@ -21,7 +21,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
       </Text>
     </View>
   );
-  const introSubmittingEndsAt = moment(story.startedAt).add(
+  const introSubmittingEndsAt = moment(story.introSubmittingStartedAt).add(
     story.settings?.introTimeLimitSeconds,
     'seconds'
   );
@@ -99,7 +99,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
 
       {story?.status === 'waiting_for_intros' &&
         type === 'Intro' &&
-        story.startedAt &&
+        story.createdAt &&
         moment().isBefore(introSubmittingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
             Submitting intros ends {moment().to(introSubmittingEndsAt)}
@@ -137,7 +137,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
 
       {story?.status === 'waiting_for_outros' &&
         type === 'Ending' &&
-        story.startedAt &&
+        story.createdAt &&
         moment().isBefore(outroSubmittingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
             Submitting endings ends {moment().to(outroSubmittingEndsAt)}
