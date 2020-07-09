@@ -6,7 +6,8 @@ const INITIAL_STATE = {
   leaveStoryLoading: false,
   deleteStoryLoading: false,
 
-  createRoundLoading: false
+  skipRoundLoading: false,
+  createRoundLoading: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -41,6 +42,12 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, createRoundLoading: false };
     case Story.CREATE_ROUND_SUCCESS:
       return { ...state, createRoundLoading: false };
+    case Story.SKIP_ROUND_START:
+      return { ...state, skipRoundLoading: true };
+    case Story.SKIP_ROUND_FAILURE:
+      return { ...state, skipRoundLoading: false };
+    case Story.SKIP_ROUND_SUCCESS:
+      return { ...state, skipRoundLoading: false };
     default:
       return state;
   }
