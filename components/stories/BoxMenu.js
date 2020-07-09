@@ -71,24 +71,44 @@ const BoxMenu = ({ parentType, block, storyStatus, userIsAuthor }) => {
     if (userIsAuthor) {
       Toast.show(`You cannot vote for your own ${parentType.toLowerCase()}`, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
+        position: Toast.positions.BOTTOM,
       });
 
       return;
     }
 
-    if (storyStatus !== 'intro_voting') {
+    if (parentType === 'Intro' && storyStatus !== 'intro_voting') {
       setshowMenu(false);
 
       let message = "It's not time to vote yet";
 
-      if (tooLatetoVoteForIntro || moment().isAfter(introVotingEndsAt)) {
+      if (
+        tooLatetoVoteForIntro ||
+        (storedStory.introVotingStartedAt && moment().isAfter(introVotingEndsAt))
+      ) {
         message = "It's too late to vote now";
       }
 
       Toast.show(message, {
         duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM
+        position: Toast.positions.BOTTOM,
+      });
+
+      return;
+    }
+
+    if (parentType === 'Outro' && storyStatus !== 'outro_voting') {
+      setshowMenu(false);
+
+      let message = "It's not time to vote yet";
+
+      if (storedStory.status === 'completed') {
+        message = "It's too late to vote now";
+      }
+
+      Toast.show(message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
       });
 
       return;
@@ -110,14 +130,13 @@ const BoxMenu = ({ parentType, block, storyStatus, userIsAuthor }) => {
         parent={block}
         onDismiss={dismissReport}
       />
-      {introEnding && (
-        <VotingModal
-          dismiss={dismissVoting}
-          visible={showVoting}
-          parentType={parentType}
-          parent={block}
-        />
-      )}
+      <VotingModal
+        dismiss={dismissVoting}
+        visible={showVoting}
+        parentType={parentType}
+        storyId={storyId}
+        roundId={block._id}
+      />
       <CommentModal dismiss={dismissComment} visible={showComment} parent={block} />
 
       <TouchableOpacity testID="three-dot-menu-button" onPress={() => setshowMenu(true)}>
