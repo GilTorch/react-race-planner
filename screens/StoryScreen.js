@@ -471,7 +471,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
           }}>
           <ProposedSection
             onPropose={handleRoundWriting('intro')}
-            userCanPropose={userIsAParticipant && !tooLateToJoin}
+            userCanPropose={userIsAParticipant && !tooLateToJoin && !isMasterAuthor}
             type="Intro"
             proposedBlocks={storedStory?.parts?.filter((p) => p.isIntro)}
             listMode={listMode}
