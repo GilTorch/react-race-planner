@@ -76,11 +76,11 @@ export const deleteStoryAction = (storyId) => (dispatch) => {
     });
 };
 
-export const skipRoundAction = (documentPartId) => (dispatch) => {
+export const skipRoundAction = (storyId, documentPartId) => (dispatch) => {
   dispatch({ type: Story.SKIP_ROUND_START });
 
   return axios
-    .post('/documentPart', documentPartId)
+    .put(`/documents/${storyId}/skip-turn`, { documentPartId })
     .then(() => {
       dispatch({ type: Story.SKIP_ROUND_SUCESS });
     })

@@ -20,6 +20,7 @@ const Round = ({
   style,
   isMasterAuthorRound,
   isCompletedStory,
+  storyId,
   skipRound,
 }) => {
   const roundStatus = round.status;
@@ -34,7 +35,7 @@ const Round = ({
 
   const handleSkipRound = async () => {
     try {
-      await skipRound();
+      await skipRound(storyId, round._id);
     } catch (e) {
       Toast.show(e, {
         duration: Toast.durations.LONG,
@@ -213,6 +214,7 @@ Round.propTypes = {
   style: PropTypes.object,
   isMasterAuthorRound: PropTypes.bool,
   isCompletedStory: PropTypes.bool,
+  storyId: PropTypes.string.isRequired,
   skipRound: PropTypes.func,
 };
 
