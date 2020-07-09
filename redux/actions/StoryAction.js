@@ -76,3 +76,18 @@ export const deleteStoryAction = (storyId) => (dispatch) => {
       throw error.response?.data;
     });
 };
+
+export const voteForRoundAction = (storyId, roundId) => (dispatch) => {
+  dispatch({ type: Story.ROUND_VOTE_START });
+
+  return axios
+    .post(`/votes/${storyId}/${roundId}`)
+    .then((response) => {
+      dispatch({ type: Story.ROUND_VOTE_SUCCESS, story: response.data.story });
+    })
+    .catch((error) => {
+      dispatch({ type: Story.ROUND_VOTE_FAILURE });
+
+      throw error.response?.data;
+    });
+};
