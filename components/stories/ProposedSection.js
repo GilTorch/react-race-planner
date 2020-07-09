@@ -11,9 +11,9 @@ import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 
 const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose, story }) => {
-  const currentUser = useSelector(state => state.auth.currentUser);
+  const currentUser = useSelector((state) => state.auth.currentUser);
 
-  const electedBlock = proposedBlocks.find(block => block.isElected);
+  const electedBlock = proposedBlocks.find((block) => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
       <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
@@ -23,19 +23,19 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
   );
   const introSubmittingEndsAt = moment(story.introSubmittingStartedAt).add(
     story.settings?.introTimeLimitSeconds,
-    'seconds'
+    'seconds',
   );
   const introVotingEndsAt = moment(story.introVotingStartedAt).add(
     story.settings?.voteTimeLimitSeconds,
-    'seconds'
+    'seconds',
   );
   const outroSubmittingEndsAt = moment(story.outroSubmittingStartedAt).add(
     story.settings?.outroTimeLimitSeconds,
-    'seconds'
+    'seconds',
   );
   const outroVotingEndsAt = moment(story.outroVotingStartedAt).add(
     story.settings?.voteTimeLimitSeconds,
-    'seconds'
+    'seconds',
   );
 
   // const [introSubmittingEndDate, setIntroSubmittingEndDate] = React.useState(introSubmittingEndsAt);
@@ -45,7 +45,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
 
   // const tick = () => {
   //   setIntroSubmittingEndDate(
-  //     moment(story.startedAt).add(story.settings?.introTimeLimitSeconds, 'seconds')
+  //     moment(story.createdAt).add(story.settings?.introTimeLimitSeconds, 'seconds')
   //   );
 
   //   setIntroVotingEndDate(
@@ -83,7 +83,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
           style={{
             flex: 1,
             marginLeft: 20,
-            marginTop: 10
+            marginTop: 10,
           }}>
           <Button
             icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
@@ -121,7 +121,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
           style={{
             flex: 1,
             marginLeft: 20,
-            marginTop: 10
+            marginTop: 10,
           }}>
           <Button
             icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
@@ -160,7 +160,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
             color: '#ed8a18',
             marginLeft: 20,
             marginBottom: 20,
-            marginTop: 10
+            marginTop: 10,
           }}>
           No endings yet
         </Text>
@@ -238,11 +238,11 @@ ProposedSection.propTypes = {
   proposedBlocks: PropTypes.array.isRequired,
   listMode: PropTypes.bool,
   userCanPropose: PropTypes.bool,
-  onPropose: PropTypes.func.isRequired
+  onPropose: PropTypes.func.isRequired,
 };
 
 ProposedSection.defaultProps = {
-  listMode: false
+  listMode: false,
 };
 
 const textColor = '#5A7582';
@@ -251,33 +251,33 @@ const styles = StyleSheet.create({
   title: {
     color: textColor,
     fontSize: 20,
-    marginLeft: 20
+    marginLeft: 20,
   },
   intros: {
     width: SCREEN_WIDTH * 0.75,
     elevation: 2,
     marginVertical: 20,
     marginRight: 20,
-    padding: 10
+    padding: 10,
   },
   subTitle: {
     fontWeight: 'bold',
-    color: textColor
+    color: textColor,
   },
   separator: {
     fontSize: 25,
-    color: textColor
+    color: textColor,
   },
   boxFooter: {
     marginLeft: 5,
     fontSize: 12,
     lineHeight: 20,
-    color: textColor
+    color: textColor,
   },
   displayRow: {
     flexDirection: 'row',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
 
 export default ProposedSection;
