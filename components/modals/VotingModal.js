@@ -33,12 +33,12 @@ const VotingModal = ({ visible, dismiss, parentType, storyId, roundId, voteForRo
           style={{
             backgroundColor: 'white',
             marginHorizontal: 20,
-            borderRadius: 6
+            borderRadius: 6,
           }}>
           <View
             style={{
               borderRadius: 6,
-              shadowColor: '#000'
+              shadowColor: '#000',
             }}>
             <View
               style={{
@@ -46,7 +46,7 @@ const VotingModal = ({ visible, dismiss, parentType, storyId, roundId, voteForRo
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginVertical: 15
+                marginVertical: 15,
               }}>
               <Text type="bold" style={{ fontSize: 30, color: '#5A7582' }}>
                 Vote For This {parentType}
@@ -107,18 +107,18 @@ VotingModal.defaultProps = {
 
 const styles = {
   label: {
-    color: '#5A7582'
+    color: '#5A7582',
   },
   text: {
     fontSize: 13,
     color: '#5A7582',
-    textAlign: 'justify'
+    textAlign: 'justify',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
-    marginVertical: 20
+    marginVertical: 20,
   },
   button: {
     width: 120,
@@ -131,13 +131,17 @@ const styles = {
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84
+    shadowRadius: 3.84,
   },
   buttonText: {
     color: 'white',
+    fontSize: 18,
+  },
+};
+
 const mapDispatchToProps = {
   voteForRound: voteForRoundAction,
 };
