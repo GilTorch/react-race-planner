@@ -4,13 +4,22 @@ import { Menu, Divider } from 'react-native-paper';
 import { Feather, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import Toast from 'react-native-root-toast';
 import moment from 'moment';
 import Text from '../CustomText';
 import { ReportModal, CommentModal, VotingModal } from '../modals';
 
-const BoxMenu = ({ parentType, block, storyStatus, userIsAuthor }) => {
+const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
+  const currentUser = useSelector((state) => state.auth.currentUser);
+  const inProgresstories = useSelector((state) => state.home.stories) || [];
+  const completedStories = useSelector((state) => state.library.stories) || [];
+  const myStories = useSelector((state) => state.writing.stories) || [];
+
+  const storedStory =
+    [...myStories, ...inProgresstories, ...completedStories].find((s) => s._id === storyId) || {};
+
   const [showMenu, setshowMenu] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [showVoting, setShowVoting] = React.useState(false);
@@ -21,7 +30,7 @@ const BoxMenu = ({ parentType, block, storyStatus, userIsAuthor }) => {
     'intro_voting',
     'round_writing',
     'waiting_for_outros',
-    'outro_voting'
+    'outro_voting',
   ];
   const penddingStatus = inProgressStatuses.includes(storyStatus);
   const tooLatetoVoteForIntro = inProgressStatuses.slice(3).includes(storyStatus);
@@ -51,9 +60,9 @@ const BoxMenu = ({ parentType, block, storyStatus, userIsAuthor }) => {
   };
 
   const showVotingModal = () => {
-    const introVotingEndsAt = moment(block.introVotingStartedAt).add(
-      block.settings?.voteTimeLimitSeconds,
-      'seconds'
+    const introVotingEndsAt = moment(storedStory.introVotingStartedAt).add(
+      storedStory.settings?.voteTimeLimitSeconds,
+      'seconds',
     );
 
     const userPartOfStory =
@@ -138,13 +147,12 @@ const BoxMenu = ({ parentType, block, storyStatus, userIsAuthor }) => {
         roundId={block._id}
       />
       <CommentModal dismiss={dismissComment} visible={showComment} parent={block} />
-
       <TouchableOpacity testID="three-dot-menu-button" onPress={() => setshowMenu(true)}>
         <Menu
           contentStyle={{
             flexDirection: 'column',
             justifyContent: 'space-between',
-            elevation: 3
+            elevation: 3,
           }}
           visible={showMenu}
           anchor={<Feather name="more-vertical" size={23} color="#5A7582" />}
@@ -220,12 +228,14 @@ BoxMenu.propTypes = {
   parentType: PropTypes.string.isRequired,
   block: PropTypes.object.isRequired,
   storyStatus: PropTypes.string,
-  userIsAuthor: PropTypes.bool
+  storyId: PropTypes.string,
+  userIsAuthor: PropTypes.bool,
 };
 
 BoxMenu.defaultProps = {
   storyStatus: 'waiting_for_players',
-  userIsAuthor: false
+  userIsAuthor: false,
+  storyId: '',
 };
 
 const styles = StyleSheet.create({
@@ -233,8 +243,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 10,
     marginRight: 20,
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
 
 export default BoxMenu;
