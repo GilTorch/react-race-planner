@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   createStoryLoading: false,
   leaveStoryLoading: false,
   deleteStoryLoading: false,
+  roundVoteLoading: false,
 
   createRoundLoading: false,
 };
@@ -41,6 +42,12 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, createRoundLoading: false };
     case Story.CREATE_ROUND_SUCCESS:
       return { ...state, createRoundLoading: false };
+    case Story.ROUND_VOTE_START:
+      return { ...state, roundVoteLoading: true };
+    case Story.ROUND_VOTE_FAILURE:
+      return { ...state, roundVoteLoading: false };
+    case Story.ROUND_VOTE_SUCCESS:
+      return { ...state, roundVoteLoading: false };
     default:
       return state;
   }
