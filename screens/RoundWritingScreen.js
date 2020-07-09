@@ -105,8 +105,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
         // navigation.navigate('StoryScreen', { story });
         navigation.reset({
           index: 0,
-          routes: [{ name: 'StoryScreen' }],
-          route: { params: { story } },
+          routes: [{ name: 'StoryScreen', params: { story } }],
         });
       } else {
         const finalObj = {
