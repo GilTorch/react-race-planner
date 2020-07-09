@@ -56,6 +56,18 @@ const BoxMenu = ({ parentType, block, storyStatus, userIsAuthor }) => {
       'seconds'
     );
 
+    const userPartOfStory =
+      storedStory?.coAuthors?.some((ca) => ca.profile._id === currentUser?._id) || userIsAuthor;
+
+    if (!userPartOfStory) {
+      Toast.show('You are not a participant', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
+
+      return;
+    }
+
     if (userIsAuthor) {
       Toast.show(`You cannot vote for your own ${parentType.toLowerCase()}`, {
         duration: Toast.durations.SHORT,
