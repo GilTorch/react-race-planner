@@ -6,7 +6,7 @@ const INITIAL_STATE = {
   leaveStoryLoading: false,
   deleteStoryLoading: false,
 
-  createRoundLoading: false
+  createRoundLoading: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
