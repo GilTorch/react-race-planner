@@ -1,4 +1,5 @@
-import { Writing } from '../actions/types';
+import { Writing, Story } from '../actions/types';
+import mergeResponse from '../../utils/mergeResponse';
 
 const initialState = {
   loadingStories: false,
@@ -42,6 +43,8 @@ const writingReducer = (state = initialState, action) => {
       return { ...state, filters: { ...state.filters, ...action.data } };
     case Writing.GET_SELF_STORIES_START:
       return { ...state, loadingStories: true };
+    case Story.CREATE_ROUND_SUCCESS:
+      return { ...state, stories: mergeResponse(state.stories, [action.story]) };
     case Writing.UPDATE_SELF_STORIES:
       return { ...state, updatingStories: true };
     case Writing.GET_SELF_STORIES_SUCCESS:
