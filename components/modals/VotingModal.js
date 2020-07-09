@@ -2,9 +2,30 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Modal, Portal } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import Text from '../CustomText';
+import Toast from 'react-native-root-toast';
+import { connect } from 'react-redux';
 
-const VotingModal = ({ visible, dismiss, parentType, parent }) => {
+import Text from '../CustomText';
+import { voteForRoundAction } from '../../redux/actions/StoryAction';
+
+const VotingModal = ({ visible, dismiss, parentType, storyId, roundId, voteForRound }) => {
+  // TODO: Use this later to display the content of the block
+  // const myStories = useSelector((state) => state.writing.stories) || [];
+  // const storedRound = myStories
+  //   .find((s) => s._id === storyId)
+  //   ?.parts?.find((r) => r._id === roundId);
+
+  const handleVoting = async () => {
+    try {
+      await voteForRound(storyId, roundId);
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+      });
+    }
+  };
+
   return (
     <Portal>
       <Modal visible={visible}>
@@ -53,7 +74,7 @@ const VotingModal = ({ visible, dismiss, parentType, parent }) => {
               <Text style={{ color: '#EC8918' }}>Vote ends in 34 minutes</Text>
             </View> */}
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity onPress={() => handleVoting()} style={styles.button}>
                 <Text style={styles.buttonText}>Vote</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -73,7 +94,15 @@ VotingModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   dismiss: PropTypes.func.isRequired,
   parentType: PropTypes.string.isRequired,
-  parent: PropTypes.object.isRequired
+  storyId: PropTypes.string,
+  roundId: PropTypes.string,
+  voteForRound: PropTypes.func,
+};
+
+VotingModal.defaultProps = {
+  storyId: '',
+  roundId: '',
+  voteForRound: () => null,
 };
 
 const styles = {
@@ -109,8 +138,8 @@ const styles = {
   },
   buttonText: {
     color: 'white',
-    fontSize: 18
-  }
+const mapDispatchToProps = {
+  voteForRound: voteForRoundAction,
 };
 
-export default VotingModal;
+export default connect(null, mapDispatchToProps)(VotingModal);
