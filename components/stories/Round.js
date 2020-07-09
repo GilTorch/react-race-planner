@@ -17,10 +17,10 @@ const Round = ({
   listMode,
   style,
   isMasterAuthorRound,
-  isCompletedStory
+  isCompletedStory,
 }) => {
   const roundStatus = round.status;
-  const currentUser = useSelector(state => state.auth.currentUser);
+  const currentUser = useSelector((state) => state.auth.currentUser);
   const inprogressRound = roundStatus === 'in_progress';
   const userTurn = round?.author?._id === currentUser?._id;
   const height = inprogressRound && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
@@ -59,7 +59,7 @@ const Round = ({
         <View
           style={{
             flexDirection: 'row',
-            marginTop: 10
+            marginTop: 10,
           }}>
           <Surface style={{ ...styles.surface, marginRight: 20 }}>
             <Button
@@ -139,14 +139,14 @@ Round.propTypes = {
   listMode: PropTypes.bool.isRequired,
   style: PropTypes.object,
   isMasterAuthorRound: PropTypes.bool,
-  isCompletedStory: PropTypes.bool
+  isCompletedStory: PropTypes.bool,
 };
 
 Round.defaultProps = {
   style: {},
   totalRound: 11,
   isMasterAuthorRound: false,
-  isCompletedStory: false
+  isCompletedStory: false,
 };
 
 const styles = StyleSheet.create({
@@ -154,53 +154,53 @@ const styles = StyleSheet.create({
     color: '#5A7582',
     fontSize: 20,
     marginLeft: 20,
-    marginBottom: 20
+    marginBottom: 20,
   },
   round: {
     marginHorizontal: 40,
     backgroundColor: '#fff',
     elevation: 2,
     alignSelf: 'center',
-    padding: 15
+    padding: 15,
   },
   pendding: {
     color: '#ED8A18',
     marginBottom: 20,
     marginTop: 10,
     fontSize: 13,
-    fontFamily: 'RobotoItalic'
+    fontFamily: 'RobotoItalic',
   },
   boxHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   boxFooter: {
     marginLeft: 5,
     fontSize: 12,
     lineHeight: 20,
-    color: '#5A7582'
+    color: '#5A7582',
   },
   subTitle: {
     fontWeight: 'bold',
-    color: '#5A7582'
+    color: '#5A7582',
   },
   boxBtnLabel: {
     fontSize: 11,
     fontFamily: 'RobotoMedium',
-    color: '#fff'
+    color: '#fff',
   },
   surface: {
     backgroundColor: '#fff',
     borderRadius: 5,
-    elevation: 2
+    elevation: 2,
   },
   separator: {
     fontSize: 25,
-    color: '#5A7582'
+    color: '#5A7582',
   },
   displayRow: {
-    flexDirection: 'row'
-  }
+    flexDirection: 'row',
+  },
 });
 
 export default Round;
