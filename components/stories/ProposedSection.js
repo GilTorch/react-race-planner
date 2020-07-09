@@ -180,7 +180,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
           }
 
           // eslint-disable-next-line no-underscore-dangle
-          if (currentUser._id === proposedBlock.author._id) {
+          if (currentUser?._id === proposedBlock.author?._id) {
             authorName = 'You';
           }
 
@@ -192,10 +192,11 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
                 </Text>
                 <BoxMenu
                   parentType={type}
-                  block={{ proposedBlock }}
+                  block={proposedBlock}
                   storyStatus={story.status}
+                  storyId={story._id}
                   // eslint-disable-next-line no-underscore-dangle
-                  userIsAuthor={currentUser._id === proposedBlock.author._id}
+                  userIsAuthor={currentUser?._id === proposedBlock.author?._id}
                 />
               </View>
               <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
