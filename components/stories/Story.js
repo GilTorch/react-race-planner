@@ -237,7 +237,9 @@ const Story = ({ story, index, length, navigation, updating }) => {
             }}>
             {/* TODO: Use the `createdAt` of the first round */}
             <Text style={{ color: textColor, fontSize: 12 }}>
-              {moment(story.startedAt || story.createdAt).fromNow()}
+              {/* If the story has a start date, we display it, if not, we display the date it was created */}
+              {/* Remember: The date it was created will mostly likely not be the same as when it started (enough authors have joined) */}
+              {moment(story.introSubmittingStartedAt || story.createdAt).fromNow()}
             </Text>
             <View
               style={{
