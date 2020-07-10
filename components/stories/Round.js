@@ -39,15 +39,16 @@ const Round = ({
   let authorName = isMasterAuthorRound ? 'the Master Author' : 'an Anonymous Author';
   const wordsCount = round.content?.split(' ').length || 0;
 
-  // if (userTurn) {
-  //   console.log(round);
-  // }
-
   const handleSkipRound = async () => {
     try {
       await skipRound(story._id, round._id);
+
+      Toast.show('You have the next turn now', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+      });
     } catch (e) {
-      Toast.show(e, {
+      Toast.show(e.message, {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,
       });
