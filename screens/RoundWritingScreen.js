@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  StatusBar
+  StatusBar,
+  SafeAreaView,
 } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import PropTypes from 'prop-types';
@@ -16,7 +17,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import CNRichTextEditor, {
   CNToolbar,
   getDefaultStyles,
-  convertToObject
+  convertToObject,
 } from 'react-native-cn-richtext-editor';
 import { Surface } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -24,24 +25,24 @@ import { useFocusEffect } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import Toast from 'react-native-root-toast';
 
-import { createStoryAction } from '../redux/actions/StoryAction';
+import { createStoryAction, createRoundAction } from '../redux/actions/StoryAction';
 
 const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();
 
-const RoundWritingScreen = ({ navigation, route, createStory }) => {
+const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => {
   navigation.setOptions({
-    headerShown: false
+    headerShown: false,
   });
 
   useEffect(() => {
     const parent = navigation.dangerouslyGetParent();
     parent.setOptions({
-      tabBarVisible: false
+      tabBarVisible: false,
     });
     return () =>
       parent.setOptions({
-        tabBarVisible: true
+        tabBarVisible: true,
       });
   }, []);
 
@@ -52,7 +53,7 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
       } else {
         StatusBar.setBarStyle('light-content');
       }
-    }, [])
+    }, []),
   );
 
   const [customStyles] = useState({
@@ -62,7 +63,7 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
     title: { fontSize: 20 },
     ol: { fontSize: 12 },
     ul: { fontSize: 12 },
-    bold: { fontSize: 12, fontWeight: 'bold', color: '' }
+    bold: { fontSize: 12, fontWeight: 'bold', color: '' },
   });
 
   const [selectedTag, setSelectedTag] = useState('body');
@@ -71,40 +72,63 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
   const [value, setValue] = useState(
     convertToObject(
       '<div><p><span>This is </span><span style="font-weight: bold;">bold</span><span> and </span><span style="font-style: italic;">italic </span><span>text</span></p></div>',
-      customStyles
-    )
+      customStyles,
+    ),
   );
 
   let editor = null;
 
-  const onStyleKeyPress = toolType => {
+  const onStyleKeyPress = (toolType) => {
     editor.applyToolbar(toolType);
   };
 
-  const onSelectedTagChanged = tag => {
+  const onSelectedTagChanged = (tag) => {
     setSelectedTag(tag);
   };
 
-  const onSelectedStyleChanged = styles => {
+  const onSelectedStyleChanged = (styles) => {
     setSelectedStyles(styles);
   };
 
-  const onValueChanged = newVal => {
+  const onValueChanged = (newVal) => {
     setValue(newVal);
   };
 
   const submitRound = async () => {
     try {
-      const { story } = await createStory({
-        ...route.params.story,
-        intro: value
-      });
+      if (route.params.isNewStory) {
+        const { story } = await createStory({
+          ...route.params.story,
+          intro: value,
+        });
 
-      navigation.navigate('StoryScreen', { story });
+        // navigation.navigate('StoryScreen', { story });
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'StoryScreen', params: { story } }],
+        });
+      } else {
+        const finalObj = {
+          content: value,
+        };
+
+        if (route.params.entity === 'intro') {
+          finalObj.isIntro = true;
+        }
+
+        if (route.params.entity === 'outro') {
+          finalObj.isOutro = true;
+        }
+
+        // Send data as is and finish round creation remotely
+        await createRound(finalObj, route.params.story?._id);
+
+        navigation.goBack();
+      }
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
+        position: Toast.positions.BOTTOM,
       });
     }
   };
@@ -115,52 +139,52 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
       enabled
       keyboardVerticalOffset={IS_IOS ? 0 : 0}
       style={styles.root}>
-      <View style={styles.container}>
-        <Surface
+      <Surface
+        style={{
+          elevation: 3,
+          zIndex: 1,
+        }}>
+        <LinearGradient
+          colors={['#03a2a2', '#23c2c2']}
+          locations={[0.5, 1]}
           style={{
-            elevation: 3,
-            zIndex: 1
+            paddingHorizontal: 10,
           }}>
-          <LinearGradient
-            colors={['#03a2a2', '#23c2c2']}
-            locations={[0.5, 1]}
+          <SafeAreaView
             style={{
               alignItems: 'center',
               flexDirection: 'row',
               justifyContent: 'space-between',
-              paddingBottom: 12,
-              paddingTop: 35,
-              paddingLeft: 10,
-              paddingRight: 10
             }}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Text type="bold" style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
+              <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
                 Cancel
               </Text>
             </TouchableOpacity>
 
-            <Text type="bold" style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
-              Round Writing
+            <Text type="bold" style={{ color: 'white', fontSize: 18, marginVertical: 15 }}>
+              {`${route.params.entity.charAt(0).toUpperCase()}${route.params.entity.slice(1)}`}{' '}
+              Writing
             </Text>
             <TouchableOpacity onPress={() => submitRound()}>
-              <Text type="bold" style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
+              <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
                 Done
               </Text>
             </TouchableOpacity>
-          </LinearGradient>
-        </Surface>
-      </View>
+          </SafeAreaView>
+        </LinearGradient>
+      </Surface>
       <MenuProvider style={{ flex: 1 }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.main}>
             <CNRichTextEditor
-              ref={input => {
+              ref={(input) => {
                 editor = input;
               }}
               onSelectedTagChanged={onSelectedTagChanged}
               onSelectedStyleChanged={onSelectedStyleChanged}
               value={value}
-              placeholder="Write your story intro here..."
+              placeholder={`Write your story ${route.params.entity} here...`}
               style={styles.editor}
               styleList={customStyles}
               foreColor="dimgray" // optional (will override default fore-color)
@@ -172,12 +196,12 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
         <View style={styles.toolbarContainer}>
           <CNToolbar
             style={{
-              height: 35
+              height: 35,
             }}
             iconSetContainerStyle={{
               flexGrow: 1,
               justifyContent: 'space-evenly',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
             size={28}
             iconSet={[
@@ -187,27 +211,27 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
                   {
                     toolTypeText: 'bold',
                     buttonTypes: 'style',
-                    iconComponent: <MaterialCommunityIcons name="format-bold" />
+                    iconComponent: <MaterialCommunityIcons name="format-bold" />,
                   },
                   {
                     toolTypeText: 'italic',
                     buttonTypes: 'style',
-                    iconComponent: <MaterialCommunityIcons name="format-italic" />
+                    iconComponent: <MaterialCommunityIcons name="format-italic" />,
                   },
                   {
                     toolTypeText: 'underline',
                     buttonTypes: 'style',
-                    iconComponent: <MaterialCommunityIcons name="format-underline" />
+                    iconComponent: <MaterialCommunityIcons name="format-underline" />,
                   },
                   {
                     toolTypeText: 'lineThrough',
                     buttonTypes: 'style',
-                    iconComponent: <MaterialCommunityIcons name="format-strikethrough-variant" />
-                  }
-                ]
+                    iconComponent: <MaterialCommunityIcons name="format-strikethrough-variant" />,
+                  },
+                ],
               },
               {
-                type: 'seperator'
+                type: 'seperator',
               },
               {
                 type: 'tool',
@@ -215,15 +239,15 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
                   {
                     toolTypeText: 'ul',
                     buttonTypes: 'tag',
-                    iconComponent: <MaterialCommunityIcons name="format-list-bulleted" />
+                    iconComponent: <MaterialCommunityIcons name="format-list-bulleted" />,
                   },
                   {
                     toolTypeText: 'ol',
                     buttonTypes: 'tag',
-                    iconComponent: <MaterialCommunityIcons name="format-list-numbered" />
-                  }
-                ]
-              }
+                    iconComponent: <MaterialCommunityIcons name="format-list-numbered" />,
+                  },
+                ],
+              },
             ]}
             selectedTag={selectedTag}
             selectedStyles={selectedStyles}
@@ -242,36 +266,38 @@ const RoundWritingScreen = ({ navigation, route, createStory }) => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#EEE'
+    backgroundColor: '#EEE',
   },
   main: {
     flex: 1,
     padding: 15,
     backgroundColor: '#fff',
-    alignItems: 'stretch'
+    alignItems: 'stretch',
   },
   editor: {
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   toolbarContainer: {
-    minHeight: 35
+    minHeight: 35,
   },
   divider: {
     marginVertical: 0,
     marginHorizontal: 0,
     borderBottomWidth: 1,
-    borderColor: '#eee'
-  }
+    borderColor: '#eee',
+  },
 });
 
 RoundWritingScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
-  createStory: PropTypes.func.isRequired
+  createStory: PropTypes.func.isRequired,
+  createRound: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
-  createStory: createStoryAction
+  createStory: createStoryAction,
+  createRound: createRoundAction,
 };
 
 export default connect(null, mapDispatchToProps)(RoundWritingScreen);

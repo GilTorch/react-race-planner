@@ -1,4 +1,5 @@
-import { Writing } from '../actions/types';
+import { Writing, Story } from '../actions/types';
+import mergeResponse from '../../utils/mergeResponse';
 
 const initialState = {
   loadingStories: false,
@@ -15,8 +16,8 @@ const initialState = {
         { selected: true, label: 'Waiting for Endings', slug: 'waiting_for_outros' },
         { selected: true, label: 'Waiting for Outro Votes', slug: 'outro_voting' },
         { selected: true, label: 'Completed', slug: 'completed' },
-        { selected: true, label: "Stories That I'm Part of", slug: 'include_self' }
-      ]
+        { selected: true, label: "Stories That I'm Part of", slug: 'include_self' },
+      ],
     },
     genres: {
       allSelected: true,
@@ -27,11 +28,11 @@ const initialState = {
         { selected: true, label: 'Scifi', slug: 'scifi' },
         { selected: true, label: 'Romance', slug: 'romance' },
         { selected: true, label: 'Essay', slug: 'essay' },
-        { selected: true, label: 'Bedtime Stories', slug: 'bedtime_stories' }
-      ]
+        { selected: true, label: 'Bedtime Stories', slug: 'bedtime_stories' },
+      ],
     },
-    authorsRange: [5, 20]
-  }
+    authorsRange: [5, 20],
+  },
 };
 
 const writingReducer = (state = initialState, action) => {
@@ -42,6 +43,10 @@ const writingReducer = (state = initialState, action) => {
       return { ...state, filters: { ...state.filters, ...action.data } };
     case Writing.GET_SELF_STORIES_START:
       return { ...state, loadingStories: true };
+    case Story.ROUND_VOTE_SUCCESS:
+      return { ...state, stories: mergeResponse(state.stories, [action.story]) };
+    case Story.CREATE_ROUND_SUCCESS:
+      return { ...state, stories: mergeResponse(state.stories, [action.story]) };
     case Writing.UPDATE_SELF_STORIES:
       return { ...state, updatingStories: true };
     case Writing.GET_SELF_STORIES_SUCCESS:
@@ -49,7 +54,7 @@ const writingReducer = (state = initialState, action) => {
         ...state,
         stories: stories?.length ? stories : null,
         loadingStories: false,
-        updatingStories: false
+        updatingStories: false,
       };
     case Writing.GET_SELF_STORIES_FAILURE:
       return { ...state, loadingStories: false, updatingStories: false };
