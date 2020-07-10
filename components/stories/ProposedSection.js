@@ -1,8 +1,10 @@
+/* eslint-disable consistent-return */
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Surface, Button } from 'react-native-paper';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+import HTMLView from 'react-native-htmlview';
 import { useSelector } from 'react-redux';
 
 import moment from 'moment';
@@ -16,9 +18,12 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
   const electedBlock = proposedBlocks.find((block) => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
-      <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
-        {electedBlock.content || `No elected ${type} yet`}
-      </Text>
+      {electedBlock.content && <HTMLView value={electedBlock.content} />}
+      {!electedBlock.content && (
+        <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
+          {`No elected ${type} yet`}
+        </Text>
+      )}
     </View>
   );
   const introSubmittingEndsAt = moment(story.introSubmittingStartedAt).add(
@@ -186,7 +191,11 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
 
           return (
             <Surface key={Math.random()} style={{ ...styles.intros, marginLeft: margin }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
                 <Text type="bold" style={styles.subTitle}>
                   By {authorName}
                 </Text>
@@ -199,9 +208,9 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
                   userIsAuthor={currentUser?._id === proposedBlock.author?._id}
                 />
               </View>
-              <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
-                {proposedBlock.content}
-              </Text>
+
+              <HTMLView value={proposedBlock.content} />
+
               <View style={{ marginTop: 'auto' }}>
                 <Text style={styles.separator}>---</Text>
                 {proposedBlock.isElected && (

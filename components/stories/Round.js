@@ -5,6 +5,7 @@ import { Surface, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import HTMLView from 'react-native-htmlview';
 
 import Text from '../CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
@@ -35,9 +36,10 @@ const Round = ({
   }
 
   const roundBody = (
-    <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
-      {round.content || ''}
-    </Text>
+    // <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
+    //   {round.content || ''}
+    // </Text>
+    <HTMLView value={round.content} />
   );
 
   const inprogress = (
@@ -89,9 +91,10 @@ const Round = ({
 
   const listRound = (
     <View style={{ marginHorizontal: 35, marginBottom: 20, ...style }}>
-      <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
+      {/* <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
         {round.content || ''}
-      </Text>
+      </Text> */}
+      <HTMLView value={round.content} />
     </View>
   );
 

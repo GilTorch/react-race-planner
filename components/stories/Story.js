@@ -9,6 +9,7 @@ import LottieView from 'lottie-react-native';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { AllHtmlEntities } from 'html-entities';
+import HTMLView from 'react-native-htmlview';
 
 import MysteryIcon from '../svg/icons/MysteryIcon';
 import { getUserProfileUri } from '../../utils/functions';
@@ -288,7 +289,8 @@ const Story = ({ story, index, length, navigation, updating }) => {
             </Text>
 
             {initialIntro && (
-              <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro.content}</Text>
+              // <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro.content}</Text>
+              <HTMLView value={initialIntro.content} />
             )}
 
             {!initialIntro && (
@@ -309,7 +311,8 @@ const Story = ({ story, index, length, navigation, updating }) => {
             </Text>
 
             {electedIntro && (
-              <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
+              // <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
+              <HTMLView value={electedIntro.content} />
             )}
 
             {!electedIntro && story.status === 'intro_voting' && (

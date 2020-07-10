@@ -66,7 +66,8 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
     );
 
     const userPartOfStory =
-      storedStory?.coAuthors?.some((ca) => ca.profile._id === currentUser?._id) || userIsAuthor;
+      storedStory?.coAuthors?.some((ca) => ca.profile._id === currentUser?._id) ||
+      storedStory?.masterAuthor?._id === currentUser._id;
 
     if (!userPartOfStory) {
       Toast.show('You are not a participant', {
