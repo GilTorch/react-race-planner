@@ -13,6 +13,7 @@ import Text from '../CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 import { skipRoundAction } from '../../redux/actions/StoryAction';
+import LeaveStoryModal from '../modals/LeaveStoryModal';
 
 const Round = ({
   navigation,
@@ -29,6 +30,8 @@ const Round = ({
   const roundStatus = round.status;
   const currentUser = useSelector((state) => state.auth.currentUser);
   const loading = useSelector((state) => state.story.skipRoundLoading);
+
+  const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
 
   const inprogressRound = roundStatus === 'in_progress';
   const userTurn = round?.author?._id === currentUser?._id;
@@ -50,8 +53,6 @@ const Round = ({
       });
     }
   };
-
-  // const handleLeave = async () => { };
 
   if (isCompletedStory) {
     if (round.privacyStatus === 'username') {
@@ -111,10 +112,10 @@ const Round = ({
             <Button
               mode="contained"
               uppercase={false}
-              onPress={() => ''}
+              onPress={() => setIsLeaveStoryModalVisible(true)}
               style={{ backgroundColor: '#f44336' }}
               labelStyle={styles.boxBtnLabel}>
-              Leave Story
+              {isMasterAuthorRound ? 'Delete Story' : 'Leave Story'}
             </Button>
           </Surface>
         </View>
@@ -133,6 +134,13 @@ const Round = ({
 
   const cardRound = (
     <View style={{ marginBottom: 20 }}>
+      <LeaveStoryModal
+        isMasterAuthor={isMasterAuthorRound}
+        dismiss={() => setIsLeaveStoryModalVisible(false)}
+        visible={isLeaveStoryModalVisible}
+        storyId={story._id}
+        navigation={navigation}
+      />
       <Text type="medium" style={styles.title}>
         Round {roundIdx}/{totalRound} {userTurn && '(Your Turn)'}
       </Text>
