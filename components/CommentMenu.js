@@ -39,7 +39,6 @@ const CommentMenu = ({ comment, deleteComment }) => {
   const handleDeleteComment = async () => {
     try {
       await deleteComment(comment._id);
-      hideDeleteModal();
     } catch (e) {
       hideDeleteModal();
       Toast.show(e.message, {
@@ -78,7 +77,7 @@ const CommentMenu = ({ comment, deleteComment }) => {
               marginBottom: 10
             }}>
             <Text type="bold" style={{ fontSize: 20, color: '#5A7582' }}>
-              Are you sure you whant to delete the comment?
+              Are you sure you want to delete this comment?
             </Text>
           </View>
           <View
