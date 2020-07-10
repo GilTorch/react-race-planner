@@ -44,6 +44,21 @@ const homeReducer = (state = initialState, action) => {
         ...state,
         stories: state.stories ? [action.story, ...state.stories] : [action.story],
       };
+    // When it's a new comment, we're not sure where exactly the story is
+    // so we attempt to update it everywhere. We don't add it as a new one,
+    // that's why we don't use `mergeResponse`
+    case Story.COMMENT_ROUND_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
     case Story.JOIN_STORY_SUCCESS:
       return { ...state, stories: mergeResponse(state.stories, [action.story]) };
     case Home.GET_ACTIVE_STORIES_START:

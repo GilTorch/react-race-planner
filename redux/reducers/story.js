@@ -5,13 +5,19 @@ const INITIAL_STATE = {
   createStoryLoading: false,
   leaveStoryLoading: false,
   deleteStoryLoading: false,
-  roundVoteLoading: false,
-
+  createCommentLoading: false,
   createRoundLoading: false,
+  roundVoteLoading: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case Story.COMMENT_ROUND_START:
+      return { ...state, createCommentLoading: true };
+    case Story.COMMENT_ROUND_FAILURE:
+      return { ...state, createCommentLoading: false };
+    case Story.COMMENT_ROUND_SUCCESS:
+      return { ...state, createCommentLoading: false };
     case Story.JOIN_STORY_START:
       return { ...state, joinStoryLoading: true };
     case Story.JOIN_STORY_FAILURE:

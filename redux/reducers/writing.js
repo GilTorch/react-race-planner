@@ -49,6 +49,21 @@ const writingReducer = (state = initialState, action) => {
       return { ...state, stories: mergeResponse(state.stories, [action.story]) };
     case Writing.UPDATE_SELF_STORIES:
       return { ...state, updatingStories: true };
+    // When it's a new comment, we're not sure where exactly the story is
+    // so we attempt to update it everywhere. We don't add it as a new one,
+    // that's why we don't use `mergeResponse`
+    case Story.COMMENT_ROUND_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
     case Writing.GET_SELF_STORIES_SUCCESS:
       return {
         ...state,

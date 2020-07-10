@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal */
 /* eslint-disable no-underscore-dangle */
 import axios from '../../services/axiosService';
 import { Story } from './types';
@@ -72,6 +73,21 @@ export const deleteStoryAction = (storyId) => (dispatch) => {
     })
     .catch((error) => {
       dispatch({ type: Story.DELETE_STORY_FAILURE });
+
+      throw error.response?.data;
+    });
+};
+
+export const createCommentAction = (data, documentPartId) => (dispatch) => {
+  dispatch({ type: Story.COMMENT_ROUND_START });
+
+  return axios
+    .post(`/comments/${documentPartId}`, data)
+    .then((response) => {
+      dispatch({ type: Story.COMMENT_ROUND_SUCCESS, story: response.data.story });
+    })
+    .catch((error) => {
+      dispatch({ type: Story.COMMENT_ROUND_FAILURE });
 
       throw error.response?.data;
     });
