@@ -1,4 +1,4 @@
-import { Writing } from '../actions/types';
+import { Writing, Story } from '../actions/types';
 
 const initialState = {
   loadingStories: false,
@@ -44,6 +44,18 @@ const writingReducer = (state = initialState, action) => {
       return { ...state, loadingStories: true };
     case Writing.UPDATE_SELF_STORIES:
       return { ...state, updatingStories: true };
+    case Story.DELETE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories?.map(s => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        })
+      };
     case Writing.GET_SELF_STORIES_SUCCESS:
       return {
         ...state,

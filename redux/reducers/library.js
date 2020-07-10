@@ -1,4 +1,4 @@
-import { Library } from '../actions/types';
+import { Library, Story } from '../actions/types';
 
 const initialState = {
   loadingStories: false,
@@ -35,6 +35,18 @@ const libraryReducer = (state = initialState, action) => {
       return { ...state, loadingStories: true };
     case Library.UPDATE_COMPLETED_STORIES:
       return { ...state, updatingStories: true };
+    case Story.DELETE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories?.map(s => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        })
+      };
     case Library.GET_COMPLETED_STORIES_SUCCESS:
       return {
         ...state,

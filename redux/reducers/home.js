@@ -49,6 +49,18 @@ const homeReducer = (state = initialState, action) => {
         ...state,
         stories: mergeResponse(state.stories, [action.story])
       };
+    case Story.DELETE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories?.map(s => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        })
+      };
     case Story.JOIN_STORY_SUCCESS:
       return { ...state, stories: mergeResponse(state.stories, [action.story]) };
     case Home.GET_ACTIVE_STORIES_START:
