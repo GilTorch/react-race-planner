@@ -27,9 +27,9 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
   const defaultValues = {
     author: currentUser._id,
     content: '',
-    privacyStatus: 'username', // TODO: get the status from setting state
-    documentPartId: parent._id,
-    isReview: false,
+    // TODO: provide a checkbox to the user for them to appear publicly
+    // when the story ends
+    privacyStatus: 'anonymous',
     isActive: true
   };
 
