@@ -6,8 +6,8 @@ export const deleteCommentAction = commentId => dispatch => {
 
   return axios
     .delete(`/comments/${commentId}`)
-    .then(() => {
-      dispatch({ type: Story.DELETE_COMMENT_SUCCESS });
+    .then(response => {
+      dispatch({ type: Story.DELETE_COMMENT_SUCCESS, story: response.data.story });
     })
     .catch(error => {
       dispatch({ type: Story.DELETE_COMMENT_FAILURE });
