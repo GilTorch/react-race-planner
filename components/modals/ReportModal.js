@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Modal, Portal, TextInput, Surface, Button } from 'react-native-paper';
 import PropTypes from 'prop-types';
+import HTMLView from 'react-native-htmlview';
 
 import Text from '../CustomText';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
@@ -84,9 +85,10 @@ const ReportModal = ({ visible, onDismiss, parentType, parent }) => {
                       </Text>
                     </View>
                     <Text style={{ ...styles.text, paddingBottom: 2 }}>Content: </Text>
-                    <Text style={{ color: textColor, lineHeight: 17 }}>
+                    {/* <Text style={{ color: textColor, lineHeight: 17 }}>
                       {parent.content || 'Round Content'}
-                    </Text>
+                    </Text> */}
+                    <HTMLView value={parent.content} />
                   </>
                 )}
                 <View style={{ marginTop: 30 }}>
