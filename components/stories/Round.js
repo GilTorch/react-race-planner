@@ -112,6 +112,7 @@ const Round = ({
           <Surface style={styles.surface}>
             <Button
               mode="contained"
+              disabled={loading}
               uppercase={false}
               onPress={() => setIsLeaveStoryModalVisible(true)}
               style={{ backgroundColor: '#f44336' }}
