@@ -44,7 +44,6 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
       comment.author = currentUser;
       setComments([...comments, comment]);
 
-      flatRef.current.scrollToEnd();
       reset(defaultValues);
     } catch (e) {
       Toast.show(e.message, {
@@ -66,8 +65,6 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
     register('content');
     register('author');
     register('privacyStatus');
-    register('documentPartId');
-    register('isReview');
     register('isActive');
   }, [register]);
 
