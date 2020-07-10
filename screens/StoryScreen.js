@@ -541,12 +541,12 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             {moment()
               .startOf('day')
               .seconds(storedStory?.settings?.introTimeLimitSeconds)
-              .format('H:mm')}{' '}
+              ?.format('H:mm')}{' '}
             to write{' & '}
             {moment()
               .startOf('day')
               .seconds(storedStory?.settings?.voteTimeLimitSeconds)
-              .format('H:mm')}{' '}
+              ?.format('H:mm')}{' '}
             to vote
           </Text>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>
@@ -556,12 +556,12 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             {moment()
               .startOf('day')
               .seconds(storedStory?.settings?.outroTimeLimitSeconds)
-              .format('H:mm')}{' '}
+              ?.format('H:mm')}{' '}
             to write{' & '}
             {moment()
               .startOf('day')
               .seconds(storedStory?.settings?.voteTimeLimitSeconds)
-              .format('H:mm')}{' '}
+              ?.format('H:mm')}{' '}
             to vote
           </Text>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>Time for writing a round</Text>
@@ -569,7 +569,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             {moment()
               .startOf('day')
               .seconds(storedStory?.settings?.roundTimeLimitSeconds)
-              .format('H:mm')}{' '}
+              ?.format('H:mm')}{' '}
           </Text>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>Privacy Status</Text>
 
