@@ -5,7 +5,9 @@ import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import Toast from 'react-native-root-toast';
+import HTMLView from 'react-native-htmlview';
 import { reportCommentAction } from '../../redux/actions/StoryActions';
+
 import Text from '../CustomText';
 import { newReportSchema } from '../../utils/validators';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
@@ -13,13 +15,13 @@ import { SCREEN_HEIGHT } from '../../utils/dimensions';
 const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) => {
   const [padding, setPadding] = React.useState(0);
   const rounds = parentType === 'round' || parentType === 'Ending' || parentType === 'Intro';
-  const loadingReportComment = useSelector(state => state.story.loadingReportComment);
+  const loadingReportComment = useSelector((state) => state.story.loadingReportComment);
 
   const { errors, handleSubmit, register, setValue } = useForm({
-    validationSchema: newReportSchema
+    validationSchema: newReportSchema,
   });
 
-  const keyboardDidShow = e => {
+  const keyboardDidShow = (e) => {
     const add = parentType === 'story' ? -10 : SCREEN_HEIGHT * 0.15;
     setPadding(add + e.endCoordinates.height);
   };
@@ -38,7 +40,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
 
   const loremText = 'some text';
 
-  const onSubmit = async report => {
+  const onSubmit = async (report) => {
     try {
       if (parentType === 'comment') {
         // eslint-disable-next-line no-underscore-dangle
@@ -46,7 +48,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
 
         Toast.show('Comment successfully reported', {
           duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM
+          position: Toast.positions.BOTTOM,
         });
       }
       // if Intro/Ending/round
@@ -55,7 +57,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
     } catch (error) {
       Toast.show('Something unexpected happened', {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
+        position: Toast.positions.BOTTOM,
       });
     }
   };
@@ -67,21 +69,21 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
         visible={visible}
         contentContainerStyle={{
           width: '90%',
-          alignSelf: 'center'
+          alignSelf: 'center',
         }}
         onDismiss={onDismiss}>
         <View
           style={{
             backgroundColor: 'white',
             borderRadius: 6,
-            overflow: 'hidden'
+            overflow: 'hidden',
           }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={{ backgroundColor: 'white' }}>
               <View
                 style={{
                   alignItems: 'center',
-                  marginVertical: 10
+                  marginVertical: 10,
                 }}>
                 {parentType === 'comment' && (
                   <Text type="bold" style={{ fontSize: 24, color: textColor }}>
@@ -139,9 +141,10 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                       </Text>
                     </View>
                     <Text style={{ ...styles.text, paddingBottom: 2 }}>Content: </Text>
-                    <Text style={{ color: textColor, lineHeight: 17 }}>
+                    {/* <Text style={{ color: textColor, lineHeight: 17 }}>
                       {parent.content || 'Round Content'}
-                    </Text>
+                    </Text> */}
+                    <HTMLView value={parent.content} />
                   </>
                 )}
                 <View style={{ marginTop: 30 }}>
@@ -151,7 +154,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                 </View>
                 <TextInput
                   placeholder="Your reason for reporting here..."
-                  onChangeText={text => {
+                  onChangeText={(text) => {
                     setValue('reason', text);
                   }}
                   multiline
@@ -160,7 +163,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                     borderWidth: 1,
                     marginTop: 5,
                     borderStyle: 'dashed',
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
                   }}
                 />
                 {errors.reason && (
@@ -173,7 +176,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                     flexDirection: 'row',
                     width: '65%',
                     alignSelf: 'flex-end',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
                   }}>
                   <Surface style={styles.btnSurface}>
                     <Button
@@ -223,7 +226,7 @@ ReportModal.propTypes = {
   onDismiss: PropTypes.func.isRequired,
   parentType: PropTypes.string.isRequired,
   parent: PropTypes.object.isRequired,
-  reportComment: PropTypes.func.isRequired
+  reportComment: PropTypes.func.isRequired,
 };
 
 const textColor = '#5A7582';
@@ -233,12 +236,12 @@ const styles = StyleSheet.create({
   btnSurface: {
     elevation: 4,
     marginVertical: 10,
-    borderRadius: 5
-  }
+    borderRadius: 5,
+  },
 });
 
 const mapDispatchToProps = {
-  reportComment: reportCommentAction
+  reportComment: reportCommentAction,
 };
 
 export default connect(null, mapDispatchToProps)(ReportModal);
