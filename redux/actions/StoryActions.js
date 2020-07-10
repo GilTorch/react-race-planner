@@ -91,24 +91,10 @@ export const deleteStoryAction = storyId => dispatch => {
     });
 };
 
-export const createReportAction = report => dispatch => {
-  dispatch({ type: Story.CREATE_REPORT_START });
-  return axios
-    .post('/reports', { ...report })
-    .then(res => {
-      dispatch({ type: Story.CREATE_REPORT_SUCCESS });
-      return Promise.resolve(res.data);
-    })
-    .catch(error => {
-      dispatch({ type: Story.CREATE_REPORT_FAILURE });
-      throw error.response?.data;
-    });
-};
-
-export const reportCommentAction = ({ commentId, reportId }) => dispatch => {
+export const reportCommentAction = ({ commentId, report }) => dispatch => {
   dispatch({ type: Story.REPORT_COMMENT_START });
   return axios
-    .put(`/comments/${commentId}`, { reportId })
+    .post(`/comments/${commentId}/reports`, { report })
     .then(() => {
       dispatch({ type: Story.REPORT_COMMENT_SUCCESS });
     })

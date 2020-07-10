@@ -1,19 +1,18 @@
 import React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { Modal, Portal, TextInput, Surface, Button, ActivityIndicator } from 'react-native-paper';
+import { Modal, Portal, TextInput, Surface, Button } from 'react-native-paper';
 import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import Toast from 'react-native-root-toast';
-import { createReportAction, reportCommentAction } from '../../redux/actions/StoryActions';
+import { reportCommentAction } from '../../redux/actions/StoryActions';
 import Text from '../CustomText';
 import { newReportSchema } from '../../utils/validators';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
 
-const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, reportComment }) => {
+const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) => {
   const [padding, setPadding] = React.useState(0);
   const rounds = parentType === 'round' || parentType === 'Ending' || parentType === 'Intro';
-  const loadingCreateReport = useSelector(state => state.story.loadingCreateReport);
   const loadingReportComment = useSelector(state => state.story.loadingReportComment);
 
   const { errors, handleSubmit, register, setValue } = useForm({
@@ -39,19 +38,20 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, rep
 
   const loremText = 'some text';
 
-  const onSubmit = async data => {
+  const onSubmit = async report => {
     try {
-      const report = await createReport(data);
-      let toastMessage = 'Report successfully sent';
       if (parentType === 'comment') {
         // eslint-disable-next-line no-underscore-dangle
-        await reportComment({ commentId: parent._id, reportId: report._id });
-        toastMessage = 'Comment successfully reported';
+        await reportComment({ commentId: parent._id, report });
+
+        Toast.show('Comment successfully reported', {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM
+        });
       }
-      Toast.show(toastMessage, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
-      });
+      // if Intro/Ending/round
+
+      // if story
     } catch (error) {
       Toast.show('Something unexpected happened', {
         duration: Toast.durations.SHORT,
@@ -182,7 +182,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, rep
                       style={{ backgroundColor: '#03A2A2' }}>
                       <Text type="bold" style={{ color: '#FFF' }}>
                         Report
-                        {(loadingCreateReport || loadingCreateReport) && (
+                        {loadingReportComment && (
                           <Text type="bold" style={{ color: '#fff' }}>
                             ing...
                           </Text>
@@ -216,8 +216,7 @@ ReportModal.propTypes = {
   onDismiss: PropTypes.func.isRequired,
   parentType: PropTypes.string.isRequired,
   parent: PropTypes.object.isRequired,
-  reportComment: PropTypes.func.isRequired,
-  createReport: PropTypes.func.isRequired
+  reportComment: PropTypes.func.isRequired
 };
 
 const textColor = '#5A7582';
@@ -232,8 +231,7 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = {
-  reportComment: reportCommentAction,
-  createReport: createReportAction
+  reportComment: reportCommentAction
 };
 
 export default connect(null, mapDispatchToProps)(ReportModal);
