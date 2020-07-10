@@ -77,14 +77,14 @@ export const deleteStoryAction = storyId => dispatch => {
     });
 };
 
-export const createCommentAction = data => dispatch => {
+export const createCommentAction = (data, documentPartId) => dispatch => {
   dispatch({ type: Story.COMMENT_ROUND_START });
 
   return axios
-    .post('/comments', data)
+    .post(`/comments/${documentPartId}`, data)
     .then(response => {
-      dispatch({ type: Story.COMMENT_ROUND_SUCCESS });
-      return response.data;
+      dispatch({ type: Story.COMMENT_ROUND_SUCCESS, story: response.data.story });
+      return response.data.comment;
     })
     .catch(error => {
       dispatch({ type: Story.COMMENT_ROUND_FAILURE });
