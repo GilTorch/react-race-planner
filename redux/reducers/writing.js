@@ -1,5 +1,4 @@
 import { Writing, Story } from '../actions/types';
-import mergeResponse from '../../utils/mergeResponse';
 
 const initialState = {
   loadingStories: false,
@@ -44,9 +43,29 @@ const writingReducer = (state = initialState, action) => {
     case Writing.GET_SELF_STORIES_START:
       return { ...state, loadingStories: true };
     case Story.ROUND_VOTE_SUCCESS:
-      return { ...state, stories: mergeResponse(state.stories, [action.story]) };
+      return {
+        ...state,
+        stories: state.stories.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
     case Story.CREATE_ROUND_SUCCESS:
-      return { ...state, stories: mergeResponse(state.stories, [action.story]) };
+      return {
+        ...state,
+        stories: state.stories.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
     case Writing.UPDATE_SELF_STORIES:
       return { ...state, updatingStories: true };
     // When it's a new comment, we're not sure where exactly the story is
