@@ -14,21 +14,14 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
   const electedBlock = proposedBlocks.find(block => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
-      <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
-        {electedBlock.content || `No elected ${type} yet`}
-      </Text>
+      {electedBlock.content && <HTMLView value={electedBlock.content} />}
+      {!electedBlock.content && (
+        <Text type="regular" style={{ color: textColor, lineHeight: 20 }}>
+          {`No elected ${type} yet`}
+        </Text>
+      )}
     </View>
   );
-
-  const renderNode = (node, index) => {
-    if (node.name === 'iframe') {
-      return (
-        <View key={index} style={{ width: 200, height: 200 }}>
-          <Text>{node.attribs.src}</Text>
-        </View>
-      );
-    }
-  };
 
   const cardsSection = (
     <>
@@ -67,12 +60,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode }) => {
                 />
               </View>
 
-              <HTMLView
-                value={proposedBlock.content}
-                type="regular"
-                style={{ color: textColor, lineHeight: 20 }}
-                renderNode={renderNode}
-              />
+              <HTMLView value={proposedBlock.content} />
 
               <View style={{ marginTop: 'auto' }}>
                 <Text style={styles.separator}>---</Text>
