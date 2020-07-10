@@ -490,10 +490,11 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
                     {bigAdd.includes(index) && <HugeAdvertisement />}
                     {add.includes(index) && <SmallAdvertisement />}
                     <Round
+                      navigation={navigation}
                       round={round}
                       roundIdx={index + 1}
                       totalRound={arr.length}
-                      storyId={storedStory._id}
+                      story={storedStory}
                       listMode={listMode}
                       isMasterAuthorRound={round.author?._id === masterAuthor?._id}
                       isCompletedStory={completedStory}

@@ -8,12 +8,14 @@ import Toast from 'react-native-root-toast';
 import { connect, useSelector } from 'react-redux';
 import HTMLView from 'react-native-htmlview';
 
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Text from '../CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 import { skipRoundAction } from '../../redux/actions/StoryAction';
 
 const Round = ({
+  navigation,
   round,
   totalRound,
   roundIdx,
@@ -21,7 +23,7 @@ const Round = ({
   style,
   isMasterAuthorRound,
   isCompletedStory,
-  storyId,
+  story,
   skipRound,
 }) => {
   const roundStatus = round.status;
@@ -32,11 +34,15 @@ const Round = ({
   const userTurn = round?.author?._id === currentUser?._id;
   const height = inprogressRound && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
   let authorName = isMasterAuthorRound ? 'the Master Author' : 'an Anonymous Author';
-  const wordsCount = round.content.split(' ').length;
+  const wordsCount = round.content?.split(' ').length || 0;
+
+  // if (userTurn) {
+  //   console.log(round);
+  // }
 
   const handleSkipRound = async () => {
     try {
-      await skipRound(storyId, round._id);
+      await skipRound(story._id, round._id);
     } catch (e) {
       Toast.show(e, {
         duration: Toast.durations.LONG,
@@ -44,6 +50,8 @@ const Round = ({
       });
     }
   };
+
+  // const handleLeave = async () => { };
 
   if (isCompletedStory) {
     if (round.privacyStatus === 'username') {
@@ -57,7 +65,8 @@ const Round = ({
     // <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
     //   {round.content || ''}
     // </Text>
-    <HTMLView value={round.content} />
+
+    <HTMLView value={round.content || 'no content yet. <u>Press to add text</u>'} />
   );
 
   const inprogress = (
@@ -73,7 +82,9 @@ const Round = ({
 
   const userRound = (
     <>
-      {roundBody}
+      <TouchableOpacity onPress={() => navigation.navigate('RoundWriting', { entity: 'round' })}>
+        {roundBody}
+      </TouchableOpacity>
       <View style={{ marginTop: 'auto' }}>
         <Text style={styles.subTitle}>{wordsCount}/50 words</Text>
         <View
@@ -81,18 +92,20 @@ const Round = ({
             flexDirection: 'row',
             marginTop: 10,
           }}>
-          <Surface style={{ ...styles.surface, marginRight: 20 }}>
-            <Button
-              mode="contained"
-              loading={loading}
-              disabled={loading}
-              uppercase={false}
-              onPress={handleSkipRound}
-              style={{ backgroundColor: '#ED8A18', width: SCREEN_WIDTH * 0.25 }}
-              labelStyle={styles.boxBtnLabel}>
-              Skip Turn
-            </Button>
-          </Surface>
+          {round.skipCount !== 1 && (
+            <Surface style={{ ...styles.surface, marginRight: 20 }}>
+              <Button
+                mode="contained"
+                loading={loading}
+                disabled={loading}
+                uppercase={false}
+                onPress={handleSkipRound}
+                style={{ backgroundColor: '#ED8A18', width: SCREEN_WIDTH * 0.25 }}
+                labelStyle={styles.boxBtnLabel}>
+                Skip Turn
+              </Button>
+            </Surface>
+          )}
 
           <Surface style={styles.surface}>
             <Button
@@ -165,6 +178,7 @@ const styles = StyleSheet.create({
   },
   round: {
     marginHorizontal: 40,
+    minWidth: '70%',
     backgroundColor: '#fff',
     elevation: 2,
     alignSelf: 'center',
@@ -211,13 +225,14 @@ const styles = StyleSheet.create({
 });
 
 Round.propTypes = {
+  navigation: PropTypes.object.isRequired,
   round: PropTypes.object.isRequired,
   totalRound: PropTypes.number,
   listMode: PropTypes.bool.isRequired,
   style: PropTypes.object,
   isMasterAuthorRound: PropTypes.bool,
   isCompletedStory: PropTypes.bool,
-  storyId: PropTypes.string.isRequired,
+  story: PropTypes.object.isRequired,
   skipRound: PropTypes.func,
 };
 
