@@ -10,6 +10,7 @@ import { useSelector, connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import Toast from 'react-native-root-toast';
 import moment from 'moment';
+import HTMLView from 'react-native-htmlview';
 
 import { getUserProfileUri, avatarGenerator } from '../../utils/functions';
 import Text from '../CustomText';
@@ -18,37 +19,33 @@ import { createCommentAction } from '../../redux/actions/StoryAction';
 import { commentSchema } from '../../utils/validators';
 
 const CommentModal = ({ visible, dismiss, parent, createComment }) => {
-  const currentUser = useSelector(state => state.auth.currentUser);
+  const currentUser = useSelector((state) => state.auth.currentUser);
   const [margin, setMargin] = React.useState(0);
-  const [comments, setComments] = React.useState(parent.comments);
 
   const flatRef = React.useRef();
 
   const defaultValues = {
-    author: currentUser._id,
+    author: currentUser?._id,
     content: '',
     // TODO: provide a checkbox to the user for them to appear publicly
     // when the story ends
     privacyStatus: 'anonymous',
-    isActive: true
+    isActive: true,
   };
 
   const { errors, handleSubmit, register, watch, setValue, reset } = useForm({
     validationSchema: commentSchema,
-    defaultValues
+    defaultValues,
   });
 
-  const submit = async data => {
+  const submit = async (data) => {
     try {
-      const comment = await createComment(data, parent._id);
-      comment.author = currentUser;
-      setComments([...comments, comment]);
-
+      await createComment(data, parent?._id);
       reset(defaultValues);
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
+        position: Toast.positions.BOTTOM,
       });
     }
   };
@@ -87,7 +84,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
             margin: 20,
             borderRadius: 6,
             overflow: 'hidden',
-            height: SCREEN_HEIGHT * 0.95
+            height: SCREEN_HEIGHT * 0.95,
           }}>
           <View
             style={{
@@ -96,11 +93,11 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
               shadowColor: '#000',
               shadowOffset: {
                 width: 0,
-                height: 2
+                height: 2,
               },
               shadowOpacity: 0.25,
               shadowRadius: 3.84,
-              paddingBottom: 10
+              paddingBottom: 10,
             }}>
             <View
               style={{
@@ -108,7 +105,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginVertical: 15
+                marginVertical: 15,
               }}>
               <Text type="bold" style={{ fontSize: 30, color: '#5A7582' }}>
                 Round Comments
@@ -117,29 +114,30 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
             <View style={{ paddingLeft: 20, flexDirection: 'row' }}>
               <Text style={styles.label}>Author: </Text>
               <Text type="bold" style={styles.label}>
-                {parent.author?.username || ''}
+                {parent?.author?.username || ''}
               </Text>
             </View>
             <View style={{ marginLeft: 20, marginTop: 10 }}>
               <Text style={styles.label}>Content:</Text>
             </View>
             <View style={{ marginTop: 10, paddingLeft: 20, paddingRight: 20 }}>
-              <Text style={styles.text}>{parent.content || ''}</Text>
+              {/* <Text style={styles.text}>{parent?.content || ''}</Text> */}
+              <HTMLView value={parent?.content} />
             </View>
             <View
               style={{
                 paddingLeft: 20,
                 paddingRight: 20,
-                paddingTop: 20
+                paddingTop: 20,
               }}>
               <Text type="bold" style={styles.label}>
-                Comments ({comments?.length})
+                Comments ({parent?.comments?.length})
               </Text>
             </View>
           </View>
           <View style={{ flex: 1 }}>
             <FlatList
-              data={comments}
+              data={parent?.comments}
               ref={flatRef}
               renderItem={({ item, index }) => (
                 <View>
@@ -150,7 +148,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                       justifyContent: 'space-around',
                       alignItems: 'flex-start',
                       padding: 10,
-                      marginVertical: 10
+                      marginVertical: 10,
                     }}>
                     {item.privacyStatus === 'anonymous' && (
                       <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
@@ -161,7 +159,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                             height: 50,
                             borderRadius: 100,
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'center',
                           }}>
                           <FontAwesome name="user" size={30} color="white" />
                         </View>
@@ -176,7 +174,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                           source={{
                             uri:
                               getUserProfileUri(item.author.picture) ||
-                              avatarGenerator(item.author.username)
+                              avatarGenerator(item.author.username),
                           }}
                         />
                       </View>
@@ -203,21 +201,22 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                           </Text>
                         </View>
                       </View>
-                      <Text style={{ color: '#5A7582', lineHeight: 17 }}>{item.content}</Text>
+                      {/* <Text style={{ color: '#5A7582', lineHeight: 17 }}>{item.content}</Text> */}
+                      <HTMLView value={item.content} />
                     </View>
                   </View>
-                  {comments?.length !== index + 1 && (
+                  {parent?.comments?.length !== index + 1 && (
                     <Dash dashThickness={0.5} dashColor="#707070" style={{ width: '100%' }} />
                   )}
                 </View>
               )}
-              keyExtractor={item => `${item._id}`}
+              keyExtractor={(item) => `${item._id}`}
             />
             <View style={{ marginBottom: margin }}>
               <TextInput
                 underlineColor={errors.content ? 'red' : 'white'}
                 value={watch('content')}
-                onChangeText={text => setValue('content', text)}
+                onChangeText={(text) => setValue('content', text)}
                 returnKeyType="send"
                 onEndEditing={handleSubmit(submit)}
                 style={{
@@ -226,7 +225,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                   borderColor: '#D3CBCB',
                   backgroundColor: 'white',
                   justifyContent: 'center',
-                  padding: 5
+                  padding: 5,
                 }}
                 placeholder="Type your comment here..."
               />
@@ -242,7 +241,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                 }}
                 style={{
                   ...styles.button,
-                  backgroundColor: '#F44336'
+                  backgroundColor: '#F44336',
                 }}>
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
@@ -256,12 +255,12 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
 
 const styles = {
   label: {
-    color: '#5A7582'
+    color: '#5A7582',
   },
   text: {
     fontSize: 13,
     color: '#5A7582',
-    textAlign: 'justify'
+    textAlign: 'justify',
   },
   button: {
     width: 95,
@@ -272,23 +271,23 @@ const styles = {
     alignSelf: 'flex-end',
     right: 10,
     height: 24,
-    top: 13
+    top: 13,
   },
   buttonText: {
     color: 'white',
-    fontSize: 18
-  }
+    fontSize: 18,
+  },
 };
 
 CommentModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   dismiss: PropTypes.func.isRequired,
   parent: PropTypes.object.isRequired,
-  createComment: PropTypes.func.isRequired
+  createComment: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
-  createComment: createCommentAction
+  createComment: createCommentAction,
 };
 
 export default connect(null, mapDispatchToProps)(CommentModal);

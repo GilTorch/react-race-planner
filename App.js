@@ -10,7 +10,7 @@ import {
   SimpleLineIcons,
   Entypo,
   Feather,
-  MaterialIcons
+  MaterialIcons,
 } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
@@ -44,7 +44,7 @@ import persistor from './redux/store/persistor';
 // persistor.purge();
 
 function cacheImages(images) {
-  return images.map(image => {
+  return images.map((image) => {
     if (typeof image === 'string') {
       return Image.prefetch(image);
     }
@@ -53,7 +53,7 @@ function cacheImages(images) {
 }
 
 function cacheFonts(fonts) {
-  return fonts.map(font => Font.loadAsync(font));
+  return fonts.map((font) => Font.loadAsync(font));
 }
 
 async function loadAssetsAsync() {
@@ -82,8 +82,8 @@ async function loadAssetsAsync() {
       RobotoMediumItalic,
       RobotoRegular,
       RobotoThin,
-      RobotoThinItalic
-    }
+      RobotoThinItalic,
+    },
   ];
 
   const imageAssets = cacheImages(images);
@@ -96,9 +96,9 @@ const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#23C2C2'
+    primary: '#23C2C2',
     // accent: '#5A7582'
-  }
+  },
 };
 
 export default function App(props) {
@@ -138,16 +138,16 @@ export default function App(props) {
 }
 
 App.propTypes = {
-  skipLoadingScreen: PropTypes.bool
+  skipLoadingScreen: PropTypes.bool,
 };
 
 App.defaultProps = {
-  skipLoadingScreen: false
+  skipLoadingScreen: false,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
-  }
+    backgroundColor: '#fff',
+  },
 });
