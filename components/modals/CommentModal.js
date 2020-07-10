@@ -18,14 +18,14 @@ import { createCommentAction } from '../../redux/actions/StoryAction';
 import { commentSchema } from '../../utils/validators';
 
 const CommentModal = ({ visible, dismiss, parent, createComment }) => {
-  const user = useSelector(state => state.auth.currentUser);
+  const currentUser = useSelector(state => state.auth.currentUser);
   const [margin, setMargin] = React.useState(0);
   const [comments, setComments] = React.useState(parent.comments);
 
   const flatRef = React.useRef();
 
   const defaultValues = {
-    author: user._id,
+    author: currentUser._id,
     content: '',
     privacyStatus: 'username', // TODO: get the status from setting state
     documentPartId: parent._id,
@@ -40,8 +40,8 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
 
   const submit = async data => {
     try {
-      const comment = await createComment(data);
-      comment.author = user;
+      const comment = await createComment(data, parent._id);
+      comment.author = currentUser;
       setComments([...comments, comment]);
 
       flatRef.current.scrollToEnd();
