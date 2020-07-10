@@ -7,6 +7,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import Dash from 'react-native-dash';
 import { AllHtmlEntities } from 'html-entities';
 import moment from 'moment';
+import HTMLView from 'react-native-htmlview';
 
 import { getUserProfileUri, avatarGenerator } from '../../utils/functions';
 import Text from '../CustomText';
@@ -59,7 +60,8 @@ const CommentModal = ({ visible, dismiss, parent }) => {
               <Text style={styles.label}>Content:</Text>
             </View>
             <View style={{ marginTop: 10, paddingLeft: 20, paddingRight: 20 }}>
-              <Text style={styles.text}>{parent.content || ''}</Text>
+              {/* <Text style={styles.text}>{parent.content || ''}</Text> */}
+              <HTMLView value={parent.content} />
             </View>
             <View
               style={{
@@ -139,7 +141,8 @@ const CommentModal = ({ visible, dismiss, parent }) => {
                           </Text>
                         </View>
                       </View>
-                      <Text style={{ color: '#5A7582', lineHeight: 17 }}>{item.content}</Text>
+                      {/* <Text style={{ color: '#5A7582', lineHeight: 17 }}>{item.content}</Text> */}
+                      <HTMLView value={item.content} />
                     </View>
                   </View>
                   {parent.comments?.length !== index + 1 && (
