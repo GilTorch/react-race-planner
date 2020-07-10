@@ -41,7 +41,6 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
   const submit = async (data) => {
     try {
       await createComment(data, parent?._id);
-      reset(defaultValues);
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,

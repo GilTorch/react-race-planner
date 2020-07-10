@@ -1,5 +1,4 @@
 import { Home, Story } from '../actions/types';
-import mergeResponse from '../../utils/mergeResponse';
 
 const initialState = {
   loadingStories: false,
@@ -59,8 +58,37 @@ const homeReducer = (state = initialState, action) => {
           return s;
         }),
       };
+    // We shouldn't have to check for this here
+    // We need to add a local state for the current story
+    // to the Story screen
+    // We're only doing the following in the case
+    // where the user just joined the story and the story is
+    // still in the `home` reducer while they propose their intro
+    // Because they got to it from the Home screen
+    case Story.CREATE_ROUND_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
     case Story.JOIN_STORY_SUCCESS:
-      return { ...state, stories: mergeResponse(state.stories, [action.story]) };
+      return {
+        ...state,
+        stories: state.stories.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
     case Home.GET_ACTIVE_STORIES_START:
       return { ...state, loadingStories: true };
     case Home.UPDATE_ACTIVE_STORIES:

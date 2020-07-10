@@ -126,6 +126,13 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
         navigation.goBack();
       }
     } catch (e) {
+      // This is a quick hack until we set
+      // a local state in the Story screen
+      if (!e) {
+        navigation.goBack();
+        return;
+      }
+
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
         position: Toast.positions.BOTTOM,
