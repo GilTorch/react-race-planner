@@ -1,4 +1,5 @@
 import { Writing, Story } from '../actions/types';
+import mergeResponse from '../../utils/mergeResponse';
 
 const initialState = {
   loadingStories: false,
@@ -82,6 +83,11 @@ const writingReducer = (state = initialState, action) => {
 
           return s;
         }),
+      };
+    case Story.SKIP_ROUND_SUCCESS:
+      return {
+        ...state,
+        stories: mergeResponse(state.stories, [action.story]),
       };
     case Writing.GET_SELF_STORIES_SUCCESS:
       return {

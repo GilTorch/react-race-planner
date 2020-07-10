@@ -81,8 +81,8 @@ export const skipRoundAction = (storyId, documentPartId) => (dispatch) => {
 
   return axios
     .put(`/documents/${storyId}/skip-turn`, { documentPartId })
-    .then(() => {
-      dispatch({ type: Story.SKIP_ROUND_SUCCESS });
+    .then((response) => {
+      dispatch({ type: Story.SKIP_ROUND_SUCCESS, story: response.data.story });
     })
     .catch((error) => {
       dispatch({ type: Story.SKIP_ROUND_FAILURE });
