@@ -90,3 +90,33 @@ export const skipRoundAction = (storyId, documentPartId) => (dispatch) => {
       throw error.response?.data;
     });
 };
+
+export const createCommentAction = (data, documentPartId) => (dispatch) => {
+  dispatch({ type: Story.COMMENT_ROUND_START });
+
+  return axios
+    .post(`/comments/${documentPartId}`, data)
+    .then((response) => {
+      dispatch({ type: Story.COMMENT_ROUND_SUCCESS, story: response.data.story });
+    })
+    .catch((error) => {
+      dispatch({ type: Story.COMMENT_ROUND_FAILURE });
+
+      throw error.response?.data;
+    });
+};
+
+export const voteForRoundAction = (storyId, roundId) => (dispatch) => {
+  dispatch({ type: Story.ROUND_VOTE_START });
+
+  return axios
+    .post(`/votes/${storyId}/${roundId}`)
+    .then((response) => {
+      dispatch({ type: Story.ROUND_VOTE_SUCCESS, story: response.data.story });
+    })
+    .catch((error) => {
+      dispatch({ type: Story.ROUND_VOTE_FAILURE });
+
+      throw error.response?.data;
+    });
+};

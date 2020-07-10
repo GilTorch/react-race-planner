@@ -14,8 +14,8 @@ const initialState = {
         { selected: true, label: 'Waiting for Intro Votes', slug: 'intro_voting' },
         { selected: true, label: 'Rounds in Progress', slug: 'round_writing' },
         { selected: true, label: 'Waiting for Endings', slug: 'waiting_for_outros' },
-        { selected: true, label: 'Waiting for Outro Votes', slug: 'outro_voting' }
-      ]
+        { selected: true, label: 'Waiting for Outro Votes', slug: 'outro_voting' },
+      ],
     },
     genres: {
       allSelected: true,
@@ -26,11 +26,11 @@ const initialState = {
         { selected: true, label: 'Scifi', slug: 'scifi' },
         { selected: true, label: 'Romance', slug: 'romance' },
         { selected: true, label: 'Essay', slug: 'essay' },
-        { selected: true, label: 'Bedtime Stories', slug: 'bedtime_stories' }
-      ]
+        { selected: true, label: 'Bedtime Stories', slug: 'bedtime_stories' },
+      ],
     },
-    authorsRange: [5, 20]
-  }
+    authorsRange: [5, 20],
+  },
 };
 
 const homeReducer = (state = initialState, action) => {
@@ -42,12 +42,22 @@ const homeReducer = (state = initialState, action) => {
     case Story.CREATE_STORY_SUCCESS:
       return {
         ...state,
-        stories: state.stories ? [action.story, ...state.stories] : [action.story]
+        stories: state.stories ? [action.story, ...state.stories] : [action.story],
       };
-    case Story.CREATE_ROUND_SUCCESS:
+    // When it's a new comment, we're not sure where exactly the story is
+    // so we attempt to update it everywhere. We don't add it as a new one,
+    // that's why we don't use `mergeResponse`
+    case Story.COMMENT_ROUND_SUCCESS:
       return {
         ...state,
-        stories: mergeResponse(state.stories, [action.story])
+        stories: state.stories.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
       };
     case Story.JOIN_STORY_SUCCESS:
       return { ...state, stories: mergeResponse(state.stories, [action.story]) };
@@ -60,7 +70,7 @@ const homeReducer = (state = initialState, action) => {
         ...state,
         stories: stories?.length ? stories : null,
         loadingStories: false,
-        updatingStories: false
+        updatingStories: false,
       };
     case Home.GET_ACTIVE_STORIES_FAILURE:
       return { ...state, loadingStories: false, updatingStories: false };

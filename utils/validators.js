@@ -66,6 +66,10 @@ export const passwordResetVerificationSchema = yup.object().shape({
     .oneOf([yup.ref('newPassword'), null], 'Passwords are not the same')
 });
 
+export const commentSchema = yup.object().shape({
+  content: yup.string().required('Please enter the comment')
+});
+
 export const newStorySchema = yup.object().shape({
   title: yup.string().required('Enter a title for the story')
 });

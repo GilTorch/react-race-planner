@@ -8,10 +8,18 @@ const INITIAL_STATE = {
 
   skipRoundLoading: false,
   createRoundLoading: false,
+  createCommentLoading: false,
+  roundVoteLoading: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case Story.COMMENT_ROUND_START:
+      return { ...state, createCommentLoading: true };
+    case Story.COMMENT_ROUND_FAILURE:
+      return { ...state, createCommentLoading: false };
+    case Story.COMMENT_ROUND_SUCCESS:
+      return { ...state, createCommentLoading: false };
     case Story.JOIN_STORY_START:
       return { ...state, joinStoryLoading: true };
     case Story.JOIN_STORY_FAILURE:
@@ -48,6 +56,12 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, skipRoundLoading: false };
     case Story.SKIP_ROUND_SUCCESS:
       return { ...state, skipRoundLoading: false };
+    case Story.ROUND_VOTE_START:
+      return { ...state, roundVoteLoading: true };
+    case Story.ROUND_VOTE_FAILURE:
+      return { ...state, roundVoteLoading: false };
+    case Story.ROUND_VOTE_SUCCESS:
+      return { ...state, roundVoteLoading: false };
     default:
       return state;
   }

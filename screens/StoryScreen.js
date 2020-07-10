@@ -471,7 +471,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
           }}>
           <ProposedSection
             onPropose={handleRoundWriting('intro')}
-            userCanPropose={userIsAParticipant && !tooLateToJoin}
+            userCanPropose={userIsAParticipant && !tooLateToJoin && !isMasterAuthor}
             type="Intro"
             proposedBlocks={storedStory?.parts?.filter((p) => p.isIntro)}
             listMode={listMode}
@@ -529,7 +529,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             backgroundColor: '#000',
           },
         }}>
-        <View style={{ marginHorizontal: 25 }}>
+        <ScrollView style={{ marginHorizontal: 25 }}>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>
             Minimum and maximum authors allowed
           </Text>
@@ -542,12 +542,12 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
           <Text style={{ marginTop: 5, marginBottom: 10 }}>
             {moment()
               .startOf('day')
-              .seconds(storedStory?.settings?.introTimeLimitSeconds)
+              .seconds(storedStory?.settings?.introTimeLimitSeconds || 0)
               .format('H:mm')}{' '}
             to write{' & '}
             {moment()
               .startOf('day')
-              .seconds(storedStory?.settings?.voteTimeLimitSeconds)
+              .seconds(storedStory?.settings?.voteTimeLimitSeconds || 0)
               .format('H:mm')}{' '}
             to vote
           </Text>
@@ -557,12 +557,12 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
           <Text style={{ marginTop: 5, marginBottom: 10 }}>
             {moment()
               .startOf('day')
-              .seconds(storedStory?.settings?.outroTimeLimitSeconds)
+              .seconds(storedStory?.settings?.outroTimeLimitSeconds || 0)
               .format('H:mm')}{' '}
             to write{' & '}
             {moment()
               .startOf('day')
-              .seconds(storedStory?.settings?.voteTimeLimitSeconds)
+              .seconds(storedStory?.settings?.voteTimeLimitSeconds || 0)
               .format('H:mm')}{' '}
             to vote
           </Text>
@@ -570,7 +570,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
           <Text style={{ marginTop: 5, marginBottom: 10 }}>
             {moment()
               .startOf('day')
-              .seconds(storedStory?.settings?.roundTimeLimitSeconds)
+              .seconds(storedStory?.settings?.roundTimeLimitSeconds || 0)
               .format('H:mm')}{' '}
           </Text>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>Privacy Status</Text>
@@ -596,7 +596,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
               Join Story
             </Button>
           </Surface>
-        </View>
+        </ScrollView>
       </RBSheet>
     </View>
   );

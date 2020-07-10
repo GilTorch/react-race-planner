@@ -9,6 +9,7 @@ import LottieView from 'lottie-react-native';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { AllHtmlEntities } from 'html-entities';
+import HTMLView from 'react-native-htmlview';
 
 import MysteryIcon from '../svg/icons/MysteryIcon';
 import { getUserProfileUri } from '../../utils/functions';
@@ -18,7 +19,7 @@ import BoxMenu from './BoxMenu';
 import LoaderAnimation from '../../lottie/loading-pencil.json';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
 
-const avatarGenerator = username => `https://api.adorable.io/avatars/${username}.png`;
+const avatarGenerator = (username) => `https://api.adorable.io/avatars/${username}.png`;
 
 const Story = ({ story, index, length, navigation, updating }) => {
   let ShowAdvertisement;
@@ -35,7 +36,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
     ShowEndAdvertisement = <SmallAdvertisement />;
   }
 
-  const currentUser = useSelector(state => state.auth.currentUser);
+  const currentUser = useSelector((state) => state.auth.currentUser);
   const { masterAuthor } = story;
   const inProgressStatuses = [
     'waiting_for_players',
@@ -43,19 +44,21 @@ const Story = ({ story, index, length, navigation, updating }) => {
     'intro_voting',
     'round_writing',
     'waiting_for_outros',
-    'outro_voting'
+    'outro_voting',
   ];
   const inProgress = inProgressStatuses.includes(story.status);
   const status = inProgress ? 'In Progress' : 'Completed';
   const currentGenre = story.genre;
   const authorsCount = story.coAuthors?.length + 1;
-  let anonymousAuthorsCount = story.coAuthors?.filter(ca => ca.privacyStatus === 'anonymous')
+  let anonymousAuthorsCount = story.coAuthors?.filter((ca) => ca.privacyStatus === 'anonymous')
     .length;
   // eslint-disable-next-line no-plusplus
   if (story.privacyStatus === 'anonymous') anonymousAuthorsCount++;
   let GenreIconLibrary;
-  const initialIntro = story.parts?.find(sp => sp.isIntro && sp.author?._id === masterAuthor?._id);
-  const electedIntro = story.parts?.find(sp => sp.isIntro && sp.isElected);
+  const initialIntro = story.parts?.find(
+    (sp) => sp.isIntro && sp.author?._id === masterAuthor?._id,
+  );
+  const electedIntro = story.parts?.find((sp) => sp.isIntro && sp.isElected);
 
   switch (currentGenre?.iconLibraryName) {
     case 'MaterialCommunityIcons':
@@ -91,7 +94,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
     if (anonymousAuthorsCount) {
       if (publicauthorsCount) {
         final = `${final} ${new AllHtmlEntities().decode(
-          '&middot;'
+          '&middot;',
         )} ${anonymousAuthorsCount} anonymous`;
       } else {
         final = `${anonymousAuthorsCount} anonymous`;
@@ -109,7 +112,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
           marginBottom: 25,
           marginHorizontal: 20,
           borderRadius: 4,
-          elevation: 2
+          elevation: 2,
         }}>
         {updating && (
           <>
@@ -120,7 +123,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
                 height: '100%',
                 position: 'absolute',
                 opacity: '1',
-                zIndex: 10000
+                zIndex: 10000,
               }}
             />
             <View
@@ -131,18 +134,18 @@ const Story = ({ story, index, length, navigation, updating }) => {
                 zIndex: 10000,
                 justifyContent: 'center',
                 alignSelf: 'center',
-                top: 55
+                top: 55,
               }}>
               <LottieView
                 colorFilters={[
                   {
                     keypath: 'button',
-                    color: '#F00000'
+                    color: '#F00000',
                   },
                   {
                     keypath: 'Sending Loader',
-                    color: '#F00000'
-                  }
+                    color: '#F00000',
+                  },
                 ]}
                 style={{ color: 'red' }}
                 source={LoaderAnimation}
@@ -157,7 +160,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignItems: 'center'
+              alignItems: 'center',
             }}>
             <View>
               <TouchableOpacity
@@ -169,7 +172,12 @@ const Story = ({ story, index, length, navigation, updating }) => {
                 </Text>
               </TouchableOpacity>
             </View>
-            <BoxMenu parentType="story" block={story} />
+            <BoxMenu
+              parentType="story"
+              block={story}
+              storyId={story._id}
+              storyStatus={story.status}
+            />
           </View>
 
           {status === 'Completed' && (
@@ -181,7 +189,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
                     source={{
                       uri:
                         getUserProfileUri(masterAuthor?.picture) ||
-                        avatarGenerator(masterAuthor?.username)
+                        avatarGenerator(masterAuthor?.username),
                     }}
                   />
 
@@ -190,7 +198,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
               )}
 
               {story.coAuthors
-                ?.filter(ca => ca.privacyStatus !== 'anonymous')
+                ?.filter((ca) => ca.privacyStatus !== 'anonymous')
                 .map((author, idx) => (
                   <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Image
@@ -198,7 +206,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
                       source={{
                         uri:
                           getUserProfileUri(author.profile.picture) ||
-                          avatarGenerator(author.profile.username)
+                          avatarGenerator(author.profile.username),
                       }}
                     />
                   </View>
@@ -233,18 +241,19 @@ const Story = ({ story, index, length, navigation, updating }) => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              flexWrap: 'wrap'
+              flexWrap: 'wrap',
             }}>
-            {/* TODO: Use the `createdAt` of the first round */}
             <Text style={{ color: textColor, fontSize: 12 }}>
-              {moment(story.startedAt || story.createdAt).fromNow()}
+              {/* If the story has a start date, we display it, if not, we display the date it was created */}
+              {/* Remember: The date it was created will mostly likely not be the same as when it started (enough authors have joined) */}
+              {moment(story.introSubmittingStartedAt || story.createdAt).fromNow()}
             </Text>
             <View
               style={{
                 height: 15,
                 borderLeftColor: textColor,
                 borderLeftWidth: 1,
-                marginHorizontal: 8
+                marginHorizontal: 8,
               }}
             />
             <Text style={{ color: textColor, fontSize: 12 }}>{status}</Text>
@@ -253,7 +262,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
                 height: 15,
                 borderLeftColor: textColor,
                 borderLeftWidth: 1,
-                marginHorizontal: 8
+                marginHorizontal: 8,
               }}
             />
 
@@ -261,7 +270,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
               <View
                 style={{
                   ...styles.storyGenreIconContainer,
-                  backgroundColor: currentGenre?.color
+                  backgroundColor: currentGenre?.color,
                 }}>
                 {currentGenre?.iconLibraryName === 'MysteryIcon' && <GenreIconLibrary width={12} />}
 
@@ -280,7 +289,8 @@ const Story = ({ story, index, length, navigation, updating }) => {
             </Text>
 
             {initialIntro && (
-              <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro.content}</Text>
+              // <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro.content}</Text>
+              <HTMLView value={initialIntro.content} />
             )}
 
             {!initialIntro && (
@@ -288,7 +298,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
                 style={{
                   color: '#ED8A18',
                   fontFamily: 'RobotoItalic',
-                  fontSize: 12
+                  fontSize: 12,
                 }}>
                 Waiting for{' '}
                 {masterAuthor?._id === currentUser?._id ? 'your' : "the Master Author's"} intro
@@ -301,7 +311,8 @@ const Story = ({ story, index, length, navigation, updating }) => {
             </Text>
 
             {electedIntro && (
-              <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
+              // <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
+              <HTMLView value={electedIntro.content} />
             )}
 
             {!electedIntro && story.status === 'intro_voting' && (
@@ -309,7 +320,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
                 style={{
                   color: '#ED8A18',
                   fontFamily: 'RobotoItalic',
-                  fontSize: 12
+                  fontSize: 12,
                 }}>
                 Votes are in progress
               </Text>
@@ -320,7 +331,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
                 style={{
                   color: '#ED8A18',
                   fontFamily: 'RobotoItalic',
-                  fontSize: 12
+                  fontSize: 12,
                 }}>
                 Votes haven't started yet
               </Text>
@@ -334,7 +345,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
 };
 
 Story.defaultProps = {
-  updating: false
+  updating: false,
 };
 
 Story.propTypes = {
@@ -342,7 +353,7 @@ Story.propTypes = {
   index: PropTypes.number.isRequired,
   length: PropTypes.number.isRequired,
   navigation: PropTypes.object.isRequired,
-  updating: PropTypes.bool
+  updating: PropTypes.bool,
 };
 
 const textColor = '#5A7582';
@@ -353,21 +364,21 @@ const styles = StyleSheet.create({
     marginBottom: 7,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   storyAuthorsImage: {
     width: 21,
     height: 21,
     borderRadius: 100,
     borderWidth: 1,
-    borderColor: 'white'
+    borderColor: 'white',
   },
   storyAuthorsSeparator: {
     height: 15,
     marginLeft: 5,
     marginRight: 15,
     borderLeftColor: textColor,
-    borderLeftWidth: 1
+    borderLeftWidth: 1,
   },
   storyGenreIconContainer: {
     width: 22,
@@ -375,8 +386,8 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginRight: 5,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
 
 export default Story;
