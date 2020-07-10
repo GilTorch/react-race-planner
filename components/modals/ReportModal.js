@@ -181,10 +181,17 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                       onPress={handleSubmit(onSubmit)}
                       style={{ backgroundColor: '#03A2A2' }}>
                       <Text type="bold" style={{ color: '#FFF' }}>
-                        Report
                         {loadingReportComment && (
+                          <>
+                            <Text type="bold" style={{ color: '#fff' }}>
+                              Reporting
+                            </Text>
+                          </>
+                        )}
+
+                        {!loadingReportComment && (
                           <Text type="bold" style={{ color: '#fff' }}>
-                            ing...
+                            Report
                           </Text>
                         )}
                       </Text>
