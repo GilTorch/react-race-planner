@@ -15,7 +15,7 @@ import BoxMenu from './BoxMenu';
 const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose, story }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
 
-  const electedBlock = proposedBlocks.find((block) => block.isElected);
+  const electedBlock = proposedBlocks?.find((block) => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
       {electedBlock.content && <HTMLView value={electedBlock.content} />}
@@ -80,7 +80,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
   const cardsSection = (
     <>
       <Text type="medium" style={{ ...styles.title, marginTop: type === 'Ending' ? 0 : 20 }}>
-        All Proposed {type}s ({proposedBlocks.length})
+        All Proposed {type}s ({proposedBlocks?.length})
       </Text>
 
       {userCanPropose && type === 'Intro' && moment().isBefore(introSubmittingEndsAt) && (
@@ -172,7 +172,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
       )}
 
       <ScrollView horizontal style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
-        {proposedBlocks.map((proposedBlock, index) => {
+        {proposedBlocks?.map((proposedBlock, index) => {
           const margin = index === 0 ? 20 : 0;
           let authorName = index === 0 ? 'the Master Author' : 'an Anonymous Author';
 
