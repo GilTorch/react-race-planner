@@ -182,12 +182,15 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, rep
                       style={{ backgroundColor: '#03A2A2' }}>
                       <Text type="bold" style={{ color: '#FFF' }}>
                         Report
-                        {(loadingCreateReport || loadingCreateReport) && (
+                        {(loadingCreateReport || loadingReportComment) && (
                           <Text type="bold" style={{ color: '#fff' }}>
-                            ing...
+                            ing{' '}
                           </Text>
                         )}
                       </Text>
+                      {(loadingCreateReport || loadingReportComment) && (
+                        <ActivityIndicator size={15} color="white" />
+                      )}
                     </Button>
                   </Surface>
                   <Surface style={styles.btnSurface}>
