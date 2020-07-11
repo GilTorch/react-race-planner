@@ -49,7 +49,7 @@ const homeReducer = (state = initialState, action) => {
     case Story.COMMENT_ROUND_SUCCESS:
       return {
         ...state,
-        stories: state.stories.map((s) => {
+        stories: state.stories?.map((s) => {
           // eslint-disable-next-line no-underscore-dangle
           if (s._id === action.story._id) {
             return action.story;
@@ -68,7 +68,7 @@ const homeReducer = (state = initialState, action) => {
     case Story.CREATE_ROUND_SUCCESS:
       return {
         ...state,
-        stories: state.stories.map((s) => {
+        stories: state.stories?.map((s) => {
           // eslint-disable-next-line no-underscore-dangle
           if (s._id === action.story._id) {
             return action.story;
@@ -80,18 +80,27 @@ const homeReducer = (state = initialState, action) => {
     case Story.DELETE_COMMENT_SUCCESS:
       return {
         ...state,
-        stories: state.stories?.map(s => {
+        stories: state.stories?.map((s) => {
           // eslint-disable-next-line no-underscore-dangle
           if (s._id === action.story._id) {
             return action.story;
           }
 
           return s;
-        })
+        }),
       };
     case Story.JOIN_STORY_SUCCESS:
       return {
         ...state,
+        stories: state.stories?.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
     case Story.ROUND_VOTE_SUCCESS:
       return {
         ...state,
