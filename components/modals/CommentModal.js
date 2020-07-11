@@ -15,8 +15,9 @@ import HTMLView from 'react-native-htmlview';
 import { getUserProfileUri, avatarGenerator } from '../../utils/functions';
 import Text from '../CustomText';
 import { SCREEN_HEIGHT } from '../../utils/dimensions';
-import { createCommentAction } from '../../redux/actions/StoryAction';
+import { createCommentAction } from '../../redux/actions/StoryActions';
 import { commentSchema } from '../../utils/validators';
+import CommentMenu from '../CommentMenu';
 
 const CommentModal = ({ visible, dismiss, parent, createComment }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
@@ -179,7 +180,12 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                       </View>
                     )}
                     <View style={{ flex: 3 }}>
-                      <View style={{ marginBottom: 10, flexDirection: 'row' }}>
+                      <View
+                        style={{
+                          marginBottom: 10,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}>
                         <View>
                           {item.privacyStatus === 'anonymous' && (
                             <Text type="bold" style={{ color: '#03A2A2' }}>
@@ -199,6 +205,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                             {moment(item.createdAt).fromNow()}
                           </Text>
                         </View>
+                        <CommentMenu comment={item} />
                       </View>
                       {/* <Text style={{ color: '#5A7582', lineHeight: 17 }}>{item.content}</Text> */}
                       <HTMLView value={item.content} />

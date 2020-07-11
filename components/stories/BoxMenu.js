@@ -9,7 +9,8 @@ import { useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
 import moment from 'moment';
 import Text from '../CustomText';
-import { ReportModal, CommentModal, VotingModal } from '../modals';
+import { CommentModal, VotingModal } from '../modals';
+import ReportModal from '../modals/ReportModal';
 
 const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);

@@ -25,7 +25,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import Toast from 'react-native-root-toast';
 
-import { createStoryAction, createRoundAction } from '../redux/actions/StoryAction';
+import { createStoryAction, createRoundAction } from '../redux/actions/StoryActions';
 
 const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();

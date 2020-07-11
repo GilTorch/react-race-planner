@@ -6,7 +6,7 @@ import Toast from 'react-native-root-toast';
 import { connect } from 'react-redux';
 
 import Text from '../CustomText';
-import { voteForRoundAction } from '../../redux/actions/StoryAction';
+import { voteForRoundAction } from '../../redux/actions/StoryActions';
 
 const VotingModal = ({ visible, dismiss, parentType, storyId, roundId, voteForRound }) => {
   // TODO: Use this later to display the content of the block

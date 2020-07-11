@@ -27,7 +27,7 @@ import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
 import { SCREEN_HEIGHT } from '../utils/dimensions';
-import { joinStoryAction, leaveStoryAction } from '../redux/actions/StoryAction';
+import { joinStoryAction, leaveStoryAction } from '../redux/actions/StoryActions';
 import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 
 const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
@@ -542,12 +542,12 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             {moment()
               .startOf('day')
               .seconds(storedStory?.settings?.introTimeLimitSeconds || 0)
-              .format('H:mm')}{' '}
+              ?.format('H:mm')}{' '}
             to write{' & '}
             {moment()
               .startOf('day')
               .seconds(storedStory?.settings?.voteTimeLimitSeconds || 0)
-              .format('H:mm')}{' '}
+              ?.format('H:mm')}{' '}
             to vote
           </Text>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>
@@ -557,12 +557,12 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             {moment()
               .startOf('day')
               .seconds(storedStory?.settings?.outroTimeLimitSeconds || 0)
-              .format('H:mm')}{' '}
+              ?.format('H:mm')}{' '}
             to write{' & '}
             {moment()
               .startOf('day')
               .seconds(storedStory?.settings?.voteTimeLimitSeconds || 0)
-              .format('H:mm')}{' '}
+              ?.format('H:mm')}{' '}
             to vote
           </Text>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>Time for writing a round</Text>
@@ -570,7 +570,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             {moment()
               .startOf('day')
               .seconds(storedStory?.settings?.roundTimeLimitSeconds || 0)
-              .format('H:mm')}{' '}
+              ?.format('H:mm')}{' '}
           </Text>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>Privacy Status</Text>
 

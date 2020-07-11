@@ -73,3 +73,9 @@ export const commentSchema = yup.object().shape({
 export const newStorySchema = yup.object().shape({
   title: yup.string().required('Enter a title for the story')
 });
+
+export const newReportSchema = yup.object().shape({
+  reason: yup.string().required('You need to specify the reason why you are reporting'),
+  isActive: yup.boolean().default(true),
+  status: yup.string().default('')
+});

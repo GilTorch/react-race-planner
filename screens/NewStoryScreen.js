@@ -16,7 +16,7 @@ import { useSelector, connect } from 'react-redux';
 import Text from '../components/CustomText';
 import { genresData } from '../utils/data';
 import { newStorySchema } from '../utils/validators';
-import { createStoryAction } from '../redux/actions/StoryAction';
+import { createStoryAction } from '../redux/actions/StoryActions';
 
 const NewStoryScreen = ({ navigation, route }) => {
   useFocusEffect(
