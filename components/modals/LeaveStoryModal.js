@@ -6,7 +6,7 @@ import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
 
 import Text from '../CustomText';
-import { leaveStoryAction, deleteStoryAction } from '../../redux/actions/StoryAction';
+import { leaveStoryAction, deleteStoryAction } from '../../redux/actions/StoryActions';
 
 const LeaveStoryModal = ({
   visible,
@@ -17,7 +17,8 @@ const LeaveStoryModal = ({
   deleteStory,
   navigation
 }) => {
-  const deleteStoryLoading = useSelector(state => state.home.deleteStoryLoading);
+  const deleteStoryLoading = useSelector(state => state.story.deleteStoryLoading);
+  const leaveStoryLoading = useSelector(state => state.story.leaveStoryLoading);
 
   const confirmDelete = async () => {
     try {
@@ -105,9 +106,14 @@ const LeaveStoryModal = ({
                   style={{
                     ...styles.button,
                     backgroundColor: '#EC8918',
-                    flex: 2,
-                    marginRight: 10
+                    flex: 1,
+                    marginLeft: 20,
+                    marginRight: 10,
+                    flexDirection: 'row'
                   }}>
+                  {leaveStoryLoading && (
+                    <ActivityIndicator style={{ marginRight: 10 }} size={18} color="#fff" />
+                  )}
                   <Text style={{ ...styles.buttonText }}>Just Leave</Text>
                 </TouchableOpacity>
               )}
