@@ -92,7 +92,10 @@ const homeReducer = (state = initialState, action) => {
     case Story.JOIN_STORY_SUCCESS:
       return {
         ...state,
-        stories: state.stories.map((s) => {
+    case Story.ROUND_VOTE_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories?.map((s) => {
           // eslint-disable-next-line no-underscore-dangle
           if (s._id === action.story._id) {
             return action.story;
