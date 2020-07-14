@@ -1,4 +1,3 @@
-/* eslint-disable no-throw-literal */
 import axios from '../../services/axiosService';
 import { Story } from './types';
 
@@ -102,6 +101,7 @@ export const skipRoundAction = (storyId, documentPartId) => (dispatch) => {
     })
     .catch((error) => {
       dispatch({ type: Story.SKIP_ROUND_FAILURE });
+
       throw error.response?.data;
     });
 };
@@ -115,6 +115,7 @@ export const reportCommentAction = ({ commentId, report }) => (dispatch) => {
     })
     .catch((error) => {
       dispatch({ type: Story.REPORT_COMMENT_FAILURE });
+
       throw error.response?.data;
     });
 };
@@ -144,6 +145,23 @@ export const voteForRoundAction = (storyId, roundId) => (dispatch) => {
     })
     .catch((error) => {
       dispatch({ type: Story.ROUND_VOTE_FAILURE });
+
+      throw error.response?.data;
+    });
+};
+
+export const getSelectedStoryAction = (storyId) => (dispatch) => {
+  dispatch({ type: Story.GET_SELECTED_STORY_START });
+
+  return axios
+    .get(`/documents/${storyId}`)
+    .then((response) => {
+      dispatch({ type: Story.GET_SELECTED_STORY_SUCCESS });
+
+      return response.data;
+    })
+    .catch((error) => {
+      dispatch({ type: Story.GET_SELECTED_STORY_FAILURE });
 
       throw error.response?.data;
     });
