@@ -27,10 +27,10 @@ import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
 import { SCREEN_HEIGHT } from '../utils/dimensions';
-import { joinStoryAction, leaveStoryAction } from '../redux/actions/StoryActions';
+import { joinStoryAction } from '../redux/actions/StoryActions';
 import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 
-const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
+const StoryScreen = ({ navigation, route, joinStory }) => {
   const { story, reducerName } = route.params;
   const { masterAuthor } = story;
   const stories = useSelector((state) => state[reducerName]?.stories) || [];
@@ -183,9 +183,7 @@ const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
             position: Toast.positions.BOTTOM,
           });
         } else {
-          await leaveStory(story?._id, currentUser?._id);
-
-          navigation.goBack();
+          setIsLeaveStoryModalVisible(true);
         }
       } catch (e) {
         Toast.show(e.message, {
@@ -633,12 +631,10 @@ StoryScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
   joinStory: PropTypes.func.isRequired,
-  leaveStory: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
   joinStory: joinStoryAction,
-  leaveStory: leaveStoryAction,
 };
 
 export default connect(null, mapDispatchToProps)(StoryScreen);
