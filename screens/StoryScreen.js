@@ -27,15 +27,16 @@ import Text from '../components/CustomText';
 import { Round, ProposedSection, MetaData } from '../components/stories';
 import { HugeAdvertisement, SmallAdvertisement } from '../components/advertisements';
 import { SCREEN_HEIGHT } from '../utils/dimensions';
-import { joinStoryAction } from '../redux/actions/StoryActions';
+import { joinStoryAction, getSelectedStoryAction } from '../redux/actions/StoryActions';
 import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 
-const StoryScreen = ({ navigation, route, joinStory }) => {
+const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const { story, reducerName } = route.params;
   const { masterAuthor } = story;
   const stories = useSelector((state) => state[reducerName]?.stories) || [];
 
-  const storedStory = stories.find((s) => s._id === story?._id) || {};
+  const selectedStory = stories.find((s) => s._id === story?._id) || {};
+  const [storedStory, setStoredStory] = React.useState(selectedStory);
   // We make sure they are in the order of the story lifecycle - https://app.clickup.com/2351815/v/dc/16z6a-777/27rp7-735
   // so that we can properly use this variable later
   const inProgressStatuses = [
@@ -120,6 +121,27 @@ const StoryScreen = ({ navigation, route, joinStory }) => {
     React.useCallback(() => {
       StatusBar.setHidden(false);
       StatusBar.setBarStyle('light-content');
+    }, []),
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchSelectedStory = async () => {
+        try {
+          // TODO: on the server side return a formatedDocument
+          // const fetchedStory = await getSelectedStory(story._id);
+          // console.log(fetchedStory);
+          await getSelectedStory(story._id);
+          // setStoredStory(fetchedStory);
+        } catch (e) {
+          Toast.show(e.message, {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+          });
+        }
+      };
+
+      fetchSelectedStory();
     }, []),
   );
 
@@ -631,10 +653,12 @@ StoryScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   route: PropTypes.object.isRequired,
   joinStory: PropTypes.func.isRequired,
+  getSelectedStory: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
   joinStory: joinStoryAction,
+  getSelectedStory: getSelectedStoryAction,
 };
 
 export default connect(null, mapDispatchToProps)(StoryScreen);
