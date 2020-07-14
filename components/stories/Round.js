@@ -89,7 +89,9 @@ const Round = ({
         {roundBody}
       </TouchableOpacity>
       <View style={{ marginTop: 'auto' }}>
-        <Text style={styles.subTitle}>{wordsCount}/50 words</Text>
+        <Text style={styles.subTitle}>
+          {wordsCount}/{story.settings.roundMaxWords} words
+        </Text>
         <View
           style={{
             flexDirection: 'row',
