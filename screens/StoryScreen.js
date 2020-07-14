@@ -31,15 +31,11 @@ import { joinStoryAction, leaveStoryAction } from '../redux/actions/StoryActions
 import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 
 const StoryScreen = ({ navigation, route, joinStory, leaveStory }) => {
-  const { story } = route.params;
-  const inProgresstories = useSelector((state) => state.home.stories) || [];
-  const completedStories = useSelector((state) => state.library.stories) || [];
-  const myStories = useSelector((state) => state.writing.stories) || [];
+  const { story, reducerName } = route.params;
   const { masterAuthor } = story;
+  const stories = useSelector((state) => state[reducerName]?.stories) || [];
 
-  const storedStory =
-    [...myStories, ...inProgresstories, ...completedStories].find((s) => s._id === story?._id) ||
-    {};
+  const storedStory = stories.find((s) => s._id === story?._id) || {};
   // We make sure they are in the order of the story lifecycle - https://app.clickup.com/2351815/v/dc/16z6a-777/27rp7-735
   // so that we can properly use this variable later
   const inProgressStatuses = [
