@@ -21,9 +21,7 @@ const LeaveStoryModal = ({
   const leaveStoryLoading = useSelector((state) => state.story.leaveStoryLoading);
   const currentUser = useSelector((state) => state.auth.currentUser);
 
-  const [isDelete, setIsDelete] = React.useState(false);
-
-  const confirmDeleteOrLeave = async () => {
+  const confirmDeleteOrLeave = async (isDelete) => {
     try {
       if (isDelete) {
         await deleteStory(storyId);
@@ -91,10 +89,7 @@ const LeaveStoryModal = ({
             <View style={styles.buttonContainer}>
               {isMasterAuthor && (
                 <TouchableOpacity
-                  onPress={() => {
-                    setIsDelete(true);
-                    confirmDeleteOrLeave();
-                  }}
+                  onPress={() => confirmDeleteOrLeave(true)}
                   style={{
                     ...styles.button,
                     backgroundColor: '#F44336',
