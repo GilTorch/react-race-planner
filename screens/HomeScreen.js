@@ -251,6 +251,7 @@ const HomeScreen = ({ navigation, getStories }) => {
                     index={index}
                     length={stories.length}
                     navigation={navigation}
+                    reducerName="home"
                   />
                 </View>
               ))}

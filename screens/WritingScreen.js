@@ -242,6 +242,7 @@ const WritingScreen = ({ navigation, getStories }) => {
                     index={index}
                     length={stories.length}
                     navigation={navigation}
+                    reducerName="writing"
                   />
                 </View>
               ))}

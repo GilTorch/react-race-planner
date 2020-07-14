@@ -21,7 +21,7 @@ import { SCREEN_WIDTH } from '../../utils/dimensions';
 
 const avatarGenerator = (username) => `https://api.adorable.io/avatars/${username}.png`;
 
-const Story = ({ story, index, length, navigation, updating }) => {
+const Story = ({ story, index, length, navigation, updating, reducerName }) => {
   let ShowAdvertisement;
   let ShowEndAdvertisement;
   if (index !== 0) {
@@ -165,7 +165,7 @@ const Story = ({ story, index, length, navigation, updating }) => {
             <View>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('StoryScreen', { story });
+                  navigation.navigate('StoryScreen', { story, reducerName });
                 }}>
                 <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
                   {story.title || 'Story Title'}
@@ -354,6 +354,7 @@ Story.propTypes = {
   length: PropTypes.number.isRequired,
   navigation: PropTypes.object.isRequired,
   updating: PropTypes.bool,
+  reducerName: PropTypes.string.isRequired,
 };
 
 const textColor = '#5A7582';

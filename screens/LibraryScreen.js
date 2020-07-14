@@ -242,6 +242,7 @@ const LibraryScreen = ({ navigation, getStories }) => {
                     index={index}
                     length={stories.length}
                     navigation={navigation}
+                    reducerName="library"
                   />
                 </View>
               ))}
