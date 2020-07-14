@@ -113,18 +113,6 @@ const homeReducer = (state = initialState, action) => {
           return s;
         }),
       };
-    case Story.ROUND_VOTE_SUCCESS:
-      return {
-        ...state,
-        stories: state.stories.map((s) => {
-          // eslint-disable-next-line no-underscore-dangle
-          if (s._id === action.story._id) {
-            return action.story;
-          }
-
-          return s;
-        }),
-      };
     case Home.GET_ACTIVE_STORIES_START:
       return { ...state, loadingStories: true };
     case Home.UPDATE_ACTIVE_STORIES:
