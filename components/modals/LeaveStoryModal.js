@@ -19,10 +19,17 @@ const LeaveStoryModal = ({
 }) => {
   const deleteStoryLoading = useSelector((state) => state.story.deleteStoryLoading);
   const leaveStoryLoading = useSelector((state) => state.story.leaveStoryLoading);
+  const currentUser = useSelector((state) => state.auth.currentUser);
 
-  const confirmDelete = async () => {
+  const [isDelete, setIsDelete] = React.useState(false);
+
+  const confirmDeleteOrLeave = async () => {
     try {
-      await deleteStory(storyId);
+      if (isDelete) {
+        await deleteStory(storyId);
+      } else {
+        await leavestory(storyId, currentUser?._id);
+      }
 
       dismiss();
       navigation.goBack();
@@ -36,7 +43,7 @@ const LeaveStoryModal = ({
 
   return (
     <Portal>
-      <Modal visible={visible}>
+      <Modal visible={visible} dismissable={false}>
         <View
           style={{
             backgroundColor: 'white',
@@ -84,7 +91,10 @@ const LeaveStoryModal = ({
             <View style={styles.buttonContainer}>
               {isMasterAuthor && (
                 <TouchableOpacity
-                  onPress={() => confirmDelete()}
+                  onPress={() => {
+                    setIsDelete(true);
+                    confirmDeleteOrLeave();
+                  }}
                   style={{
                     ...styles.button,
                     backgroundColor: '#F44336',
@@ -102,7 +112,7 @@ const LeaveStoryModal = ({
 
               {!isMasterAuthor && (
                 <TouchableOpacity
-                  onPress={() => leavestory()}
+                  onPress={() => confirmDeleteOrLeave()}
                   style={{
                     ...styles.button,
                     backgroundColor: '#EC8918',
