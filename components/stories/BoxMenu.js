@@ -9,7 +9,8 @@ import { useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
 import moment from 'moment';
 import Text from '../CustomText';
-import { ReportModal, CommentModal, VotingModal } from '../modals';
+import { CommentModal, VotingModal } from '../modals';
+import ReportModal from '../modals/ReportModal';
 
 const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
@@ -32,7 +33,6 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
     'waiting_for_outros',
     'outro_voting',
   ];
-  const penddingStatus = inProgressStatuses.includes(storyStatus);
   const tooLatetoVoteForIntro = inProgressStatuses.slice(3).includes(storyStatus);
   const introEnding = parentType === 'Intro' || parentType === 'Ending';
   let votingMessage = "It's not time to vote yet";
@@ -167,9 +167,7 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
           {parentType === 'round' && (
             <TouchableOpacity
               onPress={() => {
-                if (!penddingStatus) {
-                  showCommentModal();
-                }
+                showCommentModal();
               }}
               style={{ ...styles.menuItem, marginTop: 10 }}>
               <FontAwesome

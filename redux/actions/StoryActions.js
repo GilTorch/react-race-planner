@@ -1,5 +1,21 @@
+/* eslint-disable no-throw-literal */
 import axios from '../../services/axiosService';
 import { Story } from './types';
+
+export const deleteCommentAction = (commentId) => (dispatch) => {
+  dispatch({ type: Story.DELETE_COMMENT_START });
+
+  return axios
+    .delete(`/comments/${commentId}`)
+    .then((response) => {
+      dispatch({ type: Story.DELETE_COMMENT_SUCCESS, story: response.data.story });
+    })
+    .catch((error) => {
+      dispatch({ type: Story.DELETE_COMMENT_FAILURE });
+
+      throw error.response?.data;
+    });
+};
 
 export const joinStoryAction = (storyId, userId, privacyStatus) => (dispatch) => {
   dispatch({ type: Story.JOIN_STORY_START });
@@ -86,7 +102,19 @@ export const skipRoundAction = (storyId, documentPartId) => (dispatch) => {
     })
     .catch((error) => {
       dispatch({ type: Story.SKIP_ROUND_FAILURE });
+      throw error.response?.data;
+    });
+};
 
+export const reportCommentAction = ({ commentId, report }) => (dispatch) => {
+  dispatch({ type: Story.REPORT_COMMENT_START });
+  return axios
+    .post(`/comments/${commentId}/reports`, { report })
+    .then(() => {
+      dispatch({ type: Story.REPORT_COMMENT_SUCCESS });
+    })
+    .catch((error) => {
+      dispatch({ type: Story.REPORT_COMMENT_FAILURE });
       throw error.response?.data;
     });
 };

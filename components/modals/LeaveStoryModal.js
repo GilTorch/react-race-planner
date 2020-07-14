@@ -6,7 +6,7 @@ import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
 
 import Text from '../CustomText';
-import { leaveStoryAction, deleteStoryAction } from '../../redux/actions/StoryAction';
+import { leaveStoryAction, deleteStoryAction } from '../../redux/actions/StoryActions';
 
 const LeaveStoryModal = ({
   visible,
