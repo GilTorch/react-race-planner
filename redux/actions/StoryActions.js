@@ -158,7 +158,7 @@ export const getSelectedStoryAction = (storyId) => (dispatch) => {
     .then((response) => {
       dispatch({ type: Story.GET_SELECTED_STORY_SUCCESS, story: response.data.story });
 
-      return response.data;
+      return response.data.story;
     })
     .catch((error) => {
       dispatch({ type: Story.GET_SELECTED_STORY_FAILURE });
