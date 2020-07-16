@@ -119,20 +119,10 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setHidden(false);
-      StatusBar.setBarStyle('light-content');
-    }, []),
-  );
-
-  useFocusEffect(
-    React.useCallback(() => {
       const fetchSelectedStory = async () => {
         try {
-          // TODO: on the server side return a formatedDocument
-          // const fetchedStory = await getSelectedStory(story._id);
-          // console.log(fetchedStory);
-          await getSelectedStory(story._id);
-          // setStoredStory(fetchedStory);
+          const fetchedStory = await getSelectedStory(story._id);
+          setStoredStory(fetchedStory);
         } catch (e) {
           Toast.show(e.message, {
             duration: Toast.durations.SHORT,
@@ -141,6 +131,8 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
         }
       };
 
+      StatusBar.setHidden(false);
+      StatusBar.setBarStyle('light-content');
       fetchSelectedStory();
     }, []),
   );
