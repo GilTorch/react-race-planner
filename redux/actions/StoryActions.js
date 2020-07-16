@@ -156,7 +156,7 @@ export const getSelectedStoryAction = (storyId) => (dispatch) => {
   return axios
     .get(`/documents/${storyId}`)
     .then((response) => {
-      dispatch({ type: Story.GET_SELECTED_STORY_SUCCESS });
+      dispatch({ type: Story.GET_SELECTED_STORY_SUCCESS, story: response.data.story });
 
       return response.data;
     })
