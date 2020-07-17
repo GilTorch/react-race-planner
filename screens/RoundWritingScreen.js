@@ -121,7 +121,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
         }
 
         // Send data as is and finish round creation remotely
-        await createRound(finalObj, route.params.story?._id);
+        await createRound(finalObj, route.params.story?._id, route.params.round?._id);
 
         navigation.goBack();
       }
