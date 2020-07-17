@@ -116,7 +116,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
           finalObj.isIntro = true;
         }
 
-        if (route.params.entity === 'outro') {
+        if (route.params.entity === 'ending') {
           finalObj.isOutro = true;
         }
 
