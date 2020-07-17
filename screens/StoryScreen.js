@@ -56,7 +56,8 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const isMasterAuthor = currentUser?._id === masterAuthor?._id;
   const userIsAParticipant =
     selectedStory?.coAuthors?.find((ca) => ca.profile._id === currentUser?._id) || isMasterAuthor;
-  const tooLateForOutro = selectedStory?.status === 'outro_voting';
+  const tooLateForOutro =
+    selectedStory?.status === 'outro_voting' || selectedStory?.status === 'completed';
   const waitingStory = authorsCount < selectedStory?.settings?.minimumParticipants;
   const completedStory = selectedStory?.status === 'completed';
   const inProgress = inProgressStatuses.includes(selectedStory?.status);
