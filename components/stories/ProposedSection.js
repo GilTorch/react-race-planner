@@ -152,7 +152,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
       {story?.status === 'outro_voting' &&
         type === 'Ending' &&
         story.outroVotingStartedAt &&
-        moment().isBefore(outroSubmittingEndsAt) && (
+        moment().isBefore(outroVotingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
             Votes for the story ending are currently in progress. Ending{' '}
             {moment().to(outroVotingEndsAt)}
