@@ -15,7 +15,7 @@ import { SCREEN_HEIGHT } from '../../utils/dimensions';
 const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) => {
   const [padding, setPadding] = React.useState(0);
   const rounds = parentType === 'round' || parentType === 'Ending' || parentType === 'Intro';
-  const loadingReportComment = useSelector((state) => state.story.loadingReportComment);
+  const reportCommentLoading = useSelector((state) => state.story.reportCommentLoading);
 
   const { errors, handleSubmit, register, setValue } = useForm({
     validationSchema: newReportSchema,
@@ -184,7 +184,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                       onPress={handleSubmit(onSubmit)}
                       style={{ backgroundColor: '#03A2A2' }}>
                       <Text type="bold" style={{ color: '#FFF' }}>
-                        {loadingReportComment && (
+                        {reportCommentLoading && (
                           <>
                             <Text type="bold" style={{ color: '#fff' }}>
                               Reporting
@@ -192,7 +192,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                           </>
                         )}
 
-                        {!loadingReportComment && (
+                        {!reportCommentLoading && (
                           <Text type="bold" style={{ color: '#fff' }}>
                             Report
                           </Text>

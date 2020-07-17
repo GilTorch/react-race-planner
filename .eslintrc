@@ -4,6 +4,7 @@
   "plugins": ["react", "jsx-a11y", "import", "eslint-plugin-prettier", "eslint-plugin-react"],
   "rules": {
     "no-underscore-dangle": "off",
+    "no-throw-literal": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -50,7 +51,7 @@
         "printWidth": 100,
         "jsxBracketSameLine": true,
         "arrowParens": "always",
-        "endOfLine": "lf",
+        "endOfLine": "auto",
         "trailingComma": "all"
       }
     ]
