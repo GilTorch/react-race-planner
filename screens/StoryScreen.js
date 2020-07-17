@@ -36,7 +36,6 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const stories = useSelector((state) => state[reducerName]?.stories) || [];
 
   const selectedStory = stories.find((s) => s._id === story?._id) || {};
-  const [storedStory, setStoredStory] = React.useState(selectedStory);
   // We make sure they are in the order of the story lifecycle - https://app.clickup.com/2351815/v/dc/16z6a-777/27rp7-735
   // so that we can properly use this variable later
   const inProgressStatuses = [
@@ -47,30 +46,30 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     'waiting_for_outros',
     'outro_voting',
   ];
-  const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(storedStory?.status);
-  const authorsCount = storedStory?.coAuthors?.length + 1;
-  const anonymousAuthorsCount = storedStory?.coAuthors?.filter(
+  const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(selectedStory?.status);
+  const authorsCount = selectedStory?.coAuthors?.length + 1;
+  const anonymousAuthorsCount = selectedStory?.coAuthors?.filter(
     (ca) => ca.privacyStatus === 'anonymous',
   ).length;
-  const missingAuthorsCount = storedStory?.settings?.minimumParticipants - authorsCount;
+  const missingAuthorsCount = selectedStory?.settings?.minimumParticipants - authorsCount;
   const currentUser = useSelector((state) => state.auth.currentUser);
   const isMasterAuthor = currentUser?._id === masterAuthor?._id;
   const userIsAParticipant =
-    storedStory?.coAuthors?.find((ca) => ca.profile._id === currentUser?._id) || isMasterAuthor;
-  const tooLateForOutro = storedStory?.status === 'outro_voting';
-  const waitingStory = authorsCount < storedStory?.settings?.minimumParticipants;
-  const completedStory = storedStory?.status === 'completed';
-  const inProgress = inProgressStatuses.includes(storedStory?.status);
+    selectedStory?.coAuthors?.find((ca) => ca.profile._id === currentUser?._id) || isMasterAuthor;
+  const tooLateForOutro = selectedStory?.status === 'outro_voting';
+  const waitingStory = authorsCount < selectedStory?.settings?.minimumParticipants;
+  const completedStory = selectedStory?.status === 'completed';
+  const inProgress = inProgressStatuses.includes(selectedStory?.status);
   const status = inProgress ? 'In Progress' : 'Completed';
   let masterAuthorName =
-    storedStory?.privacyStatus === 'anonymous' ? 'Anonymous' : masterAuthor.username;
+    selectedStory?.privacyStatus === 'anonymous' ? 'Anonymous' : masterAuthor.username;
 
-  if (storedStory?.privacyStatus === 'username_and_full_name') {
+  if (selectedStory?.privacyStatus === 'username_and_full_name') {
     masterAuthorName = `${masterAuthor.firstName} ${masterAuthor.lastName} (${masterAuthor.username})`;
   }
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
   const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
-  const reachedEnding = !inProgressStatuses.slice(0, 4).includes(storedStory?.status);
+  const reachedEnding = !inProgressStatuses.slice(0, 4).includes(selectedStory?.status);
   const scrollView = React.useRef(null);
   const refRBSheet = React.useRef();
 
@@ -121,8 +120,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     React.useCallback(() => {
       const fetchSelectedStory = async () => {
         try {
-          const fetchedStory = await getSelectedStory(story._id);
-          setStoredStory(fetchedStory);
+          await getSelectedStory(story._id);
         } catch (e) {
           Toast.show(e.message, {
             duration: Toast.durations.SHORT,
@@ -215,7 +213,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,
       });
-    } else if (tooLateToJoin && storedStory?.genre?.slug !== 'bedtime_stories') {
+    } else if (tooLateToJoin && selectedStory?.genre?.slug !== 'bedtime_stories') {
       Toast.show("It's too late to join this story now", {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,
@@ -228,7 +226,6 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const handleJoinStory = async () => {
     try {
       await joinStory(story?._id, currentUser?._id, privacyStatus);
-
       refRBSheet.current.close();
     } catch (e) {
       Toast.show(e.message, {
@@ -239,7 +236,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   };
 
   const handleRoundWriting = (entity) => () => {
-    navigation.navigate('RoundWriting', { story: storedStory, entity });
+    navigation.navigate('RoundWriting', { story: selectedStory, entity });
   };
 
   return (
@@ -297,7 +294,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
                 textAlign: 'center',
                 fontSize: 18,
               }}>
-              {storedStory?.title}
+              {selectedStory?.title}
             </Animated.Text>
 
             <Animated.View
@@ -309,20 +306,20 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
                 alignSelf: 'flex-start',
                 justifyContent: 'space-between',
               }}>
-              <MetaData label="Genre" value={storedStory?.genre?.name} />
+              <MetaData label="Genre" value={selectedStory?.genre?.name} />
               <MetaData label="Status" value={status} />
               {completedStory && <MetaData label="Master Author" value={masterAuthorName} />}
               <MetaData
                 label="Intro Maximum Words"
-                value={`${storedStory?.settings?.introMaxWords}`}
+                value={`${selectedStory?.settings?.introMaxWords}`}
               />
               <MetaData
                 label="Ending Maximum Words"
-                value={`${storedStory?.settings?.outroMaxWords}`}
+                value={`${selectedStory?.settings?.outroMaxWords}`}
               />
               <MetaData
                 label="Words per Round"
-                value={`${storedStory?.settings?.roundMaxWords} max`}
+                value={`${selectedStory?.settings?.roundMaxWords} max`}
               />
               <MetaData label="Co-Authors" value={coAuthors} />
             </Animated.View>
@@ -481,14 +478,14 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
             onPropose={handleRoundWriting('intro')}
             userCanPropose={userIsAParticipant && !tooLateToJoin && !isMasterAuthor}
             type="Intro"
-            proposedBlocks={storedStory?.parts?.filter((p) => p.isIntro)}
+            proposedBlocks={selectedStory?.parts?.filter((p) => p.isIntro)}
             listMode={listMode}
-            story={storedStory}
+            story={selectedStory}
           />
           <SmallAdvertisement />
 
           {!waitingStory &&
-            storedStory?.parts
+            selectedStory?.parts
               ?.filter((s) => !s.isIntro && !s.isOutro)
               .map((round, index, arr) => {
                 const bigAdd = [4, 10];
@@ -502,7 +499,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
                       round={round}
                       roundIdx={index + 1}
                       totalRound={arr.length}
-                      story={storedStory}
+                      story={selectedStory}
                       listMode={listMode}
                       isMasterAuthorRound={round.author?._id === masterAuthor?._id}
                       isCompletedStory={completedStory}
@@ -518,8 +515,8 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
               onPropose={handleRoundWriting('ending')}
               userCanPropose={userIsAParticipant && tooLateForOutro}
               type="Ending"
-              proposedBlocks={storedStory?.parts?.filter((p) => p.isOutro)}
-              story={storedStory}
+              proposedBlocks={selectedStory?.parts?.filter((p) => p.isOutro)}
+              story={selectedStory}
             />
           )}
         </ScrollView>
@@ -543,7 +540,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
             Minimum and maximum authors allowed
           </Text>
           <Text style={{ marginTop: 5, marginBottom: 10 }}>
-            {storedStory?.settings?.minimumParticipants} to 100
+            {selectedStory?.settings?.minimumParticipants} to 100
           </Text>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>
             Time for writing and voting for the intro
@@ -551,12 +548,12 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           <Text style={{ marginTop: 5, marginBottom: 10 }}>
             {moment()
               .startOf('day')
-              .seconds(storedStory?.settings?.introTimeLimitSeconds || 0)
+              .seconds(selectedStory?.settings?.introTimeLimitSeconds || 0)
               ?.format('H:mm')}{' '}
             to write{' & '}
             {moment()
               .startOf('day')
-              .seconds(storedStory?.settings?.voteTimeLimitSeconds || 0)
+              .seconds(selectedStory?.settings?.voteTimeLimitSeconds || 0)
               ?.format('H:mm')}{' '}
             to vote
           </Text>
@@ -566,12 +563,12 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           <Text style={{ marginTop: 5, marginBottom: 10 }}>
             {moment()
               .startOf('day')
-              .seconds(storedStory?.settings?.outroTimeLimitSeconds || 0)
+              .seconds(selectedStory?.settings?.outroTimeLimitSeconds || 0)
               ?.format('H:mm')}{' '}
             to write{' & '}
             {moment()
               .startOf('day')
-              .seconds(storedStory?.settings?.voteTimeLimitSeconds || 0)
+              .seconds(selectedStory?.settings?.voteTimeLimitSeconds || 0)
               ?.format('H:mm')}{' '}
             to vote
           </Text>
@@ -579,7 +576,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           <Text style={{ marginTop: 5, marginBottom: 10 }}>
             {moment()
               .startOf('day')
-              .seconds(storedStory?.settings?.roundTimeLimitSeconds || 0)
+              .seconds(selectedStory?.settings?.roundTimeLimitSeconds || 0)
               ?.format('H:mm')}{' '}
           </Text>
           <Text style={{ fontSize: 16, color: '#03a2a2' }}>Privacy Status</Text>
@@ -589,7 +586,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           </Text>
 
           <Dropdown
-            value={storedStory?.privacyStatus}
+            value={selectedStory?.privacyStatus}
             fontSize={16}
             dropdownPosition={0.1}
             onChangeText={(text) => setPrivacyStatus(text)}
