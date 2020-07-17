@@ -127,6 +127,19 @@ export const reportCommentAction = ({ commentId, report }) => (dispatch) => {
     });
 };
 
+export const createReportAction = (data) => (dispatch) => {
+  dispatch({ type: Story.REPORT_STORY_START });
+
+  return axios
+    .post('/reports', data)
+    .then(() => dispatch({ type: Story.REPORT_STORY_SUCCESS }))
+    .catch((error) => {
+      dispatch({ type: Story.REPORT_STORY_FAILURE });
+
+      throw error.response?.data;
+    });
+};
+
 export const createCommentAction = (data, documentPartId) => (dispatch) => {
   dispatch({ type: Story.COMMENT_ROUND_START });
 

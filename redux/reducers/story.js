@@ -1,6 +1,7 @@
 import { Story } from '../actions/types';
 
 const INITIAL_STATE = {
+  createReportLoading: false,
   joinStoryLoading: false,
   createStoryLoading: false,
   leaveStoryLoading: false,
