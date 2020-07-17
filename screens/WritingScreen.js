@@ -21,18 +21,18 @@ import SearchAndFilter from '../components/stories/SearchAndFilter';
 const WritingScreen = ({ navigation, getStories }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentGenre, setCurrentGenre] = useState(genresData[0]);
-  const updatingStories = useSelector(state => state.writing.updating);
-  const filters = useSelector(state => state.writing.filters);
-  const stories = useSelector(state => state.writing.stories);
-  const status = filters.status.tags.filter(tag => tag.selected).map(tag => tag.slug);
-  const genres = filters.genres.tags.filter(tag => tag.selected).map(tag => tag.slug);
+  const updatingStories = useSelector((state) => state.writing.updating);
+  const filters = useSelector((state) => state.writing.filters);
+  const stories = useSelector((state) => state.writing.stories);
+  const status = filters.status.tags.filter((tag) => tag.selected).map((tag) => tag.slug);
+  const genres = filters.genres.tags.filter((tag) => tag.selected).map((tag) => tag.slug);
 
   let menu = null;
-  const setMenuRef = ref => {
+  const setMenuRef = (ref) => {
     menu = ref;
   };
 
-  const showMenu = async genreIndex => {
+  const showMenu = async (genreIndex) => {
     setCurrentGenre(genresData[genreIndex]);
     menu.show();
   };
@@ -43,9 +43,9 @@ const WritingScreen = ({ navigation, getStories }) => {
       StatusBar.setBarStyle('dark-content');
 
       navigation.setOptions({
-        headerShown: false
+        headerShown: false,
       });
-    }, [])
+    }, []),
   );
 
   useFocusEffect(
@@ -56,18 +56,18 @@ const WritingScreen = ({ navigation, getStories }) => {
             status,
             genres,
             authorsRange: filters.authorsRange,
-            screen: 'writing'
+            screen: 'writing',
           });
         } catch (e) {
           Toast.show(e?.message, {
             duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM
+            position: Toast.positions.BOTTOM,
           });
         }
       };
 
       fetchStories();
-    }, [filters])
+    }, [filters]),
   );
 
   const getUserStories = async (sq, leading) => {
@@ -79,17 +79,17 @@ const WritingScreen = ({ navigation, getStories }) => {
             status,
             genres,
             authorsRange: filters.authorsRange,
-            screen: 'writing'
+            screen: 'writing',
           });
         } catch (e) {
           Toast.show(e?.message, {
             duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM
+            position: Toast.positions.BOTTOM,
           });
         }
       },
       2000,
-      { leading }
+      { leading },
     );
 
     await debounced();
@@ -105,7 +105,7 @@ const WritingScreen = ({ navigation, getStories }) => {
             marginBottom: 10,
             marginLeft: 23,
             flexDirection: 'row',
-            alignItems: 'center'
+            alignItems: 'center',
           }}>
           <SimpleLineIcons color="#ED8A18" name="layers" size={25} />
           <Text style={{ ...styles.headline, fontSize: 16, marginLeft: 15 }} type="medium">
@@ -127,7 +127,7 @@ const WritingScreen = ({ navigation, getStories }) => {
                   type="medium"
                   style={{
                     color: '#5A7582',
-                    fontSize: 14
+                    fontSize: 14,
                   }}>
                   {genre.name}
                 </Text>
@@ -144,7 +144,7 @@ const WritingScreen = ({ navigation, getStories }) => {
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              marginBottom: 10
+              marginBottom: 10,
             }}>
             <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
               {currentGenre.name}
@@ -158,7 +158,7 @@ const WritingScreen = ({ navigation, getStories }) => {
               alignSelf: 'flex-end',
               justifyContent: 'flex-end',
               marginTop: 15,
-              marginBottom: 20
+              marginBottom: 20,
             }}>
             <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
               <Button
@@ -201,7 +201,7 @@ const WritingScreen = ({ navigation, getStories }) => {
               style={{
                 flex: 1,
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
               }}>
               <Text
                 type="bold"
@@ -242,6 +242,7 @@ const WritingScreen = ({ navigation, getStories }) => {
                     index={index}
                     length={stories.length}
                     navigation={navigation}
+                    reducerName="writing"
                   />
                 </View>
               ))}
@@ -254,19 +255,19 @@ const WritingScreen = ({ navigation, getStories }) => {
 };
 
 WritingScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EEE',
-    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.2 : 0
+    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.2 : 0,
   },
   btnSurface: {
     elevation: 4,
     marginVertical: 10,
-    borderRadius: 5
+    borderRadius: 5,
   },
   headline: { color: '#5A7582' },
   genreIconContainer: {
@@ -274,16 +275,16 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 100
-  }
+    borderRadius: 100,
+  },
 });
 
 WritingScreen.propTypes = {
-  getStories: PropTypes.func.isRequired
+  getStories: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
-  getStories: getStoriesAction
+  getStories: getStoriesAction,
 };
 
 export default connect(null, mapDispatchToProps)(WritingScreen);

@@ -16,7 +16,7 @@ import { useSelector, connect } from 'react-redux';
 import Text from '../components/CustomText';
 import { genresData } from '../utils/data';
 import { newStorySchema } from '../utils/validators';
-import { createStoryAction } from '../redux/actions/StoryAction';
+import { createStoryAction } from '../redux/actions/StoryActions';
 
 const NewStoryScreen = ({ navigation, route }) => {
   useFocusEffect(
@@ -25,14 +25,14 @@ const NewStoryScreen = ({ navigation, route }) => {
       StatusBar.setBarStyle('light-content');
 
       navigation.setOptions({
-        headerShown: false
+        headerShown: false,
       });
-    }, [])
+    }, []),
   );
 
-  const user = useSelector(state => state.auth.currentUser);
+  const user = useSelector((state) => state.auth.currentUser);
   // const types = useSelector(state => state.storyType);
-  const loading = useSelector(state => state.story.createStoryLoading);
+  const loading = useSelector((state) => state.story.createStoryLoading);
 
   const listAuthordata = [
     { value: 2 },
@@ -43,22 +43,22 @@ const NewStoryScreen = ({ navigation, route }) => {
     { value: 7 },
     { value: 8 },
     { value: 9 },
-    { value: 10 }
+    { value: 10 },
   ];
   const privacyData = [
     { value: 'username', label: 'Username' },
     { value: 'username_and_full_name', label: 'Username and Full Name' },
-    { value: 'anonymous', label: 'Anonymous' }
+    { value: 'anonymous', label: 'Anonymous' },
   ];
 
   const genresTitle = [];
-  genresData.forEach(genre => genresTitle.push({ value: genre.name }));
+  genresData.forEach((genre) => genresTitle.push({ value: genre.name }));
 
   const [time, setTime] = React.useState({
     introTimeLimitSeconds: '0:15',
     endingTimeLimitSeconds: '0:15',
     roundTimeLimitSeconds: '0:15',
-    voteTimeLimitSeconds: '0:15'
+    voteTimeLimitSeconds: '0:15',
   });
   const [selectedTime] = React.useState();
   let TimePickerRef = null;
@@ -76,10 +76,10 @@ const NewStoryScreen = ({ navigation, route }) => {
         endingTimeLimitSeconds: 900,
         roundTimeLimitSeconds: 900,
         voteTimeLimitSeconds: 900,
-        minimumParticipants: 2
+        minimumParticipants: 2,
       },
-      privacyStatus: 'username'
-    }
+      privacyStatus: 'username',
+    },
   });
   const storySettings = watch('settings');
 
@@ -93,13 +93,13 @@ const NewStoryScreen = ({ navigation, route }) => {
     TimePickerRef.close();
   };
 
-  const submit = async story => {
+  const submit = async (story) => {
     try {
-      navigation.navigate('RoundWriting', { story, entity: 'intro', isNewstory: true });
+      navigation.navigate('RoundWriting', { story, entity: 'intro', isNewStory: true });
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
+        position: Toast.positions.BOTTOM,
       });
     }
   };
@@ -121,14 +121,14 @@ const NewStoryScreen = ({ navigation, route }) => {
       <Surface
         style={{
           elevation: 3,
-          zIndex: 10
+          zIndex: 10,
         }}>
         <LinearGradient colors={['#03a2a2', '#23c2c2']} locations={[0.5, 1]}>
           <SafeAreaView
             style={{
               alignItems: 'center',
               flexDirection: 'row',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
             }}>
             <TouchableOpacity
               onPress={() => navigation.goBack()}
@@ -164,13 +164,13 @@ const NewStoryScreen = ({ navigation, route }) => {
             marginTop: 20,
             padding: 15,
             paddingBottom: 40,
-            flexDirection: 'column'
+            flexDirection: 'column',
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2' }}>Title</Text>
           <TextInput
             autoCapitalize="words"
             style={[styles.input, errors.title && styles.errorInput]}
-            onChangeText={text => setValue('title', text)}
+            onChangeText={(text) => setValue('title', text)}
             value={watch('title')}
           />
           {errors.title && (
@@ -184,7 +184,7 @@ const NewStoryScreen = ({ navigation, route }) => {
             marginTop: 20,
             padding: 15,
             paddingBottom: 40,
-            flexDirection: 'column'
+            flexDirection: 'column',
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2' }}>Genre</Text>
           <Dropdown
@@ -192,7 +192,7 @@ const NewStoryScreen = ({ navigation, route }) => {
             fontSize={16}
             dropdownPosition={0.5}
             data={genresTitle}
-            onChangeText={text => setValue('genre', text)}
+            onChangeText={(text) => setValue('genre', text)}
           />
         </Surface>
         <Surface
@@ -202,7 +202,7 @@ const NewStoryScreen = ({ navigation, route }) => {
             marginTop: 20,
             padding: 15,
             paddingBottom: 40,
-            flexDirection: 'column'
+            flexDirection: 'column',
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>
             Minimum Amount of Authors
@@ -213,7 +213,7 @@ const NewStoryScreen = ({ navigation, route }) => {
             fontSize={16}
             dropdownPosition={0.5}
             data={listAuthordata}
-            onChangeText={text =>
+            onChangeText={(text) =>
               setValue('settings', { ...storySettings, minimumParticipants: text })
             }
           />
@@ -316,7 +316,7 @@ const NewStoryScreen = ({ navigation, route }) => {
             marginBottom: 40,
             padding: 15,
             paddingBottom: 40,
-            flexDirection: 'column'
+            flexDirection: 'column',
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>Privacy Status</Text>
           <Text>
@@ -327,7 +327,7 @@ const NewStoryScreen = ({ navigation, route }) => {
             fontSize={16}
             dropdownPosition={0.5}
             data={privacyData}
-            onChangeText={text => setValue('privacyStatus', text)}
+            onChangeText={(text) => setValue('privacyStatus', text)}
           />
         </Surface>
       </ScrollView>
@@ -335,7 +335,7 @@ const NewStoryScreen = ({ navigation, route }) => {
         hourUnit=" hr"
         minuteUnit=" mn"
         selectedMinute="15" // TODO: set depending on the `selectedTime`
-        ref={ref => {
+        ref={(ref) => {
           TimePickerRef = ref;
         }}
         onCancel={onCancelTimePicker}
@@ -349,27 +349,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EEE',
-    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0
+    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.1 : 0,
   },
   input: {
     height: 40,
     fontSize: 16,
     minWidth: 70,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   errorInput: {
     borderColor: 'red',
-    borderBottomWidth: 1
-  }
+    borderBottomWidth: 1,
+  },
 });
 
 NewStoryScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  route: PropTypes.object.isRequired
+  route: PropTypes.object.isRequired,
 };
 
 const mapDispatchToProps = {
-  createStory: createStoryAction
+  createStory: createStoryAction,
 };
 
 export default connect(null, mapDispatchToProps)(NewStoryScreen);
