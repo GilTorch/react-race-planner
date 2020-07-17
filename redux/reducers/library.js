@@ -62,6 +62,18 @@ const libraryReducer = (state = initialState, action) => {
           return s;
         }),
       };
+    case Story.GET_SELECTED_STORY_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories?.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
     case Library.GET_COMPLETED_STORIES_SUCCESS:
       return {
         ...state,
