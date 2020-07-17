@@ -14,7 +14,7 @@ import { deleteCommentAction } from '../redux/actions/StoryActions';
 
 const CommentMenu = ({ comment, deleteComment }) => {
   // const loading = useSelector(state => state.story.loading);
-  const user = useSelector(state => state.auth.currentUser); // TODO: use the id instead of the email
+  const user = useSelector((state) => state.auth.currentUser); // TODO: use the id instead of the email
 
   const [showMenu, setshowMenu] = useState(false);
   const [showReport, setShowReport] = useState(false);
@@ -43,7 +43,7 @@ const CommentMenu = ({ comment, deleteComment }) => {
       hideDeleteModal();
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
+        position: Toast.positions.BOTTOM,
       });
     }
   };
@@ -67,14 +67,14 @@ const CommentMenu = ({ comment, deleteComment }) => {
             backgroundColor: 'white',
             borderRadius: 6,
             width: '90%',
-            alignSelf: 'center'
+            alignSelf: 'center',
           }}
           onDismiss={() => setShowDelete(false)}>
           <View
             style={{
               alignItems: 'center',
               margin: 20,
-              marginBottom: 10
+              marginBottom: 10,
             }}>
             <Text type="bold" style={{ fontSize: 20, color: '#5A7582' }}>
               Are you sure you want to delete this comment?
@@ -85,7 +85,7 @@ const CommentMenu = ({ comment, deleteComment }) => {
               marginTop: 30,
               marginBottom: 10,
               flexDirection: 'row',
-              justifyContent: 'space-evenly'
+              justifyContent: 'space-evenly',
             }}>
             <Surface style={styles.btnSurface}>
               <Button
@@ -116,7 +116,7 @@ const CommentMenu = ({ comment, deleteComment }) => {
           contentStyle={{
             flexDirection: 'column',
             justifyContent: 'space-between',
-            elevation: 3
+            elevation: 3,
           }}
           visible={showMenu}
           anchor={<Feather name="more-vertical" size={18} color="#5A7582" />}
@@ -148,21 +148,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 10,
     marginRight: 20,
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
 
 CommentMenu.propTypes = {
   comment: PropTypes.object.isRequired,
-  deleteComment: PropTypes.func
+  deleteComment: PropTypes.func,
 };
 
 CommentMenu.defaultProps = {
-  deleteComment: () => ''
+  deleteComment: () => '',
 };
 
 const mapDispatchToProps = {
-  deleteComment: deleteCommentAction
+  deleteComment: deleteCommentAction,
 };
 
 export default connect(null, mapDispatchToProps)(CommentMenu);
