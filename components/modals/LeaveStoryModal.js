@@ -15,38 +15,43 @@ const LeaveStoryModal = ({
   storyId,
   leavestory,
   deleteStory,
-  navigation
+  navigation,
 }) => {
-  const deleteStoryLoading = useSelector(state => state.story.deleteStoryLoading);
-  const leaveStoryLoading = useSelector(state => state.story.leaveStoryLoading);
+  const deleteStoryLoading = useSelector((state) => state.story.deleteStoryLoading);
+  const leaveStoryLoading = useSelector((state) => state.story.leaveStoryLoading);
+  const currentUser = useSelector((state) => state.auth.currentUser);
 
-  const confirmDelete = async () => {
+  const confirmDeleteOrLeave = async (isDelete) => {
     try {
-      await deleteStory(storyId);
+      if (isDelete) {
+        await deleteStory(storyId);
+      } else {
+        await leavestory(storyId, currentUser?._id);
+      }
 
       dismiss();
       navigation.goBack();
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
+        position: Toast.positions.BOTTOM,
       });
     }
   };
 
   return (
     <Portal>
-      <Modal visible={visible}>
+      <Modal visible={visible} dismissable={false}>
         <View
           style={{
             backgroundColor: 'white',
             marginHorizontal: 20,
-            borderRadius: 6
+            borderRadius: 6,
           }}>
           <View
             style={{
               borderRadius: 6,
-              shadowColor: '#000'
+              shadowColor: '#000',
             }}>
             <View
               style={{
@@ -54,7 +59,7 @@ const LeaveStoryModal = ({
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginVertical: 15
+                marginVertical: 15,
               }}>
               {isMasterAuthor && (
                 <Text type="bold" style={{ fontSize: 30, color: '#5A7582' }}>
@@ -84,14 +89,14 @@ const LeaveStoryModal = ({
             <View style={styles.buttonContainer}>
               {isMasterAuthor && (
                 <TouchableOpacity
-                  onPress={() => confirmDelete()}
+                  onPress={() => confirmDeleteOrLeave(true)}
                   style={{
                     ...styles.button,
                     backgroundColor: '#F44336',
                     flex: 1,
                     marginLeft: 20,
                     marginRight: 10,
-                    flexDirection: 'row'
+                    flexDirection: 'row',
                   }}>
                   {deleteStoryLoading && (
                     <ActivityIndicator style={{ marginRight: 10 }} size={18} color="#fff" />
@@ -102,14 +107,14 @@ const LeaveStoryModal = ({
 
               {!isMasterAuthor && (
                 <TouchableOpacity
-                  onPress={() => leavestory()}
+                  onPress={() => confirmDeleteOrLeave()}
                   style={{
                     ...styles.button,
                     backgroundColor: '#EC8918',
                     flex: 1,
                     marginLeft: 20,
                     marginRight: 10,
-                    flexDirection: 'row'
+                    flexDirection: 'row',
                   }}>
                   {leaveStoryLoading && (
                     <ActivityIndicator style={{ marginRight: 10 }} size={18} color="#fff" />
@@ -138,29 +143,29 @@ LeaveStoryModal.propTypes = {
   deleteStory: PropTypes.func.isRequired,
   isMasterAuthor: PropTypes.bool.isRequired,
   storyId: PropTypes.string.isRequired,
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
 };
 
 const mapDispatchToProps = {
   leavestory: leaveStoryAction,
-  deleteStory: deleteStoryAction
+  deleteStory: deleteStoryAction,
 };
 
 const styles = {
   label: {
     color: '#5A7582',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   text: {
     fontSize: 13,
     color: '#5A7582',
-    textAlign: 'justify'
+    textAlign: 'justify',
   },
   buttonContainer: {
     flexDirection: 'row',
     marginVertical: 20,
     // alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
   },
   button: {
     backgroundColor: '#03A2A2',
@@ -170,16 +175,16 @@ const styles = {
     borderRadius: 5,
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     padding: 5,
     shadowOpacity: 0.25,
-    shadowRadius: 3.84
+    shadowRadius: 3.84,
   },
 
   buttonText: {
-    color: 'white'
-  }
+    color: 'white',
+  },
 };
 
 export default connect(null, mapDispatchToProps)(LeaveStoryModal);

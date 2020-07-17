@@ -67,7 +67,7 @@ const NewStoryScreen = ({ navigation, route }) => {
   const { errors, handleSubmit, register, watch, setValue } = useForm({
     validationSchema: newStorySchema,
     defaultValues: {
-      masterAuthor: user._id,
+      masterAuthor: user?._id,
       type: 'story', // TODO: get and send the typeId
       status: 'waiting_for_players',
       genre: preselectedGenre, // TODO: send the genreId instead

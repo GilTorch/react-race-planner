@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Modal, Portal, TextInput, Surface, Button } from 'react-native-paper';
@@ -5,62 +6,58 @@ import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import Toast from 'react-native-root-toast';
+
 import HTMLView from 'react-native-htmlview';
-import { reportCommentAction } from '../../redux/actions/StoryActions';
-
 import Text from '../CustomText';
-import { newReportSchema } from '../../utils/validators';
-import { SCREEN_HEIGHT } from '../../utils/dimensions';
+import { createReportAction, reportCommentAction } from '../../redux/actions/StoryActions';
+import { reportSchema } from '../../utils/validators';
 
-const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) => {
-  const [padding, setPadding] = React.useState(0);
-  const rounds = parentType === 'round' || parentType === 'Ending' || parentType === 'Intro';
-  const loadingReportComment = useSelector((state) => state.story.loadingReportComment);
+const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, reportComment }) => {
+  const user = useSelector((state) => state.auth.currentUser);
+  const loading = useSelector((state) => state.story.createReportLoading);
+  const reportCommentLoading = useSelector((state) => state.story.reportCommentLoading);
 
-  const { errors, handleSubmit, register, setValue } = useForm({
-    validationSchema: newReportSchema,
+  const { errors, handleSubmit, register, watch, setValue } = useForm({
+    validationSchema: reportSchema,
+    defaultValues: {
+      reporter: user?._id,
+      status: 'pending',
+      documentId: parent._id,
+    },
   });
 
-  const keyboardDidShow = (e) => {
-    const add = parentType === 'story' ? -10 : SCREEN_HEIGHT * 0.15;
-    setPadding(add + e.endCoordinates.height);
-  };
-
-  React.useEffect(() => {
-    register('status');
-    register('isActive');
-    register('reason');
-    Keyboard.addListener('keyboardDidHide', () => setPadding(0));
-    Keyboard.addListener('keyboardDidShow', keyboardDidShow);
-    return () => {
-      Keyboard.removeAllListeners('keyboardDidShow');
-      Keyboard.removeAllListeners('keyboardDidHide');
-    };
-  });
-
-  const loremText = 'some text';
-
-  const onSubmit = async (report) => {
+  const submit = async (data) => {
     try {
       if (parentType === 'comment') {
         // eslint-disable-next-line no-underscore-dangle
-        await reportComment({ commentId: parent._id, report });
+        await reportComment({ commentId: parent._id, report: data });
 
         Toast.show('Comment successfully reported', {
           duration: Toast.durations.SHORT,
           position: Toast.positions.BOTTOM,
         });
-      }
-      // if Intro/Ending/round
+      } else {
+        await createReport(data);
 
-      // if story
-    } catch (error) {
-      Toast.show('Something unexpected happened', {
+        Toast.show('Report sent', {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+        });
+      }
+    } catch (e) {
+      Toast.show(e.message, {
         duration: Toast.durations.SHORT,
         position: Toast.positions.BOTTOM,
       });
     }
   };
+
+  React.useEffect(() => {
+    register('reason');
+    register('reporter');
+    register('status');
+    register('documentId');
+  }, [register]);
 
   return (
     <Portal>
@@ -120,18 +117,6 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                     </View>
                   </>
                 )}
-                {rounds && (
-                  <>
-                    <View style={{ flexDirection: 'row', marginBottom: 5 }}>
-                      <Text style={styles.text}>Author: </Text>
-                      <Text type="bold" style={styles.text}>
-                        Anonymous 1
-                      </Text>
-                    </View>
-                    <Text style={{ ...styles.text, paddingBottom: 2 }}>Content: </Text>
-                    <Text style={{ color: textColor, lineHeight: 17 }}>{loremText}</Text>
-                  </>
-                )}
                 {parentType === 'comment' && (
                   <>
                     <View style={{ flexDirection: 'row', marginBottom: 5 }}>
@@ -154,11 +139,10 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                 </View>
                 <TextInput
                   placeholder="Your reason for reporting here..."
-                  onChangeText={(text) => {
-                    setValue('reason', text);
-                  }}
+                  value={watch('reason')}
                   multiline
-                  underlineColor="white"
+                  underlineColor={errors.reason ? 'red' : 'white'}
+                  onChangeText={(text) => setValue('reason', text)}
                   style={{
                     borderWidth: 1,
                     marginTop: 5,
@@ -167,10 +151,11 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                   }}
                 />
                 {errors.reason && (
-                  <Text style={{ marginTop: 10, marginBottom: 10, color: 'red' }}>
+                  <Text style={{ fontSize: 12, marginTop: 3, color: 'red' }}>
                     {errors.reason.message}
                   </Text>
                 )}
+
                 <View
                   style={{
                     flexDirection: 'row',
@@ -181,10 +166,12 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                   <Surface style={styles.btnSurface}>
                     <Button
                       uppercase={false}
-                      onPress={handleSubmit(onSubmit)}
+                      loading={loading}
+                      disabled={loading}
+                      onPress={handleSubmit(submit)}
                       style={{ backgroundColor: '#03A2A2' }}>
                       <Text type="bold" style={{ color: '#FFF' }}>
-                        {loadingReportComment && (
+                        {reportCommentLoading && (
                           <>
                             <Text type="bold" style={{ color: '#fff' }}>
                               Reporting
@@ -192,7 +179,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
                           </>
                         )}
 
-                        {!loadingReportComment && (
+                        {!reportCommentLoading && (
                           <Text type="bold" style={{ color: '#fff' }}>
                             Report
                           </Text>
@@ -214,19 +201,10 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, reportComment }) 
               </View>
             </View>
           </TouchableWithoutFeedback>
-          <View style={{ paddingBottom: padding }} />
         </View>
       </Modal>
     </Portal>
   );
-};
-
-ReportModal.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-  parentType: PropTypes.string.isRequired,
-  parent: PropTypes.object.isRequired,
-  reportComment: PropTypes.func.isRequired,
 };
 
 const textColor = '#5A7582';
@@ -240,7 +218,17 @@ const styles = StyleSheet.create({
   },
 });
 
+ReportModal.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  onDismiss: PropTypes.func.isRequired,
+  parentType: PropTypes.string.isRequired,
+  parent: PropTypes.object.isRequired,
+  createReport: PropTypes.func.isRequired,
+  reportComment: PropTypes.func.isRequired,
+};
+
 const mapDispatchToProps = {
+  createReport: createReportAction,
   reportComment: reportCommentAction,
 };
 

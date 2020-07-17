@@ -58,6 +58,18 @@ const homeReducer = (state = initialState, action) => {
           return s;
         }),
       };
+    case Story.GET_SELECTED_STORY_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories?.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
     // We shouldn't have to check for this here
     // We need to add a local state for the current story
     // to the Story screen

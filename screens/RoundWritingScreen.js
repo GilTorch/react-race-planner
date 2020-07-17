@@ -116,12 +116,12 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
           finalObj.isIntro = true;
         }
 
-        if (route.params.entity === 'outro') {
+        if (route.params.entity === 'ending') {
           finalObj.isOutro = true;
         }
 
         // Send data as is and finish round creation remotely
-        await createRound(finalObj, route.params.story?._id);
+        await createRound(finalObj, route.params.story?._id, route.params.round?._id);
 
         navigation.goBack();
       }

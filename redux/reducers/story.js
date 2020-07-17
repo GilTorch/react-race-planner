@@ -1,11 +1,15 @@
 import { Story } from '../actions/types';
 
 const INITIAL_STATE = {
+  createReportLoading: false,
   joinStoryLoading: false,
   createStoryLoading: false,
   leaveStoryLoading: false,
   deleteStoryLoading: false,
-  loadingReportComment: false,
+
+  getSelectedStoryLoading: false,
+  skipRoundLoading: false,
+  reportCommentLoading: false,
   createRoundLoading: false,
   createCommentLoading: false,
   roundVoteLoading: false,
@@ -49,18 +53,30 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, createRoundLoading: false };
     case Story.CREATE_ROUND_SUCCESS:
       return { ...state, createRoundLoading: false };
+    case Story.SKIP_ROUND_START:
+      return { ...state, skipRoundLoading: true };
+    case Story.SKIP_ROUND_FAILURE:
+      return { ...state, skipRoundLoading: false };
+    case Story.SKIP_ROUND_SUCCESS:
+      return { ...state, skipRoundLoading: false };
     case Story.REPORT_COMMENT_START:
-      return { ...state, loadingReportComment: true };
+      return { ...state, reportCommentLoading: true };
     case Story.REPORT_COMMENT_FAILURE:
-      return { ...state, loadingReportComment: false };
+      return { ...state, reportCommentLoading: false };
     case Story.REPORT_COMMENT_SUCCESS:
-      return { ...state, loadingReportComment: false };
+      return { ...state, reportCommentLoading: false };
     case Story.ROUND_VOTE_START:
       return { ...state, roundVoteLoading: true };
     case Story.ROUND_VOTE_FAILURE:
       return { ...state, roundVoteLoading: false };
     case Story.ROUND_VOTE_SUCCESS:
       return { ...state, roundVoteLoading: false };
+    case Story.GET_SELECTED_STORY_START:
+      return { ...state, getSelectedStoryLoading: true };
+    case Story.GET_SELECTED_STORY_FAILURE:
+      return { ...state, getSelectedStoryLoading: false };
+    case Story.GET_SELECTED_STORY_SUCCESS:
+      return { ...state, getSelectedStoryLoading: false };
     default:
       return state;
   }

@@ -9,7 +9,7 @@ import {
   Switch,
   Keyboard,
   Platform,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
@@ -27,7 +27,7 @@ import { updateUserAction, updateUserPreferenceAction } from '../redux/actions/U
 
 const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreference }) => {
   navigation.setOptions({
-    headerShown: false
+    headerShown: false,
   });
 
   useFocusEffect(
@@ -37,15 +37,15 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
       } else {
         StatusBar.setBarStyle('light-content');
       }
-    }, [])
+    }, []),
   );
   const { key, value } = route.params;
   const inputs = {};
 
-  const loading = useSelector(state => state.auth.loading);
-  const userUpdateLoading = useSelector(state => state.user.loading);
+  const loading = useSelector((state) => state.auth.loading);
+  const userUpdateLoading = useSelector((state) => state.user.loading);
 
-  const currentUser = useSelector(state => state.auth.currentUser);
+  const currentUser = useSelector((state) => state.auth.currentUser);
   const [userData, setUserData] = useState(value);
   const [privacy, setPrivacy] = useState(value.preferences);
   const [disableCheck, setDisableCheck] = useState(true);
@@ -58,10 +58,10 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
   const cityRef = useRef();
   const countryRef = useRef();
 
-  const focusNextField = name => inputs[name].focus();
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const focusNextField = (name) => inputs[name].focus();
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
-  const selectGender = gender => {
+  const selectGender = (gender) => {
     setDisableCheck(value.gender.toLowerCase() === gender);
 
     setUserData({ gender });
@@ -81,14 +81,14 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
     <View style={{ flex: 1, backgroundColor: '#eee' }}>
       <Surface
         style={{
-          elevation: 3
+          elevation: 3,
         }}>
         <LinearGradient colors={['#03a2a2', '#23c2c2']} locations={[0.5, 1]}>
           <SafeAreaView
             style={{
               alignItems: 'center',
               flexDirection: 'row',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
             }}>
             <IconButton
               testID="back-arrow"
@@ -108,7 +108,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
                     width: 36,
                     height: 36,
                     justifyContent: 'center',
-                    alignItems: 'center'
+                    alignItems: 'center',
                   }}>
                   <ActivityIndicator color="#fff" size={Platform.OS === 'android' ? 36 : 'small'} />
                 </View>
@@ -124,7 +124,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
                       if (key === 'privacy') {
                         await updateUserPreference({
                           data: { privacyStatus: privacy },
-                          id: currentUser?._id
+                          id: currentUser?._id,
                         });
                       } else {
                         await updateUser({ data: userData, id: currentUser?._id });
@@ -132,7 +132,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
 
                       Toast.show('Successfully updated', {
                         duration: Toast.durations.LONG,
-                        position: Toast.positions.BOTTOM
+                        position: Toast.positions.BOTTOM,
                       });
 
                       navigation.goBack();
@@ -143,7 +143,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
                       // success
                       Toast.show(e.message, {
                         duration: Toast.durations.LONG,
-                        position: Toast.positions.BOTTOM
+                        position: Toast.positions.BOTTOM,
                       });
                     }
                   }}
@@ -168,7 +168,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             underlineColor="#C8C7CC"
             value={userData.username}
             disabled={loading}
-            onChangeText={val => {
+            onChangeText={(val) => {
               setUserData({ username: val });
               setDisableCheck(value.username === val);
             }}
@@ -187,7 +187,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             underlineColor="#C8C7CC"
             value={userData.firstName}
             disabled={loading}
-            onChangeText={val => {
+            onChangeText={(val) => {
               setUserData({ firstName: val });
               setDisableCheck(value.firstName === val);
             }}
@@ -206,7 +206,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             underlineColor="#C8C7CC"
             value={userData.lastName}
             disabled={loading}
-            onChangeText={val => {
+            onChangeText={(val) => {
               setUserData({ lastName: val });
               setDisableCheck(value.lastName === val);
             }}
@@ -226,7 +226,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             keyboardType="email-address"
             value={userData.email}
             disabled={loading}
-            onChangeText={val => {
+            onChangeText={(val) => {
               // setEmail(val);
               setUserData({ email: val });
               setDisableCheck(value.email === val);
@@ -250,7 +250,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             returnKeyType="next"
             value={userData.phone1}
             disabled={loading}
-            onChangeText={val => {
+            onChangeText={(val) => {
               setUserData({ ...userData, phone1: val });
               setDisableCheck(value.phone1 === val);
             }}
@@ -263,12 +263,12 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             keyboardType="phone-pad"
             underlineColor="#C8C7CC"
             returnKeyType="done"
-            ref={input => {
+            ref={(input) => {
               inputs.phone2 = input;
             }}
             value={userData.phone2}
             disabled={loading}
-            onChangeText={val => {
+            onChangeText={(val) => {
               setUserData({ ...userData, phone2: val });
               setDisableCheck(value.phone2 === val);
             }}
@@ -290,7 +290,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             underlineColor="transparent"
             value={userData.addressLine1}
             disabled={loading}
-            onChangeText={val => {
+            onChangeText={(val) => {
               setUserData({ ...userData, addressLine1: val });
               setDisableCheck(value.addressLine1 === val);
             }}
@@ -305,7 +305,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             underlineColor="transparent"
             value={userData.addressLine2}
             disabled={loading}
-            onChangeText={val => {
+            onChangeText={(val) => {
               setUserData({ ...userData, addressLine2: val });
               setDisableCheck(value.addressLine2 === val);
             }}
@@ -321,7 +321,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             underlineColor="transparent"
             value={userData.city}
             disabled={loading}
-            onChangeText={val => {
+            onChangeText={(val) => {
               setUserData({ ...userData, city: val });
               setDisableCheck(value.city === val);
             }}
@@ -340,7 +340,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             underlineColor="#C8C7CC"
             value={userData.country}
             disabled={loading}
-            onChangeText={val => {
+            onChangeText={(val) => {
               setUserData({ ...userData, country: val });
               setDisableCheck(value.country === val);
             }}
@@ -365,7 +365,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
               borderColor: '#C8C7CC',
               paddingLeft: 20,
               borderTopWidth: 0.5,
-              borderBottomWidth: 0.5
+              borderBottomWidth: 0.5,
             }}>
             <TouchableOpacity onPress={() => selectGender('male')} style={styles.checkBox}>
               <Text style={{ fontSize: 18 }}>Male</Text>
@@ -413,7 +413,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             onSubmitEditing={() => focusNextField('password2')}
             blurOnSubmit={false}
             returnKeyType="next"
-            ref={input => {
+            ref={(input) => {
               inputs.password = input;
             }}
             style={styles.input}
@@ -430,7 +430,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
             secureTextEntry={secure}
             onSubmitEditing={() => ''}
             returnKeyType="done"
-            ref={input => {
+            ref={(input) => {
               inputs.password2 = input;
             }}
             style={styles.input}
@@ -442,7 +442,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
-              marginHorizontal: 20
+              marginHorizontal: 20,
             }}>
             <Text style={styles.inputTitle}>Show Passwords</Text>
             <Switch
@@ -468,7 +468,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
               borderColor: '#C8C7CC',
               paddingLeft: 20,
               borderTopWidth: 0.5,
-              borderBottomWidth: 0.5
+              borderBottomWidth: 0.5,
             }}>
             <TouchableOpacity
               onPress={() => {
@@ -511,7 +511,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
               marginTop: 10,
               marginBottom: 20,
               paddingHorizontal: 20,
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}>
             <Text style={{ color: '#898989' }}>
               This determines what people will see as your name (for rounds and comments) at the end
@@ -527,7 +527,7 @@ const EditSettingsScreen = ({ navigation, route, updateUser, updateUserPreferenc
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   checkBox: {
     height: 45,
@@ -535,16 +535,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginRight: 20
+    marginRight: 20,
   },
   labelInput: {
     marginBottom: 20,
     marginLeft: 20,
-    paddingTop: 30
+    paddingTop: 30,
   },
   inputTitle: {
     fontSize: 18,
-    color: '#898989'
+    color: '#898989',
   },
   input: {
     height: 45,
@@ -552,20 +552,20 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     backgroundColor: 'white',
     borderColor: '#C8C7CC',
-    borderTopWidth: 0.5
-  }
+    borderTopWidth: 0.5,
+  },
 });
 
 EditSettingsScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
   updateUser: PropTypes.func.isRequired,
   updateUserPreference: PropTypes.func.isRequired,
-  route: PropTypes.object.isRequired
+  route: PropTypes.object.isRequired,
 };
 
 const mapDispatchToProps = {
   updateUser: updateUserAction,
-  updateUserPreference: updateUserPreferenceAction
+  updateUserPreference: updateUserPreferenceAction,
 };
 
 export default connect(null, mapDispatchToProps)(EditSettingsScreen);

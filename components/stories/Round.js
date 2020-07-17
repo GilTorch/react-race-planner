@@ -4,14 +4,19 @@ import { StyleSheet, View } from 'react-native';
 import { Surface, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import Toast from 'react-native-root-toast';
+import { connect, useSelector } from 'react-redux';
 import HTMLView from 'react-native-htmlview';
 
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Text from '../CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
+import { skipRoundAction } from '../../redux/actions/StoryActions';
+import LeaveStoryModal from '../modals/LeaveStoryModal';
 
 const Round = ({
+  navigation,
   round,
   totalRound,
   roundIdx,
@@ -19,13 +24,36 @@ const Round = ({
   style,
   isMasterAuthorRound,
   isCompletedStory,
+  story,
+  skipRound,
 }) => {
   const roundStatus = round.status;
   const currentUser = useSelector((state) => state.auth.currentUser);
+  const loading = useSelector((state) => state.story.skipRoundLoading);
+
+  const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
+
   const inprogressRound = roundStatus === 'in_progress';
   const userTurn = round?.author?._id === currentUser?._id;
   const height = inprogressRound && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
   let authorName = isMasterAuthorRound ? 'the Master Author' : 'an Anonymous Author';
+  const wordsCount = round.content?.split(' ').length || 0;
+
+  const handleSkipRound = async () => {
+    try {
+      await skipRound(story._id, round._id);
+
+      Toast.show('You have the next turn now', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+      });
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+      });
+    }
+  };
 
   if (isCompletedStory) {
     if (round.privacyStatus === 'username') {
@@ -39,7 +67,8 @@ const Round = ({
     // <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
     //   {round.content || ''}
     // </Text>
-    <HTMLView value={round.content} />
+
+    <HTMLView value={round.content || 'no content yet. <u>Press to add text</u>'} />
   );
 
   const inprogress = (
@@ -55,33 +84,43 @@ const Round = ({
 
   const userRound = (
     <>
-      {roundBody}
+      <TouchableOpacity
+        onPress={() => navigation.navigate('RoundWriting', { story, entity: 'round', round })}>
+        {roundBody}
+      </TouchableOpacity>
       <View style={{ marginTop: 'auto' }}>
-        <Text style={styles.subTitle}>24/50 words</Text>
+        <Text style={styles.subTitle}>
+          {wordsCount}/{story.settings.roundMaxWords} words
+        </Text>
         <View
           style={{
             flexDirection: 'row',
             marginTop: 10,
           }}>
-          <Surface style={{ ...styles.surface, marginRight: 20 }}>
-            <Button
-              mode="contained"
-              uppercase={false}
-              onPress={() => ''}
-              style={{ backgroundColor: '#ED8A18', width: SCREEN_WIDTH * 0.25 }}
-              labelStyle={styles.boxBtnLabel}>
-              Skip Turn
-            </Button>
-          </Surface>
+          {round.skipCount !== 1 && (
+            <Surface style={{ ...styles.surface, marginRight: 20 }}>
+              <Button
+                mode="contained"
+                loading={loading}
+                disabled={loading}
+                uppercase={false}
+                onPress={handleSkipRound}
+                style={{ backgroundColor: '#ED8A18', width: SCREEN_WIDTH * 0.25 }}
+                labelStyle={styles.boxBtnLabel}>
+                Skip Turn
+              </Button>
+            </Surface>
+          )}
 
           <Surface style={styles.surface}>
             <Button
               mode="contained"
+              disabled={loading}
               uppercase={false}
-              onPress={() => ''}
+              onPress={() => setIsLeaveStoryModalVisible(true)}
               style={{ backgroundColor: '#f44336' }}
               labelStyle={styles.boxBtnLabel}>
-              Leave Story
+              {isMasterAuthorRound ? 'Delete Story' : 'Leave Story'}
             </Button>
           </Surface>
         </View>
@@ -100,6 +139,13 @@ const Round = ({
 
   const cardRound = (
     <View style={{ marginBottom: 20 }}>
+      <LeaveStoryModal
+        isMasterAuthor={isMasterAuthorRound}
+        dismiss={() => setIsLeaveStoryModalVisible(false)}
+        visible={isLeaveStoryModalVisible}
+        storyId={story._id}
+        navigation={navigation}
+      />
       <Text type="medium" style={styles.title}>
         Round {roundIdx}/{totalRound} {userTurn && '(Your Turn)'}
       </Text>
@@ -136,22 +182,6 @@ const Round = ({
   return listMode ? listRound : cardRound;
 };
 
-Round.propTypes = {
-  round: PropTypes.object.isRequired,
-  totalRound: PropTypes.number,
-  listMode: PropTypes.bool.isRequired,
-  style: PropTypes.object,
-  isMasterAuthorRound: PropTypes.bool,
-  isCompletedStory: PropTypes.bool,
-};
-
-Round.defaultProps = {
-  style: {},
-  totalRound: 11,
-  isMasterAuthorRound: false,
-  isCompletedStory: false,
-};
-
 const styles = StyleSheet.create({
   title: {
     color: '#5A7582',
@@ -161,6 +191,7 @@ const styles = StyleSheet.create({
   },
   round: {
     marginHorizontal: 40,
+    minWidth: '70%',
     backgroundColor: '#fff',
     elevation: 2,
     alignSelf: 'center',
@@ -206,4 +237,27 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Round;
+Round.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  round: PropTypes.object.isRequired,
+  totalRound: PropTypes.number,
+  listMode: PropTypes.bool.isRequired,
+  style: PropTypes.object,
+  isMasterAuthorRound: PropTypes.bool,
+  isCompletedStory: PropTypes.bool,
+  story: PropTypes.object.isRequired,
+  skipRound: PropTypes.func,
+};
+
+Round.defaultProps = {
+  style: {},
+  totalRound: 11,
+  isMasterAuthorRound: false,
+  isCompletedStory: false,
+};
+
+const mapDispatchToProps = {
+  skipRound: skipRoundAction,
+};
+
+export default connect(null, mapDispatchToProps)(Round);
