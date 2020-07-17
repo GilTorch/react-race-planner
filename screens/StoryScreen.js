@@ -513,7 +513,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
               // We use 'ending' instead of 'outro'
               // because we're gonna be using that on the UI
               onPropose={handleRoundWriting('ending')}
-              userCanPropose={userIsAParticipant && tooLateForOutro}
+              userCanPropose={userIsAParticipant && !tooLateForOutro}
               type="Ending"
               proposedBlocks={selectedStory?.parts?.filter((p) => p.isOutro)}
               story={selectedStory}
