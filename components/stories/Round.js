@@ -85,7 +85,7 @@ const Round = ({
   const userRound = (
     <>
       <TouchableOpacity
-        onPress={() => navigation.navigate('RoundWriting', { story, entity: 'round' })}>
+        onPress={() => navigation.navigate('RoundWriting', { story, entity: 'round', round })}>
         {roundBody}
       </TouchableOpacity>
       <View style={{ marginTop: 'auto' }}>
