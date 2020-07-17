@@ -45,11 +45,18 @@ export const createStoryAction = (data) => (dispatch) => {
     });
 };
 
-export const createRoundAction = (data, storyId) => (dispatch) => {
+export const createRoundAction = (data, storyId, roundId) => (dispatch) => {
   dispatch({ type: Story.CREATE_ROUND_START });
+  let urlString = `/documents/${storyId}/document-parts`;
 
-  return axios
-    .post(`/documents/${storyId}/document-parts`, data)
+  if (roundId) {
+    urlString = `/documents/${storyId}/document-parts/${roundId}`;
+  }
+
+  // When `roundId` exists, it means it's a round submission, not an intro nor outro
+  // So we do a `put` instead of a `post`. Because we're updating the data
+  // not creating a new one
+  return axios[roundId ? 'put' : 'post'](urlString, data)
     .then((response) => {
       dispatch({ type: Story.CREATE_ROUND_SUCCESS, story: response.data.story });
     })
