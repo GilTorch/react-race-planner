@@ -20,7 +20,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, rep
   const { errors, handleSubmit, register, watch, setValue } = useForm({
     validationSchema: reportSchema,
     defaultValues: {
-      reporter: user._id,
+      reporter: user?._id,
       status: 'pending',
       documentId: parent._id,
     },
