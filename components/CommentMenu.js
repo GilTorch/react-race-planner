@@ -20,7 +20,7 @@ const CommentMenu = ({ comment, deleteComment }) => {
   const [showReport, setShowReport] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
-  const ownComment = user.email === comment.author.email;
+  const ownComment = user?.email === comment.author.email;
 
   const showReportModal = () => {
     setshowMenu(false);
