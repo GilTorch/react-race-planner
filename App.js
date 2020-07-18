@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View, Image, Platform, Button } from 'react-native';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
+
 import * as Font from 'expo-font';
 import {
   Ionicons,
@@ -15,10 +18,11 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import { AppLoading } from 'expo';
+import { AppLoading, Notifications } from 'expo';
 import { Asset } from 'expo-asset';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import axios from './services/axiosService';
 
 import useLinking from './navigation/useLinking';
 import SpaceMono from './assets/fonts/SpaceMono-Regular.ttf';
@@ -106,14 +110,75 @@ export default function App(props) {
   const containerRef = useRef();
   const [initialNavigationState, setInitialNavigationState] = useState();
   const { getInitialState } = useLinking(containerRef);
+  // Push Notifcations
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
 
+  const savePushToken = (token) => {
+    axios.post('/save-push-token', { token }).catch((error) => {
+      console.log("failed to save the user's token", error);
+    });
+  };
+
+  // useEffect(() => {
+  //   // fetching the user frrom the store directly and check whether they are
+  //   // authenticated or not
+  //   const user = store.getState().auth.currentUser;
+  //   const isAuthenticated = user && user.isActive && !user.isPasswordReset;
+
+  //   if (isAuthenticated && expoPushToken) {
+  //     savePushToken(expoPushToken);
+  //   }
+  // }, [expoPushToken]);
+
+  const registerForPushNotificationsAsync = async () => {
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      const token = await Notifications.getExpoPushTokenAsync();
+
+      setExpoPushToken(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('default', {
+        name: 'default',
+        sound: true,
+        priority: 'max',
+        vibrate: [0, 250, 250, 250],
+      });
+    }
+  };
   useEffect(() => {
     async function setupInitialState() {
       setInitialNavigationState(await getInitialState());
     }
 
     setupInitialState();
+
+    // Push Notifications
+    // registerForPushNotificationsAsync();
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    const notificationListener = Notifications.addListener(handleNotification);
+
+    return () => {
+      notificationListener.remove();
+    };
   }, []);
+
+  const handleNotification = (notif) => {
+    setNotification(notif);
+  };
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return <AppLoading startAsync={loadAssetsAsync} onFinish={() => setLoadingComplete(true)} />;
@@ -128,7 +193,7 @@ export default function App(props) {
               ref={containerRef}
               initialState={initialNavigationState}
               initialRouteName="SignupScreen">
-              <AppNavigation store={store} />
+              <AppNavigation />
             </NavigationContainer>
           </View>
         </PaperProvider>

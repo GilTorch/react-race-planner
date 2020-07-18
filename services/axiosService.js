@@ -11,7 +11,7 @@ const platformBaseURL = Platform.OS === 'android' ? ANDROID_BASE_URL : IOS_BASE_
 
 // When it's a device, iOS and Android use the same base url
 const axiosOptions = {
-  baseURL: Constants.isDevice ? ANDROID_BASE_URL : platformBaseURL
+  baseURL: Constants.isDevice ? ANDROID_BASE_URL : platformBaseURL,
 };
 
 const axiosService = axios.create(axiosOptions);
@@ -19,7 +19,7 @@ const axiosService = axios.create(axiosOptions);
 // Add a request interceptor to automatically add the latest saved token
 // to the headers
 axiosService.interceptors.request.use(
-  config => {
+  (config) => {
     const { token } = store.getState().auth;
     const mutableConfig = { ...config };
 
@@ -31,13 +31,13 @@ axiosService.interceptors.request.use(
 
     return mutableConfig;
   },
-  err => Promise.reject(err)
+  (err) => Promise.reject(err),
 );
 
 // Add a response interceptor to automatically save the token we got from the server
 // to the state
 axiosService.interceptors.response.use(
-  async response => {
+  async (response) => {
     if (response.data?.token) {
       // 1. decode the token
       const decodedUser = jwt.decode(response.data.token, JWT_SECRET);
@@ -47,12 +47,12 @@ axiosService.interceptors.response.use(
       // 2. save the user and the token to the state
       store.dispatch({
         type: Auth.ADD_SESSION,
-        data: { user: decodedUser, token: response.data.token }
+        data: { user: decodedUser, token: response.data.token },
       });
     }
     return response;
   },
-  error => {
+  (error) => {
     if (error.response?.data?.token) {
       // 1. decode the token
       const decodedUser = jwt.decode(error.response.data.token, JWT_SECRET);
@@ -64,12 +64,12 @@ axiosService.interceptors.response.use(
         type: Auth.ADD_SESSION,
         data: {
           user: decodedUser,
-          token: error.response.data.token
-        }
+          token: error.response.data.token,
+        },
       });
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosService;
