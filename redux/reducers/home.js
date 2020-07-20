@@ -38,11 +38,6 @@ const homeReducer = (state = initialState, action) => {
   switch (action.type) {
     case Home.SET_ACTIVE_STORIES_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
-    case Story.CREATE_STORY_SUCCESS:
-      return {
-        ...state,
-        stories: state.stories ? [action.story, ...state.stories] : [action.story],
-      };
     // When it's a new comment, we're not sure where exactly the story is
     // so we attempt to update it everywhere. We don't add it as a new one,
     // that's why we don't use `mergeResponse`
