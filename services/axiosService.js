@@ -10,8 +10,10 @@ import store from '../redux/store';
 const platformBaseURL = Platform.OS === 'android' ? ANDROID_BASE_URL : IOS_BASE_URL;
 
 // When it's a device, iOS and Android use the same base url
+// alert('http://192.168.0.103:3000/api/v1');
+
 const axiosOptions = {
-  baseURL: Constants.isDevice ? ANDROID_BASE_URL : platformBaseURL,
+  baseURL: 'http://192.168.0.103:3000/api/v1',
 };
 
 const axiosService = axios.create(axiosOptions);

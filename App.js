@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Image, Platform, Button } from 'react-native';
+import { StyleSheet, View, Image, Platform } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 
@@ -110,26 +110,26 @@ export default function App(props) {
   const containerRef = useRef();
   const [initialNavigationState, setInitialNavigationState] = useState();
   const { getInitialState } = useLinking(containerRef);
-  // Push Notifcations
+  // Push Notifications
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
 
   const savePushToken = (token) => {
-    axios.post('/save-push-token', { token }).catch((error) => {
+    axios.post('/users/save-push-token', { token }).catch((error) => {
       console.log("failed to save the user's token", error);
     });
   };
 
-  // useEffect(() => {
-  //   // fetching the user frrom the store directly and check whether they are
-  //   // authenticated or not
-  //   const user = store.getState().auth.currentUser;
-  //   const isAuthenticated = user && user.isActive && !user.isPasswordReset;
+  useEffect(() => {
+    // fetching the user frrom the store directly and check whether they are
+    // authenticated or not
+    const user = store.getState().auth.currentUser;
+    const isAuthenticated = user && user.isActive && !user.isPasswordReset;
 
-  //   if (isAuthenticated && expoPushToken) {
-  //     savePushToken(expoPushToken);
-  //   }
-  // }, [expoPushToken]);
+    if (isAuthenticated && expoPushToken) {
+      savePushToken(expoPushToken);
+    }
+  }, [expoPushToken]);
 
   const registerForPushNotificationsAsync = async () => {
     if (Constants.isDevice) {
@@ -167,13 +167,13 @@ export default function App(props) {
     setupInitialState();
 
     // Push Notifications
-    // registerForPushNotificationsAsync();
+    registerForPushNotificationsAsync();
     // This listener is fired whenever a notification is received while the app is foregrounded
-    const notificationListener = Notifications.addListener(handleNotification);
+    // const notificationListener = Notifications.addListener(handleNotification);
 
-    return () => {
-      notificationListener.remove();
-    };
+    // return () => {
+    //   notificationListener.remove();
+    // };
   }, []);
 
   const handleNotification = (notif) => {
