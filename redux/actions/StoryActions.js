@@ -36,7 +36,7 @@ export const createStoryAction = (data) => (dispatch) => {
     .post('/documents', data)
     .then((response) => {
       dispatch({ type: Story.CREATE_STORY_SUCCESS, story: response.data.story });
-      return response.data;
+      return response.data.story;
     })
     .catch((error) => {
       dispatch({ type: Story.CREATE_STORY_FAILURE });

@@ -97,15 +97,17 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
   const submitRound = async () => {
     try {
       if (route.params.isNewStory) {
-        const { story } = await createStory({
+        const story = await createStory({
           ...route.params.story,
           intro: value,
         });
 
-        // navigation.navigate('StoryScreen', { story });
         navigation.reset({
-          index: 0,
-          routes: [{ name: 'HomeScreen' }, { name: 'StoryScreen', params: { story } }],
+          index: 1,
+          routes: [
+            { name: 'HomeScreen' },
+            { name: 'StoryScreen', params: { story, reducerName: 'writing' } },
+          ],
         });
       } else {
         const finalObj = {
