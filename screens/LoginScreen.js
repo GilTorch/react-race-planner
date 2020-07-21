@@ -18,22 +18,22 @@ import { loginAction } from '../redux/actions/AuthActions';
 import PageSpinner from '../components/PageSpinner';
 
 const LoginScreen = ({ navigation, login }) => {
-  const authState = useSelector(state => state.auth);
+  const authState = useSelector((state) => state.auth);
   const { errors, handleSubmit, register, watch, setValue } = useForm({
     validationSchema: loginSchema,
-    validateCriteriaMode: 'all'
+    validateCriteriaMode: 'all',
   });
   const inputs = {};
-  const focusNextField = name => inputs[name].focus();
+  const focusNextField = (name) => inputs[name].focus();
 
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(true);
 
       navigation.setOptions({
-        headerShown: false
+        headerShown: false,
       });
-    }, [])
+    }, []),
   );
 
   React.useEffect(() => {
@@ -41,7 +41,7 @@ const LoginScreen = ({ navigation, login }) => {
     register('password');
   }, [register]);
 
-  const submit = async data => {
+  const submit = async (data) => {
     try {
       await login(data);
     } catch (e) {
@@ -53,7 +53,7 @@ const LoginScreen = ({ navigation, login }) => {
 
       Toast.show(toastMessage, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
+        position: Toast.positions.BOTTOM,
       });
 
       if (authState.currentUser?.isActive === false) {
@@ -101,12 +101,12 @@ const LoginScreen = ({ navigation, login }) => {
             </View>
             <View style={styles.inputContainer}>
               <TextInput
-                ref={input => {
+                ref={(input) => {
                   inputs.usernameOrEmail = input;
                 }}
                 autoCapitalize="none"
                 testID="login-user-name"
-                onChangeText={text => setValue('usernameOrEmail', text)}
+                onChangeText={(text) => setValue('usernameOrEmail', text)}
                 value={watch('usernameOrEmail')}
                 onSubmitEditing={() => focusNextField('password')}
                 blurOnSubmit={false}
@@ -128,11 +128,11 @@ const LoginScreen = ({ navigation, login }) => {
             </View>
             <View style={styles.inputContainer}>
               <TextInput
-                ref={input => {
+                ref={(input) => {
                   inputs.password = input;
                 }}
                 testID="login-password"
-                onChangeText={text => setValue('password', text)}
+                onChangeText={(text) => setValue('password', text)}
                 value={watch('password')}
                 onSubmitEditing={handleSubmit(submit)}
                 blurOnSubmit={false}
@@ -224,48 +224,48 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 70,
-    marginBottom: 70
+    marginBottom: 70,
   },
   logoContainer: {
     backgroundColor: 'red',
     width: '70%',
     height: 149,
     marginTop: 50,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   logo: {
     width: '70%',
     height: 149,
-    resizeMode: 'stretch'
+    resizeMode: 'stretch',
   },
   headlineContainer: {},
   headline: {
     color: '#38434A',
-    fontSize: 24
+    fontSize: 24,
   },
   inputContainer: {
     borderRadius: 4.87,
     borderColor: '#DFE3E9',
     backgroundColor: '#F8FAFC',
-    borderWidth: 1
+    borderWidth: 1,
   },
   labelContainer: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   label: {
     color: '#7F8FA4',
-    fontSize: 11
+    fontSize: 11,
   },
   input: {
     paddingLeft: 8,
     flex: 1,
-    height: 35.43
+    height: 35.43,
   },
   form: {
-    width: '75%'
+    width: '75%',
   },
   formGroup: {
-    marginTop: 10
+    marginTop: 10,
   },
   submitButton: {
     // marginTop: 30,
@@ -273,45 +273,45 @@ const styles = StyleSheet.create({
     backgroundColor: '#23C2C2',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 35.43
+    height: 35.43,
   },
   submitButtonText: {
-    color: 'white'
+    color: 'white',
   },
   loginWithSocialMediaTextContainer: {
     marginTop: 20,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   socialMediaButtonsContainer: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20
+    marginTop: 20,
   },
   socialMediaButton: {
     width: 40,
     height: 40,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   goToLoginPageButton: {},
   goToLoginPageButtonText: {
-    color: '#23C2C2'
+    color: '#23C2C2',
   },
   errorInput: {
     borderColor: 'red',
-    borderBottomWidth: 1
-  }
+    borderBottomWidth: 1,
+  },
 });
 
 LoginScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  login: PropTypes.func.isRequired
+  login: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
-  login: loginAction
+  login: loginAction,
 };
 
 export default connect(null, mapDispatchToProps)(LoginScreen);
