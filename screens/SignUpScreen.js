@@ -8,45 +8,46 @@ import {
   StatusBar,
   Platform,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-// import { Entypo } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useFocusEffect } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
-// import * as Google from 'expo-google-app-auth';
-// import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from 'react-native-dotenv';
+import * as Google from 'expo-google-app-auth';
+import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from 'react-native-dotenv';
 
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
-// import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
-// import * as Facebook from '../services/facebook';
+import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import * as Facebook from '../services/facebook';
+import * as Twitter from '../services/twitter';
 import { signupAction } from '../redux/actions/AuthActions';
 import { signupSchema } from '../utils/validators';
 import PageSpinner from '../components/PageSpinner';
-// import * as Twitter from '../services/twitter';
 
-// const defaultValues = {
-//   username: '',
-//   firstName: '',
-//   lastName: '',
-//   email: '',
-//   password: '',
-//   password2: '',
-//   socialAccount: '',
-//   googleAccountId: '',
-//   twitterAccountId: '',
-//   facebookAccountId: '',
-//   socialPlatformName: ''
-// };
+const defaultValues = {
+  username: '',
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  password2: '',
+  socialAccount: false,
+  googleAccountId: '',
+  twitterAccountId: '',
+  facebookAccountId: '',
+  socialPlatformName: '',
+};
 
 const SignupScreen = ({ navigation, signup }) => {
   const authState = useSelector((state) => state.auth);
-  // const [socialSignUp, setSocialSignup] = React.useState(false);
-  // const { register, handleSubmit, errors, setValue, watch, reset } = useForm({
-  const { register, handleSubmit, errors, setValue, watch } = useForm({
+  const [socialSignUp, setSocialSignup] = React.useState(false);
+  const { register, handleSubmit, errors, setValue, watch, reset } = useForm({
+    // const { register, handleSubmit, errors, setValue, watch } = useForm({
     validationSchema: signupSchema,
     validateCriteriaMode: 'all',
   });
@@ -106,75 +107,81 @@ const SignupScreen = ({ navigation, signup }) => {
     }
   };
 
-  // async function googleLogin() {
-  //   setSocialSignup(true);
+  async function googleLogin() {
+    setSocialSignup(true);
 
-  //   try {
-  //     const result = await Google.logInAsync({
-  //       androidClientId: GOOGLE_ANDROID_CLIENT_ID,
-  //       iosClientId: GOOGLE_IOS_CLIENT_ID,
-  //       scopes: ['profile', 'email']
-  //     });
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+        iosClientId: GOOGLE_IOS_CLIENT_ID,
+        scopes: ['profile', 'email'],
+      });
 
-  //     if (result.type === 'success') {
-  //       setValue([
-  //         { username: `${result.user.givenName}_${result.user.familyName}`.toLowerCase() },
-  //         { firstName: result.user.givenName },
-  //         { lastName: result.user.familyName },
-  //         { email: result.user.email },
-  //         { socialAccount: true },
-  //         { googleAccountId: result.user.id },
-  //         { socialPlatformName: 'Google' }
-  //       ]);
-  //     }
+      if (result.type === 'success') {
+        setValue(
+          [
+            { username: `${result.user.givenName}_${result.user.familyName}`.toLowerCase() },
+            { firstName: result.user.givenName },
+            { lastName: result.user.familyName },
+            { email: result.user.email },
+            { socialAccount: true },
+            { googleAccountId: result.user.id },
+            { socialPlatformName: 'Google' },
+          ],
+          true,
+        );
+      }
 
-  //     setSocialSignup(false);
-  //   } catch (e) {
-  //     setSocialSignup(false);
-  //   }
-  // }
+      setSocialSignup(false);
+    } catch (e) {
+      setSocialSignup(false);
+    }
+  }
 
-  // const twitterLogin = async () => {
-  //   setSocialSignup(true);
+  const twitterLogin = async () => {
+    setSocialSignup(true);
 
-  //   const { twitterAccountId, username, lastName, firstName, email } = await Twitter.authSession(
-  //     false
-  //   );
+    const { twitterAccountId, username, lastName, firstName, email } = await Twitter.authSession(
+      false,
+    );
 
-  //   if (twitterAccountId) {
-  //     setValue([
-  //       { twitterAccountId },
-  //       { username },
-  //       { lastName },
-  //       { firstName },
-  //       { email },
-  //       { socialAccount: true },
-  //       { socialPlatformName: 'Twitter' }
-  //     ]);
-  //   }
+    if (twitterAccountId) {
+      setValue(
+        [
+          { twitterAccountId },
+          { username },
+          { lastName },
+          { firstName },
+          { email },
+          { socialAccount: true },
+          { socialPlatformName: 'Twitter' },
+        ],
+        true,
+      );
+    }
 
-  //   setSocialSignup(false);
-  // };
+    setSocialSignup(false);
+  };
 
-  // const fbSignup = async () => {
-  //   const { id, email, first_name, last_name } = await Facebook.logIn();
-  //   if (id) {
-  //     setValue('facebookAccountId', id);
-  //     setValueIfFieldExists('email', email);
-  //     setValueIfFieldExists('firstName', first_name);
-  //     setValueIfFieldExists('lastName', last_name);
-  //     setIsSigningUpFacebook(true);
-  //   } else {
-  //     Alert.alert(
-  //       'There was an error while trying to access your Facebook account. Try again later.'
-  //     );
-  //   }
-  // };
-
-  // Toast.show(requestError.message, {
-  //   duration: Toast.durations.SHORT,
-  //   position: Toast.positions.BOTTOM
-  // });
+  const fbSignup = async () => {
+    const { id, email, first_name, last_name } = await Facebook.logIn();
+    if (id) {
+      setValue(
+        [
+          { username: `${first_name}_${last_name}`.toLowerCase() },
+          { firstName: first_name },
+          { lastName: last_name },
+          { email },
+          { socialAccount: true },
+          { facebookAccountId: id },
+          { socialPlatformName: 'Facebook' },
+        ],
+        true,
+      );
+    } else {
+      Alert.alert('There was an error while trying to access your Facebook account.');
+    }
+  };
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' && 'padding'}>
@@ -368,10 +375,10 @@ const SignupScreen = ({ navigation, signup }) => {
               )}
             </TouchableOpacity>
 
-            {/* <View
+            <View
               style={[
                 styles.loginWithSocialMediaTextContainer,
-                { marginTop: socialAccount ? 15 : 20 }
+                { marginTop: socialAccount ? 15 : 20 },
               ]}>
               {socialAccount && (
                 <TouchableOpacity
@@ -399,7 +406,7 @@ const SignupScreen = ({ navigation, signup }) => {
             <View
               style={[
                 styles.socialMediaButtonsContainer,
-                { justifyContent: socialAccount ? 'space-around' : 'space-between' }
+                { justifyContent: socialAccount ? 'space-around' : 'space-between' },
               ]}>
               {socialPlatformName !== 'Twitter' && (
                 <TouchableOpacity
@@ -407,29 +414,32 @@ const SignupScreen = ({ navigation, signup }) => {
                   testID="twitter-icon-button"
                   style={{
                     backgroundColor: '#3ABDFF',
-                    ...styles.socialMediaButton
+                    ...styles.socialMediaButton,
                   }}>
                   <Entypo name="twitter-with-circle" size={24} color="#fff" />
                 </TouchableOpacity>
               )}
-              <TouchableOpacity
-                testID="facebook-icon-button"
-                style={{
-                  backgroundColor: '#1382D5',
-                  ...styles.socialMediaButton
-                }}>
-                <Entypo name="facebook-with-circle" size={24} color="#fff" />
-              </TouchableOpacity>
+              {socialPlatformName !== 'Facebook' && (
+                <TouchableOpacity
+                  onPress={fbSignup}
+                  testID="facebook-icon-button"
+                  style={{
+                    backgroundColor: '#1382D5',
+                    ...styles.socialMediaButton,
+                  }}>
+                  <Entypo name="facebook-with-circle" size={24} color="#fff" />
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
                 onPress={googleLogin}
                 testID="google-icon-btn"
                 style={{
                   backgroundColor: '#e6e6e6',
-                  ...styles.socialMediaButton
+                  ...styles.socialMediaButton,
                 }}>
                 <GoogleColorfulIcon />
               </TouchableOpacity>
-            </View> */}
+            </View>
             <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
               <Text style={{ color: '#7F8FA4' }}>Already a member? </Text>
               <TouchableOpacity
@@ -443,8 +453,8 @@ const SignupScreen = ({ navigation, signup }) => {
           </View>
         </View>
       </ScrollView>
-      {/* <PageSpinner visible={authState.loading || socialSignUp} /> */}
-      <PageSpinner visible={authState.loading} />
+      <PageSpinner visible={authState.loading || socialSignUp} />
+      {/* <PageSpinner visible={authState.loading} /> */}
     </KeyboardAvoidingView>
   );
 };
