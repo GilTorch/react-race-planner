@@ -169,11 +169,11 @@ export default function App(props) {
     // Push Notifications
     registerForPushNotificationsAsync();
     // This listener is fired whenever a notification is received while the app is foregrounded
-    // const notificationListener = Notifications.addListener(handleNotification);
+    const notificationListener = Notifications.addListener(handleNotification);
 
-    // return () => {
-    //   notificationListener.remove();
-    // };
+    return () => {
+      notificationListener.remove();
+    };
   }, []);
 
   const handleNotification = (notif) => {
