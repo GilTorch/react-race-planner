@@ -7,7 +7,7 @@ import {
   StyleSheet,
   StatusBar,
   Platform,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -43,26 +43,26 @@ import PageSpinner from '../components/PageSpinner';
 // };
 
 const SignupScreen = ({ navigation, signup }) => {
-  const authState = useSelector(state => state.auth);
+  const authState = useSelector((state) => state.auth);
   // const [socialSignUp, setSocialSignup] = React.useState(false);
   // const { register, handleSubmit, errors, setValue, watch, reset } = useForm({
   const { register, handleSubmit, errors, setValue, watch } = useForm({
     validationSchema: signupSchema,
-    validateCriteriaMode: 'all'
+    validateCriteriaMode: 'all',
   });
   const socialAccount = watch('socialAccount', false);
   const socialPlatformName = watch('socialPlatformName', false);
   const inputs = {};
-  const focusNextField = name => inputs[name].focus();
+  const focusNextField = (name) => inputs[name].focus();
 
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(true);
 
       navigation.setOptions({
-        headerShown: false
+        headerShown: false,
       });
-    }, [])
+    }, []),
   );
 
   // Since this is the first screen in the auth stack, we check if there's
@@ -91,7 +91,7 @@ const SignupScreen = ({ navigation, signup }) => {
     register('socialPlatformName');
   }, [register]);
 
-  const submit = async data => {
+  const submit = async (data) => {
     try {
       await signup(data);
 
@@ -101,7 +101,7 @@ const SignupScreen = ({ navigation, signup }) => {
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
+        position: Toast.positions.BOTTOM,
       });
     }
   };
@@ -197,7 +197,7 @@ const SignupScreen = ({ navigation, signup }) => {
                 <TextInput
                   autoCapitalize="none"
                   testID="user-name"
-                  onChangeText={text => setValue('username', text)}
+                  onChangeText={(text) => setValue('username', text)}
                   value={watch('username')}
                   onSubmitEditing={() => focusNextField('firstName')}
                   blurOnSubmit={false}
@@ -220,11 +220,11 @@ const SignupScreen = ({ navigation, signup }) => {
               <View style={styles.inputContainer}>
                 <TextInput
                   testID="first-name"
-                  onChangeText={text => setValue('firstName', text)}
+                  onChangeText={(text) => setValue('firstName', text)}
                   value={watch('firstName')}
                   onSubmitEditing={() => focusNextField('lastName')}
                   blurOnSubmit={false}
-                  ref={input => {
+                  ref={(input) => {
                     inputs.firstName = input;
                   }}
                   returnKeyType="next"
@@ -247,11 +247,11 @@ const SignupScreen = ({ navigation, signup }) => {
               <View style={styles.inputContainer}>
                 <TextInput
                   testID="last-name"
-                  onChangeText={text => setValue('lastName', text)}
+                  onChangeText={(text) => setValue('lastName', text)}
                   value={watch('lastName')}
                   onSubmitEditing={() => focusNextField('email')}
                   blurOnSubmit={false}
-                  ref={input => {
+                  ref={(input) => {
                     inputs.lastName = input;
                   }}
                   returnKeyType="next"
@@ -274,13 +274,13 @@ const SignupScreen = ({ navigation, signup }) => {
                 <TextInput
                   testID="email-address"
                   autoCapitalize="none"
-                  onChangeText={text => setValue('email', text)}
+                  onChangeText={(text) => setValue('email', text)}
                   value={watch('email')}
                   onSubmitEditing={
                     socialAccount ? handleSubmit(submit) : () => focusNextField('password')
                   }
                   blurOnSubmit={false}
-                  ref={input => {
+                  ref={(input) => {
                     inputs.email = input;
                   }}
                   keyboardType="email-address"
@@ -305,11 +305,11 @@ const SignupScreen = ({ navigation, signup }) => {
                   <View style={styles.inputContainer}>
                     <TextInput
                       testID="password"
-                      onChangeText={text => setValue('password', text)}
+                      onChangeText={(text) => setValue('password', text)}
                       value={watch('password')}
                       onSubmitEditing={() => focusNextField('password2')}
                       blurOnSubmit={false}
-                      ref={input => {
+                      ref={(input) => {
                         inputs.password = input;
                       }}
                       secureTextEntry
@@ -332,11 +332,11 @@ const SignupScreen = ({ navigation, signup }) => {
                   <View style={styles.inputContainer}>
                     <TextInput
                       testID="password-confirmation"
-                      onChangeText={text => setValue('password2', text)}
+                      onChangeText={(text) => setValue('password2', text)}
                       value={watch('password2')}
                       onSubmitEditing={handleSubmit(submit)}
                       blurOnSubmit={false}
-                      ref={input => {
+                      ref={(input) => {
                         inputs.password2 = input;
                       }}
                       secureTextEntry
@@ -454,7 +454,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   container: {
     backgroundColor: 'white',
@@ -462,51 +462,51 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 70,
-    marginBottom: 70
+    marginBottom: 70,
   },
   logoContainer: {
     width: '70%',
     height: 149,
     marginTop: 50,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   logo: {
     width: '70%',
     height: 149,
-    resizeMode: 'stretch'
+    resizeMode: 'stretch',
   },
   headlineContainer: {},
   headline: {
     color: '#38434A',
-    fontSize: 24
+    fontSize: 24,
   },
   inputContainer: {
     backgroundColor: '#F8FAFC',
     borderRadius: 4.87,
     borderColor: '#DFE3E9',
-    borderWidth: 1
+    borderWidth: 1,
   },
   labelContainer: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   label: {
     color: '#7F8FA4',
-    fontSize: 11
+    fontSize: 11,
   },
   input: {
     paddingLeft: 8,
     flex: 1,
-    height: 35.43
+    height: 35.43,
   },
   errorInput: {
     borderColor: 'red',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   form: {
-    width: '75%'
+    width: '75%',
   },
   formGroup: {
-    marginTop: 10
+    marginTop: 10,
   },
   submitButton: {
     marginTop: 30,
@@ -514,39 +514,39 @@ const styles = StyleSheet.create({
     backgroundColor: '#23C2C2',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 35.43
+    height: 35.43,
   },
   submitButtonText: {
-    color: 'white'
+    color: 'white',
   },
   loginWithSocialMediaTextContainer: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   socialMediaButtonsContainer: {
     width: '100%',
     flexDirection: 'row',
-    marginTop: 20
+    marginTop: 20,
   },
   socialMediaButton: {
     width: 40,
     height: 40,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   goToLoginPageButton: {},
   goToLoginPageButtonText: {
-    color: '#23C2C2'
-  }
+    color: '#23C2C2',
+  },
 });
 
 SignupScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  signup: PropTypes.func.isRequired
+  signup: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
-  signup: signupAction
+  signup: signupAction,
 };
 
 export default connect(null, mapDispatchToProps)(SignupScreen);
