@@ -22,6 +22,8 @@ import PageSpinner from '../components/PageSpinner';
 const LoginScreen = ({ navigation, login }) => {
   const authState = useSelector((state) => state.auth);
 
+  const [isSocialLogin, setIsSocialLogin] = React.useState(false);
+
   const { errors, handleSubmit, register, watch, setValue } = useForm({
     validationSchema: loginSchema,
     validateCriteriaMode: 'all',
@@ -51,8 +53,11 @@ const LoginScreen = ({ navigation, login }) => {
     } catch (e) {
       let toastMessage = e?.message || 'Something unexpected happened';
 
-      if (e?.code === 'UnauthorizedUser') {
+      if (e?.code === 'UnauthorizedUser' && !isSocialLogin) {
         toastMessage = 'This username/email and password combination is incorrect';
+      }
+      if (e?.code === 'UnauthorizedUser' && isSocialLogin) {
+        toastMessage = "You don't have any account associated to that social network";
       }
 
       Toast.show(toastMessage, {
@@ -74,6 +79,7 @@ const LoginScreen = ({ navigation, login }) => {
         socialAccountId: facebookAccountId,
         socialAccountFieldName: 'facebookAccountId',
       };
+      setIsSocialLogin(true);
       submit(data);
     } else {
       Toast.show('There was an error while trying to access your Facebook account.', {
@@ -90,6 +96,7 @@ const LoginScreen = ({ navigation, login }) => {
         socialAccountId: twitterAccountId,
         socialAccountFieldName: 'twitterAccountId',
       };
+      setIsSocialLogin(true);
       submit(data);
     }
   };
@@ -107,6 +114,7 @@ const LoginScreen = ({ navigation, login }) => {
           socialAccountId: result.user.id,
           socialAccountFieldName: 'googleAccountId',
         };
+        setIsSocialLogin(true);
         submit(data);
       }
     } catch (e) {
