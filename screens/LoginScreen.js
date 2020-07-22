@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
+import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-// import { Entypo } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
@@ -11,9 +11,9 @@ import { useFocusEffect } from '@react-navigation/native';
 import { loginSchema } from '../utils/validators';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
-// import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
-// import * as Facebook from '../services/facebook';
-// import * as Twitter from '../services/twitter';
+import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import * as Facebook from '../services/facebook';
+import * as Twitter from '../services/twitter';
 import { loginAction } from '../redux/actions/AuthActions';
 import PageSpinner from '../components/PageSpinner';
 
@@ -62,24 +62,24 @@ const LoginScreen = ({ navigation, login }) => {
     }
   };
 
-  // const facebookLogin = async () => {
-  //   const facebookData = await Facebook.logIn();
-  //   const facebookAccountId = facebookData.id;
-  //   if (facebookAccountId) {
-  //     // dispatch(loginUser({ facebookAccountId }));
-  //   } else {
-  //     Alert.alert(
-  //       'There was an error while trying to access your Facebook account. Try again later.'
-  //     );
-  //   }
-  // };
+  const facebookLogin = async () => {
+    const facebookData = await Facebook.logIn();
+    const facebookAccountId = facebookData.id;
+    if (facebookAccountId) {
+      // await login(facebookAccountId);
+    } else {
+      Alert.alert(
+        'There was an error while trying to access your Facebook account. Try again later.',
+      );
+    }
+  };
 
-  // const twitterLogin = async () => {
-  //   const { twitterAccountId } = await Twitter.authSession(true);
-  //   if (twitterAccountId) {
-  //     // dispatch(login(twitterAccountId))
-  //   }
-  // };
+  const twitterLogin = async () => {
+    const { twitterAccountId } = await Twitter.authSession(true);
+    if (twitterAccountId) {
+      // await login(twitterAccountId);
+    }
+  };
 
   return (
     <ScrollView
@@ -166,7 +166,7 @@ const LoginScreen = ({ navigation, login }) => {
             </Text>
           </TouchableOpacity>
 
-          {/* <View style={styles.loginWithSocialMediaTextContainer}>
+          <View style={styles.loginWithSocialMediaTextContainer}>
             <Text type="medium" style={{ color: '#7F8FA4' }}>
               Or login via social networks
             </Text>
@@ -177,7 +177,7 @@ const LoginScreen = ({ navigation, login }) => {
               testID="twitter-icon-button"
               style={{
                 backgroundColor: '#3ABDFF',
-                ...styles.socialMediaButton
+                ...styles.socialMediaButton,
               }}>
               <Entypo name="twitter-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
@@ -186,7 +186,7 @@ const LoginScreen = ({ navigation, login }) => {
               testID="facebook-icon-button"
               style={{
                 backgroundColor: '#1382D5',
-                ...styles.socialMediaButton
+                ...styles.socialMediaButton,
               }}>
               <Entypo name="facebook-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
@@ -194,11 +194,11 @@ const LoginScreen = ({ navigation, login }) => {
               testID="google-icon-button"
               style={{
                 backgroundColor: '#e6e6e6',
-                ...styles.socialMediaButton
+                ...styles.socialMediaButton,
               }}>
               <GoogleColorfulIcon />
             </TouchableOpacity>
-          </View> */}
+          </View>
           <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
             <Text style={{ color: '#7F8FA4' }}>Don't have an account yet? </Text>
             <TouchableOpacity
