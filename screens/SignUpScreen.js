@@ -95,10 +95,6 @@ const SignupScreen = ({ navigation, signup }) => {
   const submit = async (data) => {
     try {
       await signup(data);
-
-      // If it gets here, it means the user account is saved successfully
-      // and they need to verify their account
-      navigation.navigate('OTPVerification');
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
