@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, View, Image, Platform } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
+import Toast from 'react-native-root-toast';
 
 import * as Font from 'expo-font';
 import {
@@ -22,7 +23,6 @@ import { AppLoading, Notifications } from 'expo';
 import { Asset } from 'expo-asset';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import axios from './services/axiosService';
 
 import useLinking from './navigation/useLinking';
 import SpaceMono from './assets/fonts/SpaceMono-Regular.ttf';
@@ -42,6 +42,7 @@ import ScriptoRerumLogo from './assets/images/scriptorerum-logo.png';
 import AppNavigation from './navigation';
 import store from './redux/store';
 import persistor from './redux/store/persistor';
+import { AppContext } from './utils/providers/app-context';
 
 // For development only. We use those when we want to
 // reset the store and pause redux-persist respectively
@@ -114,23 +115,6 @@ export default function App(props) {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
 
-  const savePushToken = (token) => {
-    axios.post('/users/save-push-token', { token }).catch((error) => {
-      console.log("failed to save the user's token", error);
-    });
-  };
-
-  useEffect(() => {
-    // fetching the user frrom the store directly and check whether they are
-    // authenticated or not
-    const user = store.getState().auth.currentUser;
-    const isAuthenticated = user && user.isActive && !user.isPasswordReset;
-
-    if (isAuthenticated && expoPushToken) {
-      savePushToken(expoPushToken);
-    }
-  }, [expoPushToken]);
-
   const registerForPushNotificationsAsync = async () => {
     if (Constants.isDevice) {
       const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
@@ -140,14 +124,17 @@ export default function App(props) {
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
+        Toast.show('Failed to get push token for push notification!', {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+        });
         return;
       }
       const token = await Notifications.getExpoPushTokenAsync();
 
       setExpoPushToken(token);
     } else {
-      alert('Must use physical device for Push Notifications');
+      console.log('Must use physical device for Push Notifications');
     }
 
     if (Platform.OS === 'android') {
@@ -187,16 +174,18 @@ export default function App(props) {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <PaperProvider theme={theme}>
-          <View style={styles.container}>
-            <NavigationContainer
-              ref={containerRef}
-              initialState={initialNavigationState}
-              initialRouteName="SignupScreen">
-              <AppNavigation />
-            </NavigationContainer>
-          </View>
-        </PaperProvider>
+        <AppContext.Provider value={{ expoPushToken, notification }}>
+          <PaperProvider theme={theme}>
+            <View style={styles.container}>
+              <NavigationContainer
+                ref={containerRef}
+                initialState={initialNavigationState}
+                initialRouteName="SignupScreen">
+                <AppNavigation />
+              </NavigationContainer>
+            </View>
+          </PaperProvider>
+        </AppContext.Provider>
       </PersistGate>
     </Provider>
   );
