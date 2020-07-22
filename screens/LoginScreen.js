@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar, Alert } from 'react-native';
+import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
@@ -7,7 +7,9 @@ import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
 import Toast from 'react-native-root-toast';
 import { useFocusEffect } from '@react-navigation/native';
+import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from 'react-native-dotenv';
 
+import * as Google from 'expo-google-app-auth';
 import { loginSchema } from '../utils/validators';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
@@ -19,10 +21,12 @@ import PageSpinner from '../components/PageSpinner';
 
 const LoginScreen = ({ navigation, login }) => {
   const authState = useSelector((state) => state.auth);
+
   const { errors, handleSubmit, register, watch, setValue } = useForm({
     validationSchema: loginSchema,
     validateCriteriaMode: 'all',
   });
+
   const inputs = {};
   const focusNextField = (name) => inputs[name].focus();
 
@@ -68,9 +72,10 @@ const LoginScreen = ({ navigation, login }) => {
     if (facebookAccountId) {
       // await login(facebookAccountId);
     } else {
-      Alert.alert(
-        'There was an error while trying to access your Facebook account. Try again later.',
-      );
+      Toast.show('There was an error while trying to access your Facebook account.', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
     }
   };
 
@@ -80,6 +85,25 @@ const LoginScreen = ({ navigation, login }) => {
       // await login(twitterAccountId);
     }
   };
+
+  async function googleLogin() {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+        iosClientId: GOOGLE_IOS_CLIENT_ID,
+        scopes: ['profile'],
+      });
+
+      if (result.type === 'success') {
+        // await login(result.user.id);
+      }
+    } catch (e) {
+      Toast.show('There was an error while trying to access your Google account.', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
+    }
+  }
 
   return (
     <ScrollView
@@ -191,6 +215,7 @@ const LoginScreen = ({ navigation, login }) => {
               <Entypo name="facebook-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={googleLogin}
               testID="google-icon-button"
               style={{
                 backgroundColor: '#e6e6e6',
@@ -219,6 +244,12 @@ const LoginScreen = ({ navigation, login }) => {
 };
 
 const styles = StyleSheet.create({
+  spiner: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     backgroundColor: 'white',
     justifyContent: 'center',
