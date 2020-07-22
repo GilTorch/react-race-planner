@@ -34,8 +34,7 @@ export const updateUserPreferenceAction = (dataObj) => (dispatch) => {
 };
 
 export const savePushTokenAction = (token) => (dispatch) => {
-  alert(`trying to save the token ${token}`);
   return axios.post('/users/save-push-token', { token }).catch((error) => {
-    console.error("failed to save the user's token", error);
+    console.log("failed to save the user's token", error);
   });
 };
