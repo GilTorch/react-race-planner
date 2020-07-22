@@ -70,7 +70,11 @@ const LoginScreen = ({ navigation, login }) => {
     const facebookData = await Facebook.logIn();
     const facebookAccountId = facebookData.id;
     if (facebookAccountId) {
-      // await login(facebookAccountId);
+      const data = {
+        socialAccountId: facebookAccountId,
+        socialAccountFieldName: 'facebookAccountId',
+      };
+      submit(data);
     } else {
       Toast.show('There was an error while trying to access your Facebook account.', {
         duration: Toast.durations.SHORT,
@@ -82,7 +86,11 @@ const LoginScreen = ({ navigation, login }) => {
   const twitterLogin = async () => {
     const { twitterAccountId } = await Twitter.authSession(true);
     if (twitterAccountId) {
-      // await login(twitterAccountId);
+      const data = {
+        socialAccountId: twitterAccountId,
+        socialAccountFieldName: 'twitterAccountId',
+      };
+      submit(data);
     }
   };
 
@@ -95,7 +103,11 @@ const LoginScreen = ({ navigation, login }) => {
       });
 
       if (result.type === 'success') {
-        // await login(result.user.id);
+        const data = {
+          socialAccountId: result.user.id,
+          socialAccountFieldName: 'googleAccountId',
+        };
+        submit(data);
       }
     } catch (e) {
       Toast.show('There was an error while trying to access your Google account.', {
