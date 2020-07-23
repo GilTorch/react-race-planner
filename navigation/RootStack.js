@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import BottomTab from './BottomTab';
 import FilterScreen from '../screens/FilterScreen';
@@ -11,13 +11,22 @@ import ResetPasswordScreen from '../screens/ResetPasswordScreen';
 import ResetPasswordTwoScreen from '../screens/ResetPasswordTwoScreen';
 import OTPVerificationScreen from '../screens/OTPVerificationScreen';
 import NewStoryScreen from '../screens/NewStoryScreen';
+import { AppContext } from '../utils/providers/app-context';
+import { savePushTokenAction } from '../redux/actions/UserActions';
 
 const Stack = createStackNavigator();
 
 export default function RootStack() {
-  const user = useSelector(state => state.auth.currentUser);
-
+  const dispatch = useDispatch();
+  const { expoPushToken } = useContext(AppContext);
+  const user = useSelector((state) => state.auth.currentUser);
   const isAuthenticated = user?.isActive && !user?.isPasswordReset;
+
+  useEffect(() => {
+    if (isAuthenticated && expoPushToken) {
+      dispatch(savePushTokenAction(expoPushToken));
+    }
+  }, [expoPushToken, isAuthenticated]);
 
   return (
     <Stack.Navigator mode={isAuthenticated ? 'modal' : 'card'}>
@@ -30,12 +39,12 @@ export default function RootStack() {
           <Stack.Screen name="OTPVerification" component={OTPVerificationScreen} />
         </>
       ) : (
-          <>
-            <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }} />
-            <Stack.Screen name="FilterScreen" component={FilterScreen} />
-            <Stack.Screen name="NewStoryScreen" component={NewStoryScreen} />
-          </>
-        )}
+        <>
+          <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }} />
+          <Stack.Screen name="FilterScreen" component={FilterScreen} />
+          <Stack.Screen name="NewStoryScreen" component={NewStoryScreen} />
+        </>
+      )}
     </Stack.Navigator>
   );
 }

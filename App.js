@@ -1,5 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View, Image, Platform } from 'react-native';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
+import Toast from 'react-native-root-toast';
+
 import * as Font from 'expo-font';
 import {
   Ionicons,
@@ -15,7 +19,7 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import { AppLoading } from 'expo';
+import { AppLoading, Notifications } from 'expo';
 import { Asset } from 'expo-asset';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -38,6 +42,7 @@ import ScriptoRerumLogo from './assets/images/scriptorerum-logo.png';
 import AppNavigation from './navigation';
 import store from './redux/store';
 import persistor from './redux/store/persistor';
+import { AppContext } from './utils/providers/app-context';
 
 // For development only. We use those when we want to
 // reset the store and pause redux-persist respectively
@@ -106,14 +111,61 @@ export default function App(props) {
   const containerRef = useRef();
   const [initialNavigationState, setInitialNavigationState] = useState();
   const { getInitialState } = useLinking(containerRef);
+  // Push Notifications
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
 
+  const registerForPushNotificationsAsync = async () => {
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        Toast.show('Failed to get push token for push notification!', {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+        });
+        return;
+      }
+      const token = await Notifications.getExpoPushTokenAsync();
+
+      setExpoPushToken(token);
+    } else {
+      console.log('Must use physical device for Push Notifications');
+    }
+
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('default', {
+        name: 'default',
+        sound: true,
+        priority: 'max',
+        vibrate: [0, 250, 250, 250],
+      });
+    }
+  };
   useEffect(() => {
     async function setupInitialState() {
       setInitialNavigationState(await getInitialState());
     }
 
     setupInitialState();
+
+    // Push Notifications
+    registerForPushNotificationsAsync();
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    const notificationListener = Notifications.addListener(handleNotification);
+
+    return () => {
+      notificationListener.remove();
+    };
   }, []);
+
+  const handleNotification = (notif) => {
+    setNotification(notif);
+  };
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return <AppLoading startAsync={loadAssetsAsync} onFinish={() => setLoadingComplete(true)} />;
@@ -122,16 +174,18 @@ export default function App(props) {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <PaperProvider theme={theme}>
-          <View style={styles.container}>
-            <NavigationContainer
-              ref={containerRef}
-              initialState={initialNavigationState}
-              initialRouteName="SignupScreen">
-              <AppNavigation store={store} />
-            </NavigationContainer>
-          </View>
-        </PaperProvider>
+        <AppContext.Provider value={{ expoPushToken, notification }}>
+          <PaperProvider theme={theme}>
+            <View style={styles.container}>
+              <NavigationContainer
+                ref={containerRef}
+                initialState={initialNavigationState}
+                initialRouteName="SignupScreen">
+                <AppNavigation />
+              </NavigationContainer>
+            </View>
+          </PaperProvider>
+        </AppContext.Provider>
       </PersistGate>
     </Provider>
   );
