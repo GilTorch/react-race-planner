@@ -44,12 +44,15 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
   const dateOfBirth = user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(687041730000);
   const [modalUsername, setModalUsername] = useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [date, setDate] = React.useState(dateOfBirth);
   const [show, setShow] = React.useState(false);
   const [showImageManipulator, setShowImageManipulator] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(user?.picture);
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   // const [socialLink, setSocialLink] = React.useState(false);
+  const [socialAccountFieldName, setSocialAccountFieldName] = useState();
+  const [socialName, setSocialName] = useState();
   const menuRef = React.useRef();
   imageUrl = `${Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL}/${
     USER_AVATAR_UPLOAD_LOCATION
@@ -172,8 +175,8 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
     }
   };
 
-  const showSuccessMessage = field => {
-    Toast.show(`Successfully ${field}`, {
+  const showSuccessMessage = message => {
+    Toast.show(`Successfully ${message}`, {
       duration: Toast.durations.LONG,
       position: Toast.positions.BOTTOM
     });
@@ -212,35 +215,31 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
   //   setSocialLink(false);
   // };
 
-  const twitterLogin = async () => {
+  const linkToTwitterAccount = async () => {
     const { twitterAccountId } = await Twitter.authSession(true);
     if (twitterAccountId) {
-      await updateUser({ id: user._id, data: { twitterAccountId, link: true } });
-      showSuccessMessage('link to Twitter account');
+      try {
+        await updateUser({ id: user._id, data: { twitterAccountId, link: true } });
+        showSuccessMessage('link to Twitter account');
+      } catch (e) {
+        Toast.show(e.message, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM
+        });
+      }
     }
   };
 
-  const linkOrUnlinkAccount = async socialAccountFieldName => {
-    if (user[socialAccountFieldName]) {
+  const unlinkSocialAccount = async () => {
+    try {
       await updateUser({ id: user._id, data: { socialAccountFieldName, link: false } });
-      showSuccessMessage('unlink the social account');
-
-    } else {
-      switch (socialAccountFieldName) {
-        case 'facebookAccountId':
-          facebookLogin();
-          break;
-        case 'googleAccountId':
-          googleLogin();
-          break;
-        case 'twitterAccountId':
-          twitterLogin();
-          break;
-        default:
-          return null;
-      }
+      showSuccessMessage(`unlink to ${socialName} account`);
+    } catch (e) {
+      Toast.show(e, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
     }
-    return null;
   };
 
   const handleDeleteAccount = async () => {
@@ -692,7 +691,15 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} /> */}
             <TouchableOpacity
-              onPress={() => linkOrUnlinkAccount('twitterAccountId')}
+              onPress={() => {
+                if (user?.twitterAccountId) {
+                  setSocialAccountFieldName('twitterAccountId');
+                  setSocialName('Twitter');
+                  setConfirmModalVisible(true);
+                } else {
+                  linkToTwitterAccount();
+                }
+              }}
               style={{
                 height: 50,
                 borderColor: '#C8C7CC',
@@ -719,10 +726,10 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
               {linkingLoading && (
                 <ActivityIndicator color="#000" size={Platform.OS === 'android' ? 30 : 'small'} />
               )}
-              {!user?.twitterAccountId && !linkingLoading && (
+              {!linkingLoading && !user?.twitterAccountId && (
                 <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
               )}
-              {user?.twitterAccountId && !linkingLoading && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
+              {!linkingLoading && user?.twitterAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
             </TouchableOpacity>
           </View>
         </View>
@@ -924,6 +931,58 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
                   <Button
                     testID="cancel-deletion"
                     onPress={() => hideDeleteModal()}
+                    style={{ backgroundColor: '#03A2A2' }}>
+                    <Text type="bold" style={{ color: '#FFF' }}>
+                      Cancel
+                    </Text>
+                  </Button>
+                </Surface>
+              </View>
+            </View>
+          </Modal>
+          <Modal
+            dismissable={false}
+            visible={confirmModalVisible}
+            contentContainerStyle={{
+              backgroundColor: 'white',
+              borderRadius: 6,
+              height: '20%',
+              width: '90%',
+              alignSelf: 'center'
+            }}>
+            <View style={{ flex: 1 }}>
+              <View
+                style={{
+                  marginTop: 10,
+                  margin: 20,
+                }}>
+                <Text type="bold" style={{ fontSize: 20, color: '#5A7582' }}>
+                  Are you sure you want to unlink with your {socialName} account?
+              </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-evenly',
+                  marginTop: 20,
+                }}>
+                <Surface style={styles.btnSurface}>
+                  <Button
+                    onPress={() => {
+                      setConfirmModalVisible(false);
+                      unlinkSocialAccount();
+                    }}
+                    testID="delete-account"
+                    style={{ backgroundColor: '#f44336' }}>
+                    <Text type="bold" style={{ color: '#fff' }}>
+                      Unlink
+                    </Text>
+                  </Button>
+                </Surface>
+                <Surface style={styles.btnSurface}>
+                  <Button
+                    testID="cancel-deletion"
+                    onPress={() => setConfirmModalVisible(false)}
                     style={{ backgroundColor: '#03A2A2' }}>
                     <Text type="bold" style={{ color: '#FFF' }}>
                       Cancel
