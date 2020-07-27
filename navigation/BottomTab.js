@@ -18,9 +18,9 @@ export default function BottomTab() {
       tabBarOptions={{
         labelPosition: 'beside-icon',
         style: {
-          paddingHorizontal: 15
+          paddingHorizontal: 15,
         },
-        keyboardHidesTabBar: true
+        keyboardHidesTabBar: true,
       }}>
       <Tab.Screen
         name="Library"
@@ -36,7 +36,7 @@ export default function BottomTab() {
                   fontSize: 13,
                   textTransform: 'uppercase',
                   fontWeight: 'bold',
-                  color: '#03A2A2'
+                  color: '#03A2A2',
                 }}>
                 Library
               </Text>
@@ -53,7 +53,7 @@ export default function BottomTab() {
               />
             );
             return icon;
-          }
+          },
         }}
       />
 
@@ -71,7 +71,7 @@ export default function BottomTab() {
                   paddingLeft: 15,
                   textTransform: 'uppercase',
                   fontWeight: 'bold',
-                  color: '#03A2A2'
+                  color: '#03A2A2',
                 }}>
                 Home
               </Text>
@@ -86,7 +86,7 @@ export default function BottomTab() {
                 testID="home-icon"
               />
             );
-          }
+          },
         }}
       />
 
@@ -104,7 +104,7 @@ export default function BottomTab() {
                   paddingLeft: 15,
                   textTransform: 'uppercase',
                   fontWeight: 'bold',
-                  color: '#03A2A2'
+                  color: '#03A2A2',
                 }}>
                 Writing
               </Text>
@@ -119,7 +119,7 @@ export default function BottomTab() {
                 testID="writing-icon"
               />
             );
-          }
+          },
         }}
       />
 
@@ -136,7 +136,7 @@ export default function BottomTab() {
                   paddingLeft: 15,
                   textTransform: 'uppercase',
                   fontWeight: 'bold',
-                  color: '#03A2A2'
+                  color: '#03A2A2',
                 }}>
                 Settings
               </Text>
@@ -151,7 +151,7 @@ export default function BottomTab() {
                 testID="settings-icon"
               />
             );
-          }
+          },
         }}
       />
     </Tab.Navigator>

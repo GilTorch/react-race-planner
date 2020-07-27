@@ -1,39 +1,43 @@
 import React from 'react';
 import { View, ScrollView, Image, TextInput, StyleSheet, StatusBar } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-// import { Entypo } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
 import Toast from 'react-native-root-toast';
 import { useFocusEffect } from '@react-navigation/native';
+import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from 'react-native-dotenv';
 
+import * as Google from 'expo-google-app-auth';
 import { loginSchema } from '../utils/validators';
 import Text from '../components/CustomText';
 import SRLogo from '../assets/images/scriptorerum-logo.png';
-// import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
-// import * as Facebook from '../services/facebook';
-// import * as Twitter from '../services/twitter';
+import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import * as Facebook from '../services/facebook';
+import * as Twitter from '../services/twitter';
 import { loginAction } from '../redux/actions/AuthActions';
 import PageSpinner from '../components/PageSpinner';
 
 const LoginScreen = ({ navigation, login }) => {
-  const authState = useSelector(state => state.auth);
+  const authState = useSelector((state) => state.auth);
+
   const { errors, handleSubmit, register, watch, setValue } = useForm({
     validationSchema: loginSchema,
-    validateCriteriaMode: 'all'
+    validateCriteriaMode: 'all',
   });
+
   const inputs = {};
-  const focusNextField = name => inputs[name].focus();
+  const focusNextField = (name) => inputs[name].focus();
 
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setHidden(true);
 
       navigation.setOptions({
-        headerShown: false
+        headerShown: false,
       });
-    }, [])
+    }, []),
   );
 
   React.useEffect(() => {
@@ -41,19 +45,22 @@ const LoginScreen = ({ navigation, login }) => {
     register('password');
   }, [register]);
 
-  const submit = async data => {
+  const submit = async (data) => {
     try {
       await login(data);
     } catch (e) {
       let toastMessage = e?.message || 'Something unexpected happened';
 
-      if (e?.code === 'UnauthorizedUser') {
+      if (e?.code === 'UnauthorizedUser' && !data.socialAccountId) {
         toastMessage = 'This username/email and password combination is incorrect';
+      }
+      if (e?.code === 'UnauthorizedUser' && data.socialAccountId) {
+        toastMessage = "You don't have any account associated to that social network";
       }
 
       Toast.show(toastMessage, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM
+        position: Toast.positions.BOTTOM,
       });
 
       if (authState.currentUser?.isActive === false) {
@@ -62,24 +69,56 @@ const LoginScreen = ({ navigation, login }) => {
     }
   };
 
-  // const facebookLogin = async () => {
-  //   const facebookData = await Facebook.logIn();
-  //   const facebookAccountId = facebookData.id;
-  //   if (facebookAccountId) {
-  //     // dispatch(loginUser({ facebookAccountId }));
-  //   } else {
-  //     Alert.alert(
-  //       'There was an error while trying to access your Facebook account. Try again later.'
-  //     );
-  //   }
-  // };
+  const facebookLogin = async () => {
+    const facebookData = await Facebook.logIn();
+    const facebookAccountId = facebookData.id;
+    if (facebookAccountId) {
+      const data = {
+        socialAccountId: facebookAccountId,
+        socialAccountFieldName: 'facebookAccountId',
+      };
+      submit(data);
+    } else {
+      Toast.show('There was an error while trying to access your Facebook account.', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
+    }
+  };
 
-  // const twitterLogin = async () => {
-  //   const { twitterAccountId } = await Twitter.authSession(true);
-  //   if (twitterAccountId) {
-  //     // dispatch(login(twitterAccountId))
-  //   }
-  // };
+  const twitterLogin = async () => {
+    const { twitterAccountId } = await Twitter.authSession(true);
+    if (twitterAccountId) {
+      const data = {
+        socialAccountId: twitterAccountId,
+        socialAccountFieldName: 'twitterAccountId',
+      };
+      submit(data);
+    }
+  };
+
+  async function googleLogin() {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+        iosClientId: GOOGLE_IOS_CLIENT_ID,
+        scopes: ['profile'],
+      });
+
+      if (result.type === 'success') {
+        const data = {
+          socialAccountId: result.user.id,
+          socialAccountFieldName: 'googleAccountId',
+        };
+        submit(data);
+      }
+    } catch (e) {
+      Toast.show('There was an error while trying to access your Google account.', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+      });
+    }
+  }
 
   return (
     <ScrollView
@@ -101,12 +140,12 @@ const LoginScreen = ({ navigation, login }) => {
             </View>
             <View style={styles.inputContainer}>
               <TextInput
-                ref={input => {
+                ref={(input) => {
                   inputs.usernameOrEmail = input;
                 }}
                 autoCapitalize="none"
                 testID="login-user-name"
-                onChangeText={text => setValue('usernameOrEmail', text)}
+                onChangeText={(text) => setValue('usernameOrEmail', text)}
                 value={watch('usernameOrEmail')}
                 onSubmitEditing={() => focusNextField('password')}
                 blurOnSubmit={false}
@@ -128,11 +167,11 @@ const LoginScreen = ({ navigation, login }) => {
             </View>
             <View style={styles.inputContainer}>
               <TextInput
-                ref={input => {
+                ref={(input) => {
                   inputs.password = input;
                 }}
                 testID="login-password"
-                onChangeText={text => setValue('password', text)}
+                onChangeText={(text) => setValue('password', text)}
                 value={watch('password')}
                 onSubmitEditing={handleSubmit(submit)}
                 blurOnSubmit={false}
@@ -166,7 +205,7 @@ const LoginScreen = ({ navigation, login }) => {
             </Text>
           </TouchableOpacity>
 
-          {/* <View style={styles.loginWithSocialMediaTextContainer}>
+          <View style={styles.loginWithSocialMediaTextContainer}>
             <Text type="medium" style={{ color: '#7F8FA4' }}>
               Or login via social networks
             </Text>
@@ -177,7 +216,7 @@ const LoginScreen = ({ navigation, login }) => {
               testID="twitter-icon-button"
               style={{
                 backgroundColor: '#3ABDFF',
-                ...styles.socialMediaButton
+                ...styles.socialMediaButton,
               }}>
               <Entypo name="twitter-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
@@ -186,19 +225,20 @@ const LoginScreen = ({ navigation, login }) => {
               testID="facebook-icon-button"
               style={{
                 backgroundColor: '#1382D5',
-                ...styles.socialMediaButton
+                ...styles.socialMediaButton,
               }}>
               <Entypo name="facebook-with-circle" size={24} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={googleLogin}
               testID="google-icon-button"
               style={{
                 backgroundColor: '#e6e6e6',
-                ...styles.socialMediaButton
+                ...styles.socialMediaButton,
               }}>
               <GoogleColorfulIcon />
             </TouchableOpacity>
-          </View> */}
+          </View>
           <View style={{ marginTop: 20, marginBottom: 40, flexDirection: 'row' }}>
             <Text style={{ color: '#7F8FA4' }}>Don't have an account yet? </Text>
             <TouchableOpacity
@@ -219,53 +259,59 @@ const LoginScreen = ({ navigation, login }) => {
 };
 
 const styles = StyleSheet.create({
+  spiner: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 70,
-    marginBottom: 70
+    marginBottom: 70,
   },
   logoContainer: {
     backgroundColor: 'red',
     width: '70%',
     height: 149,
     marginTop: 50,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   logo: {
     width: '70%',
     height: 149,
-    resizeMode: 'stretch'
+    resizeMode: 'stretch',
   },
   headlineContainer: {},
   headline: {
     color: '#38434A',
-    fontSize: 24
+    fontSize: 24,
   },
   inputContainer: {
     borderRadius: 4.87,
     borderColor: '#DFE3E9',
     backgroundColor: '#F8FAFC',
-    borderWidth: 1
+    borderWidth: 1,
   },
   labelContainer: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   label: {
     color: '#7F8FA4',
-    fontSize: 11
+    fontSize: 11,
   },
   input: {
     paddingLeft: 8,
     flex: 1,
-    height: 35.43
+    height: 35.43,
   },
   form: {
-    width: '75%'
+    width: '75%',
   },
   formGroup: {
-    marginTop: 10
+    marginTop: 10,
   },
   submitButton: {
     // marginTop: 30,
@@ -273,45 +319,45 @@ const styles = StyleSheet.create({
     backgroundColor: '#23C2C2',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 35.43
+    height: 35.43,
   },
   submitButtonText: {
-    color: 'white'
+    color: 'white',
   },
   loginWithSocialMediaTextContainer: {
     marginTop: 20,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   socialMediaButtonsContainer: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20
+    marginTop: 20,
   },
   socialMediaButton: {
     width: 40,
     height: 40,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   goToLoginPageButton: {},
   goToLoginPageButtonText: {
-    color: '#23C2C2'
+    color: '#23C2C2',
   },
   errorInput: {
     borderColor: 'red',
-    borderBottomWidth: 1
-  }
+    borderBottomWidth: 1,
+  },
 });
 
 LoginScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  login: PropTypes.func.isRequired
+  login: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
-  login: loginAction
+  login: loginAction,
 };
 
 export default connect(null, mapDispatchToProps)(LoginScreen);
