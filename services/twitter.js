@@ -76,7 +76,9 @@ const authSession = async (isLogin) => {
       username: twitterAccessToken.screen_name,
       firstName,
       lastName: lastName.join(' '),
-      email: '',
+      // We pass the `email` field too. They will be
+      // available once we go through the Twitter review process
+      email: twitterProfile.email,
     };
   } catch (error) {
     Toast.show('Something went wrong...', {
