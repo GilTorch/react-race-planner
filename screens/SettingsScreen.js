@@ -946,50 +946,48 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
             contentContainerStyle={{
               backgroundColor: 'white',
               borderRadius: 6,
-              height: '20%',
+              height: '25%',
               width: '90%',
               alignSelf: 'center'
             }}>
-            <View style={{ flex: 1 }}>
-              <View
-                style={{
-                  marginTop: 10,
-                  margin: 20,
-                }}>
-                <Text type="bold" style={{ fontSize: 20, color: '#5A7582' }}>
-                  Are you sure you want to unlink with your {socialName} account?
+            <View
+              style={{
+                marginTop: 10,
+                margin: 20,
+              }}>
+              <Text type="bold" style={{ fontSize: 20, color: '#5A7582' }}>
+                Are you sure you want to unlink with your {socialName} account?
               </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-evenly',
-                  marginTop: 20,
-                }}>
-                <Surface style={styles.btnSurface}>
-                  <Button
-                    onPress={() => {
-                      setConfirmModalVisible(false);
-                      unlinkSocialAccount();
-                    }}
-                    testID="delete-account"
-                    style={{ backgroundColor: '#f44336' }}>
-                    <Text type="bold" style={{ color: '#fff' }}>
-                      Unlink
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                marginTop: 'auto',
+              }}>
+              <Surface style={styles.btnSurface}>
+                <Button
+                  onPress={() => {
+                    setConfirmModalVisible(false);
+                    unlinkSocialAccount();
+                  }}
+                  testID="delete-account"
+                  style={{ backgroundColor: '#f44336' }}>
+                  <Text type="bold" style={{ color: '#fff' }}>
+                    Unlink
                     </Text>
-                  </Button>
-                </Surface>
-                <Surface style={styles.btnSurface}>
-                  <Button
-                    testID="cancel-deletion"
-                    onPress={() => setConfirmModalVisible(false)}
-                    style={{ backgroundColor: '#03A2A2' }}>
-                    <Text type="bold" style={{ color: '#FFF' }}>
-                      Cancel
+                </Button>
+              </Surface>
+              <Surface style={styles.btnSurface}>
+                <Button
+                  testID="cancel-deletion"
+                  onPress={() => setConfirmModalVisible(false)}
+                  style={{ backgroundColor: '#03A2A2' }}>
+                  <Text type="bold" style={{ color: '#FFF' }}>
+                    Cancel
                     </Text>
-                  </Button>
-                </Surface>
-              </View>
+                </Button>
+              </Surface>
             </View>
           </Modal>
         </Portal>
