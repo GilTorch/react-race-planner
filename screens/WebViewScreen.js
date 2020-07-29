@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, StatusBar, SafeAreaView, Platform } from 'react-native';
+import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
 import { Surface, IconButton } from 'react-native-paper';
 import { WebView } from 'react-native-webview';
@@ -38,6 +39,7 @@ const WebViewScreen = ({ navigation, route }) => {
               alignItems: 'center',
               flexDirection: 'row',
               justifyContent: 'flex-start',
+              marginTop: Constants.statusBarHeight,
             }}>
             <IconButton onPress={() => navigation.goBack()} icon="arrow-left" color="white" />
             <Text type="bold" style={{ color: 'white', marginLeft: 10, fontSize: 18 }}>
