@@ -11,13 +11,14 @@ import Text from '../components/CustomText';
 
 const WebViewScreen = ({ navigation, route }) => {
   navigation.setOptions({
-    headerShown: false
+    headerShown: false,
   });
 
   useFocusEffect(
     React.useCallback(() => {
+      // StatusBar.setHidden(false);
       StatusBar.setBarStyle('light-content');
-    }, [])
+    }, []),
   );
 
   const { title } = route.params;
@@ -28,14 +29,15 @@ const WebViewScreen = ({ navigation, route }) => {
     <View style={{ flex: 1 }}>
       <Surface
         style={{
-          elevation: 3
+          elevation: 3,
+          backgroundColor: 'blue',
         }}>
         <LinearGradient colors={['#03a2a2', '#23c2c2']} locations={[0.5, 1]}>
           <SafeAreaView
             style={{
               alignItems: 'center',
               flexDirection: 'row',
-              justifyContent: 'flex-start'
+              justifyContent: 'flex-start',
             }}>
             <IconButton onPress={() => navigation.goBack()} icon="arrow-left" color="white" />
             <Text type="bold" style={{ color: 'white', marginLeft: 10, fontSize: 18 }}>
@@ -51,7 +53,7 @@ const WebViewScreen = ({ navigation, route }) => {
 
 WebViewScreen.propTypes = {
   navigation: PropTypes.object.isRequired,
-  route: PropTypes.object.isRequired
+  route: PropTypes.object.isRequired,
 };
 
 export default WebViewScreen;
