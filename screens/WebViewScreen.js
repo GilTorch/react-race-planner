@@ -23,8 +23,13 @@ const WebViewScreen = ({ navigation, route }) => {
   );
 
   const { title } = route.params;
+  let uri;
   const baseUri = Platform.OS === 'android' ? ANDROID_SERVER_URL : IOS_SERVER_URL;
-  const uri = title === 'Privacy Policy' ? `${baseUri}/pp` : `${baseUri}/tos`;
+  if (title === 'Privacy Policy' || title === 'Terms of Service') {
+    uri = title === 'Privacy Policy' ? `${baseUri}/pp` : `${baseUri}/tos`;
+  } else if (title === 'Bug Repport') {
+    uri = 'https://forms.clickup.com/f/27rp7-245/BRCZB43N75QMY8IM1H';
+  }
 
   return (
     <View style={{ flex: 1 }}>
