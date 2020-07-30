@@ -837,10 +837,10 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
               paddingLeft: 20
             }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('WebViewScreen', { title: 'Bug Repport' })}
+              onPress={() => navigation.navigate('WebViewScreen', { title: 'Bug Report' })}
               testID="privacy-policy">
               <View style={styles.profileField}>
-                <Text style={{ fontSize: 18 }}>Bug Repport</Text>
+                <Text style={{ fontSize: 18 }}>Bug Report</Text>
                 <View>
                   <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
                 </View>
