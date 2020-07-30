@@ -250,23 +250,23 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
       if (socialName === 'Facebook') {
         setLinkingFbLoading(true);
         await updateUser({ id: user._id, data: { socialAccountFieldName, link: false } });
-        setLinkingFbLoading(false);
       } else if (socialName === 'Twitter') {
         setLinkingTwitterLoading(true);
         await updateUser({ id: user._id, data: { socialAccountFieldName, link: false } });
-        setLinkingTwitterLoading(false);
       } else if (socialName === 'Google') {
         setLinkingGoogleLoading(true);
         await updateUser({ id: user._id, data: { socialAccountFieldName, link: false } });
-        setLinkingGoogleLoading(false);
       }
       showSuccessMessage(`unlink to ${socialName} account`);
     } catch (e) {
-      Toast.show(e, {
+      Toast.show(e.message, {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM
       });
     }
+    setLinkingFbLoading(false);
+    setLinkingTwitterLoading(false);
+    setLinkingGoogleLoading(false);
   };
 
   const handleDeleteAccount = async () => {
