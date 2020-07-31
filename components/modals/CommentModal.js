@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
-import { View, TouchableOpacity, FlatList, Image, Keyboard } from 'react-native';
+import { View, TouchableOpacity, FlatList, Image, Keyboard, Platform } from 'react-native';
 import { Modal, Portal, TextInput } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { FontAwesome } from '@expo/vector-icons';
@@ -74,7 +74,9 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
   }, [register]);
 
   React.useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => setMargin('25%'));
+    Keyboard.addListener('keyboardDidShow', () => {
+      setMargin(Platform.OS === 'android' ? 200 : 500);
+    });
     Keyboard.addListener('keyboardDidHide', onKeyboardHide);
 
     return () => {
@@ -93,6 +95,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
             borderRadius: 6,
             overflow: 'hidden',
             height: SCREEN_HEIGHT * 0.95,
+            marginBottom: margin,
           }}>
           <View
             style={{
@@ -226,7 +229,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
               )}
               keyExtractor={(item) => `${item._id}`}
             />
-            <View style={{ marginBottom: margin }}>
+            <View>
               <TextInput
                 underlineColor={errors.content ? 'red' : 'white'}
                 value={watch('content')}
