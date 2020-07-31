@@ -94,7 +94,9 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     }
   }
   let firstBtnColor;
-  if (userIsAParticipant && inProgress) {
+  if (userIsAParticipant && isMasterAuthor && inProgress) {
+    firstBtnColor = '#A39F9F';
+  } else if (userIsAParticipant && inProgress) {
     firstBtnColor = '#F44336';
   } else if (!userIsAParticipant && waitingStory) {
     firstBtnColor = '#ED8A18';
@@ -199,6 +201,8 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
       try {
         if (completedStory) {
           showToast("It's too late to leave this story now");
+        } else if (isMasterAuthor && inProgress) {
+          showToast("You cannot delete an 'In Progress' story");
         } else {
           setIsLeaveStoryModalVisible(true);
         }
