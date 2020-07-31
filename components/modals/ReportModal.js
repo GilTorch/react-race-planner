@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
-import { StyleSheet, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { StyleSheet, View, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
 import { Modal, Portal, TextInput, Surface, Button } from 'react-native-paper';
 import { connect, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -11,11 +11,14 @@ import HTMLView from 'react-native-htmlview';
 import Text from '../CustomText';
 import { createReportAction, reportCommentAction } from '../../redux/actions/StoryActions';
 import { reportSchema } from '../../utils/validators';
+import { SCREEN_HEIGHT } from '../../utils/dimensions';
 
 const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, reportComment }) => {
   const user = useSelector((state) => state.auth.currentUser);
   const loading = useSelector((state) => state.story.createReportLoading);
   const reportCommentLoading = useSelector((state) => state.story.reportCommentLoading);
+
+  const [margin, setMargin] = React.useState(0);
 
   const { errors, handleSubmit, register, watch, setValue } = useForm({
     validationSchema: reportSchema,
@@ -74,6 +77,7 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, rep
             backgroundColor: 'white',
             borderRadius: 6,
             overflow: 'hidden',
+            marginBottom: Platform.OS === 'ios' ? margin : 0,
           }}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={{ backgroundColor: 'white' }}>
@@ -143,6 +147,8 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, rep
                   multiline
                   underlineColor={errors.reason ? 'red' : 'white'}
                   onChangeText={(text) => setValue('reason', text)}
+                  onFocus={() => setMargin(SCREEN_HEIGHT * 0.3)}
+                  onBlur={() => setMargin(0)}
                   style={{
                     borderWidth: 1,
                     marginTop: 5,
