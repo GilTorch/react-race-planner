@@ -1,26 +1,25 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
-/* eslint-disable no-alert */
 import React, { useState } from 'react';
-import { ScrollView, Image, View, TouchableOpacity, Platform, SafeAreaView, StatusBar } from 'react-native';
+import { ScrollView, Image, View, TouchableOpacity, Platform, SafeAreaView, StatusBar, Alert } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
-import { Surface, Portal, Modal, Divider, Button, TextInput } from 'react-native-paper';
+import { Surface, Portal, Modal, Divider, Button, TextInput, ActivityIndicator } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator } from 'expo-image-crop';
 import { useSelector, connect } from 'react-redux';
 
-// import * as Google from 'expo-google-app-auth';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import { useFocusEffect } from '@react-navigation/native';
-import { ANDROID_SERVER_URL, IOS_SERVER_URL, USER_AVATAR_UPLOAD_LOCATION } from 'react-native-dotenv';
+import { ANDROID_SERVER_URL, IOS_SERVER_URL, USER_AVATAR_UPLOAD_LOCATION, GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from 'react-native-dotenv';
 
 import moment from 'moment';
+import * as Google from 'expo-google-app-auth';
+import * as Facebook from '../services/facebook';
+import * as Twitter from '../services/twitter';
 import { logoutAction, deleteAccountAction } from '../redux/actions/AuthActions';
 import { updateUserAction } from '../redux/actions/UserActions';
 
@@ -28,7 +27,7 @@ import Text from '../components/CustomText';
 import Logo from '../assets/images/scriptorerum-logo.png';
 import app from '../app.json';
 import CustomStatusBar from '../components/StatusBar';
-// import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
+import GoogleColorfulIcon from '../components/GoogleColorfulIcon';
 
 const platformServerURL = Platform.OS === 'android' ? ANDROID_SERVER_URL : IOS_SERVER_URL;
 
@@ -39,15 +38,21 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
   let imageUrl;
 
   const user = useSelector(state => state.auth.currentUser);
+  const [linkingFbLoading, setLinkingFbLoading] = useState(false);
+  const [linkingTwitterLoading, setLinkingTwitterLoading] = useState(false);
+  const [linkingGoogleLoading, setLinkingGoogleLoading] = useState(false);
+
   const dateOfBirth = user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(687041730000);
   const [modalUsername, setModalUsername] = useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [date, setDate] = React.useState(dateOfBirth);
   const [show, setShow] = React.useState(false);
   const [showImageManipulator, setShowImageManipulator] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(user?.picture);
   const birthDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-  // const [socialLink, setSocialLink] = React.useState(false);
+  const [socialAccountFieldName, setSocialAccountFieldName] = useState();
+  const [socialName, setSocialName] = useState();
   const menuRef = React.useRef();
   imageUrl = `${Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL}/${
     USER_AVATAR_UPLOAD_LOCATION
@@ -74,12 +79,12 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
 
     if (status !== 'granted') {
-      alert('Sorry, we need camera roll permissions to make this work!');
+      Alert.alert('Sorry, we need camera roll permissions to make this work!');
       return;
     }
 
     if (!Constants.isDevice) {
-      alert('Camera access is not available on the emulator/simulator');
+      Alert.alert('Camera access is not available on the emulator/simulator');
       return;
     }
 
@@ -170,81 +175,99 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
     }
   };
 
-  // const showSuccessMessage = field => {
-  //   Toast.show(`Successfully ${field}`, {
-  //     duration: Toast.durations.LONG,
-  //     position: Toast.positions.BOTTOM
-  //   });
-  // };
+  const showSuccessMessage = message => {
+    Toast.show(`Successfully ${message}`, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.BOTTOM
+    });
+  };
 
-  // const facebookLogin = async () => {
-  //   const facebookData = await Facebook.logIn();
-  //   const facebookAccountId = facebookData.id;
-  //   if (facebookAccountId) {
-  //     const data = await updateUser({ id: user?._id, facebookAccountId });
-  //     if (data) {
-  //       showSuccessMessage('link to Facebook account');
-  //     }
-  //   }
-  //   setSocialLink(false);
-  // };
+  const linkToTwitterAccount = async () => {
+    const { twitterAccountId } = await Twitter.authSession(true);
+    if (twitterAccountId) {
+      setLinkingTwitterLoading(true);
+      await linkSocialAcount('Twitter', twitterAccountId);
+      setLinkingTwitterLoading(false);
+    }
+  };
 
-  // const googleLogin = async () => {
-  //   try {
-  //     const result = await Google.logInAsync({
-  //       androidClientId: '179189574549-p2l06hbg13fqqba7nfib4nq7na5ci1lc.apps.googleusercontent.com',
-  //       iosClientId: '179189574549-3379mn2seve0i471eqfkpgduqkgvnd98.apps.googleusercontent.com',
-  //       scopes: ['profile']
-  //     });
+  const linkToFacebookAccount = async () => {
+    const facebookData = await Facebook.logIn();
+    const facebookAccountId = facebookData.id;
+    if (facebookAccountId) {
+      setLinkingFbLoading(true);
+      await linkSocialAcount('Facebook', facebookAccountId);
+      setLinkingFbLoading(false);
+    }
+  };
 
-  //     if (result.type === 'success') {
-  //       const googleAccountId = result.user?.id;
-  //       const data = await updateUser({ id: user?._id, googleAccountId });
-  //       if (data) {
-  //         showSuccessMessage('link to Google account');
-  //       }
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  //   setSocialLink(false);
-  // };
+  const linkToGoogleAccount = async () => {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+        iosClientId: GOOGLE_IOS_CLIENT_ID,
+        scopes: ['profile']
+      });
 
-  // const twitterLogin = async () => {
-  //   const { twitterAccountId } = await Twitter.authSession(true);
-  //   if (twitterAccountId) {
-  //     const data = await updateUser({ id: user?._id, twitterAccountId });
-  //     if (data) {
-  //       showSuccessMessage('link to Twitter account');
-  //     }
-  //   }
-  //   setSocialLink(false);
-  // };
+      if (result.type === 'success') {
+        setLinkingGoogleLoading(true);
+        const googleAccountId = result.user?.id;
+        await linkSocialAcount('Google', googleAccountId);
+        setLinkingGoogleLoading(false);
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
+    }
+  };
 
-  // const linkOrUnlinkAccount = async socialAccountId => {
-  //   if (user[socialAccountId]) {
-  //     const data = await updateUser({ id: user?._id, [socialAccountId]: '' });
-  //     if (data) {
-  //       showSuccessMessage('unlink the social account');
-  //     }
-  //   } else {
-  //     setSocialLink(true);
-  //     switch (socialAccountId) {
-  //       case 'facebookAccountId':
-  //         facebookLogin();
-  //         break;
-  //       case 'googleAccountId':
-  //         googleLogin();
-  //         break;
-  //       case 'twitterAccountId':
-  //         twitterLogin();
-  //         break;
-  //       default:
-  //         return null;
-  //     }
-  //   }
-  //   return null;
-  // };
+  const linkSocialAcount = async (accountName, socialId) => {
+    try {
+      let socialFieldName;
+      if (accountName === 'Facebook') {
+        socialFieldName = 'facebookAccountId';
+      } else if (accountName === 'Twitter') {
+        socialFieldName = 'twitterAccountId';
+      } else if (accountName === 'Google') {
+        socialFieldName = 'googleAccountId';
+      }
+      await updateUser({ id: user._id, data: { [socialFieldName]: socialId, link: true } });
+
+      Toast.show(`Successfully link to ${accountName} account`, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
+    }
+  };
+
+  const unlinkSocialAccount = async () => {
+    try {
+      if (socialName === 'Facebook') {
+        setLinkingFbLoading(true);
+        await updateUser({ id: user._id, data: { socialAccountFieldName, link: false } });
+      } else if (socialName === 'Twitter') {
+        setLinkingTwitterLoading(true);
+        await updateUser({ id: user._id, data: { socialAccountFieldName, link: false } });
+      } else if (socialName === 'Google') {
+        setLinkingGoogleLoading(true);
+        await updateUser({ id: user._id, data: { socialAccountFieldName, link: false } });
+      }
+      showSuccessMessage(`unlink to ${socialName} account`);
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM
+      });
+    }
+    setLinkingFbLoading(false);
+    setLinkingTwitterLoading(false);
+    setLinkingGoogleLoading(false);
+  };
 
   const handleDeleteAccount = async () => {
     if (user?.username === modalUsername) {
@@ -623,7 +646,7 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
           </View>
         </View>
 
-        {/* <View>
+        <View>
           <View
             style={{
               marginVertical: 20,
@@ -634,7 +657,16 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
           </View>
           <View style={{ backgroundColor: 'white' }}>
             <TouchableOpacity
-              onPress={() => alert('facebook')}
+              disabled={linkingFbLoading}
+              onPress={() => {
+                if (user?.facebookAccountId) {
+                  setSocialAccountFieldName('facebookAccountId');
+                  setSocialName('Facebook');
+                  setConfirmModalVisible(true);
+                } else {
+                  linkToFacebookAccount();
+                }
+              }}
               style={{
                 height: 50,
                 borderColor: '#C8C7CC',
@@ -659,16 +691,28 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
                 />
                 <Text style={{ fontSize: 18 }}>Facebook</Text>
               </View>
-              {!user?.facebookAccountId && (
+              {linkingFbLoading && (
+                <ActivityIndicator color="#000" size={Platform.OS === 'android' ? 30 : 'small'} />
+              )}
+              {!linkingFbLoading && !user?.facebookAccountId && (
                 <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
               )}
-              {user?.facebookAccountId && (
+              {!linkingFbLoading && user?.facebookAccountId && (
                 <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>
               )}
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} />
             <TouchableOpacity
-              onPress={() => alert('google')}
+              disabled={linkingGoogleLoading}
+              onPress={() => {
+                if (user?.googleAccountId) {
+                  setSocialAccountFieldName('googleAccountId');
+                  setSocialName('Google');
+                  setConfirmModalVisible(true);
+                } else {
+                  linkToGoogleAccount();
+                }
+              }}
               style={{
                 height: 50,
                 paddingHorizontal: 20,
@@ -688,14 +732,26 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
                 </View>
                 <Text style={{ fontSize: 18 }}>Google</Text>
               </View>
-              {!user?.googleAccountId && (
+              {linkingGoogleLoading && (
+                <ActivityIndicator color="#000" size={Platform.OS === 'android' ? 30 : 'small'} />
+              )}
+              {!linkingGoogleLoading && !user?.googleAccountId && (
                 <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
               )}
-              {user?.googleAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
+              {!linkingGoogleLoading && user?.googleAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} />
             <TouchableOpacity
-              onPress={() => alert('twitter')}
+              disabled={linkingTwitterLoading}
+              onPress={() => {
+                if (user?.twitterAccountId) {
+                  setSocialAccountFieldName('twitterAccountId');
+                  setSocialName('Twitter');
+                  setConfirmModalVisible(true);
+                } else {
+                  linkToTwitterAccount();
+                }
+              }}
               style={{
                 height: 50,
                 borderColor: '#C8C7CC',
@@ -719,13 +775,16 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
                 />
                 <Text style={{ fontSize: 18 }}>Twitter</Text>
               </View>
-              {!user?.twitterAccountId && (
+              {linkingTwitterLoading && (
+                <ActivityIndicator color="#000" size={Platform.OS === 'android' ? 30 : 'small'} />
+              )}
+              {!linkingTwitterLoading && !user?.twitterAccountId && (
                 <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
               )}
-              {user?.twitterAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
+              {!linkingTwitterLoading && user?.twitterAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
             </TouchableOpacity>
           </View>
-        </View> */}
+        </View>
 
         {/* <View>
           <View style={{ marginVertical: 20, justifyContent: 'center', marginLeft: 20 }}>
@@ -931,6 +990,56 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
                   </Button>
                 </Surface>
               </View>
+            </View>
+          </Modal>
+          <Modal
+            dismissable={false}
+            visible={confirmModalVisible}
+            contentContainerStyle={{
+              backgroundColor: 'white',
+              borderRadius: 6,
+              height: '25%',
+              width: '90%',
+              alignSelf: 'center'
+            }}>
+            <View
+              style={{
+                marginTop: 10,
+                margin: 20,
+              }}>
+              <Text type="bold" style={{ fontSize: 20, color: '#5A7582' }}>
+                Are you sure you want to unlink with your {socialName} account?
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                marginTop: 'auto',
+              }}>
+              <Surface style={styles.btnSurface}>
+                <Button
+                  onPress={() => {
+                    setConfirmModalVisible(false);
+                    unlinkSocialAccount();
+                  }}
+                  testID="delete-account"
+                  style={{ backgroundColor: '#f44336' }}>
+                  <Text type="bold" style={{ color: '#fff' }}>
+                    Unlink
+                    </Text>
+                </Button>
+              </Surface>
+              <Surface style={styles.btnSurface}>
+                <Button
+                  testID="cancel-deletion"
+                  onPress={() => setConfirmModalVisible(false)}
+                  style={{ backgroundColor: '#03A2A2' }}>
+                  <Text type="bold" style={{ color: '#FFF' }}>
+                    Cancel
+                    </Text>
+                </Button>
+              </Surface>
             </View>
           </Modal>
         </Portal>
