@@ -20,13 +20,15 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, rep
 
   const [margin, setMargin] = React.useState(0);
 
-  const { errors, handleSubmit, register, watch, setValue } = useForm({
+  const defaultValues = {
+    reporter: user?._id,
+    status: 'pending',
+    documentId: parent._id,
+  };
+
+  const { errors, handleSubmit, register, watch, setValue, reset } = useForm({
     validationSchema: reportSchema,
-    defaultValues: {
-      reporter: user?._id,
-      status: 'pending',
-      documentId: parent._id,
-    },
+    defaultValues,
   });
 
   const submit = async (data) => {
@@ -196,7 +198,10 @@ const ReportModal = ({ visible, onDismiss, parentType, parent, createReport, rep
                   <Surface style={styles.btnSurface}>
                     <Button
                       uppercase={false}
-                      onPress={onDismiss}
+                      onPress={() => {
+                        onDismiss();
+                        reset(defaultValues);
+                      }}
                       style={{ backgroundColor: '#f44336' }}>
                       <Text type="bold" style={{ color: '#fff' }}>
                         Cancel
