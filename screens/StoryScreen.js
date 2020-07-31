@@ -187,38 +187,30 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     rawScrollPosition = e.nativeEvent.contentOffset.y;
   };
 
+  const showToast = (message) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.BOTTOM,
+    });
+  };
+
   const joinOrLeave = async () => {
     if (userIsAParticipant) {
       try {
         if (completedStory) {
-          Toast.show("It's too late to leave this story now", {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.BOTTOM,
-          });
+          showToast("It's too late to leave this story now");
         } else {
           setIsLeaveStoryModalVisible(true);
         }
       } catch (e) {
-        Toast.show(e.message, {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
-        });
+        showToast(e.message);
       }
     } else if (completedStory) {
-      Toast.show('You cannot join a completed story', {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-      });
+      showToast('You cannot join a completed story');
     } else if (authorsCount === 100) {
-      Toast.show('The maximum amount of participants has been reached', {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-      });
+      showToast('The maximum amount of participants has been reached');
     } else if (tooLateToJoin && selectedStory?.genre?.slug !== 'bedtime_stories') {
-      Toast.show("It's too late to join this story now", {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-      });
+      showToast("It's too late to join this story now");
     } else {
       refRBSheet.current.open();
     }
@@ -229,10 +221,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
       await joinStory(story?._id, currentUser?._id, privacyStatus);
       refRBSheet.current.close();
     } catch (e) {
-      Toast.show(e.message, {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-      });
+      showToast(e.message);
     }
   };
 
