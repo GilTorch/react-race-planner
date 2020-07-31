@@ -54,9 +54,11 @@ const NewStoryScreen = ({ navigation, route }) => {
   const genresTitle = [];
   genresData.forEach((genre) => genresTitle.push({ value: genre.name }));
 
+  // We'll fix those times once we enable the features that use them
+  // on this screen
   const [time, setTime] = React.useState({
-    introTimeLimitSeconds: '0:15',
-    endingTimeLimitSeconds: '0:15',
+    introTimeLimitSeconds: '0:10',
+    endingTimeLimitSeconds: '0:10',
     roundTimeLimitSeconds: '0:15',
     voteTimeLimitSeconds: '0:15',
   });
@@ -72,10 +74,10 @@ const NewStoryScreen = ({ navigation, route }) => {
       status: 'waiting_for_players',
       genre: preselectedGenre, // TODO: send the genreId instead
       settings: {
-        introTimeLimitSeconds: 900,
-        endingTimeLimitSeconds: 900,
-        roundTimeLimitSeconds: 900,
-        voteTimeLimitSeconds: 900,
+        introTimeLimitSeconds: 90,
+        endingTimeLimitSeconds: 90,
+        roundTimeLimitSeconds: 120,
+        voteTimeLimitSeconds: 90,
         minimumParticipants: 2,
       },
       privacyStatus: 'username',
