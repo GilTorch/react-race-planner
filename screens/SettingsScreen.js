@@ -879,6 +879,35 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
           </View>
         </View>
 
+        <View>
+          <View
+            style={{
+              marginVertical: 20,
+              justifyContent: 'center',
+              marginLeft: 20
+            }}>
+            <Text style={styles.headline}>EXTRA</Text>
+          </View>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderColor: '#C8C7CC',
+              borderWidth: 1,
+              paddingLeft: 20
+            }}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('WebViewScreen', { title: 'Bug Report' })}
+              testID="privacy-policy">
+              <View style={styles.profileField}>
+                <Text style={{ fontSize: 18 }}>Bug Report</Text>
+                <View>
+                  <Ionicons style={{ color: '#C7C7CC' }} size={24} name="ios-arrow-forward" />
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View
           testID="logout-btn"
           style={{
