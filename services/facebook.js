@@ -7,11 +7,11 @@ const logIn = async () => {
   try {
     await Facebook.initializeAsync(expo.facebookAppId);
     const { type, token } = await Facebook.logInWithReadPermissionsAsync({
-      permissions: ['public_profile']
+      permissions: ['public_profile'],
     });
     if (type === 'success') {
       const response = await axios.get(
-        `https://graph.facebook.com/me?access_token=${token}&fields=email,first_name,last_name`
+        `https://graph.facebook.com/me?access_token=${token}&fields=email,first_name,last_name`,
       );
       const facebookData = await response.data;
       return facebookData;

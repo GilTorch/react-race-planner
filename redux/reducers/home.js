@@ -1,8 +1,6 @@
-import { Home } from '../actions/types';
-// import mergeResponse from '../../utils/mergeResponse';
+import { Home, Story } from '../actions/types';
 
 const initialState = {
-  createStoryLoading: false,
   loadingStories: false,
   stories: null,
   updatingStories: false,
@@ -15,8 +13,8 @@ const initialState = {
         { selected: true, label: 'Waiting for Intro Votes', slug: 'intro_voting' },
         { selected: true, label: 'Rounds in Progress', slug: 'round_writing' },
         { selected: true, label: 'Waiting for Endings', slug: 'waiting_for_outros' },
-        { selected: true, label: 'Waiting for Outro Votes', slug: 'outro_voting' }
-      ]
+        { selected: true, label: 'Waiting for Outro Votes', slug: 'outro_voting' },
+      ],
     },
     genres: {
       allSelected: true,
@@ -27,11 +25,11 @@ const initialState = {
         { selected: true, label: 'Scifi', slug: 'scifi' },
         { selected: true, label: 'Romance', slug: 'romance' },
         { selected: true, label: 'Essay', slug: 'essay' },
-        { selected: true, label: 'Bedtime Stories', slug: 'bedtime_stories' }
-      ]
+        { selected: true, label: 'Bedtime Stories', slug: 'bedtime_stories' },
+      ],
     },
-    authorsRange: [5, 20]
-  }
+    authorsRange: [5, 20],
+  },
 };
 
 const homeReducer = (state = initialState, action) => {
@@ -40,15 +38,87 @@ const homeReducer = (state = initialState, action) => {
   switch (action.type) {
     case Home.SET_ACTIVE_STORIES_FILTERS:
       return { ...state, filters: { ...state.filters, ...action.data } };
-    case Home.CREATE_STORY_START:
-      return { ...state, createStoryLoading: true };
-    case Home.CREATE_STORY_FAILURE:
-      return { ...state, createStoryLoading: false };
-    case Home.CREATE_STORY_SUCCESS:
+    // When it's a new comment, we're not sure where exactly the story is
+    // so we attempt to update it everywhere. We don't add it as a new one,
+    // that's why we don't use `mergeResponse`
+    case Story.COMMENT_ROUND_SUCCESS:
       return {
         ...state,
-        createStoryLoading: false,
-        stories: state.stories ? [...state.stories, action.story] : [action.story]
+        stories: state.stories?.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
+    case Story.GET_SELECTED_STORY_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories?.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
+    // We shouldn't have to check for this here
+    // We need to add a local state for the current story
+    // to the Story screen
+    // We're only doing the following in the case
+    // where the user just joined the story and the story is
+    // still in the `home` reducer while they propose their intro
+    // Because they got to it from the Home screen
+    case Story.CREATE_ROUND_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories?.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
+    case Story.DELETE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories?.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
+    case Story.JOIN_STORY_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories?.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
+      };
+    case Story.ROUND_VOTE_SUCCESS:
+      return {
+        ...state,
+        stories: state.stories?.map((s) => {
+          // eslint-disable-next-line no-underscore-dangle
+          if (s._id === action.story._id) {
+            return action.story;
+          }
+
+          return s;
+        }),
       };
     case Home.GET_ACTIVE_STORIES_START:
       return { ...state, loadingStories: true };
@@ -59,7 +129,7 @@ const homeReducer = (state = initialState, action) => {
         ...state,
         stories: stories?.length ? stories : null,
         loadingStories: false,
-        updatingStories: false
+        updatingStories: false,
       };
     case Home.GET_ACTIVE_STORIES_FAILURE:
       return { ...state, loadingStories: false, updatingStories: false };

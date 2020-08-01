@@ -21,18 +21,18 @@ import SearchAndFilter from '../components/stories/SearchAndFilter';
 const HomeScreen = ({ navigation, getStories }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentGenre, setCurrentGenre] = useState(genresData[0]);
-  const updatingStories = useSelector(state => state.home.updating);
-  const filters = useSelector(state => state.home.filters);
-  const stories = useSelector(state => state.home.stories);
-  const status = filters.status.tags.filter(tag => tag.selected).map(tag => tag.slug);
-  const genres = filters.genres.tags.filter(tag => tag.selected).map(tag => tag.slug);
+  const updatingStories = useSelector((state) => state.home.updating);
+  const filters = useSelector((state) => state.home.filters);
+  const stories = useSelector((state) => state.home.stories);
+  const status = filters.status.tags.filter((tag) => tag.selected).map((tag) => tag.slug);
+  const genres = filters.genres.tags.filter((tag) => tag.selected).map((tag) => tag.slug);
 
   let menu = null;
-  const setMenuRef = ref => {
+  const setMenuRef = (ref) => {
     menu = ref;
   };
 
-  const showMenu = async genreIndex => {
+  const showMenu = async (genreIndex) => {
     setCurrentGenre(genresData[genreIndex]);
     menu.show();
   };
@@ -43,9 +43,9 @@ const HomeScreen = ({ navigation, getStories }) => {
       StatusBar.setBarStyle('dark-content');
 
       navigation.setOptions({
-        headerShown: false
+        headerShown: false,
       });
-    }, [])
+    }, []),
   );
 
   useFocusEffect(
@@ -56,18 +56,18 @@ const HomeScreen = ({ navigation, getStories }) => {
             status,
             genres,
             authorsRange: filters.authorsRange,
-            screen: 'home'
+            screen: 'home',
           });
         } catch (e) {
           Toast.show(e?.message, {
             duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM
+            position: Toast.positions.BOTTOM,
           });
         }
       };
 
       fetchStories();
-    }, [filters])
+    }, [filters]),
   );
 
   const getInProgressStories = async (sq, leading) => {
@@ -79,17 +79,17 @@ const HomeScreen = ({ navigation, getStories }) => {
             status,
             genres,
             authorsRange: filters.authorsRange,
-            screen: 'home'
+            screen: 'home',
           });
         } catch (e) {
           Toast.show(e?.message, {
             duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM
+            position: Toast.positions.BOTTOM,
           });
         }
       },
       2000,
-      { leading }
+      { leading },
     );
 
     await debounced();
@@ -105,7 +105,7 @@ const HomeScreen = ({ navigation, getStories }) => {
             marginBottom: 10,
             marginLeft: 23,
             flexDirection: 'row',
-            alignItems: 'center'
+            alignItems: 'center',
           }}>
           <SimpleLineIcons color="#ED8A18" name="layers" size={25} />
           <Text style={{ ...styles.headline, fontSize: 16, marginLeft: 15 }} type="medium">
@@ -119,15 +119,24 @@ const HomeScreen = ({ navigation, getStories }) => {
           contentContainerStyle={{ paddingLeft: 23 }}>
           {genresData.map((genre, index) => (
             <TouchableOpacity onPress={() => showMenu(index)} key={index.toString()}>
-              <View style={{ justifyContent: 'center', alignItems: 'center', marginRight: 20 }}>
-                <View style={{ ...styles.genreIconContainer, backgroundColor: genre.color }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: 20,
+                }}>
+                <View
+                  style={{
+                    ...styles.genreIconContainer,
+                    backgroundColor: genre.color,
+                  }}>
                   {genre.icon(32)}
                 </View>
                 <Text
                   type="medium"
                   style={{
                     color: '#5A7582',
-                    fontSize: 14
+                    fontSize: 14,
                   }}>
                   {genre.name}
                 </Text>
@@ -144,7 +153,7 @@ const HomeScreen = ({ navigation, getStories }) => {
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              marginBottom: 10
+              marginBottom: 10,
             }}>
             <Text type="bold" style={{ color: '#5A7582', fontSize: 24 }}>
               {currentGenre.name}
@@ -158,7 +167,7 @@ const HomeScreen = ({ navigation, getStories }) => {
               alignSelf: 'flex-end',
               justifyContent: 'flex-end',
               marginTop: 15,
-              marginBottom: 20
+              marginBottom: 20,
             }}>
             <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
               <Button
@@ -201,14 +210,15 @@ const HomeScreen = ({ navigation, getStories }) => {
               style={{
                 flex: 1,
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
               }}>
               <Text
                 type="bold"
                 style={{ fontSize: 24, color: '#999', textAlign: 'center', paddingHorizontal: 10 }}>
                 There are no stories with those filters yet
               </Text>
-              <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
+              {/*  We disable this button for now */}
+              {/* <Surface style={{ marginRight: 10, ...styles.btnSurface }}>
                 <Button
                   icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
                   uppercase={false}
@@ -218,7 +228,7 @@ const HomeScreen = ({ navigation, getStories }) => {
                     Create one using those filters
                   </Text>
                 </Button>
-              </Surface>
+              </Surface> */}
             </View>
           </>
         )}
@@ -241,6 +251,7 @@ const HomeScreen = ({ navigation, getStories }) => {
                     index={index}
                     length={stories.length}
                     navigation={navigation}
+                    reducerName="home"
                   />
                 </View>
               ))}
@@ -253,19 +264,19 @@ const HomeScreen = ({ navigation, getStories }) => {
 };
 
 HomeScreen.propTypes = {
-  navigation: PropTypes.object.isRequired
+  navigation: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#EEE',
-    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.2 : 0
+    marginTop: Platform.OS === 'android' ? Constants.statusBarHeight * 1.2 : 0,
   },
   btnSurface: {
     elevation: 4,
     marginVertical: 10,
-    borderRadius: 5
+    borderRadius: 5,
   },
   headline: { color: '#5A7582' },
   genreIconContainer: {
@@ -273,16 +284,16 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 100
-  }
+    borderRadius: 100,
+  },
 });
 
 HomeScreen.propTypes = {
-  getStories: PropTypes.func.isRequired
+  getStories: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
-  getStories: getStoriesAction
+  getStories: getStoriesAction,
 };
 
 export default connect(null, mapDispatchToProps)(HomeScreen);
