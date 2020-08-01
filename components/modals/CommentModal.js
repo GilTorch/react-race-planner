@@ -1,12 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
-import { View, TouchableOpacity, FlatList, Image, Keyboard } from 'react-native';
+import { View, TouchableOpacity, FlatList, Image, Keyboard, Platform } from 'react-native';
 import { Modal, Portal, TextInput } from 'react-native-paper';
 import PropTypes from 'prop-types';
 import { FontAwesome } from '@expo/vector-icons';
 import Dash from 'react-native-dash';
 import { AllHtmlEntities } from 'html-entities';
-import { useSelector, connect } from 'react-redux';
+import { useSelector, connect, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import Toast from 'react-native-root-toast';
 import moment from 'moment';
@@ -18,10 +18,15 @@ import { SCREEN_HEIGHT } from '../../utils/dimensions';
 import { createCommentAction } from '../../redux/actions/StoryActions';
 import { commentSchema } from '../../utils/validators';
 import CommentMenu from '../CommentMenu';
+import { Story } from '../../redux/actions/types';
 
 const CommentModal = ({ visible, dismiss, parent, createComment }) => {
+  const dispatch = useDispatch();
+
   const currentUser = useSelector((state) => state.auth.currentUser);
   const [margin, setMargin] = React.useState(0);
+  const [comments, setComments] = React.useState(parent?.comments);
+  const [updateStory, setUpdateStory] = React.useState(null);
 
   const flatRef = React.useRef();
 
@@ -41,7 +46,10 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
 
   const submit = async (data) => {
     try {
-      await createComment(data, parent?._id);
+      const { comment: newComment, story } = await createComment(data, parent?._id);
+      reset(defaultValues);
+      setComments([...comments, newComment]);
+      setUpdateStory(story);
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
@@ -66,7 +74,9 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
   }, [register]);
 
   React.useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => setMargin('25%'));
+    Keyboard.addListener('keyboardDidShow', () => {
+      setMargin(Platform.OS === 'android' ? 200 : 500);
+    });
     Keyboard.addListener('keyboardDidHide', onKeyboardHide);
 
     return () => {
@@ -85,6 +95,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
             borderRadius: 6,
             overflow: 'hidden',
             height: SCREEN_HEIGHT * 0.95,
+            marginBottom: margin,
           }}>
           <View
             style={{
@@ -131,13 +142,13 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                 paddingTop: 20,
               }}>
               <Text type="bold" style={styles.label}>
-                Comments ({parent?.comments?.length})
+                Comments ({comments?.length})
               </Text>
             </View>
           </View>
           <View style={{ flex: 1 }}>
             <FlatList
-              data={parent?.comments}
+              data={comments}
               ref={flatRef}
               renderItem={({ item, index }) => (
                 <View>
@@ -211,14 +222,14 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                       <HTMLView value={item.content} />
                     </View>
                   </View>
-                  {parent?.comments?.length !== index + 1 && (
+                  {comments?.length !== index + 1 && (
                     <Dash dashThickness={0.5} dashColor="#707070" style={{ width: '100%' }} />
                   )}
                 </View>
               )}
               keyExtractor={(item) => `${item._id}`}
             />
-            <View style={{ marginBottom: margin }}>
+            <View>
               <TextInput
                 underlineColor={errors.content ? 'red' : 'white'}
                 value={watch('content')}
@@ -244,6 +255,9 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
                 onPress={() => {
                   dismiss();
                   reset(defaultValues);
+                  if (updateStory) {
+                    dispatch({ type: Story.COMMENT_ROUND_SUCCESS, story: updateStory });
+                  }
                 }}
                 style={{
                   ...styles.button,

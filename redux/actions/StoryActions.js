@@ -146,7 +146,7 @@ export const createCommentAction = (data, documentPartId) => (dispatch) => {
   return axios
     .post(`/comments/${documentPartId}`, data)
     .then((response) => {
-      dispatch({ type: Story.COMMENT_ROUND_SUCCESS, story: response.data.story });
+      return response.data;
     })
     .catch((error) => {
       dispatch({ type: Story.COMMENT_ROUND_FAILURE });
