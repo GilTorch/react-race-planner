@@ -67,8 +67,12 @@ const Round = ({
     // <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
     //   {round.content || ''}
     // </Text>
-
-    <HTMLView value={round.content || 'no content yet. <u>Press to add text</u>'} />
+    <>
+      {roundStatus === 'completed' && <HTMLView value={round.content || 'no content'} />}
+      {inprogressRound && (
+        <HTMLView value={round.content || 'no content yet. <u>Press to add text</u>'} />
+      )}
+    </>
   );
 
   const inprogress = (
