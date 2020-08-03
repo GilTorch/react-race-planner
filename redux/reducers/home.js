@@ -1,4 +1,5 @@
 import { Home, Story } from '../actions/types';
+import mergeResponse from '../../utils/mergeResponse';
 
 const initialState = {
   loadingStories: false,
@@ -45,7 +46,6 @@ const homeReducer = (state = initialState, action) => {
       return {
         ...state,
         stories: state.stories?.map((s) => {
-          // eslint-disable-next-line no-underscore-dangle
           if (s._id === action.story._id) {
             return action.story;
           }
@@ -57,13 +57,17 @@ const homeReducer = (state = initialState, action) => {
       return {
         ...state,
         stories: state.stories?.map((s) => {
-          // eslint-disable-next-line no-underscore-dangle
           if (s._id === action.story._id) {
             return action.story;
           }
 
           return s;
         }),
+      };
+    case Story.SKIP_ROUND_SUCCESS:
+      return {
+        ...state,
+        stories: mergeResponse(state.stories, [action.story]),
       };
     // We shouldn't have to check for this here
     // We need to add a local state for the current story
@@ -88,7 +92,6 @@ const homeReducer = (state = initialState, action) => {
       return {
         ...state,
         stories: state.stories?.map((s) => {
-          // eslint-disable-next-line no-underscore-dangle
           if (s._id === action.story._id) {
             return action.story;
           }
@@ -100,7 +103,6 @@ const homeReducer = (state = initialState, action) => {
       return {
         ...state,
         stories: state.stories?.map((s) => {
-          // eslint-disable-next-line no-underscore-dangle
           if (s._id === action.story._id) {
             return action.story;
           }
@@ -112,7 +114,6 @@ const homeReducer = (state = initialState, action) => {
       return {
         ...state,
         stories: state.stories?.map((s) => {
-          // eslint-disable-next-line no-underscore-dangle
           if (s._id === action.story._id) {
             return action.story;
           }
