@@ -219,10 +219,7 @@ const NewStoryScreen = ({ navigation, route }) => {
               setValue('settings', { ...storySettings, minimumParticipants: text })
             }
           />
-          <Text>
-            
-            Including Yoursself
-          </Text>
+          <Text>Including Yoursself</Text>
         </Surface>
         {/* <Surface
           style={{
