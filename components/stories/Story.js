@@ -284,26 +284,29 @@ const Story = ({ story, index, length, navigation, updating, reducerName }) => {
             </View>
           </View>
           <View>
-            <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
-              Initially Proposed Intro {initialIntro?.author?._id === currentUser?._id && '(Yours)'}
-            </Text>
-
-            {initialIntro && (
-              // <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro.content}</Text>
-              <HTMLView value={initialIntro.content} />
-            )}
-
-            {!initialIntro && (
-              <Text
-                style={{
-                  color: '#ED8A18',
-                  fontFamily: 'RobotoItalic',
-                  fontSize: 12,
-                }}>
-                Waiting for{' '}
-                {masterAuthor?._id === currentUser?._id ? 'your' : "the Master Author's"} intro
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('StoryScreen', { story, reducerName });
+              }}>
+              <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
+                Initially Proposed Intro{' '}
+                {initialIntro?.author?._id === currentUser?._id && '(Yours)'}
               </Text>
-            )}
+
+              {initialIntro && <HTMLView value={initialIntro.content} />}
+
+              {!initialIntro && (
+                <Text
+                  style={{
+                    color: '#ED8A18',
+                    fontFamily: 'RobotoItalic',
+                    fontSize: 12,
+                  }}>
+                  Waiting for{' '}
+                  {masterAuthor?._id === currentUser?._id ? 'your' : "the Master Author's"} intro
+                </Text>
+              )}
+            </TouchableOpacity>
           </View>
           <View style={{ marginTop: 10 }}>
             <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
