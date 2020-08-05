@@ -203,7 +203,7 @@ const NewStoryScreen = ({ navigation, route }) => {
             backgroundColor: 'white',
             marginTop: 20,
             padding: 15,
-            paddingBottom: 40,
+            paddingBottom: 25,
             flexDirection: 'column',
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>
@@ -219,6 +219,10 @@ const NewStoryScreen = ({ navigation, route }) => {
               setValue('settings', { ...storySettings, minimumParticipants: text })
             }
           />
+          <Text>
+            
+            Including Yoursself
+          </Text>
         </Surface>
         {/* <Surface
           style={{
