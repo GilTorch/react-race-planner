@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   ScrollView,
@@ -9,7 +9,9 @@ import {
   Platform,
   KeyboardAvoidingView,
   Alert,
+  // CheckBox,
 } from 'react-native';
+
 import Toast from 'react-native-root-toast';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
@@ -19,6 +21,7 @@ import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
 import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from 'react-native-dotenv';
+import CheckboxGroup from 'react-native-checkbox-group';
 
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
@@ -51,6 +54,7 @@ const SignupScreen = ({ navigation, signup }) => {
     validationSchema: signupSchema,
     validateCriteriaMode: 'all',
   });
+
   const socialAccount = watch('socialAccount', false);
   const socialPlatformName = watch('socialPlatformName', false);
   const inputs = {};
@@ -446,6 +450,54 @@ const SignupScreen = ({ navigation, signup }) => {
                 </View>
               </TouchableOpacity>
             </View>
+
+            <View style={styles.container}>
+              <View style={styles.checkboxContainer}>
+                <Text style={styles.labelCheckbox}>I have read and accepted the </Text>
+                <TouchableOpacity
+                  // eslint-disable-next-line no-alert
+                  // eslint-disable-next-line no-undef
+                  onPress={() => alert('Will be redirect to Terms and Conditions!')}>
+                  <Text style={styles.termsAndConditions}>Terms and Conditions</Text>
+                </TouchableOpacity>
+                <View>
+                  <CheckboxGroup
+                    callback={(selected) => {
+                      // eslint-disable-next-line no-console
+                      console.log(selected);
+                    }}
+                    iconColor="#23C2C2"
+                    iconSize={30}
+                    checkedIcon="ios-checkbox-outline"
+                    uncheckedIcon="ios-square-outline"
+                    checkboxes={[{ label: '', value: 1 }]}
+                    labelStyle={{
+                      color: '#23C2C2',
+                    }}
+                    rowStyle={{
+                      flexDirection: 'row',
+                      marginTop: -11,
+                    }}
+                  />
+                  {/* <CheckboxGroup
+                    iconSize={30}
+                    checkedIcon="ios-checkbox-outline"
+                    uncheckedIcon="ios-square-outline"
+                    labelStyle={{
+                      color: '#333',
+                    }}
+                    rowStyle={{
+                      flexDirection: 'row',
+                    }}
+                    style={styles.checkboxPad}
+                    status={checked ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      setChecked(!checked);
+                    }}
+                  /> */}
+                </View>
+              </View>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -543,6 +595,24 @@ const styles = StyleSheet.create({
   goToLoginPageButton: {},
   goToLoginPageButtonText: {
     color: '#23C2C2',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    marginBottom: 72,
+    marginTop: -99,
+    marginLeft: 16,
+    paddingTop: 4,
+  },
+
+  labelCheckbox: {
+    margin: 0,
+    color: '#7F8FA4',
+    fontSize: 13,
+  },
+  termsAndConditions: {
+    color: '#23C2C2',
+    fontSize: 13,
+    marginBottom: -7,
   },
 });
 
