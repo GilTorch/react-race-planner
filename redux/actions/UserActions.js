@@ -33,8 +33,10 @@ export const updateUserPreferenceAction = (dataObj) => (dispatch) => {
     });
 };
 
+// eslint-disable-next-line no-unused-vars
 export const savePushTokenAction = (token) => (dispatch) => {
   return axios.post('/users/save-push-token', { token }).catch((error) => {
+    // eslint-disable-next-line no-console
     console.log("failed to save the user's token", error);
   });
 };
