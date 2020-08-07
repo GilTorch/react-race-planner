@@ -14,7 +14,7 @@ import BoxMenu from './BoxMenu';
 
 const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose, story }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
-
+  const loadingRoundVote = useSelector(state => state.story.roundVoteLoading);
   const electedBlock = proposedBlocks?.find((block) => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -42,6 +42,17 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
     story.settings?.voteTimeLimitSeconds,
     'seconds',
   );
+
+  const handleVoting = async () => {
+    try {
+      await voteForRound(storyId, roundId);
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+      });
+    }
+  };
 
   // const [introSubmittingEndDate, setIntroSubmittingEndDate] = React.useState(introSubmittingEndsAt);
   // const [introVotingEndDate, setIntroVotingEndDate] = React.useState(introVotingEndsAt);
@@ -76,6 +87,39 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
   //     }
   //   };
   // }, []);
+
+
+  const renderVotingButton = () => {
+    const votingButton = (
+      <Surface style={styles.btnSurface}>
+        <Button
+          uppercase={false}
+          loading={loadingRoundVote}
+          disabled={loadingRoundVote}
+          onPress={() => handleVoting(proposedBlock._id)}
+          style={{ backgroundColor: '#03A2A2' }}>
+          <Text type="bold" style={{ color: '#FFF' }}>
+            <Text type="bold" style={{ color: '#fff' }}>
+              Vote now
+        </Text>
+          </Text>
+        </Button>
+      </Surface>
+    )
+    if (story?.status === 'outro_voting' &&
+      type === 'Ending' &&
+      story.outroVotingStartedAt &&
+      moment().isBefore(outroVotingEndsAt)) {
+      return votingButton;
+    }
+
+    if (story?.status === 'intro_voting' &&
+      type === 'Ending' &&
+      story.introVotingStartedAt &&
+      moment().isBefore(introVotingEndsAt)) {
+      return votingButton;
+    }
+  }
 
   const cardsSection = (
     <>
@@ -234,6 +278,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
                   </Text>
                 </View>
               </View>
+              {renderVotingButton()}
             </Surface>
           );
         })}
@@ -288,6 +333,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  btnSurface: {
+    marginTop: 10
+  }
 });
 
 export default ProposedSection;
