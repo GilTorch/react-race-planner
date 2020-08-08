@@ -5,14 +5,15 @@ import { Surface, Button } from 'react-native-paper';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import HTMLView from 'react-native-htmlview';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 
 import moment from 'moment';
 import Text from '../CustomText';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
+import { voteForRoundAction } from "../../redux/actions/StoryActions";
 
-const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose, story }) => {
+const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose, story, voteForRoundAction }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
   const loadingRoundVote = useSelector(state => state.story.roundVoteLoading);
   const electedBlock = proposedBlocks?.find((block) => block.isElected);
@@ -43,9 +44,9 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
     'seconds',
   );
 
-  const handleVoting = async () => {
+  const handleVoting = async (proposedBlockId) => {
     try {
-      await voteForRound(storyId, roundId);
+      await voteForRound(story._id, proposedBlockId);
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.LONG,
@@ -89,15 +90,16 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
   // }, []);
 
 
-  const renderVotingButton = () => {
+  const renderVotingButton = (proposedBlock) => {
     const votingButton = (
-      <Surface style={styles.btnSurface}>
+      <Surface style={{ width: "90%", marginTop: 10, marginLeft: "auto", marginRight: "auto" }}>
         <Button
           uppercase={false}
           loading={loadingRoundVote}
           disabled={loadingRoundVote}
           onPress={() => handleVoting(proposedBlock._id)}
-          style={{ backgroundColor: '#03A2A2' }}>
+          style={{ backgroundColor: '#EC8918' }}
+        >
           <Text type="bold" style={{ color: '#FFF' }}>
             <Text type="bold" style={{ color: '#fff' }}>
               Vote now
@@ -106,6 +108,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
         </Button>
       </Surface>
     )
+
     if (story?.status === 'outro_voting' &&
       type === 'Ending' &&
       story.outroVotingStartedAt &&
@@ -114,7 +117,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
     }
 
     if (story?.status === 'intro_voting' &&
-      type === 'Ending' &&
+      type === 'Intro' &&
       story.introVotingStartedAt &&
       moment().isBefore(introVotingEndsAt)) {
       return votingButton;
@@ -254,7 +257,6 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
               </View>
 
               <HTMLView value={proposedBlock.content} />
-
               <View style={{ marginTop: 'auto' }}>
                 <Text style={styles.separator}>---</Text>
                 {proposedBlock.isElected && (
@@ -277,8 +279,8 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
                     Comments: {proposedBlock.comments.length}
                   </Text>
                 </View>
+                {renderVotingButton(proposedBlock)}
               </View>
-              {renderVotingButton()}
             </Surface>
           );
         })}
@@ -294,6 +296,7 @@ ProposedSection.propTypes = {
   listMode: PropTypes.bool,
   userCanPropose: PropTypes.bool,
   onPropose: PropTypes.func.isRequired,
+  voteForRound: PropTypes.func.isRequired
 };
 
 ProposedSection.defaultProps = {
@@ -307,6 +310,9 @@ const styles = StyleSheet.create({
     color: textColor,
     fontSize: 20,
     marginLeft: 20,
+  },
+  btnSurface: {
+    width: 50
   },
   intros: {
     width: SCREEN_WIDTH * 0.75,
@@ -338,4 +344,8 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProposedSection;
+const mapDispatchToProps = {
+  voteForRound: voteForRoundAction
+}
+
+export default connect(null, mapDispatchToProps)(ProposedSection);
