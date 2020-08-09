@@ -6,6 +6,7 @@ import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import HTMLView from 'react-native-htmlview';
 import { useSelector, connect } from 'react-redux';
+import Toast from 'react-native-root-toast';
 
 import moment from 'moment';
 import Text from '../CustomText';
@@ -20,10 +21,11 @@ const ProposedSection = ({
   userCanPropose,
   onPropose,
   story,
-  voteForRoundAction,
+  voteForRound,
 }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
   const loadingRoundVote = useSelector((state) => state.story.roundVoteLoading);
+
   const electedBlock = proposedBlocks?.find((block) => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -98,16 +100,17 @@ const ProposedSection = ({
   // }, []);
 
   const renderVotingButton = (proposedBlock) => {
+    const alreadyVoted = proposedBlock.votes.some((vote) => vote.voter._id === currentUser?._id);
     const votingButton = (
       <Surface style={{ width: '90%', marginTop: 10, marginLeft: 'auto', marginRight: 'auto' }}>
         <Button
           uppercase={false}
           loading={loadingRoundVote}
-          disabled={loadingRoundVote}
+          disabled={loadingRoundVote || alreadyVoted}
           onPress={() => handleVoting(proposedBlock._id)}
-          style={{ backgroundColor: '#EC8918' }}>
+          style={{ backgroundColor: alreadyVoted ? '#A39F9F' : '#EC8918' }}>
           <Text type="bold" style={{ color: '#FFF' }}>
-            <Text type="bold" style={{ color: '#fff' }}>
+            <Text type="bold" style={{ color: '#fff', fontSize: 12 }}>
               Vote now
             </Text>
           </Text>
@@ -232,6 +235,7 @@ const ProposedSection = ({
         {proposedBlocks?.map((proposedBlock, index) => {
           const margin = index === 0 ? 20 : 0;
           let authorName = index === 0 ? 'the Master Author' : 'an Anonymous Author';
+          const userIsAuthor = currentUser?._id === proposedBlock.author?._id;
 
           if (story.status === 'completed') {
             if (proposedBlock.privacyStatus === 'username') {
@@ -241,8 +245,7 @@ const ProposedSection = ({
             }
           }
 
-          // eslint-disable-next-line no-underscore-dangle
-          if (currentUser?._id === proposedBlock.author?._id) {
+          if (userIsAuthor) {
             authorName = 'You';
           }
 
@@ -261,8 +264,7 @@ const ProposedSection = ({
                   block={proposedBlock}
                   storyStatus={story.status}
                   storyId={story._id}
-                  // eslint-disable-next-line no-underscore-dangle
-                  userIsAuthor={currentUser?._id === proposedBlock.author?._id}
+                  userIsAuthor={userIsAuthor}
                 />
               </View>
 
@@ -289,7 +291,7 @@ const ProposedSection = ({
                     Comments: {proposedBlock.comments.length}
                   </Text>
                 </View>
-                {renderVotingButton(proposedBlock)}
+                {!userIsAuthor && renderVotingButton(proposedBlock)}
               </View>
             </Surface>
           );
@@ -321,9 +323,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginLeft: 20,
   },
-  btnSurface: {
-    width: 50,
-  },
   intros: {
     width: SCREEN_WIDTH * 0.75,
     elevation: 2,
@@ -348,9 +347,6 @@ const styles = StyleSheet.create({
   displayRow: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  btnSurface: {
-    marginTop: 10,
   },
 });
 
