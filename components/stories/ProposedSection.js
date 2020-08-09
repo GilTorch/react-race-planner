@@ -11,11 +11,19 @@ import moment from 'moment';
 import Text from '../CustomText';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
-import { voteForRoundAction } from "../../redux/actions/StoryActions";
+import { voteForRoundAction } from '../../redux/actions/StoryActions';
 
-const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose, story, voteForRoundAction }) => {
+const ProposedSection = ({
+  type,
+  proposedBlocks,
+  listMode,
+  userCanPropose,
+  onPropose,
+  story,
+  voteForRoundAction,
+}) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
-  const loadingRoundVote = useSelector(state => state.story.roundVoteLoading);
+  const loadingRoundVote = useSelector((state) => state.story.roundVoteLoading);
   const electedBlock = proposedBlocks?.find((block) => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -89,40 +97,42 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
   //   };
   // }, []);
 
-
   const renderVotingButton = (proposedBlock) => {
     const votingButton = (
-      <Surface style={{ width: "90%", marginTop: 10, marginLeft: "auto", marginRight: "auto" }}>
+      <Surface style={{ width: '90%', marginTop: 10, marginLeft: 'auto', marginRight: 'auto' }}>
         <Button
           uppercase={false}
           loading={loadingRoundVote}
           disabled={loadingRoundVote}
           onPress={() => handleVoting(proposedBlock._id)}
-          style={{ backgroundColor: '#EC8918' }}
-        >
+          style={{ backgroundColor: '#EC8918' }}>
           <Text type="bold" style={{ color: '#FFF' }}>
             <Text type="bold" style={{ color: '#fff' }}>
               Vote now
-        </Text>
+            </Text>
           </Text>
         </Button>
       </Surface>
-    )
+    );
 
-    if (story?.status === 'outro_voting' &&
+    if (
+      story?.status === 'outro_voting' &&
       type === 'Ending' &&
       story.outroVotingStartedAt &&
-      moment().isBefore(outroVotingEndsAt)) {
+      moment().isBefore(outroVotingEndsAt)
+    ) {
       return votingButton;
     }
 
-    if (story?.status === 'intro_voting' &&
+    if (
+      story?.status === 'intro_voting' &&
       type === 'Intro' &&
       story.introVotingStartedAt &&
-      moment().isBefore(introVotingEndsAt)) {
+      moment().isBefore(introVotingEndsAt)
+    ) {
       return votingButton;
     }
-  }
+  };
 
   const cardsSection = (
     <>
@@ -296,7 +306,7 @@ ProposedSection.propTypes = {
   listMode: PropTypes.bool,
   userCanPropose: PropTypes.bool,
   onPropose: PropTypes.func.isRequired,
-  voteForRound: PropTypes.func.isRequired
+  voteForRound: PropTypes.func.isRequired,
 };
 
 ProposedSection.defaultProps = {
@@ -312,7 +322,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   btnSurface: {
-    width: 50
+    width: 50,
   },
   intros: {
     width: SCREEN_WIDTH * 0.75,
@@ -340,12 +350,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnSurface: {
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
 });
 
 const mapDispatchToProps = {
-  voteForRound: voteForRoundAction
-}
+  voteForRound: voteForRoundAction,
+};
 
 export default connect(null, mapDispatchToProps)(ProposedSection);
