@@ -517,6 +517,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
               userCanPropose={userIsAParticipant && !tooLateForOutro}
               type="Ending"
               proposedBlocks={selectedStory?.parts?.filter((p) => p.isOutro)}
+              listMode={listMode}
               story={selectedStory}
             />
           )}
