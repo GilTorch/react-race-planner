@@ -43,6 +43,7 @@ const defaultValues = {
   googleAccountId: '',
   twitterAccountId: '',
   facebookAccountId: '',
+  acceptTerms: false,
   socialPlatformName: '',
 };
 
@@ -50,7 +51,7 @@ const SignupScreen = ({ navigation, signup }) => {
   const authState = useSelector((state) => state.auth);
   const [socialSignUp, setSocialSignup] = React.useState(false);
   const [showTermsAndConditions, setShowTermsAndConditions] = React.useState(false);
-  const [checked, setChecked] = React.useState(false);
+  // const [checked, setChecked] = React.useState(false);
 
   const showTermsAndConditionsModal = () => {
     setShowTermsAndConditions(true);
@@ -63,6 +64,7 @@ const SignupScreen = ({ navigation, signup }) => {
 
   const socialAccount = watch('socialAccount', false);
   const socialPlatformName = watch('socialPlatformName', false);
+  const acceptTerms = watch('checked', false);
   const inputs = {};
   const focusNextField = (name) => inputs[name].focus();
 
@@ -96,18 +98,26 @@ const SignupScreen = ({ navigation, signup }) => {
     register('password');
     register('password2');
     register('socialAccount');
+    register('acceptTerms');
     register('googleAccountId');
     register('twitterAccountId');
     register('facebookAccountId');
     register('socialPlatformName');
   }, [register]);
 
+  // eslint-disable-next-line no-shadow
+  // const handleCheckBox = (checked) => {
+  //   // eslint-disable-next-line no-empty
+  //   if (checked) {
+  //   } else {
+  //     // eslint-disable-next-line no-alert
+  //     return alert('You Have not read our terms and Conditions!');
+  //   }
+  // };
 
   const submit = async (data) => {
     try {
-      if (setChecked === true) {
-        await signup(data);
-      }
+      await signup(data);
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
@@ -134,6 +144,7 @@ const SignupScreen = ({ navigation, signup }) => {
             { lastName: result.user.familyName },
             { email: result.user.email },
             { socialAccount: true },
+            { acceptTerms: true },
             { googleAccountId: result.user.id },
             { socialPlatformName: 'Google' },
           ],
@@ -372,7 +383,7 @@ const SignupScreen = ({ navigation, signup }) => {
               testID="sign-up-button"
               onPress={handleSubmit(submit)}
               style={styles.submitButton}>
-              {socialAccount && (
+              {socialAccount && acceptTerms && (
                 <Text type="medium" style={styles.submitButtonText}>
                   Continue signup with {socialPlatformName}
                 </Text>
@@ -472,36 +483,33 @@ const SignupScreen = ({ navigation, signup }) => {
                   }}>
                   <Text style={styles.termsAndConditions}>Terms and Conditions </Text>
                 </TouchableOpacity>
+
                 <View style={{ marginTop: -1 }}>
                   <Checkbox
                     label=""
-                    status={checked ? 'checked' : 'unchecked'}
+                    onChangeText={() => setValue('checked', true)}
+                    status={acceptTerms ? 'checked' : 'unchecked'}
+                    style={[errors.acceptTerms && styles.acceptTerms]}
                     onPress={() => {
-                      setChecked(!checked);
+                      acceptTerms('unchecked');
+                      setValue('checked', true);
                     }}
                     checkboxStyle={{ width: 15, height: 15 }}
                   />
                 </View>
+              </View>
+              <View style={styles.errorsTermsWrapper}>
+                {errors.acceptTerms && (
+                  <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                    {errors.acceptTerms.message}
+                  </Text>
+                )}
               </View>
             </View>
           </View>
         </View>
       </ScrollView>
       <PageSpinner visible={authState.loading || socialSignUp} />
-
-      {/* <Portal> */}
-      {/* <View style={{ flex: 1 }}>
-          <Modal isVisible={isModalVisible}>
-            <View style={{ flex: 1 }}>
-              <Text>Hello!</Text>
-
-              <Button title="Hide modal" onPress={toggleModal} />
-            </View>
-          </Modal>
-        </View> */}
-      {/* </Portal> */}
-
-      {/* <PageSpinner visible={authState.loading} /> */}
     </KeyboardAvoidingView>
   );
 };
@@ -559,6 +567,10 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderBottomWidth: 1,
   },
+  acceptTerms: {
+    borderColor: 'red',
+    marginTop: -60,
+  },
   form: {
     width: '75%',
   },
@@ -601,6 +613,9 @@ const styles = StyleSheet.create({
     marginTop: -99,
     marginLeft: 4,
     paddingTop: 4,
+  },
+  errorsTermsWrapper: {
+    marginTop: -70,
   },
 
   labelCheckbox: {
