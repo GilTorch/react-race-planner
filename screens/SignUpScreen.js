@@ -9,7 +9,6 @@ import {
   Platform,
   KeyboardAvoidingView,
   Alert,
-  // CheckBox,
 } from 'react-native';
 
 import Toast from 'react-native-root-toast';
@@ -20,8 +19,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
+import Checkbox from 'react-native-checkbox';
 import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from 'react-native-dotenv';
-import CheckboxGroup from 'react-native-checkbox-group';
 
 import SRLogo from '../assets/images/scriptorerum-logo.png';
 import Text from '../components/CustomText';
@@ -31,6 +30,7 @@ import * as Twitter from '../services/twitter';
 import { signupAction } from '../redux/actions/AuthActions';
 import { signupSchema } from '../utils/validators';
 import PageSpinner from '../components/PageSpinner';
+import { TermsAndConditionsModal } from '../components/modals';
 
 const defaultValues = {
   username: '',
@@ -49,8 +49,14 @@ const defaultValues = {
 const SignupScreen = ({ navigation, signup }) => {
   const authState = useSelector((state) => state.auth);
   const [socialSignUp, setSocialSignup] = React.useState(false);
+  const [showTermsAndConditions, setShowTermsAndConditions] = React.useState(false);
+  const [checked, setChecked] = React.useState(false);
+
+  const showTermsAndConditionsModal = () => {
+    setShowTermsAndConditions(true);
+  };
+  const dismissTermsAndConditions = () => setShowTermsAndConditions(false);
   const { register, handleSubmit, errors, setValue, watch, reset } = useForm({
-    // const { register, handleSubmit, errors, setValue, watch } = useForm({
     validationSchema: signupSchema,
     validateCriteriaMode: 'all',
   });
@@ -96,9 +102,12 @@ const SignupScreen = ({ navigation, signup }) => {
     register('socialPlatformName');
   }, [register]);
 
+
   const submit = async (data) => {
     try {
-      await signup(data);
+      if (setChecked === true) {
+        await signup(data);
+      }
     } catch (e) {
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
@@ -450,51 +459,28 @@ const SignupScreen = ({ navigation, signup }) => {
                 </View>
               </TouchableOpacity>
             </View>
-
+            <TermsAndConditionsModal
+              dismiss={dismissTermsAndConditions}
+              visible={showTermsAndConditions}
+            />
             <View style={styles.container}>
               <View style={styles.checkboxContainer}>
                 <Text style={styles.labelCheckbox}>I have read and accepted the </Text>
                 <TouchableOpacity
-                  // eslint-disable-next-line no-alert
-                  // eslint-disable-next-line no-undef
-                  onPress={() => alert('Will be redirect to Terms and Conditions!')}>
-                  <Text style={styles.termsAndConditions}>Terms and Conditions</Text>
+                  onPress={() => {
+                    showTermsAndConditionsModal();
+                  }}>
+                  <Text style={styles.termsAndConditions}>Terms and Conditions </Text>
                 </TouchableOpacity>
-                <View>
-                  <CheckboxGroup
-                    callback={(selected) => {
-                      // eslint-disable-next-line no-console
-                      console.log(selected);
-                    }}
-                    iconColor="#23C2C2"
-                    iconSize={30}
-                    checkedIcon="ios-checkbox-outline"
-                    uncheckedIcon="ios-square-outline"
-                    checkboxes={[{ label: '', value: 1 }]}
-                    labelStyle={{
-                      color: '#23C2C2',
-                    }}
-                    rowStyle={{
-                      flexDirection: 'row',
-                      marginTop: -11,
-                    }}
-                  />
-                  {/* <CheckboxGroup
-                    iconSize={30}
-                    checkedIcon="ios-checkbox-outline"
-                    uncheckedIcon="ios-square-outline"
-                    labelStyle={{
-                      color: '#333',
-                    }}
-                    rowStyle={{
-                      flexDirection: 'row',
-                    }}
-                    style={styles.checkboxPad}
+                <View style={{ marginTop: -1 }}>
+                  <Checkbox
+                    label=""
                     status={checked ? 'checked' : 'unchecked'}
                     onPress={() => {
                       setChecked(!checked);
                     }}
-                  /> */}
+                    checkboxStyle={{ width: 15, height: 15 }}
+                  />
                 </View>
               </View>
             </View>
@@ -502,6 +488,19 @@ const SignupScreen = ({ navigation, signup }) => {
         </View>
       </ScrollView>
       <PageSpinner visible={authState.loading || socialSignUp} />
+
+      {/* <Portal> */}
+      {/* <View style={{ flex: 1 }}>
+          <Modal isVisible={isModalVisible}>
+            <View style={{ flex: 1 }}>
+              <Text>Hello!</Text>
+
+              <Button title="Hide modal" onPress={toggleModal} />
+            </View>
+          </Modal>
+        </View> */}
+      {/* </Portal> */}
+
       {/* <PageSpinner visible={authState.loading} /> */}
     </KeyboardAvoidingView>
   );
@@ -600,7 +599,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 72,
     marginTop: -99,
-    marginLeft: 16,
+    marginLeft: 4,
     paddingTop: 4,
   },
 
