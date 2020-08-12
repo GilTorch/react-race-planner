@@ -9,6 +9,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   Alert,
+  // Checkbox,
 } from 'react-native';
 
 import Toast from 'react-native-root-toast';
@@ -19,7 +20,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
-import Checkbox from 'react-native-checkbox';
+import CheckBox from 'react-native-checkbox';
 import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from 'react-native-dotenv';
 
 import SRLogo from '../assets/images/scriptorerum-logo.png';
@@ -64,7 +65,7 @@ const SignupScreen = ({ navigation, signup }) => {
 
   const socialAccount = watch('socialAccount', false);
   const socialPlatformName = watch('socialPlatformName', false);
-  const acceptTerms = watch('checked', false);
+  const acceptTerms = watch('acceptTerms', false);
   const inputs = {};
   const focusNextField = (name) => inputs[name].focus();
 
@@ -144,7 +145,7 @@ const SignupScreen = ({ navigation, signup }) => {
             { lastName: result.user.familyName },
             { email: result.user.email },
             { socialAccount: true },
-            { acceptTerms: true },
+            // { acceptTerms: true },
             { googleAccountId: result.user.id },
             { socialPlatformName: 'Google' },
           ],
@@ -379,11 +380,44 @@ const SignupScreen = ({ navigation, signup }) => {
                 </View>
               </>
             )}
+            <TermsAndConditionsModal
+              dismiss={dismissTermsAndConditions}
+              visible={showTermsAndConditions}
+            />
+            <View style={styles.containerl}>
+              <View style={styles.checkboxContainer}>
+                <View style={{ marginTop: -1 }}>
+                  <CheckBox
+                    label=""
+                    style={[errors.acceptTerms && styles.acceptTerms]}
+                    checked={acceptTerms}
+                    onChange={(checked) => {
+                      setValue('acceptTerms', !checked);
+                    }}
+                    checkboxStyle={{ width: 15, height: 15 }}
+                  />
+                </View>
+                <Text style={styles.labelCheckbox}> I have read and accepted the </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    showTermsAndConditionsModal();
+                  }}>
+                  <Text style={styles.termsAndConditions}>Terms and Conditions </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.errorsTermsWrapper}>
+                {errors.acceptTerms && (
+                  <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                    {errors.acceptTerms.message}
+                  </Text>
+                )}
+              </View>
+            </View>
             <TouchableOpacity
               testID="sign-up-button"
               onPress={handleSubmit(submit)}
               style={styles.submitButton}>
-              {socialAccount && acceptTerms && (
+              {socialAccount && (
                 <Text type="medium" style={styles.submitButtonText}>
                   Continue signup with {socialPlatformName}
                 </Text>
@@ -470,42 +504,6 @@ const SignupScreen = ({ navigation, signup }) => {
                 </View>
               </TouchableOpacity>
             </View>
-            <TermsAndConditionsModal
-              dismiss={dismissTermsAndConditions}
-              visible={showTermsAndConditions}
-            />
-            <View style={styles.container}>
-              <View style={styles.checkboxContainer}>
-                <Text style={styles.labelCheckbox}>I have read and accepted the </Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    showTermsAndConditionsModal();
-                  }}>
-                  <Text style={styles.termsAndConditions}>Terms and Conditions </Text>
-                </TouchableOpacity>
-
-                <View style={{ marginTop: -1 }}>
-                  <Checkbox
-                    label=""
-                    onChangeText={() => setValue('checked', true)}
-                    status={acceptTerms ? 'checked' : 'unchecked'}
-                    style={[errors.acceptTerms && styles.acceptTerms]}
-                    onPress={() => {
-                      acceptTerms('unchecked');
-                      setValue('checked', true);
-                    }}
-                    checkboxStyle={{ width: 15, height: 15 }}
-                  />
-                </View>
-              </View>
-              <View style={styles.errorsTermsWrapper}>
-                {errors.acceptTerms && (
-                  <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
-                    {errors.acceptTerms.message}
-                  </Text>
-                )}
-              </View>
-            </View>
           </View>
         </View>
       </ScrollView>
@@ -528,6 +526,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 70,
     marginBottom: 70,
+  },
+  containerl: {
+    backgroundColor: 'white',
+    width: '100%',
+    justifyContent: 'center',
+    top: '16%',
+    marginTop: 39,
+    marginBottom: -6,
   },
   logoContainer: {
     width: '70%',
@@ -568,8 +574,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   acceptTerms: {
-    borderColor: 'red',
-    marginTop: -60,
+    borderColor: 'yellow',
+    top: '50%',
+    marginTop: -10,
   },
   form: {
     width: '75%',
@@ -609,13 +616,15 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     flexDirection: 'row',
-    marginBottom: 72,
-    marginTop: -99,
+    marginTop: -240,
     marginLeft: 4,
     paddingTop: 4,
+    height: 20,
   },
   errorsTermsWrapper: {
-    marginTop: -70,
+    marginTop: 4,
+    height: 30,
+    // marginLeft: -10,
   },
 
   labelCheckbox: {
