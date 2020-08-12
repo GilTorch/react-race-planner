@@ -32,7 +32,7 @@ export const signupSchema = yup.object().shape({
   acceptTerms: yup
     .boolean()
     .oneOf([true], 'Accept Terms & Conditions is required')
-    .required('Terms & Conditions is required'),
+    .required('You have to accept Terms & Conditions '),
   socialAccount: yup.boolean(),
 });
 
