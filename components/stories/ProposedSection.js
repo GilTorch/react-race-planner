@@ -102,7 +102,7 @@ const ProposedSection = ({
   const renderVotingButton = (proposedBlock) => {
     const alreadyVoted = proposedBlock.votes.some((vote) => vote.voter._id === currentUser?._id);
     const votingButton = (
-      <Surface style={{ width: '90%', marginTop: 10, marginLeft: 'auto', marginRight: 'auto' }}>
+      <Surface style={{ width: '40%' }}>
         <Button
           uppercase={false}
           loading={loadingRoundVote}
@@ -271,27 +271,36 @@ const ProposedSection = ({
               <HTMLView value={proposedBlock.content} />
               <View style={{ marginTop: 'auto' }}>
                 <Text style={styles.separator}>---</Text>
-                {proposedBlock.isElected && (
-                  <View style={styles.displayRow}>
-                    <FontAwesome name="star" size={20} color="#ed8a18" />
-                    <Text type="bold" style={styles.boxFooter}>
-                      Elected {type}
-                    </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <View style={{ flexDirection: 'column' }}>
+                    {proposedBlock.isElected && (
+                      <View style={styles.displayRow}>
+                        <FontAwesome name="star" size={20} color="#ed8a18" />
+                        <Text type="bold" style={styles.boxFooter}>
+                          Elected {type}
+                        </Text>
+                      </View>
+                    )}
+                    <View style={styles.displayRow}>
+                      <FontAwesome5 name="vote-yea" size={16} color="#911414" />
+                      <Text type="bold" style={styles.boxFooter}>
+                        Votes: {proposedBlock.votes.length}
+                      </Text>
+                    </View>
+                    <View style={styles.displayRow}>
+                      <FontAwesome name="commenting" size={20} color="#0277BD" />
+                      <Text type="bold" style={styles.boxFooter}>
+                        Comments: {proposedBlock.comments.length}
+                      </Text>
+                    </View>
                   </View>
-                )}
-                <View style={styles.displayRow}>
-                  <FontAwesome5 name="vote-yea" size={16} color="#911414" />
-                  <Text type="bold" style={styles.boxFooter}>
-                    Votes: {proposedBlock.votes.length}
-                  </Text>
+                  {!userIsAuthor && renderVotingButton(proposedBlock)}
                 </View>
-                <View style={styles.displayRow}>
-                  <FontAwesome name="commenting" size={20} color="#0277BD" />
-                  <Text type="bold" style={styles.boxFooter}>
-                    Comments: {proposedBlock.comments.length}
-                  </Text>
-                </View>
-                {!userIsAuthor && renderVotingButton(proposedBlock)}
               </View>
             </Surface>
           );
