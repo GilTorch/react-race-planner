@@ -106,16 +106,6 @@ const SignupScreen = ({ navigation, signup }) => {
     register('socialPlatformName');
   }, [register]);
 
-  // eslint-disable-next-line no-shadow
-  // const handleCheckBox = (checked) => {
-  //   // eslint-disable-next-line no-empty
-  //   if (checked) {
-  //   } else {
-  //     // eslint-disable-next-line no-alert
-  //     return alert('You Have not read our terms and Conditions!');
-  //   }
-  // };
-
   const submit = async (data) => {
     try {
       await signup(data);
@@ -145,7 +135,6 @@ const SignupScreen = ({ navigation, signup }) => {
             { lastName: result.user.familyName },
             { email: result.user.email },
             { socialAccount: true },
-            // { acceptTerms: true },
             { googleAccountId: result.user.id },
             { socialPlatformName: 'Google' },
           ],
@@ -617,24 +606,25 @@ const styles = StyleSheet.create({
   checkboxContainer: {
     flexDirection: 'row',
     marginTop: -240,
-    marginLeft: 4,
-    paddingTop: 4,
+    paddingTop: 8,
     height: 20,
+    alignSelf: 'flex-start',
+    width: '100%',
   },
   errorsTermsWrapper: {
     marginTop: 4,
     height: 30,
-    // marginLeft: -10,
+    bottom: 5.5,
   },
 
   labelCheckbox: {
     margin: 0,
     color: '#7F8FA4',
-    fontSize: 13,
+    fontSize: 11.5,
   },
   termsAndConditions: {
     color: '#23C2C2',
-    fontSize: 13,
+    fontSize: 11.5,
     marginBottom: -7,
   },
 });
