@@ -9,7 +9,6 @@ import {
   Platform,
   KeyboardAvoidingView,
   Alert,
-  // Checkbox,
 } from 'react-native';
 
 import Toast from 'react-native-root-toast';
@@ -52,7 +51,6 @@ const SignupScreen = ({ navigation, signup }) => {
   const authState = useSelector((state) => state.auth);
   const [socialSignUp, setSocialSignup] = React.useState(false);
   const [showTermsAndConditions, setShowTermsAndConditions] = React.useState(false);
-  // const [checked, setChecked] = React.useState(false);
 
   const showTermsAndConditionsModal = () => {
     setShowTermsAndConditions(true);
