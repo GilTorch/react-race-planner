@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import Constants from 'expo-constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import Text from '../CustomText';
-import { SCREEN_HEIGHT } from '../../utils/dimensions';
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../utils/dimensions';
 import { createCommentAction } from '../../redux/actions/StoryActions';
 
 const TermsAndConditionsModal = ({ visible, dismiss }) => {
@@ -48,8 +48,9 @@ const TermsAndConditionsModal = ({ visible, dismiss }) => {
                       style={{
                         color: 'white',
                         fontSize: 18,
-                        paddingLeft: 50,
-                        paddingRight: 50,
+                        margin: 'auto',
+                        padding: 'auto',
+                        left: SCREEN_WIDTH * 0.12,
                       }}>
                       Terms and Conditions
                     </Text>
