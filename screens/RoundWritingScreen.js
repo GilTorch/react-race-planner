@@ -100,7 +100,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
 
       Toast.show('You reached your maximum character limit.', {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
+        position: Toast.positions.TOP,
       });
     } else {
       setCanWriteStory(true);
