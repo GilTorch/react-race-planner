@@ -197,9 +197,9 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
           }
 
           return (
-            <>
+            <View key={Math.random()}>
               <CommentModal dismiss={dismissComment} visible={showComment} parent={proposedBlock} />
-              <Surface key={Math.random()} style={{ ...styles.intros, marginLeft: margin }}>
+              <Surface style={{ ...styles.intros, marginLeft: margin }}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -251,7 +251,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
                   </View>
                 </View>
               </Surface>
-            </>
+            </View>
           );
         })}
       </ScrollView>
