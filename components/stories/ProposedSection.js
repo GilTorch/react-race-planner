@@ -7,12 +7,14 @@ import PropTypes from 'prop-types';
 import HTMLView from 'react-native-htmlview';
 import { useSelector, connect } from 'react-redux';
 import Toast from 'react-native-root-toast';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import moment from 'moment';
 import Text from '../CustomText';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 import { voteForRoundAction } from '../../redux/actions/StoryActions';
+import { CommentModal } from '../modals';
 
 const ProposedSection = ({
   type,
@@ -25,6 +27,7 @@ const ProposedSection = ({
 }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
   const loadingRoundVote = useSelector((state) => state.story.roundVoteLoading);
+  const [showComment, setShowComment] = React.useState(false);
 
   const electedBlock = proposedBlocks?.find((block) => block.isElected);
   const listElected = electedBlock && (
@@ -137,6 +140,10 @@ const ProposedSection = ({
     }
   };
 
+  const showCommentModal = () => {
+    setShowComment(true);
+  };
+  const dismissComment = () => setShowComment(false);
   const cardsSection = (
     <>
       <Text type="medium" style={{ ...styles.title, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -250,59 +257,62 @@ const ProposedSection = ({
           }
 
           return (
-            <Surface key={Math.random()} style={{ ...styles.intros, marginLeft: margin }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text type="bold" style={styles.subTitle}>
-                  By {authorName}
-                </Text>
-                <BoxMenu
-                  parentType={type}
-                  block={proposedBlock}
-                  storyStatus={story.status}
-                  storyId={story._id}
-                  userIsAuthor={userIsAuthor}
-                />
-              </View>
-
-              <HTMLView value={proposedBlock.content} />
-              <View style={{ marginTop: 'auto' }}>
-                <Text style={styles.separator}>---</Text>
+            <View key={Math.random()}>
+              <CommentModal dismiss={dismissComment} visible={showComment} parent={proposedBlock} />
+              <Surface style={{ ...styles.intros, marginLeft: margin }}>
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    alignItems: 'center',
                   }}>
-                  <View style={{ flexDirection: 'column' }}>
-                    {proposedBlock.isElected && (
-                      <View style={styles.displayRow}>
-                        <FontAwesome name="star" size={20} color="#ed8a18" />
-                        <Text type="bold" style={styles.boxFooter}>
-                          Elected {type}
-                        </Text>
-                      </View>
-                    )}
+                  <Text type="bold" style={styles.subTitle}>
+                    By {authorName}
+                  </Text>
+                  <BoxMenu
+                    parentType={type}
+                    block={proposedBlock}
+                    storyStatus={story.status}
+                    storyId={story._id}
+                    // eslint-disable-next-line no-underscore-dangle
+                    userIsAuthor={currentUser?._id === proposedBlock.author?._id}
+                  />
+                </View>
+
+                <HTMLView value={proposedBlock.content} />
+
+                <View style={{ marginTop: 'auto' }}>
+                  <Text style={styles.separator}>---</Text>
+                  {proposedBlock.isElected && (
                     <View style={styles.displayRow}>
-                      <FontAwesome5 name="vote-yea" size={16} color="#911414" />
+                      <FontAwesome name="star" size={20} color="#ed8a18" />
                       <Text type="bold" style={styles.boxFooter}>
-                        Votes: {proposedBlock.votes.length}
+                        Elected {type}
                       </Text>
                     </View>
-                    <View style={styles.displayRow}>
+                  )}
+                  <View style={styles.displayRow}>
+                    <FontAwesome5 name="vote-yea" size={16} color="#911414" />
+                    <Text type="bold" style={styles.boxFooter}>
+                      Votes: {proposedBlock.votes.length}
+                    </Text>
+                  </View>
+
+                  <View>
+                    <TouchableOpacity
+                      style={styles.displayRow}
+                      onPress={() => {
+                        showCommentModal();
+                      }}>
                       <FontAwesome name="commenting" size={20} color="#0277BD" />
                       <Text type="bold" style={styles.boxFooter}>
                         Comments: {proposedBlock.comments.length}
                       </Text>
-                    </View>
+                    </TouchableOpacity>
                   </View>
                   {!userIsAuthor && renderVotingButton(proposedBlock)}
                 </View>
-              </View>
-            </Surface>
+              </Surface>
+            </View>
           );
         })}
       </ScrollView>
