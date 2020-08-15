@@ -209,7 +209,7 @@ const NewStoryScreen = ({ navigation, route }) => {
           <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>
             Minimum Amount of Authors
           </Text>
-          <Text>How many authors are required for this story to begin</Text>
+          <Text>How many authors are required for this story to begin. Including yourself</Text>
           <Dropdown
             value={2}
             fontSize={16}
@@ -219,7 +219,6 @@ const NewStoryScreen = ({ navigation, route }) => {
               setValue('settings', { ...storySettings, minimumParticipants: text })
             }
           />
-          <Text>Including Yoursself</Text>
         </Surface>
         {/* <Surface
           style={{
