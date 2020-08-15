@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import { AsyncStorage } from 'react-native';
-import homeReducer from './home';
-import libraryReducer from './library';
-import writingReducer from './writing';
+import HomeReducer from './HomeReducer';
+import LibraryReducer from './LibraryReducer';
+import WritingReducer from './WritingReducer';
 import AuthReducer from './AuthReducer';
 import UserReducer from './UserReducer';
 import storyReducer from './story';
@@ -43,9 +43,9 @@ const storyPersistConfig = {
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, AuthReducer),
   user: persistReducer(userPersistConfig, UserReducer),
-  home: persistReducer(homePersistConfig, homeReducer),
-  library: persistReducer(libraryPersistConfig, libraryReducer),
-  writing: persistReducer(writingPersistConfig, writingReducer),
+  home: persistReducer(homePersistConfig, HomeReducer),
+  library: persistReducer(libraryPersistConfig, LibraryReducer),
+  writing: persistReducer(writingPersistConfig, WritingReducer),
   story: persistReducer(storyPersistConfig, storyReducer),
 });
 
