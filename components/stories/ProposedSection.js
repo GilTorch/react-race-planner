@@ -5,17 +5,28 @@ import { Surface, Button } from 'react-native-paper';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import HTMLView from 'react-native-htmlview';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
+import Toast from 'react-native-root-toast';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import moment from 'moment';
 import Text from '../CustomText';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
+import { voteForRoundAction } from '../../redux/actions/StoryActions';
 import { CommentModal } from '../modals';
 
-const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose, story }) => {
+const ProposedSection = ({
+  type,
+  proposedBlocks,
+  listMode,
+  userCanPropose,
+  onPropose,
+  story,
+  voteForRound,
+}) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
+  const loadingRoundVote = useSelector((state) => state.story.roundVoteLoading);
   const [showComment, setShowComment] = React.useState(false);
 
   const electedBlock = proposedBlocks?.find((block) => block.isElected);
@@ -45,6 +56,17 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
     story.settings?.voteTimeLimitSeconds,
     'seconds',
   );
+
+  const handleVoting = async (proposedBlockId) => {
+    try {
+      await voteForRound(story._id, proposedBlockId);
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+      });
+    }
+  };
 
   // const [introSubmittingEndDate, setIntroSubmittingEndDate] = React.useState(introSubmittingEndsAt);
   // const [introVotingEndDate, setIntroVotingEndDate] = React.useState(introVotingEndsAt);
@@ -79,6 +101,44 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
   //     }
   //   };
   // }, []);
+
+  const renderVotingButton = (proposedBlock) => {
+    const alreadyVoted = proposedBlock.votes.some((vote) => vote.voter._id === currentUser?._id);
+    const votingButton = (
+      <Surface style={{ width: '40%' }}>
+        <Button
+          uppercase={false}
+          loading={loadingRoundVote}
+          disabled={loadingRoundVote || alreadyVoted}
+          onPress={() => handleVoting(proposedBlock._id)}
+          style={{ backgroundColor: alreadyVoted ? '#A39F9F' : '#EC8918' }}>
+          <Text type="bold" style={{ color: '#FFF' }}>
+            <Text type="bold" style={{ color: '#fff', fontSize: 12 }}>
+              Vote now
+            </Text>
+          </Text>
+        </Button>
+      </Surface>
+    );
+
+    if (
+      story?.status === 'outro_voting' &&
+      type === 'Ending' &&
+      story.outroVotingStartedAt &&
+      moment().isBefore(outroVotingEndsAt)
+    ) {
+      return votingButton;
+    }
+
+    if (
+      story?.status === 'intro_voting' &&
+      type === 'Intro' &&
+      story.introVotingStartedAt &&
+      moment().isBefore(introVotingEndsAt)
+    ) {
+      return votingButton;
+    }
+  };
 
   const showCommentModal = () => {
     setShowComment(true);
@@ -182,6 +242,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
         {proposedBlocks?.map((proposedBlock, index) => {
           const margin = index === 0 ? 20 : 0;
           let authorName = index === 0 ? 'the Master Author' : 'an Anonymous Author';
+          const userIsAuthor = currentUser?._id === proposedBlock.author?._id;
 
           if (story.status === 'completed') {
             if (proposedBlock.privacyStatus === 'username') {
@@ -191,8 +252,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
             }
           }
 
-          // eslint-disable-next-line no-underscore-dangle
-          if (currentUser?._id === proposedBlock.author?._id) {
+          if (userIsAuthor) {
             authorName = 'You';
           }
 
@@ -249,6 +309,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
                       </Text>
                     </TouchableOpacity>
                   </View>
+                  {!userIsAuthor && renderVotingButton(proposedBlock)}
                 </View>
               </Surface>
             </View>
@@ -266,6 +327,7 @@ ProposedSection.propTypes = {
   listMode: PropTypes.bool,
   userCanPropose: PropTypes.bool,
   onPropose: PropTypes.func.isRequired,
+  voteForRound: PropTypes.func.isRequired,
 };
 
 ProposedSection.defaultProps = {
@@ -307,4 +369,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProposedSection;
+const mapDispatchToProps = {
+  voteForRound: voteForRoundAction,
+};
+
+export default connect(null, mapDispatchToProps)(ProposedSection);
