@@ -46,6 +46,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     'waiting_for_outros',
     'outro_voting',
   ];
+  // Note: When it's too late to join, it's also too late to delete the story
   const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(selectedStory?.status);
   const authorsCount = selectedStory?.coAuthors?.length + 1;
   const anonymousAuthorsCount = selectedStory?.coAuthors?.filter(
