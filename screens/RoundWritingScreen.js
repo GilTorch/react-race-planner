@@ -195,7 +195,9 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
               <ActivityIndicator color="#fff" size={Platform.OS === 'android' ? 30 : 'small'} />
             )}
             {!createStoryLoading && (
-              <TouchableOpacity onPress={() => submitRound()} disabled={createStoryLoading || !canWriteStory !}>
+              <TouchableOpacity
+                onPress={() => submitRound()}
+                disabled={createStoryLoading || !canWriteStory}>
                 <Text type="bold" style={{ color: canWriteStory ? 'white' : 'gray', fontSize: 14 }}>
                   Done
                 </Text>
