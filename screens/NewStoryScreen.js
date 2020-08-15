@@ -203,13 +203,13 @@ const NewStoryScreen = ({ navigation, route }) => {
             backgroundColor: 'white',
             marginTop: 20,
             padding: 15,
-            paddingBottom: 40,
+            paddingBottom: 25,
             flexDirection: 'column',
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>
             Minimum Amount of Authors
           </Text>
-          <Text>How many authors are required for this story to begin</Text>
+          <Text>How many authors are required for this story to begin. Including yourself</Text>
           <Dropdown
             value={2}
             fontSize={16}
