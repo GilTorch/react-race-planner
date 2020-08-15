@@ -31,6 +31,8 @@ const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();
 
 const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => {
+  const [canWriteStory, setCanWriteStory] = useState(true);
+
   navigation.setOptions({
     headerShown: false,
   });
@@ -93,7 +95,19 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
   };
 
   const onValueChanged = (newVal) => {
-    setValue(newVal);
+    const trimmedValue = newVal.trim();
+
+    if (trimmedValue.split(' ').length > route.params.story.settings.roundMaxWords) {
+      setCanWriteStory(false);
+
+      Toast.show('You reached your maximum character limit.', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+      });
+    } else {
+      setCanWriteStory(true);
+      setValue(trimmedValue);
+    }
   };
 
   const submitRound = async () => {
@@ -181,8 +195,8 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
               <ActivityIndicator color="#fff" size={Platform.OS === 'android' ? 30 : 'small'} />
             )}
             {!createStoryLoading && (
-              <TouchableOpacity onPress={() => submitRound()} disabled={createStoryLoading}>
-                <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
+              <TouchableOpacity onPress={() => submitRound()} disabled={createStoryLoading || !canWriteStory !}>
+                <Text type="bold" style={{ color: canWriteStory ? 'white' : 'gray', fontSize: 14 }}>
                   Done
                 </Text>
               </TouchableOpacity>
