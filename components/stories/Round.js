@@ -70,11 +70,17 @@ const Round = ({
   }
 
   const roundBody = (
-    // <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
-    //   {round.content || ''}
-    // </Text>
+    <>
+      {roundStatus === 'completed' && <HTMLView value={round.content || 'No content'} />}
 
-    <HTMLView value={round.content || 'no content yet. <u>Press to add text</u>'} />
+      {inprogressRound && !userTurn && <HTMLView value={round.content || 'No content yet'} />}
+
+      {inprogressRound && userTurn && (
+        <HTMLView
+          value={round.content || 'No content yet. <u>Press here to write your round</u>'}
+        />
+      )}
+    </>
   );
 
   const inprogress = (
