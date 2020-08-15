@@ -65,9 +65,14 @@ const Round = ({
 
   const roundBody = (
     <>
-      {roundStatus === 'completed' && <HTMLView value={round.content || 'no content'} />}
-      {inprogressRound && (
-        <HTMLView value={round.content || 'no content yet. <u>Press to add text</u>'} />
+      {roundStatus === 'completed' && <HTMLView value={round.content || 'No content'} />}
+
+      {inprogressRound && !userTurn && <HTMLView value={round.content || 'No content yet'} />}
+
+      {inprogressRound && userTurn && (
+        <HTMLView
+          value={round.content || 'No content yet. <u>Press here to write your round</u>'}
+        />
       )}
     </>
   );
