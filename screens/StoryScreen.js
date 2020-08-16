@@ -31,7 +31,7 @@ import { joinStoryAction, getSelectedStoryAction } from '../redux/actions/StoryA
 import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 
 const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
-  const { story, reducerName } = route.params;
+  const { story, reducerName, isNewStory } = route.params;
   const { masterAuthor } = story;
   const stories = useSelector((state) => state[reducerName]?.stories) || [];
 
@@ -118,6 +118,9 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
 
   navigation.setOptions({
     headerShown: false,
+    // We don't want the user to be able to swipe to go back to the Intro writing screen
+    // if it's a new story
+    gestureEnabled: !isNewStory,
   });
 
   useFocusEffect(
@@ -339,7 +342,9 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
                   icon="arrow-left"
                   color="#5a7582"
                   uppercase={false}
-                  onPress={() => navigation.goBack()}
+                  onPress={() =>
+                    isNewStory ? navigation.navigate('Writing') : navigation.goBack()
+                  }
                   labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium' }}>
                   Go Back
                 </Button>
