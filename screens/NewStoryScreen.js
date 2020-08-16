@@ -77,7 +77,7 @@ const NewStoryScreen = ({ navigation, route }) => {
         introTimeLimitSeconds: 90,
         endingTimeLimitSeconds: 90,
         roundTimeLimitSeconds: 120,
-        voteTimeLimitSeconds: 90,
+        voteTimeLimitSeconds: 300,
         minimumParticipants: 2,
         roundMaxWords: 100,
       },
