@@ -127,10 +127,10 @@ const Round = ({
           <Surface style={styles.surface}>
             <Button
               mode="contained"
-              disabled={loading}
+              disabled={loading || isMasterAuthorRound}
               uppercase={false}
               onPress={() => setIsLeaveStoryModalVisible(true)}
-              style={{ backgroundColor: '#f44336' }}
+              style={{ backgroundColor: isMasterAuthorRound ? '#A39F9F' : '#f44336' }}
               labelStyle={styles.boxBtnLabel}>
               {isMasterAuthorRound ? 'Delete Story' : 'Leave Story'}
             </Button>
