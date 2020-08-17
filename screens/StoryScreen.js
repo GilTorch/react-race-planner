@@ -31,7 +31,7 @@ import { joinStoryAction, getSelectedStoryAction } from '../redux/actions/StoryA
 import LeaveStoryModal from '../components/modals/LeaveStoryModal';
 
 const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
-  const { story, reducerName } = route.params;
+  const { story, reducerName, isNewStory } = route.params;
   const { masterAuthor } = story;
   const stories = useSelector((state) => state[reducerName]?.stories) || [];
 
@@ -46,6 +46,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     'waiting_for_outros',
     'outro_voting',
   ];
+  // Note: When it's too late to join, it's also too late to delete the story
   const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(selectedStory?.status);
   const authorsCount = selectedStory?.coAuthors?.length + 1;
   const anonymousAuthorsCount = selectedStory?.coAuthors?.filter(
@@ -94,7 +95,9 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     }
   }
   let firstBtnColor;
-  if (userIsAParticipant && inProgress) {
+  if (userIsAParticipant && isMasterAuthor && tooLateToJoin) {
+    firstBtnColor = '#A39F9F';
+  } else if (userIsAParticipant && inProgress) {
     firstBtnColor = '#F44336';
   } else if (!userIsAParticipant && waitingStory) {
     firstBtnColor = '#ED8A18';
@@ -113,8 +116,16 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     { value: 'anonymous', label: 'Anonymous' },
   ];
 
+  const parent = navigation.dangerouslyGetParent();
+  parent.setOptions({
+    tabBarVisible: true,
+  });
+
   navigation.setOptions({
     headerShown: false,
+    // We don't want the user to be able to swipe to go back to the Intro writing screen
+    // if it's a new story
+    gestureEnabled: !isNewStory,
   });
 
   useFocusEffect(
@@ -187,38 +198,32 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     rawScrollPosition = e.nativeEvent.contentOffset.y;
   };
 
+  const showToast = (message) => {
+    Toast.show(message, {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.BOTTOM,
+    });
+  };
+
   const joinOrLeave = async () => {
     if (userIsAParticipant) {
       try {
         if (completedStory) {
-          Toast.show("It's too late to leave this story now", {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.BOTTOM,
-          });
+          showToast("It's too late to leave this story now");
+        } else if (isMasterAuthor && tooLateToJoin) {
+          showToast('You cannot delete a story that has started already');
         } else {
           setIsLeaveStoryModalVisible(true);
         }
       } catch (e) {
-        Toast.show(e.message, {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
-        });
+        showToast(e.message);
       }
     } else if (completedStory) {
-      Toast.show('You cannot join a completed story', {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-      });
+      showToast('You cannot join a completed story');
     } else if (authorsCount === 100) {
-      Toast.show('The maximum amount of participants has been reached', {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-      });
+      showToast('The maximum amount of participants has been reached');
     } else if (tooLateToJoin && selectedStory?.genre?.slug !== 'bedtime_stories') {
-      Toast.show("It's too late to join this story now", {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-      });
+      showToast("It's too late to join this story now");
     } else {
       refRBSheet.current.open();
     }
@@ -229,10 +234,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
       await joinStory(story?._id, currentUser?._id, privacyStatus);
       refRBSheet.current.close();
     } catch (e) {
-      Toast.show(e.message, {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-      });
+      showToast(e.message);
     }
   };
 
@@ -345,7 +347,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
                   icon="arrow-left"
                   color="#5a7582"
                   uppercase={false}
-                  onPress={() => navigation.goBack()}
+                  onPress={() => (isNewStory ? navigation.popToTop() : navigation.goBack())}
                   labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium' }}>
                   Go Back
                 </Button>
@@ -517,6 +519,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
               userCanPropose={userIsAParticipant && !tooLateForOutro}
               type="Ending"
               proposedBlocks={selectedStory?.parts?.filter((p) => p.isOutro)}
+              listMode={listMode}
               story={selectedStory}
             />
           )}

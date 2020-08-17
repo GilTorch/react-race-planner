@@ -5,15 +5,29 @@ import { Surface, Button } from 'react-native-paper';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import HTMLView from 'react-native-htmlview';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
+import Toast from 'react-native-root-toast';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import moment from 'moment';
 import Text from '../CustomText';
 import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
+import { voteForRoundAction } from '../../redux/actions/StoryActions';
+import { CommentModal } from '../modals';
 
-const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPropose, story }) => {
+const ProposedSection = ({
+  type,
+  proposedBlocks,
+  listMode,
+  userCanPropose,
+  onPropose,
+  story,
+  voteForRound,
+}) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
+  const loadingRoundVote = useSelector((state) => state.story.roundVoteLoading);
+  const [showComment, setShowComment] = React.useState(false);
 
   const electedBlock = proposedBlocks?.find((block) => block.isElected);
   const listElected = electedBlock && (
@@ -42,6 +56,17 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
     story.settings?.voteTimeLimitSeconds,
     'seconds',
   );
+
+  const handleVoting = async (proposedBlockId) => {
+    try {
+      await voteForRound(story._id, proposedBlockId);
+    } catch (e) {
+      Toast.show(e.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+      });
+    }
+  };
 
   // const [introSubmittingEndDate, setIntroSubmittingEndDate] = React.useState(introSubmittingEndsAt);
   // const [introVotingEndDate, setIntroVotingEndDate] = React.useState(introVotingEndsAt);
@@ -77,6 +102,48 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
   //   };
   // }, []);
 
+  const renderVotingButton = (proposedBlock) => {
+    const alreadyVoted = proposedBlock.votes.some((vote) => vote.voter._id === currentUser?._id);
+    const votingButton = (
+      <Surface style={{ width: '40%' }}>
+        <Button
+          uppercase={false}
+          loading={loadingRoundVote}
+          disabled={loadingRoundVote || alreadyVoted}
+          onPress={() => handleVoting(proposedBlock._id)}
+          style={{ backgroundColor: alreadyVoted ? '#A39F9F' : '#EC8918' }}>
+          <Text type="bold" style={{ color: '#FFF' }}>
+            <Text type="bold" style={{ color: '#fff', fontSize: 12 }}>
+              Vote now
+            </Text>
+          </Text>
+        </Button>
+      </Surface>
+    );
+
+    if (
+      story?.status === 'outro_voting' &&
+      type === 'Ending' &&
+      story.outroVotingStartedAt &&
+      moment().isBefore(outroVotingEndsAt)
+    ) {
+      return votingButton;
+    }
+
+    if (
+      story?.status === 'intro_voting' &&
+      type === 'Intro' &&
+      story.introVotingStartedAt &&
+      moment().isBefore(introVotingEndsAt)
+    ) {
+      return votingButton;
+    }
+  };
+
+  const showCommentModal = () => {
+    setShowComment(true);
+  };
+  const dismissComment = () => setShowComment(false);
   const cardsSection = (
     <>
       <Text type="medium" style={{ ...styles.title, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -175,6 +242,7 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
         {proposedBlocks?.map((proposedBlock, index) => {
           const margin = index === 0 ? 20 : 0;
           let authorName = index === 0 ? 'the Master Author' : 'an Anonymous Author';
+          const userIsAuthor = currentUser?._id === proposedBlock.author?._id;
 
           if (story.status === 'completed') {
             if (proposedBlock.privacyStatus === 'username') {
@@ -184,57 +252,67 @@ const ProposedSection = ({ type, proposedBlocks, listMode, userCanPropose, onPro
             }
           }
 
-          // eslint-disable-next-line no-underscore-dangle
-          if (currentUser?._id === proposedBlock.author?._id) {
+          if (userIsAuthor) {
             authorName = 'You';
           }
 
           return (
-            <Surface key={Math.random()} style={{ ...styles.intros, marginLeft: margin }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text type="bold" style={styles.subTitle}>
-                  By {authorName}
-                </Text>
-                <BoxMenu
-                  parentType={type}
-                  block={proposedBlock}
-                  storyStatus={story.status}
-                  storyId={story._id}
-                  // eslint-disable-next-line no-underscore-dangle
-                  userIsAuthor={currentUser?._id === proposedBlock.author?._id}
-                />
-              </View>
+            <View key={Math.random()}>
+              <CommentModal dismiss={dismissComment} visible={showComment} parent={proposedBlock} />
+              <Surface style={{ ...styles.intros, marginLeft: margin }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text type="bold" style={styles.subTitle}>
+                    By {authorName}
+                  </Text>
+                  <BoxMenu
+                    parentType={type}
+                    block={proposedBlock}
+                    storyStatus={story.status}
+                    storyId={story._id}
+                    // eslint-disable-next-line no-underscore-dangle
+                    userIsAuthor={currentUser?._id === proposedBlock.author?._id}
+                  />
+                </View>
 
-              <HTMLView value={proposedBlock.content} />
+                <HTMLView value={proposedBlock.content} />
 
-              <View style={{ marginTop: 'auto' }}>
-                <Text style={styles.separator}>---</Text>
-                {proposedBlock.isElected && (
+                <View style={{ marginTop: 'auto' }}>
+                  <Text style={styles.separator}>---</Text>
+                  {proposedBlock.isElected && (
+                    <View style={styles.displayRow}>
+                      <FontAwesome name="star" size={20} color="#ed8a18" />
+                      <Text type="bold" style={styles.boxFooter}>
+                        Elected {type}
+                      </Text>
+                    </View>
+                  )}
                   <View style={styles.displayRow}>
-                    <FontAwesome name="star" size={20} color="#ed8a18" />
+                    <FontAwesome5 name="vote-yea" size={16} color="#911414" />
                     <Text type="bold" style={styles.boxFooter}>
-                      Elected {type}
+                      Votes: {proposedBlock.votes.length}
                     </Text>
                   </View>
-                )}
-                <View style={styles.displayRow}>
-                  <FontAwesome5 name="vote-yea" size={16} color="#911414" />
-                  <Text type="bold" style={styles.boxFooter}>
-                    Votes: {proposedBlock.votes.length}
-                  </Text>
+
+                  <View>
+                    <TouchableOpacity
+                      style={styles.displayRow}
+                      onPress={() => {
+                        showCommentModal();
+                      }}>
+                      <FontAwesome name="commenting" size={20} color="#0277BD" />
+                      <Text type="bold" style={styles.boxFooter}>
+                        Comments: {proposedBlock.comments.length}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  {!userIsAuthor && renderVotingButton(proposedBlock)}
                 </View>
-                <View style={styles.displayRow}>
-                  <FontAwesome name="commenting" size={20} color="#0277BD" />
-                  <Text type="bold" style={styles.boxFooter}>
-                    Comments: {proposedBlock.comments.length}
-                  </Text>
-                </View>
-              </View>
-            </Surface>
+              </Surface>
+            </View>
           );
         })}
       </ScrollView>
@@ -249,6 +327,7 @@ ProposedSection.propTypes = {
   listMode: PropTypes.bool,
   userCanPropose: PropTypes.bool,
   onPropose: PropTypes.func.isRequired,
+  voteForRound: PropTypes.func.isRequired,
 };
 
 ProposedSection.defaultProps = {
@@ -290,4 +369,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProposedSection;
+const mapDispatchToProps = {
+  voteForRound: voteForRoundAction,
+};
+
+export default connect(null, mapDispatchToProps)(ProposedSection);

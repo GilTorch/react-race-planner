@@ -14,6 +14,7 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 import { skipRoundAction } from '../../redux/actions/StoryActions';
 import LeaveStoryModal from '../modals/LeaveStoryModal';
+import { CommentModal } from '../modals';
 
 const Round = ({
   navigation,
@@ -32,6 +33,11 @@ const Round = ({
   const loading = useSelector((state) => state.story.skipRoundLoading);
 
   const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
+  const [showComment, setShowComment] = React.useState(false);
+  const showCommentModal = () => {
+    setShowComment(true);
+  };
+  const dismissComment = () => setShowComment(false);
 
   const inprogressRound = roundStatus === 'in_progress';
   const userTurn = round?.author?._id === currentUser?._id;
@@ -64,11 +70,17 @@ const Round = ({
   }
 
   const roundBody = (
-    // <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
-    //   {round.content || ''}
-    // </Text>
+    <>
+      {roundStatus === 'completed' && <HTMLView value={round.content || 'No content'} />}
 
-    <HTMLView value={round.content || 'no content yet. <u>Press to add text</u>'} />
+      {inprogressRound && !userTurn && <HTMLView value={round.content || 'No content yet'} />}
+
+      {inprogressRound && userTurn && (
+        <HTMLView
+          value={round.content || 'No content yet. <u>Press here to write your round</u>'}
+        />
+      )}
+    </>
   );
 
   const inprogress = (
@@ -165,13 +177,18 @@ const Round = ({
           <>
             {roundBody}
             <View style={{ marginTop: 'auto' }}>
+              <CommentModal dismiss={dismissComment} visible={showComment} parent={round} />
               <Text style={styles.separator}>---</Text>
-              <View style={styles.displayRow}>
+              <TouchableOpacity
+                style={styles.displayRow}
+                onPress={() => {
+                  showCommentModal();
+                }}>
                 <FontAwesome name="commenting" size={20} color="#0277BD" />
                 <Text type="bold" style={styles.boxFooter}>
                   Comments: {round.comments.length}
                 </Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </>
         )}
