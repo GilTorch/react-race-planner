@@ -342,11 +342,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
                   icon="arrow-left"
                   color="#5a7582"
                   uppercase={false}
-                  onPress={() =>
-                    isNewStory
-                      ? navigation.navigate('Writing', { screen: 'WritingScreen' })
-                      : navigation.goBack()
-                  }
+                  onPress={() => (isNewStory ? navigation.popToTop() : navigation.goBack())}
                   labelStyle={{ fontSize: 15, fontFamily: 'RobotoMedium' }}>
                   Go Back
                 </Button>
