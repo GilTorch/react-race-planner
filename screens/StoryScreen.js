@@ -116,6 +116,11 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     { value: 'anonymous', label: 'Anonymous' },
   ];
 
+  const parent = navigation.dangerouslyGetParent();
+  parent.setOptions({
+    tabBarVisible: true,
+  });
+
   navigation.setOptions({
     headerShown: false,
     // We don't want the user to be able to swipe to go back to the Intro writing screen
