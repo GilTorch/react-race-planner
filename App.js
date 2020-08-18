@@ -43,7 +43,7 @@ import AppNavigation from './navigation';
 import store from './redux/store';
 import persistor from './redux/store/persistor';
 import { AppContext } from './utils/providers/app-context';
-
+import Countdown from './components/Countdown';
 // For development only. We use those when we want to
 // reset the store and pause redux-persist respectively
 // persistor.purge();
@@ -171,6 +171,7 @@ export default function App(props) {
     return <AppLoading startAsync={loadAssetsAsync} onFinish={() => setLoadingComplete(true)} />;
   }
 
+  return <Countdown />;
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
