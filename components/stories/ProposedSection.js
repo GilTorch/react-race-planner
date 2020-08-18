@@ -151,24 +151,27 @@ const ProposedSection = ({
         All Proposed {type}s ({proposedBlocks?.length})
       </Text>
 
-      {userCanPropose && type === 'Intro' && moment().isBefore(introSubmittingEndsAt) && (
-        <View
-          style={{
-            flex: 1,
-            marginLeft: 20,
-            marginTop: 10,
-          }}>
-          <Button
-            icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
-            uppercase={false}
-            onPress={() => onPropose()}
-            style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
-            <Text type="bold" style={{ color: '#FFF' }}>
-              Propose an Intro
-            </Text>
-          </Button>
-        </View>
-      )}
+      {userCanPropose &&
+        type === 'Intro' &&
+        !alreadyProposed &&
+        moment().isBefore(introSubmittingEndsAt) && (
+          <View
+            style={{
+              flex: 1,
+              marginLeft: 20,
+              marginTop: 10,
+            }}>
+            <Button
+              icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+              uppercase={false}
+              onPress={() => onPropose()}
+              style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
+              <Text type="bold" style={{ color: '#FFF' }}>
+                Propose an Intro
+              </Text>
+            </Button>
+          </View>
+        )}
 
       {story?.status === 'waiting_for_intros' &&
         type === 'Intro' &&
