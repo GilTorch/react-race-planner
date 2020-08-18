@@ -19,7 +19,7 @@ import CNRichTextEditor, {
   getDefaultStyles,
   convertToObject,
 } from 'react-native-cn-richtext-editor';
-import { Surface, ActivityIndicator } from 'react-native-paper';
+import { Surface, ActivityIndicator, Portal, Modal, Button } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect } from '@react-navigation/native';
 import { connect, useSelector } from 'react-redux';
@@ -32,6 +32,9 @@ const defaultStyles = getDefaultStyles();
 
 const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => {
   const [canWriteStory, setCanWriteStory] = useState(true);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const showCancelConfirmationModal = () => setModalVisible(true);
+  const hideCancelConfirmationModal = () => setModalVisible(false);
 
   navigation.setOptions({
     headerShown: false,
@@ -175,7 +178,11 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <TouchableOpacity onPress={() => navigation.goBack()} disabled={createStoryLoading}>
+            <TouchableOpacity
+              onPress={() =>
+                value.length > 0 ? showCancelConfirmationModal() : navigation.goBack()
+              }
+              disabled={createStoryLoading}>
               <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
                 Cancel
               </Text>
@@ -285,6 +292,52 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
           />
         </View>
       </MenuProvider>
+
+      <Portal>
+        <Modal
+          dismissable={false}
+          visible={modalVisible}
+          contentContainerStyle={{
+            backgroundColor: 'white',
+            borderRadius: 6,
+            height: '20%',
+            width: '90%',
+            alignSelf: 'center',
+          }}
+          onDismiss={() => hideCancelConfirmationModal()}>
+          <View
+            style={{
+              alignItems: 'center',
+              margin: 20,
+              marginBottom: 10,
+            }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#5A7582' }}>
+              Are you sure you want to cancel your round?
+            </Text>
+          </View>
+          <View style={{ flex: 1, justifyContent: 'space-around' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+              }}>
+              <Surface style={styles.btnSurface}>
+                <Button onPress={() => navigation.goBack()} style={{ backgroundColor: '#f44336' }}>
+                  <Text style={{ color: '#fff', fontWeight: 'bold' }}>Yes</Text>
+                </Button>
+              </Surface>
+              <Surface style={styles.btnSurface}>
+                <Button
+                  testID="cancel-deletion"
+                  onPress={() => hideCancelConfirmationModal()}
+                  style={{ backgroundColor: '#03A2A2' }}>
+                  <Text style={{ color: '#FFF', fontWeight: 'bold' }}>No</Text>
+                </Button>
+              </Surface>
+            </View>
+          </View>
+        </Modal>
+      </Portal>
     </KeyboardAvoidingView>
   );
 };
