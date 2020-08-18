@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
+import PropTypes from 'prop-types';
 
 function converTimeInSeconds(timeInString) {
   let hours = 0;
@@ -36,10 +37,10 @@ function converTimeInString(timeInSeconds) {
   const minutesInString = minutes < 10 ? `0${minutes}:` : `${minutes}:`;
   const secondsInString = seconds < 10 ? `0${seconds}` : `${seconds}`;
 
-  return hoursInString + minutesInString + secondsInString;
+  return (hours > 0 ? hoursInString : '') + minutesInString + secondsInString;
 }
 
-export default function Cowntdown() {
+function Countdown({ style }) {
   const [timeLeft, setTimeLeft] = useState('0:10');
 
   useEffect(() => {
@@ -71,7 +72,13 @@ export default function Cowntdown() {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <Text>{timeLeft}</Text>
+      <Text style={{ ...style }}>{timeLeft}</Text>
     </View>
   );
 }
+
+Countdown.propTypes = {
+  style: PropTypes.object,
+};
+
+export default Countdown;
