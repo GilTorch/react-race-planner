@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Surface, Button } from 'react-native-paper';
+import { Surface, Button, Dialog, Paragraph, Portal } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import Toast from 'react-native-root-toast';
@@ -31,6 +31,7 @@ const Round = ({
   const roundStatus = round.status;
   const currentUser = useSelector((state) => state.auth.currentUser);
   const loading = useSelector((state) => state.story.skipRoundLoading);
+  const [confirmSkipVisible, setConfirmVisible] = React.useState(false);
 
   const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
   const [showComment, setShowComment] = React.useState(false);
@@ -116,7 +117,7 @@ const Round = ({
                 loading={loading}
                 disabled={loading}
                 uppercase={false}
-                onPress={handleSkipRound}
+                onPress={() => setConfirmVisible(true)}
                 style={{ backgroundColor: '#ED8A18', width: SCREEN_WIDTH * 0.25 }}
                 labelStyle={styles.boxBtnLabel}>
                 Skip Turn
@@ -196,7 +197,29 @@ const Round = ({
     </View>
   );
 
-  return listMode ? listRound : cardRound;
+  return (
+    <>
+      <Portal>
+        <Dialog visible={confirmSkipVisible} onDismiss={() => setConfirmVisible(false)}>
+          <Dialog.Content>
+            <Paragraph>Are you sure your want to skip your round?</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setConfirmVisible(false)}>Cancel</Button>
+            <Button
+              onPress={() => {
+                setConfirmVisible(false);
+                handleSkipRound();
+              }}>
+              Confirm
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+
+      {listMode ? listRound : cardRound}
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
