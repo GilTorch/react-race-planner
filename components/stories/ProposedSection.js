@@ -21,6 +21,7 @@ const ProposedSection = ({
   proposedBlocks,
   listMode,
   userCanPropose,
+  userIsAParticipant,
   onPropose,
   story,
   voteForRound,
@@ -315,7 +316,7 @@ const ProposedSection = ({
                         </Text>
                       </TouchableOpacity>
                     </View>
-                    {!userIsAuthor && renderVotingButton(proposedBlock)}
+                    {!userIsAuthor && userIsAParticipant && renderVotingButton(proposedBlock)}
                   </View>
                 </View>
               </Surface>
@@ -333,6 +334,7 @@ ProposedSection.propTypes = {
   proposedBlocks: PropTypes.array.isRequired,
   listMode: PropTypes.bool,
   userCanPropose: PropTypes.bool,
+  userIsAParticipant: PropTypes.bool,
   onPropose: PropTypes.func.isRequired,
   voteForRound: PropTypes.func.isRequired,
 };
