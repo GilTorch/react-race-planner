@@ -201,17 +201,23 @@ const Round = ({
     <>
       <Portal>
         <Dialog visible={confirmSkipVisible} onDismiss={() => setConfirmVisible(false)}>
+          <Dialog.Title>Skipping Round</Dialog.Title>
           <Dialog.Content>
             <Paragraph>Are you sure your want to skip your round?</Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setConfirmVisible(false)}>Cancel</Button>
             <Button
+              style={[styles.button, { backgroundColor: '#EC8918' }]}
               onPress={() => {
                 setConfirmVisible(false);
                 handleSkipRound();
               }}>
               Confirm
+            </Button>
+            <Button
+              style={[styles.button, { backgroundColor: '#ff0000' }]}
+              onPress={() => setConfirmVisible(false)}>
+              Cancel
             </Button>
           </Dialog.Actions>
         </Dialog>
@@ -274,6 +280,20 @@ const styles = StyleSheet.create({
   },
   displayRow: {
     flexDirection: 'row',
+  },
+  button: {
+    backgroundColor: '#03A2A2',
+    height: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    padding: 5,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 });
 
