@@ -125,7 +125,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
             <View style={{ paddingLeft: 20, flexDirection: 'row' }}>
               <Text style={styles.label}>Author: </Text>
               <Text type="bold" style={styles.label}>
-                {parent?.author?.username || ''}
+                {parent?.status === 'in_progress' ? 'Anonymous' : parent?.author?.username || ''}
               </Text>
             </View>
             <View style={{ marginLeft: 20, marginTop: 10 }}>
