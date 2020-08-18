@@ -282,34 +282,41 @@ const ProposedSection = ({
 
                 <View style={{ marginTop: 'auto' }}>
                   <Text style={styles.separator}>---</Text>
-                  {proposedBlock.isElected && (
-                    <View style={styles.displayRow}>
-                      <FontAwesome name="star" size={20} color="#ed8a18" />
-                      <Text type="bold" style={styles.boxFooter}>
-                        Elected {type}
-                      </Text>
-                    </View>
-                  )}
-                  <View style={styles.displayRow}>
-                    <FontAwesome5 name="vote-yea" size={16} color="#911414" />
-                    <Text type="bold" style={styles.boxFooter}>
-                      Votes: {proposedBlock.votes.length}
-                    </Text>
-                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                    <View style={{ flexDirection: 'column' }}>
+                      {proposedBlock.isElected && (
+                        <View style={styles.displayRow}>
+                          <FontAwesome name="star" size={20} color="#ed8a18" />
+                          <Text type="bold" style={styles.boxFooter}>
+                            Elected {type}
+                          </Text>
+                        </View>
+                      )}
+                      <View style={styles.displayRow}>
+                        <FontAwesome5 name="vote-yea" size={16} color="#911414" />
+                        <Text type="bold" style={styles.boxFooter}>
+                          Votes: {proposedBlock.votes.length}
+                        </Text>
+                      </View>
 
-                  <View>
-                    <TouchableOpacity
-                      style={styles.displayRow}
-                      onPress={() => {
-                        showCommentModal();
-                      }}>
-                      <FontAwesome name="commenting" size={20} color="#0277BD" />
-                      <Text type="bold" style={styles.boxFooter}>
-                        Comments: {proposedBlock.comments.length}
-                      </Text>
-                    </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.displayRow}
+                        onPress={() => {
+                          showCommentModal();
+                        }}>
+                        <FontAwesome name="commenting" size={20} color="#0277BD" />
+                        <Text type="bold" style={styles.boxFooter}>
+                          Comments: {proposedBlock.comments.length}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    {!userIsAuthor && renderVotingButton(proposedBlock)}
                   </View>
-                  {!userIsAuthor && renderVotingButton(proposedBlock)}
                 </View>
               </Surface>
             </View>
