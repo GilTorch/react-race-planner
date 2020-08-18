@@ -12,7 +12,7 @@ import Text from '../CustomText';
 import { CommentModal, VotingModal } from '../modals';
 import ReportModal from '../modals/ReportModal';
 
-const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
+const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor, isTimeToVote }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
   const inProgresstories = useSelector((state) => state.home.stories) || [];
   const completedStories = useSelector((state) => state.library.stories) || [];
@@ -60,6 +60,7 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
   };
 
   const showVotingModal = () => {
+
     const introVotingEndsAt = moment(storedStory.introVotingStartedAt).add(
       storedStory.settings?.voteTimeLimitSeconds,
       'seconds',
@@ -107,7 +108,7 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
       return;
     }
 
-    if (parentType === 'Outro' && storyStatus !== 'outro_voting') {
+    if (parentType === 'Ending' && storyStatus !== 'outro_voting') {
       setshowMenu(false);
 
       let message = "It's not time to vote yet";
