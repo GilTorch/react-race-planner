@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { View, ViewPropTypes } from 'react-native';
 import { Text } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
@@ -40,8 +40,8 @@ function converTimeInString(timeInSeconds) {
   return (hours > 0 ? hoursInString : '') + minutesInString + secondsInString;
 }
 
-function Countdown({ style }) {
-  const [timeLeft, setTimeLeft] = useState('0:10');
+function Countdown({ style, countdownTimeInSeconds }) {
+  const [timeLeft, setTimeLeft] = useState(converTimeInString(countdownTimeInSeconds));
 
   useEffect(() => {
     const interValId = setInterval(() => {
@@ -78,7 +78,8 @@ function Countdown({ style }) {
 }
 
 Countdown.propTypes = {
-  style: PropTypes.object,
+  style: ViewPropTypes.style,
+  countdownTimeInSeconds: PropTypes.number.isRequired,
 };
 
 export default Countdown;

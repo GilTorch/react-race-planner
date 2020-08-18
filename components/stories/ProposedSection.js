@@ -15,6 +15,7 @@ import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 import { voteForRoundAction } from '../../redux/actions/StoryActions';
 import { CommentModal } from '../modals';
+import Countdown from '../Countdown';
 
 const ProposedSection = ({
   type,
@@ -174,7 +175,8 @@ const ProposedSection = ({
         story.createdAt &&
         moment().isBefore(introSubmittingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
-            Submitting intros ends {moment().to(introSubmittingEndsAt)}
+            Submitting intros ends in{' '}
+            <Countdown countdownTimeInSeconds={moment().diff(introSubmittingEndsAt)} />
           </Text>
         )}
 
@@ -183,8 +185,8 @@ const ProposedSection = ({
         story.introVotingStartedAt &&
         moment().isBefore(introSubmittingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
-            Votes for the story intro are currently in progress. Ending{' '}
-            {moment().to(introVotingEndsAt)}
+            Votes for the story intro are currently in progress. Ending in{' '}
+            <Countdown countdownTimeInSeconds={moment().diff(introVotingEndsAt)} />
           </Text>
         )}
 
@@ -212,7 +214,8 @@ const ProposedSection = ({
         story.createdAt &&
         moment().isBefore(outroSubmittingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
-            Submitting endings ends {moment().to(outroSubmittingEndsAt)}
+            Submitting endings ends in{' '}
+            <Countdown countdownTimeInSeconds={moment().diff(outroSubmittingEndsAt)} />{' '}
           </Text>
         )}
 
@@ -221,8 +224,8 @@ const ProposedSection = ({
         story.outroVotingStartedAt &&
         moment().isBefore(outroVotingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
-            Votes for the story ending are currently in progress. Ending{' '}
-            {moment().to(outroVotingEndsAt)}
+            Votes for the story ending are currently in progress. Ending in{' '}
+            <Countdown countdownTimeInSeconds={moment().diff(outroVotingEndsAt)} />
           </Text>
         )}
 
