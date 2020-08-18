@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ViewPropTypes } from 'react-native';
+import { ViewPropTypes } from 'react-native';
 import { Text } from 'react-native-paper';
 import PropTypes from 'prop-types';
 
@@ -65,16 +65,8 @@ function Countdown({ style, countdownTimeInSeconds }) {
 
     return () => clearInterval(interValId);
   }, []);
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <Text style={{ ...style }}>{timeLeft}</Text>
-    </View>
-  );
+
+  return <Text style={{ ...style }}>{timeLeft}</Text>;
 }
 
 Countdown.propTypes = {
