@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Surface, Button, Dialog, Paragraph, Portal } from 'react-native-paper';
+import { Surface, Button, Portal, Modal } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import Toast from 'react-native-root-toast';
@@ -200,27 +200,31 @@ const Round = ({
   return (
     <>
       <Portal>
-        <Dialog visible={confirmSkipVisible} onDismiss={() => setConfirmVisible(false)}>
-          <Dialog.Title>Skipping Round</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>Are you sure your want to skip your round?</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
+        <Modal visible={confirmSkipVisible} onDismiss={() => setConfirmVisible(false)}>
+          <Text type="bold" style={{ fontSize: 30, color: '#5A7582' }}>
+            Leave This Story
+          </Text>
+          <View style={{ paddingHorizontal: 20, paddingTop: 5 }}>
+            <Text type="bold" style={{ color: '#5A7582', textAlign: 'center' }}>
+              Are you sure your want to skip your round?
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
             <Button
-              style={[styles.button, { backgroundColor: '#EC8918' }]}
+              style={[styles.button, { backgroundColor: '#EC8918', color: 'white' }]}
               onPress={() => {
                 setConfirmVisible(false);
                 handleSkipRound();
               }}>
-              Confirm
+              Skip
             </Button>
             <Button
-              style={[styles.button, { backgroundColor: '#ff0000' }]}
+              style={[styles.button, { backgroundColor: '#ff0000', color: 'white' }]}
               onPress={() => setConfirmVisible(false)}>
               Cancel
             </Button>
-          </Dialog.Actions>
-        </Dialog>
+          </View>
+        </Modal>
       </Portal>
 
       {listMode ? listRound : cardRound}
