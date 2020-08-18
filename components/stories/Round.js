@@ -109,7 +109,7 @@ const Round = ({
             flexDirection: 'row',
             marginTop: 10,
           }}>
-          {round.skipCount !== 1 && (
+          {round.skipCount !== 1 && roundIdx !== totalRound && (
             <Surface style={{ ...styles.surface, marginRight: 20 }}>
               <Button
                 mode="contained"
