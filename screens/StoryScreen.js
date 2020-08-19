@@ -48,15 +48,15 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   ];
   // Note: When it's too late to join, it's also too late to delete the story
   const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(selectedStory?.status);
-  const authorsCount = selectedStory?.coAuthors?.length + 1;
-  const anonymousAuthorsCount = selectedStory?.coAuthors?.filter(
-    (ca) => ca.privacyStatus === 'anonymous',
-  ).length;
+  const activeCoAuthors = selectedStory?.coAuthors?.filter((ca) => ca.isActive);
+  const authorsCount = activeCoAuthors.length + 1;
+  const anonymousAuthorsCount = activeCoAuthors?.filter((ca) => ca.privacyStatus === 'anonymous')
+    .length;
   const missingAuthorsCount = selectedStory?.settings?.minimumParticipants - authorsCount;
   const currentUser = useSelector((state) => state.auth.currentUser);
   const isMasterAuthor = currentUser?._id === masterAuthor?._id;
   const userIsAParticipant =
-    selectedStory?.coAuthors?.find((ca) => ca.profile._id === currentUser?._id) || isMasterAuthor;
+    activeCoAuthors?.find((ca) => ca.profile._id === currentUser?._id) || isMasterAuthor;
   const tooLateForOutro =
     selectedStory?.status === 'outro_voting' || selectedStory?.status === 'completed';
   const waitingStory = authorsCount < selectedStory?.settings?.minimumParticipants;
