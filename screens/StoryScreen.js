@@ -29,11 +29,13 @@ import { HugeAdvertisement, SmallAdvertisement } from '../components/advertiseme
 import { SCREEN_HEIGHT } from '../utils/dimensions';
 import { joinStoryAction, getSelectedStoryAction } from '../redux/actions/StoryActions';
 import LeaveStoryModal from '../components/modals/LeaveStoryModal';
+import PageSpinner from '../components/PageSpinner';
 
 const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const { story, reducerName, isNewStory } = route.params;
   const { masterAuthor } = story;
   const stories = useSelector((state) => state[reducerName]?.stories) || [];
+  const [spinnerVisible, setSpinnerVisible] = useState(false);
 
   const selectedStory = stories.find((s) => s._id === story?._id) || {};
   // We make sure they are in the order of the story lifecycle - https://app.clickup.com/2351815/v/dc/16z6a-777/27rp7-735
@@ -132,7 +134,11 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     React.useCallback(() => {
       const fetchSelectedStory = async () => {
         try {
+          setSpinnerVisible(true);
+
           await getSelectedStory(story._id);
+
+          setSpinnerVisible(false);
         } catch (e) {
           Toast.show(e.message, {
             duration: Toast.durations.SHORT,
@@ -525,7 +531,6 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           )}
         </ScrollView>
       )}
-
       <RBSheet
         ref={refRBSheet}
         height={SCREEN_HEIGHT * 0.6}
@@ -608,6 +613,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           </Surface>
         </ScrollView>
       </RBSheet>
+      <PageSpinner visible={spinnerVisible} />
     </View>
   );
 };
