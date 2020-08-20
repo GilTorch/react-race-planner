@@ -289,12 +289,13 @@ Round.propTypes = {
   navigation: PropTypes.object.isRequired,
   round: PropTypes.object.isRequired,
   totalRound: PropTypes.number,
+  roundIdx: PropTypes.number.isRequired,
   listMode: PropTypes.bool.isRequired,
   style: PropTypes.object,
   isMasterAuthorRound: PropTypes.bool,
   isCompletedStory: PropTypes.bool,
   story: PropTypes.object.isRequired,
-  skipRound: PropTypes.func,
+  skipRound: PropTypes.func.isRequired,
 };
 
 Round.defaultProps = {
