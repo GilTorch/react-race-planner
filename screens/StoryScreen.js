@@ -140,6 +140,8 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
 
           setSpinnerVisible(false);
         } catch (e) {
+          setSpinnerVisible(false);
+
           Toast.show(e.message, {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
