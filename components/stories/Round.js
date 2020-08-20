@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Surface, Button, Portal, Modal } from 'react-native-paper';
+import { Surface, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import Toast from 'react-native-root-toast';
@@ -15,6 +15,7 @@ import BoxMenu from './BoxMenu';
 import { skipRoundAction } from '../../redux/actions/StoryActions';
 import LeaveStoryModal from '../modals/LeaveStoryModal';
 import { CommentModal } from '../modals';
+import ConfirmModal from '../modals/ConfirmModal';
 
 const Round = ({
   navigation,
@@ -199,33 +200,16 @@ const Round = ({
 
   return (
     <>
-      <Portal>
-        <Modal visible={confirmSkipVisible} onDismiss={() => setConfirmVisible(false)}>
-          <Text type="bold" style={{ fontSize: 30, color: '#5A7582' }}>
-            Leave This Story
-          </Text>
-          <View style={{ paddingHorizontal: 20, paddingTop: 5 }}>
-            <Text type="bold" style={{ color: '#5A7582', textAlign: 'center' }}>
-              Are you sure your want to skip your round?
-            </Text>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Button
-              style={[styles.button, { backgroundColor: '#EC8918', color: 'white' }]}
-              onPress={() => {
-                setConfirmVisible(false);
-                handleSkipRound();
-              }}>
-              Skip
-            </Button>
-            <Button
-              style={[styles.button, { backgroundColor: '#ff0000', color: 'white' }]}
-              onPress={() => setConfirmVisible(false)}>
-              Cancel
-            </Button>
-          </View>
-        </Modal>
-      </Portal>
+      <ConfirmModal
+        title="Skip Your Turn"
+        subtitle="Are you sure your want to skip your round?"
+        okLabel="Skip"
+        okBtnStyle={{ backgroundColor: '#EC8918' }}
+        cancelLabel="Cancel"
+        visible={confirmSkipVisible}
+        dismiss={() => setConfirmVisible(false)}
+        onOkPressed={handleSkipRound}
+      />
 
       {listMode ? listRound : cardRound}
     </>
