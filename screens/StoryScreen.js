@@ -97,7 +97,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   let firstBtnColor;
   if (userIsAParticipant && isMasterAuthor && tooLateToJoin) {
     firstBtnColor = '#A39F9F';
-  } else if (userIsAParticipant && inProgress) {
+  } else if (userIsAParticipant && selectedStory.status === 'waiting_for_players') {
     firstBtnColor = '#F44336';
   } else if (!userIsAParticipant && waitingStory) {
     firstBtnColor = '#ED8A18';
@@ -208,10 +208,10 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const joinOrLeave = async () => {
     if (userIsAParticipant) {
       try {
-        if (completedStory) {
-          showToast("It's too late to leave this story now");
-        } else if (isMasterAuthor && tooLateToJoin) {
+        if (isMasterAuthor && selectedStory.status !== 'waiting_for_players') {
           showToast('You cannot delete a story that has started already');
+        } else if (selectedStory.status !== 'waiting_for_players') {
+          showToast("It's too late to leave this story now");
         } else {
           setIsLeaveStoryModalVisible(true);
         }
