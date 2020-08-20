@@ -12,7 +12,7 @@ import Text from '../CustomText';
 import { CommentModal, VotingModal } from '../modals';
 import ReportModal from '../modals/ReportModal';
 
-const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor, isTimeToVote }) => {
+const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
   const inProgresstories = useSelector((state) => state.home.stories) || [];
   const completedStories = useSelector((state) => state.library.stories) || [];
@@ -60,7 +60,6 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor, isTime
   };
 
   const showVotingModal = () => {
-
     const introVotingEndsAt = moment(storedStory.introVotingStartedAt).add(
       storedStory.settings?.voteTimeLimitSeconds,
       'seconds',
