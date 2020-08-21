@@ -73,6 +73,7 @@ const styles = {
   subtitle: {
     color: '#5A7582',
     paddingTop: 5,
+    paddingHorizontal: 20,
   },
   buttonContainer: {
     marginVertical: 20,
