@@ -74,4 +74,8 @@ Countdown.propTypes = {
   countdownTimeInSeconds: PropTypes.number.isRequired,
 };
 
+Countdown.defaultProps = {
+  style: {},
+};
+
 export default Countdown;
