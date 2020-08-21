@@ -15,6 +15,7 @@ import BoxMenu from './BoxMenu';
 import { skipRoundAction } from '../../redux/actions/StoryActions';
 import LeaveStoryModal from '../modals/LeaveStoryModal';
 import { CommentModal } from '../modals';
+import ConfirmModal from '../modals/ConfirmModal';
 
 const Round = ({
   navigation,
@@ -31,6 +32,7 @@ const Round = ({
   const roundStatus = round.status;
   const currentUser = useSelector((state) => state.auth.currentUser);
   const loading = useSelector((state) => state.story.skipRoundLoading);
+  const [confirmSkipVisible, setConfirmVisible] = React.useState(false);
 
   const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
   const [showComment, setShowComment] = React.useState(false);
@@ -116,7 +118,7 @@ const Round = ({
                 loading={loading}
                 disabled={loading}
                 uppercase={false}
-                onPress={handleSkipRound}
+                onPress={() => setConfirmVisible(true)}
                 style={{ backgroundColor: '#ED8A18', width: SCREEN_WIDTH * 0.25 }}
                 labelStyle={styles.boxBtnLabel}>
                 Skip Turn
@@ -196,7 +198,22 @@ const Round = ({
     </View>
   );
 
-  return listMode ? listRound : cardRound;
+  return (
+    <>
+      <ConfirmModal
+        title="Skip Your Turn"
+        subtitle="Are you sure your want to skip your round?"
+        okLabel="Skip"
+        okBtnStyle={{ backgroundColor: '#EC8918' }}
+        cancelLabel="Cancel"
+        visible={confirmSkipVisible}
+        dismiss={() => setConfirmVisible(false)}
+        onOkPressed={handleSkipRound}
+      />
+
+      {listMode ? listRound : cardRound}
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -252,18 +269,33 @@ const styles = StyleSheet.create({
   displayRow: {
     flexDirection: 'row',
   },
+  button: {
+    backgroundColor: '#03A2A2',
+    height: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    padding: 5,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
 });
 
 Round.propTypes = {
   navigation: PropTypes.object.isRequired,
   round: PropTypes.object.isRequired,
   totalRound: PropTypes.number,
+  roundIdx: PropTypes.number.isRequired,
   listMode: PropTypes.bool.isRequired,
   style: PropTypes.object,
   isMasterAuthorRound: PropTypes.bool,
   isCompletedStory: PropTypes.bool,
   story: PropTypes.object.isRequired,
-  skipRound: PropTypes.func,
+  skipRound: PropTypes.func.isRequired,
 };
 
 Round.defaultProps = {
