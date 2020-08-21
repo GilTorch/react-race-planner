@@ -258,7 +258,12 @@ const ProposedSection = ({
 
           return (
             <View key={Math.random()}>
-              <CommentModal dismiss={dismissComment} visible={showComment} parent={proposedBlock} />
+              <CommentModal
+                dismiss={dismissComment}
+                visible={showComment}
+                parent={proposedBlock}
+                storyStatus={story.status}
+              />
               <Surface style={{ ...styles.intros, marginLeft: margin }}>
                 <View
                   style={{

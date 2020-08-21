@@ -147,7 +147,12 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
         storyId={storyId}
         roundId={block._id}
       />
-      <CommentModal dismiss={dismissComment} visible={showComment} parent={block} />
+      <CommentModal
+        dismiss={dismissComment}
+        visible={showComment}
+        parent={block}
+        storyStatus={storedStory.status}
+      />
       <TouchableOpacity testID="three-dot-menu-button" onPress={() => setshowMenu(true)}>
         <Menu
           contentStyle={{
