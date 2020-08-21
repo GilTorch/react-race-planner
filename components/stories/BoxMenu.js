@@ -107,7 +107,7 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
       return;
     }
 
-    if (parentType === 'Outro' && storyStatus !== 'outro_voting') {
+    if (parentType === 'Ending' && storyStatus !== 'outro_voting') {
       setshowMenu(false);
 
       let message = "It's not time to vote yet";
