@@ -312,7 +312,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
               marginBottom: 10,
             }}>
             <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#5A7582' }}>
-              Are you sure you want to cancel your round?
+              Changes will not be saved. Do you whant to proceed?
             </Text>
           </View>
           <View style={{ flex: 1, justifyContent: 'space-around' }}>
@@ -323,7 +323,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
               }}>
               <Surface style={styles.btnSurface}>
                 <Button onPress={() => navigation.goBack()} style={{ backgroundColor: '#f44336' }}>
-                  <Text style={{ color: '#fff', fontWeight: 'bold' }}>Yes</Text>
+                  <Text style={{ color: '#fff', fontWeight: 'bold' }}>Discard</Text>
                 </Button>
               </Surface>
               <Surface style={styles.btnSurface}>
@@ -331,7 +331,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
                   testID="cancel-deletion"
                   onPress={() => hideCancelConfirmationModal()}
                   style={{ backgroundColor: '#03A2A2' }}>
-                  <Text style={{ color: '#FFF', fontWeight: 'bold' }}>No</Text>
+                  <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Cancel</Text>
                 </Button>
               </Surface>
             </View>
