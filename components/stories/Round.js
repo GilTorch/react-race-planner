@@ -179,7 +179,12 @@ const Round = ({
           <>
             {roundBody}
             <View style={{ marginTop: 'auto' }}>
-              <CommentModal dismiss={dismissComment} visible={showComment} parent={round} />
+              <CommentModal
+                dismiss={dismissComment}
+                visible={showComment}
+                parent={round}
+                storyStatus={story.status}
+              />
               <Text style={styles.separator}>---</Text>
               <TouchableOpacity
                 style={styles.displayRow}
