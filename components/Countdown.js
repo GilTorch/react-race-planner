@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ViewPropTypes } from 'react-native';
-import { Text } from 'react-native-paper';
 import PropTypes from 'prop-types';
+
+import Text from './CustomText';
 
 function converTimeInSeconds(timeInString) {
   let hours = 0;
@@ -66,7 +67,11 @@ function Countdown({ style, countdownTimeInSeconds }) {
     return () => clearInterval(interValId);
   }, []);
 
-  return <Text style={{ ...style }}>{timeLeft}</Text>;
+  return (
+    <Text type="bold" style={{ color: '#ed8a18', ...style }}>
+      {timeLeft}
+    </Text>
+  );
 }
 
 Countdown.propTypes = {
