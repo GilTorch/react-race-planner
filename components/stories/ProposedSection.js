@@ -183,7 +183,7 @@ const ProposedSection = ({
       {story?.status === 'intro_voting' &&
         type === 'Intro' &&
         story.introVotingStartedAt &&
-        moment().isBefore(introSubmittingEndsAt) && (
+        moment().isBefore(introVotingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
             Votes for the story intro are currently in progress. Ending in{' '}
             <Countdown countdownTimeInSeconds={moment().diff(introVotingEndsAt)} />
