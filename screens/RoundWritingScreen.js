@@ -109,6 +109,8 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
       setValue(trimmedValue);
     }
   };
+  const wordsCount = value?.split(' ').length || 0;
+
 
   const submitRound = async () => {
     try {
@@ -180,7 +182,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
                 Cancel
               </Text>
             </TouchableOpacity>
-
+            <Text style={styles.subTitle}>{wordsCount} words</Text>
             <Text type="bold" style={{ color: 'white', fontSize: 18, marginVertical: 15 }}>
               {`${route.params.entity.charAt(0).toUpperCase()}${route.params.entity.slice(1)}`}{' '}
               Writing
@@ -311,6 +313,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     borderBottomWidth: 1,
     borderColor: '#eee',
+  },
+  subTitle: {
+    fontWeight: 'bold',
+    color: '#5A7582',
   },
 });
 
