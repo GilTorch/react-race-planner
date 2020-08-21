@@ -176,7 +176,9 @@ const ProposedSection = ({
         moment().isBefore(introSubmittingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
             Submitting intros ends in{' '}
-            <Countdown countdownTimeInSeconds={moment().diff(introSubmittingEndsAt)} />
+            <Countdown
+              countdownTimeInSeconds={moment(introSubmittingEndsAt).diff(moment(), 'seconds')}
+            />
           </Text>
         )}
 
@@ -186,7 +188,9 @@ const ProposedSection = ({
         moment().isBefore(introVotingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
             Votes for the story intro are currently in progress. Ending in{' '}
-            <Countdown countdownTimeInSeconds={moment().diff(introVotingEndsAt)} />
+            <Countdown
+              countdownTimeInSeconds={moment(introVotingEndsAt).diff(moment(), 'seconds')}
+            />
           </Text>
         )}
 
@@ -215,7 +219,9 @@ const ProposedSection = ({
         moment().isBefore(outroSubmittingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
             Submitting endings ends in{' '}
-            <Countdown countdownTimeInSeconds={moment().diff(outroSubmittingEndsAt)} />{' '}
+            <Countdown
+              countdownTimeInSeconds={moment(outroSubmittingEndsAt).diff(moment(), 'seconds')}
+            />{' '}
           </Text>
         )}
 
@@ -225,7 +231,9 @@ const ProposedSection = ({
         moment().isBefore(outroVotingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
             Votes for the story ending are currently in progress. Ending in{' '}
-            <Countdown countdownTimeInSeconds={moment().diff(outroVotingEndsAt)} />
+            <Countdown
+              countdownTimeInSeconds={moment(outroVotingEndsAt).diff(moment(), 'seconds')}
+            />
           </Text>
         )}
 
