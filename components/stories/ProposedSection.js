@@ -154,6 +154,7 @@ const ProposedSection = ({
       </Text>
 
       {userCanPropose &&
+        story.status === 'waiting_for_intros' &&
         type === 'Intro' &&
         !alreadyProposed &&
         moment().isBefore(introSubmittingEndsAt) && (
