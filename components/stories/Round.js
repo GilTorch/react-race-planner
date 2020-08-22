@@ -9,14 +9,13 @@ import { connect, useSelector } from 'react-redux';
 import HTMLView from 'react-native-htmlview';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import moment from 'moment';
 import Text from '../CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 import { skipRoundAction } from '../../redux/actions/StoryActions';
 import LeaveStoryModal from '../modals/LeaveStoryModal';
 import { CommentModal } from '../modals';
-import moment from 'moment';
-
 
 const Round = ({
   navigation,
@@ -105,7 +104,6 @@ const Round = ({
     </View>
   );
 
-
   const userRound = (
     <>
       <TouchableOpacity
@@ -157,9 +155,6 @@ const Round = ({
       {/* <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
         {round.content || ''}
       </Text> */}
-      <Text>
-        This is the list round
-      </Text>
       <HTMLView value={round.content} />
     </View>
   );
@@ -176,12 +171,18 @@ const Round = ({
       <Text type="medium" style={styles.title}>
         Round {roundIdx}/{totalRound} {userTurn && '(Your Turn)'}
       </Text>
-      {inprogressRound && userTurn &&
-        moment().isBefore(roundSubmittingEndsAt) && (
-          <Text style={{ color: '#ed8a18', marginRight: 10, marginHorizontal: 20, marginTop: 3, marginBottom: 15 }}>
-            Submitting ends {moment().to(roundSubmittingEndsAt)}
-          </Text>
-        )}
+      {inprogressRound && userTurn && moment().isBefore(roundSubmittingEndsAt) && (
+        <Text
+          style={{
+            color: '#ed8a18',
+            marginRight: 10,
+            marginHorizontal: 20,
+            marginTop: 3,
+            marginBottom: 15,
+          }}>
+          Submitting ends {moment().to(roundSubmittingEndsAt)}
+        </Text>
+      )}
       <Surface style={{ ...styles.round, minHeight: height }}>
         <View style={styles.boxHeader}>
           <Text type="bold" style={styles.subTitle}>
