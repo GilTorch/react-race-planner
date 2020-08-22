@@ -56,7 +56,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
   const isMasterAuthor = currentUser?._id === masterAuthor?._id;
   const userIsAParticipant =
-    selectedStory?.coAuthors?.find((ca) => ca.profile._id === currentUser?._id) || isMasterAuthor;
+    selectedStory?.coAuthors?.some((ca) => ca.profile._id === currentUser?._id) || isMasterAuthor;
   const tooLateForOutro =
     selectedStory?.status === 'outro_voting' || selectedStory?.status === 'completed';
   const waitingStory = authorsCount < selectedStory?.settings?.minimumParticipants;
