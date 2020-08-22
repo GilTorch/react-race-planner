@@ -30,6 +30,7 @@ const ProposedSection = ({
   const loadingRoundVote = useSelector((state) => state.story.roundVoteLoading);
   const [showComment, setShowComment] = React.useState(false);
 
+  const alreadyProposed = proposedBlocks?.some((block) => block.author._id === currentUser?._id);
   const electedBlock = proposedBlocks?.find((block) => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -151,24 +152,27 @@ const ProposedSection = ({
         All Proposed {type}s ({proposedBlocks?.length})
       </Text>
 
-      {userCanPropose && type === 'Intro' && moment().isBefore(introSubmittingEndsAt) && (
-        <View
-          style={{
-            flex: 1,
-            marginLeft: 20,
-            marginTop: 10,
-          }}>
-          <Button
-            icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
-            uppercase={false}
-            onPress={() => onPropose()}
-            style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
-            <Text type="bold" style={{ color: '#FFF' }}>
-              Propose an Intro
-            </Text>
-          </Button>
-        </View>
-      )}
+      {userCanPropose &&
+        type === 'Intro' &&
+        !alreadyProposed &&
+        moment().isBefore(introSubmittingEndsAt) && (
+          <View
+            style={{
+              flex: 1,
+              marginLeft: 20,
+              marginTop: 10,
+            }}>
+            <Button
+              icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+              uppercase={false}
+              onPress={() => onPropose()}
+              style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
+              <Text type="bold" style={{ color: '#FFF' }}>
+                Propose an Intro
+              </Text>
+            </Button>
+          </View>
+        )}
 
       {story?.status === 'waiting_for_intros' &&
         type === 'Intro' &&
@@ -194,24 +198,27 @@ const ProposedSection = ({
           </Text>
         )}
 
-      {userCanPropose && type === 'Ending' && moment().isBefore(outroSubmittingEndsAt) && (
-        <View
-          style={{
-            flex: 1,
-            marginLeft: 20,
-            marginTop: 10,
-          }}>
-          <Button
-            icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
-            uppercase={false}
-            onPress={() => onPropose()}
-            style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
-            <Text type="bold" style={{ color: '#FFF' }}>
-              Propose an Ending
-            </Text>
-          </Button>
-        </View>
-      )}
+      {userCanPropose &&
+        type === 'Ending' &&
+        !alreadyProposed &&
+        moment().isBefore(outroSubmittingEndsAt) && (
+          <View
+            style={{
+              flex: 1,
+              marginLeft: 20,
+              marginTop: 10,
+            }}>
+            <Button
+              icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+              uppercase={false}
+              onPress={() => onPropose()}
+              style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
+              <Text type="bold" style={{ color: '#FFF' }}>
+                Propose an Ending
+              </Text>
+            </Button>
+          </View>
+        )}
 
       {story?.status === 'waiting_for_outros' &&
         type === 'Ending' &&
