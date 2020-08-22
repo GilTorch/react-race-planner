@@ -480,6 +480,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           <ProposedSection
             onPropose={handleRoundWriting('intro')}
             userCanPropose={userIsAParticipant && !tooLateToJoin && !isMasterAuthor}
+            userIsAParticipant={userIsAParticipant}
             type="Intro"
             proposedBlocks={selectedStory?.parts?.filter((p) => p.isIntro)}
             listMode={listMode}
@@ -517,6 +518,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
               // because we're gonna be using that on the UI
               onPropose={handleRoundWriting('ending')}
               userCanPropose={userIsAParticipant && !tooLateForOutro}
+              userIsAParticipant={userIsAParticipant}
               type="Ending"
               proposedBlocks={selectedStory?.parts?.filter((p) => p.isOutro)}
               listMode={listMode}

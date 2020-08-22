@@ -26,12 +26,16 @@ import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
 
 import { createStoryAction, createRoundAction } from '../redux/actions/StoryActions';
+import ConfirmModal from '../components/modals/ConfirmModal';
 
 const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();
 
 const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => {
   const [canWriteStory, setCanWriteStory] = useState(true);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const showCancelConfirmationModal = () => setModalVisible(true);
+  const hideCancelConfirmationModal = () => setModalVisible(false);
 
   navigation.setOptions({
     headerShown: false,
@@ -147,7 +151,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
 
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
+        position: Toast.positions.TOP,
       });
     }
   };
@@ -175,7 +179,11 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <TouchableOpacity onPress={() => navigation.goBack()} disabled={createStoryLoading}>
+            <TouchableOpacity
+              onPress={() =>
+                value.length > 0 ? showCancelConfirmationModal() : navigation.goBack()
+              }
+              disabled={createStoryLoading}>
               <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
                 Cancel
               </Text>
@@ -285,6 +293,17 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
           />
         </View>
       </MenuProvider>
+
+      <ConfirmModal
+        title="Discard Changes"
+        subtitle="Changes will not be saved. Do you whant to proceed?"
+        okLabel="Discard"
+        okBtnStyle={{ backgroundColor: '#F44336' }}
+        cancelLabel="Cancel"
+        visible={modalVisible}
+        dismiss={hideCancelConfirmationModal}
+        onOkPressed={() => navigation.goBack()}
+      />
     </KeyboardAvoidingView>
   );
 };
