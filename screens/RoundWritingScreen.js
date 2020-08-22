@@ -32,15 +32,15 @@ const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();
 
 const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => {
-  const { story } = route.params;
+  const { story: routeStory } = route.params;
   const [canWriteStory, setCanWriteStory] = useState(true);
 
   navigation.setOptions({
     headerShown: false,
   });
 
-  const roundSubmittingEndsAt = moment(story?.roundSubmittingStartedAt).add(
-    story.settings?.roundTimeLimitSeconds,
+  const roundSubmittingEndsAt = moment(routeStory?.roundSubmittingStartedAt).add(
+    routeStory.settings?.roundTimeLimitSeconds,
     'seconds',
   );
 
@@ -225,7 +225,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
             />
           </View>
         </TouchableWithoutFeedback>
-        {!story?.isNewStory && moment().isBefore(roundSubmittingEndsAt) && (
+        {!route.params.isNewStory && moment().isBefore(roundSubmittingEndsAt) && (
           <View style={{ backgroundColor: 'white', paddingBottom: 10 }}>
             <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
               Submitting ends{' '}
