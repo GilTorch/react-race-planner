@@ -24,6 +24,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect } from '@react-navigation/native';
 import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
+import moment from "moment";
 
 import { createStoryAction, createRoundAction } from '../redux/actions/StoryActions';
 
@@ -31,11 +32,17 @@ const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();
 
 const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => {
+  const { story } = route.params;
   const [canWriteStory, setCanWriteStory] = useState(true);
 
   navigation.setOptions({
     headerShown: false,
   });
+
+  const roundSubmittingEndsAt = moment(story?.roundSubmittingStartedAt).add(
+    story.settings?.roundTimeLimitSeconds,
+    'seconds',
+  );
 
   useEffect(() => {
     const parent = navigation.dangerouslyGetParent();
@@ -218,7 +225,18 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
             />
           </View>
         </TouchableWithoutFeedback>
-
+        {
+          !story?.isNewStory &&
+          moment().isBefore(roundSubmittingEndsAt) && (
+            <View style={{ backgroundColor: "white", paddingBottom: 10 }}>
+              <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
+                Submitting ends <Text style={{ fontWeight: "bold" }}>
+                  {moment().to(roundSubmittingEndsAt)}
+                </Text>
+              </Text>
+            </View>
+          )
+        }
         <View style={styles.toolbarContainer}>
           <CNToolbar
             style={{
