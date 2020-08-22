@@ -9,6 +9,7 @@ import { connect, useSelector } from 'react-redux';
 import HTMLView from 'react-native-htmlview';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import moment from 'moment';
 import Text from '../CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
@@ -85,13 +86,22 @@ const Round = ({
     </>
   );
 
+  const roundSubmittingEndsAt = moment(story?.roundSubmittingStartedAt).add(
+    story.settings?.roundTimeLimitSeconds,
+    'seconds',
+  );
+
   const inprogress = (
     <View style={{ flexDirection: 'row', width: SCREEN_WIDTH * 0.7 }}>
       <Text style={styles.pendding}>{roundStatus || ''}</Text>
       <Text
         type="bold-italic"
         style={{ color: '#ED8A18', fontSize: 13, marginTop: 10, marginLeft: 10 }}>
-        {round.timeLeft || ''}
+        {moment().isBefore(roundSubmittingEndsAt) && (
+          <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
+            (ends {moment().to(roundSubmittingEndsAt)})
+          </Text>
+        )}
       </Text>
     </View>
   );
@@ -164,7 +174,18 @@ const Round = ({
       <Text type="medium" style={styles.title}>
         Round {roundIdx}/{totalRound} {userTurn && '(Your Turn)'}
       </Text>
-
+      {inprogressRound && userTurn && moment().isBefore(roundSubmittingEndsAt) && (
+        <Text
+          style={{
+            color: '#ed8a18',
+            marginRight: 10,
+            marginHorizontal: 20,
+            marginTop: 3,
+            marginBottom: 15,
+          }}>
+          Submitting ends {moment().to(roundSubmittingEndsAt)}
+        </Text>
+      )}
       <Surface style={{ ...styles.round, minHeight: height }}>
         <View style={styles.boxHeader}>
           <Text type="bold" style={styles.subTitle}>

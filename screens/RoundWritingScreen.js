@@ -24,6 +24,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect } from '@react-navigation/native';
 import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
+import moment from 'moment';
 
 import { createStoryAction, createRoundAction } from '../redux/actions/StoryActions';
 import ConfirmModal from '../components/modals/ConfirmModal';
@@ -32,6 +33,7 @@ const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();
 
 const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => {
+  const { story: routeStory } = route.params;
   const [canWriteStory, setCanWriteStory] = useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
   const showCancelConfirmationModal = () => setModalVisible(true);
@@ -40,6 +42,11 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
   navigation.setOptions({
     headerShown: false,
   });
+
+  const roundSubmittingEndsAt = moment(routeStory?.roundSubmittingStartedAt).add(
+    routeStory.settings?.roundTimeLimitSeconds,
+    'seconds',
+  );
 
   useEffect(() => {
     const parent = navigation.dangerouslyGetParent();
@@ -226,7 +233,14 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
             />
           </View>
         </TouchableWithoutFeedback>
-
+        {!route.params.isNewStory && moment().isBefore(roundSubmittingEndsAt) && (
+          <View style={{ backgroundColor: 'white', paddingBottom: 10 }}>
+            <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
+              Submitting ends{' '}
+              <Text style={{ fontWeight: 'bold' }}>{moment().to(roundSubmittingEndsAt)}</Text>
+            </Text>
+          </View>
+        )}
         <View style={styles.toolbarContainer}>
           <CNToolbar
             style={{
