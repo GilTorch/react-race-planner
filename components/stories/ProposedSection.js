@@ -259,7 +259,10 @@ const ProposedSection = ({
       <ScrollView horizontal style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
         {proposedBlocks?.map((proposedBlock, index) => {
           const margin = index === 0 ? 20 : 0;
-          let authorName = index === 0 ? 'the Master Author' : 'an Anonymous Author';
+          let authorName =
+            story.masterAuthor._id === proposedBlock.author._id
+              ? 'the Master Author'
+              : 'an Anonymous Author';
           const userIsAuthor = currentUser?._id === proposedBlock.author?._id;
 
           if (story.status === 'completed') {
