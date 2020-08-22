@@ -101,6 +101,8 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     firstBtnColor = '#F44336';
   } else if (!userIsAParticipant && waitingStory) {
     firstBtnColor = '#ED8A18';
+  } else if (!userIsAParticipant && !tooLateToJoin) {
+    firstBtnColor = '#ED8A18';
   } else {
     firstBtnColor = '#A39F9F';
   }
