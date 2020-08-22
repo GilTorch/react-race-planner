@@ -125,18 +125,19 @@ const Round = ({
               </Button>
             </Surface>
           )}
-
-          <Surface style={styles.surface}>
-            <Button
-              mode="contained"
-              disabled={loading || isMasterAuthorRound}
-              uppercase={false}
-              onPress={() => setIsLeaveStoryModalVisible(true)}
-              style={{ backgroundColor: isMasterAuthorRound ? '#A39F9F' : '#f44336' }}
-              labelStyle={styles.boxBtnLabel}>
-              {isMasterAuthorRound ? 'Delete Story' : 'Leave Story'}
-            </Button>
-          </Surface>
+          {roundIdx !== totalRound && (
+            <Surface style={styles.surface}>
+              <Button
+                mode="contained"
+                disabled={loading || isMasterAuthorRound}
+                uppercase={false}
+                onPress={() => setIsLeaveStoryModalVisible(true)}
+                style={{ backgroundColor: isMasterAuthorRound ? '#A39F9F' : '#f44336' }}
+                labelStyle={styles.boxBtnLabel}>
+                {isMasterAuthorRound ? 'Delete Story' : 'Leave Story'}
+              </Button>
+            </Surface>
+          )}
         </View>
       </View>
     </>
