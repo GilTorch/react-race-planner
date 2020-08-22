@@ -19,13 +19,14 @@ import CNRichTextEditor, {
   getDefaultStyles,
   convertToObject,
 } from 'react-native-cn-richtext-editor';
-import { Surface, ActivityIndicator, Portal, Modal, Button } from 'react-native-paper';
+import { Surface, ActivityIndicator } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect } from '@react-navigation/native';
 import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
 
 import { createStoryAction, createRoundAction } from '../redux/actions/StoryActions';
+import ConfirmModal from '../components/modals/ConfirmModal';
 
 const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();
@@ -293,51 +294,16 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
         </View>
       </MenuProvider>
 
-      <Portal>
-        <Modal
-          dismissable={false}
-          visible={modalVisible}
-          contentContainerStyle={{
-            backgroundColor: 'white',
-            borderRadius: 6,
-            height: '20%',
-            width: '90%',
-            alignSelf: 'center',
-          }}
-          onDismiss={() => hideCancelConfirmationModal()}>
-          <View
-            style={{
-              alignItems: 'center',
-              margin: 20,
-              marginBottom: 10,
-            }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#5A7582' }}>
-              Changes will not be saved. Do you whant to proceed?
-            </Text>
-          </View>
-          <View style={{ flex: 1, justifyContent: 'space-around' }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-              }}>
-              <Surface style={styles.btnSurface}>
-                <Button onPress={() => navigation.goBack()} style={{ backgroundColor: '#f44336' }}>
-                  <Text style={{ color: '#fff', fontWeight: 'bold' }}>Discard</Text>
-                </Button>
-              </Surface>
-              <Surface style={styles.btnSurface}>
-                <Button
-                  testID="cancel-deletion"
-                  onPress={() => hideCancelConfirmationModal()}
-                  style={{ backgroundColor: '#03A2A2' }}>
-                  <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Cancel</Text>
-                </Button>
-              </Surface>
-            </View>
-          </View>
-        </Modal>
-      </Portal>
+      <ConfirmModal
+        title="Discard Changes"
+        subtitle="Changes will not be saved. Do you whant to proceed?"
+        okLabel="Discard"
+        okBtnStyle={{ backgroundColor: '#F44336' }}
+        cancelLabel="Cancel"
+        visible={modalVisible}
+        dismiss={hideCancelConfirmationModal}
+        onOkPressed={() => navigation.goBack()}
+      />
     </KeyboardAvoidingView>
   );
 };
