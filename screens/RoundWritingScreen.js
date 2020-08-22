@@ -218,8 +218,11 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
             />
           </View>
         </TouchableWithoutFeedback>
-        <View>
-          <Text style={styles.subTitle}>({wordsCount}) words</Text>
+        <View style={styles.wordsCountAndLimit}>
+          <Text style={styles.subTitleLeft}>({wordsCount}) words</Text>
+          <Text style={styles.subTitleRight}>
+            ({route.params.story.settings.roundMaxWords - wordsCount}) words left
+          </Text>
         </View>
         <View style={styles.toolbarContainer}>
           <CNToolbar
@@ -314,9 +317,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#eee',
   },
-  subTitle: {
+  wordsCountAndLimit: {
+    flexDirection: 'row',
+  },
+  subTitleLeft: {
     fontWeight: 'bold',
     color: '#5A7582',
+    marginLeft: '3%',
+  },
+  subTitleRight: {
+    fontWeight: 'bold',
+    color: '#5A7582',
+    marginLeft: '50%',
   },
 });
 
