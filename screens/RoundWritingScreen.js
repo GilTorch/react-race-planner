@@ -24,7 +24,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect } from '@react-navigation/native';
 import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
-import moment from "moment";
+import moment from 'moment';
 
 import { createStoryAction, createRoundAction } from '../redux/actions/StoryActions';
 
@@ -225,18 +225,14 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
             />
           </View>
         </TouchableWithoutFeedback>
-        {
-          !story?.isNewStory &&
-          moment().isBefore(roundSubmittingEndsAt) && (
-            <View style={{ backgroundColor: "white", paddingBottom: 10 }}>
-              <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
-                Submitting ends <Text style={{ fontWeight: "bold" }}>
-                  {moment().to(roundSubmittingEndsAt)}
-                </Text>
-              </Text>
-            </View>
-          )
-        }
+        {!story?.isNewStory && moment().isBefore(roundSubmittingEndsAt) && (
+          <View style={{ backgroundColor: 'white', paddingBottom: 10 }}>
+            <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
+              Submitting ends{' '}
+              <Text style={{ fontWeight: 'bold' }}>{moment().to(roundSubmittingEndsAt)}</Text>
+            </Text>
+          </View>
+        )}
         <View style={styles.toolbarContainer}>
           <CNToolbar
             style={{
