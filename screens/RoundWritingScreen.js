@@ -151,7 +151,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
 
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
+        position: Toast.positions.TOP,
       });
     }
   };
