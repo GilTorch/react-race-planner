@@ -3,12 +3,12 @@ import { Platform } from 'react-native';
 import {
   ANDROID_SERVER_URL,
   IOS_SERVER_URL,
-  USER_AVATAR_UPLOAD_LOCATION
+  USER_AVATAR_UPLOAD_LOCATION,
 } from 'react-native-dotenv';
 
 const platformServerURL = Platform.OS === 'android' ? ANDROID_SERVER_URL : IOS_SERVER_URL;
 
-export const getUserProfileUri = userPicture => {
+export const getUserProfileUri = (userPicture) => {
   if (!userPicture) {
     return null;
   }
@@ -17,10 +17,10 @@ export const getUserProfileUri = userPicture => {
     return userPicture;
   }
 
-  return `${
-    Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL
-    // TODO: Fix this annoying prettier/prettier warning
-    }/${USER_AVATAR_UPLOAD_LOCATION}/${userPicture}`;
+  const baseUri = Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL;
+  const profileUri = `${baseUri}/${USER_AVATAR_UPLOAD_LOCATION}/${userPicture}`;
+
+  return profileUri;
 };
 
-export const avatarGenerator = username => `https://api.adorable.io/avatars/${username}.png`;
+export const avatarGenerator = (username) => `https://api.adorable.io/avatars/${username}.png`;
