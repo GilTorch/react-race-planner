@@ -28,14 +28,20 @@ import moment from 'moment';
 
 import { createStoryAction, createRoundAction } from '../redux/actions/StoryActions';
 import ConfirmModal from '../components/modals/ConfirmModal';
+import Countdown from '../components/Countdown';
+import { getStoryPartsEndstime } from '../utils/functions';
 
 const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();
 
 const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => {
-  const { story: routeStory } = route.params;
+  const { story: routeStory, entity, isNewStory } = route.params;
+  const isRound = entity === 'round';
+  const isIntro = entity === 'intro';
+  const isEnding = entity === 'ending';
+
   const [canWriteStory, setCanWriteStory] = useState(true);
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const showCancelConfirmationModal = () => setModalVisible(true);
   const hideCancelConfirmationModal = () => setModalVisible(false);
 
@@ -43,10 +49,20 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
     headerShown: false,
   });
 
-  const roundSubmittingEndsAt = moment(routeStory?.roundSubmittingStartedAt).add(
-    routeStory.settings?.roundTimeLimitSeconds,
-    'seconds',
-  );
+  const {
+    introSubmittingEndsAt,
+    outroSubmittingEndsAt,
+    roundSubmittingEndsAt,
+  } = getStoryPartsEndstime(routeStory);
+
+  let submittingEndsAt;
+  if (isRound) {
+    submittingEndsAt = roundSubmittingEndsAt;
+  } else if (isIntro) {
+    submittingEndsAt = introSubmittingEndsAt;
+  } else if (isEnding) {
+    submittingEndsAt = outroSubmittingEndsAt;
+  }
 
   useEffect(() => {
     const parent = navigation.dangerouslyGetParent();
@@ -123,7 +139,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
 
   const submitRound = async () => {
     try {
-      if (route.params.isNewStory) {
+      if (isNewStory) {
         const story = await createStory({
           ...route.params.story,
           intro: value,
@@ -233,11 +249,13 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
             />
           </View>
         </TouchableWithoutFeedback>
-        {!route.params.isNewStory && moment().isBefore(roundSubmittingEndsAt) && (
+        {!isNewStory && moment().isBefore(submittingEndsAt) && (
           <View style={{ backgroundColor: 'white', paddingBottom: 10 }}>
             <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
-              Submitting ends{' '}
-              <Text style={{ fontWeight: 'bold' }}>{moment().to(roundSubmittingEndsAt)}</Text>
+              Submitting ends in{' '}
+              <Countdown
+                countdownTimeInSeconds={moment(submittingEndsAt).diff(moment(), 'seconds')}
+              />
             </Text>
           </View>
         )}
