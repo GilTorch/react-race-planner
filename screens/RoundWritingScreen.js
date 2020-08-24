@@ -123,7 +123,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
       setValue(trimmedValue);
     }
   };
-  const wordsCount = value.length === 1 ? 0 : value.split(' ').length;
+  const wordsCount = value instanceof Array ? 0 : value.split(' ').length;
 
   const submitRound = async () => {
     try {
