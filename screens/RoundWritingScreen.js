@@ -31,11 +31,25 @@ const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();
 
 const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => {
+  const { entity } = route.params;
+  const isRound = entity === 'round';
+  const isIntro = entity === 'intro';
+  const isEnding = entity === 'ending';
+
   const [canWriteStory, setCanWriteStory] = useState(true);
 
   navigation.setOptions({
     headerShown: false,
   });
+
+  let partMaxWords;
+  if (isRound) {
+    partMaxWords = 'roundMaxWords';
+  } else if (isIntro) {
+    partMaxWords = 'introMaxWords';
+  } else if (isEnding) {
+    partMaxWords = 'outroMaxWords';
+  }
 
   useEffect(() => {
     const parent = navigation.dangerouslyGetParent();
@@ -97,7 +111,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
   const onValueChanged = (newVal) => {
     const trimmedValue = newVal.trim();
 
-    if (trimmedValue.split(' ').length > route.params.story.settings.roundMaxWords) {
+    if (trimmedValue.split(' ').length > route.params.story.settings[partMaxWords]) {
       setCanWriteStory(false);
 
       Toast.show('You reached your maximum character limit.', {
@@ -218,12 +232,13 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
             />
           </View>
         </TouchableWithoutFeedback>
-        <View style={styles.wordsCountAndLimit}>
-          <Text style={styles.subTitleLeft}>({wordsCount}) words</Text>
-          <Text style={styles.subTitleRight}>
-            ({route.params.story.settings.roundMaxWords - wordsCount}) words left
+
+        <View style={styles.wordCountContainer}>
+          <Text style={{ color: '#5A7582', alignSelf: 'flex-end', marginRight: 10 }}>
+            {wordsCount}/{route.params.story.settings[partMaxWords]} words
           </Text>
         </View>
+
         <View style={styles.toolbarContainer}>
           <CNToolbar
             style={{
@@ -317,8 +332,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#eee',
   },
-  wordsCountAndLimit: {
-    flexDirection: 'row',
+  wordCountContainer: {
+    backgroundColor: 'white',
+    paddingBottom: 10,
   },
   subTitleLeft: {
     fontWeight: 'bold',
