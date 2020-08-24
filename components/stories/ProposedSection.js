@@ -16,6 +16,7 @@ import BoxMenu from './BoxMenu';
 import { voteForRoundAction } from '../../redux/actions/StoryActions';
 import { CommentModal } from '../modals';
 import Countdown from '../Countdown';
+import { getStoryPartsEndstime } from '../../utils/functions';
 
 const ProposedSection = ({
   type,
@@ -31,6 +32,13 @@ const ProposedSection = ({
   const loadingRoundVote = useSelector((state) => state.story.roundVoteLoading);
   const [showComment, setShowComment] = React.useState(false);
 
+  const {
+    introSubmittingEndsAt,
+    introVotingEndsAt,
+    outroSubmittingEndsAt,
+    outroVotingEndsAt,
+  } = getStoryPartsEndstime(story);
+
   const alreadyProposed = proposedBlocks?.some((block) => block.author._id === currentUser?._id);
   const electedBlock = proposedBlocks?.find((block) => block.isElected);
   const listElected = electedBlock && (
@@ -43,22 +51,6 @@ const ProposedSection = ({
       )}
     </View>
   );
-  const introSubmittingEndsAt = moment(story.introSubmittingStartedAt).add(
-    story.settings?.introTimeLimitSeconds,
-    'seconds',
-  );
-  const introVotingEndsAt = moment(story.introVotingStartedAt).add(
-    story.settings?.voteTimeLimitSeconds,
-    'seconds',
-  );
-  const outroSubmittingEndsAt = moment(story.outroSubmittingStartedAt).add(
-    story.settings?.outroTimeLimitSeconds,
-    'seconds',
-  );
-  const outroVotingEndsAt = moment(story.outroVotingStartedAt).add(
-    story.settings?.voteTimeLimitSeconds,
-    'seconds',
-  );
 
   const handleVoting = async (proposedBlockId) => {
     try {
@@ -70,40 +62,6 @@ const ProposedSection = ({
       });
     }
   };
-
-  // const [introSubmittingEndDate, setIntroSubmittingEndDate] = React.useState(introSubmittingEndsAt);
-  // const [introVotingEndDate, setIntroVotingEndDate] = React.useState(introVotingEndsAt);
-  // const [outroSubmittingEndDate, setOutroSubmittingEndDate] = React.useState(outroSubmittingEndsAt);
-  // const [outroVotingEndDate, setOutroVotingEndDate] = React.useState(outroVotingEndsAt);
-
-  // const tick = () => {
-  //   setIntroSubmittingEndDate(
-  //     moment(story.createdAt).add(story.settings?.introTimeLimitSeconds, 'seconds')
-  //   );
-
-  //   setIntroVotingEndDate(
-  //     moment(story.introVotingStartedAt).add(story.settings?.voteTimeLimitSeconds, 'seconds')
-  //   );
-
-  //   setOutroSubmittingEndDate(
-  //     moment(story.outroSubmittingStartedAt).add(story.settings?.outroTimeLimitSeconds, 'seconds')
-  //   );
-
-  //   setOutroVotingEndDate(
-  //     moment(story.outroVotingStartedAt).add(story.settings?.voteTimeLimitSeconds, 'seconds')
-  //   );
-  // };
-
-  // React.useEffect(() => {
-  //   let timer = setInterval(tick, 1000);
-
-  //   return () => {
-  //     if (timer) {
-  //       clearInterval(timer);
-  //       timer = null;
-  //     }
-  //   };
-  // }, []);
 
   const renderVotingButton = (proposedBlock) => {
     const alreadyVoted = proposedBlock.votes.some((vote) => vote.voter._id === currentUser?._id);

@@ -5,12 +5,13 @@ import { Feather, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-
 import Toast from 'react-native-root-toast';
 import moment from 'moment';
+
 import Text from '../CustomText';
 import { CommentModal, VotingModal } from '../modals';
 import ReportModal from '../modals/ReportModal';
+import { getStoryPartsEndstime } from '../../utils/functions';
 
 const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
@@ -60,11 +61,7 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
   };
 
   const showVotingModal = () => {
-    const introVotingEndsAt = moment(storedStory.introVotingStartedAt).add(
-      storedStory.settings?.voteTimeLimitSeconds,
-      'seconds',
-    );
-
+    const { introVotingEndsAt } = getStoryPartsEndstime(storedStory);
     const userPartOfStory =
       storedStory?.coAuthors?.some((ca) => ca.profile._id === currentUser?._id) ||
       storedStory?.masterAuthor?._id === currentUser?._id;
