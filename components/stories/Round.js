@@ -17,6 +17,7 @@ import { skipRoundAction } from '../../redux/actions/StoryActions';
 import LeaveStoryModal from '../modals/LeaveStoryModal';
 import { CommentModal } from '../modals';
 import ConfirmModal from '../modals/ConfirmModal';
+import Countdown from '../Countdown';
 
 const Round = ({
   navigation,
@@ -47,6 +48,14 @@ const Round = ({
   const height = inprogressRound && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
   let authorName = isMasterAuthorRound ? 'the Master Author' : 'an Anonymous Author';
   const wordsCount = round.content?.split(' ').length || 0;
+
+  let roundSubmittingEndsAt;
+  if (inprogressRound) {
+    roundSubmittingEndsAt = moment(round?.startedAt).add(
+      story.settings?.roundTimeLimitSeconds,
+      'seconds',
+    );
+  }
 
   const handleSkipRound = async () => {
     try {
@@ -86,23 +95,18 @@ const Round = ({
     </>
   );
 
-  const roundSubmittingEndsAt = moment(story?.roundSubmittingStartedAt).add(
-    story.settings?.roundTimeLimitSeconds,
-    'seconds',
-  );
-
   const inprogress = (
     <View style={{ flexDirection: 'row', width: SCREEN_WIDTH * 0.7 }}>
       <Text style={styles.pendding}>{roundStatus || ''}</Text>
-      <Text
-        type="bold-italic"
-        style={{ color: '#ED8A18', fontSize: 13, marginTop: 10, marginLeft: 10 }}>
-        {moment().isBefore(roundSubmittingEndsAt) && (
-          <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
-            (ends {moment().to(roundSubmittingEndsAt)})
-          </Text>
-        )}
-      </Text>
+      {moment().isBefore(roundSubmittingEndsAt) && (
+        <Text style={{ color: '#ed8a18', marginLeft: 10, marginTop: 10 }}>
+          (ends in{' '}
+          <Countdown
+            countdownTimeInSeconds={moment(roundSubmittingEndsAt).diff(moment(), 'seconds')}
+          />
+          )
+        </Text>
+      )}
     </View>
   );
 
@@ -183,7 +187,10 @@ const Round = ({
             marginTop: 3,
             marginBottom: 15,
           }}>
-          Submitting ends {moment().to(roundSubmittingEndsAt)}
+          Submitting ends{' '}
+          <Countdown
+            countdownTimeInSeconds={moment(roundSubmittingEndsAt).diff(moment(), 'seconds')}
+          />
         </Text>
       )}
       <Surface style={{ ...styles.round, minHeight: height }}>
