@@ -62,8 +62,9 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
 
   const showVotingModal = () => {
     const { introVotingEndsAt } = getStoryPartsEndstime(storedStory);
+    const activeCoAuthors = storedStory?.coAuthors?.filter((ca) => ca.isActive);
     const userPartOfStory =
-      storedStory?.coAuthors?.some((ca) => ca.profile._id === currentUser?._id) ||
+      activeCoAuthors.some((ca) => ca.profile._id === currentUser?._id) ||
       storedStory?.masterAuthor?._id === currentUser?._id;
 
     if (!userPartOfStory) {
