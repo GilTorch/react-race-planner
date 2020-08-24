@@ -35,7 +35,6 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const { story, reducerName, isNewStory } = route.params;
   const { masterAuthor } = story;
   const stories = useSelector((state) => state[reducerName]?.stories) || [];
-  const [spinnerVisible, setSpinnerVisible] = useState(false);
 
   const selectedStory = stories.find((s) => s._id === story?._id) || {};
   // We make sure they are in the order of the story lifecycle - https://app.clickup.com/2351815/v/dc/16z6a-777/27rp7-735
@@ -73,6 +72,8 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   }
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
   const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
+  const [spinnerVisible, setSpinnerVisible] = React.useState(false);
+
   const reachedEnding = !inProgressStatuses.slice(0, 4).includes(selectedStory?.status);
   const scrollView = React.useRef(null);
   const refRBSheet = React.useRef();
