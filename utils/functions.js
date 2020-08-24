@@ -27,7 +27,8 @@ export const getUserProfileUri = (userPicture) => {
 export const avatarGenerator = (username) => `https://api.adorable.io/avatars/${username}.png`;
 
 export const getStoryPartsEndstime = (story) => {
-  const roundSubmittingEndsAt = moment(story?.roundSubmittingStartedAt).add(
+  const inprogressRound = story.parts?.find((part) => part.status === 'in_progress');
+  const roundSubmittingEndsAt = moment(inprogressRound?.startedAt).add(
     story.settings?.roundTimeLimitSeconds,
     'seconds',
   );
