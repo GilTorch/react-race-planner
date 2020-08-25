@@ -30,7 +30,6 @@ import * as Twitter from '../services/twitter';
 import { signupAction } from '../redux/actions/AuthActions';
 import { signupSchema } from '../utils/validators';
 import PageSpinner from '../components/PageSpinner';
-import { TermsAndConditionsModal } from '../components/modals';
 
 const defaultValues = {
   username: '',
@@ -50,12 +49,7 @@ const defaultValues = {
 const SignupScreen = ({ navigation, signup }) => {
   const authState = useSelector((state) => state.auth);
   const [socialSignUp, setSocialSignup] = React.useState(false);
-  const [showTermsAndConditions, setShowTermsAndConditions] = React.useState(false);
 
-  const showTermsAndConditionsModal = () => {
-    setShowTermsAndConditions(true);
-  };
-  const dismissTermsAndConditions = () => setShowTermsAndConditions(false);
   const { register, handleSubmit, errors, setValue, watch, reset } = useForm({
     validationSchema: signupSchema,
     validateCriteriaMode: 'all',
@@ -367,10 +361,7 @@ const SignupScreen = ({ navigation, signup }) => {
                 </View>
               </>
             )}
-            <TermsAndConditionsModal
-              dismiss={dismissTermsAndConditions}
-              visible={showTermsAndConditions}
-            />
+
             <View style={styles.containerl}>
               <View style={styles.checkboxContainer}>
                 <View style={{ marginTop: -1 }}>
@@ -386,10 +377,11 @@ const SignupScreen = ({ navigation, signup }) => {
                 </View>
                 <Text style={styles.labelCheckbox}> I have read and accepted the </Text>
                 <TouchableOpacity
-                  onPress={() => {
-                    showTermsAndConditionsModal();
-                  }}>
-                  <Text style={styles.termsAndConditions}>Terms and Conditions </Text>
+                  onPress={() =>
+                    // eslint-disable-next-line prettier/prettier
+                    navigation.navigate('WebViewScreen', { title: '             Terms and Conditions              ' })
+                  }>
+                  <Text style={styles.termsAndConditions}>Terms and Conditions</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.errorsTermsWrapper}>
