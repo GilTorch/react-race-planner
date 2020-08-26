@@ -17,7 +17,7 @@ const WebViewScreen = ({ navigation, route }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // StatusBar.setHidden(false);
+      StatusBar.setHidden(false);
       StatusBar.setBarStyle('light-content');
     }, []),
   );
