@@ -181,6 +181,7 @@ const ProposedSection = ({
         )}
 
       {story?.status === 'waiting_for_outros' &&
+        story?.outroSubmittingStartedAt &&
         type === 'Ending' &&
         story.createdAt &&
         moment().isBefore(outroSubmittingEndsAt) && (
