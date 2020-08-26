@@ -3,12 +3,13 @@ import { Platform } from 'react-native';
 import {
   ANDROID_SERVER_URL,
   IOS_SERVER_URL,
-  USER_AVATAR_UPLOAD_LOCATION
+  USER_AVATAR_UPLOAD_LOCATION,
 } from 'react-native-dotenv';
+import moment from 'moment';
 
 const platformServerURL = Platform.OS === 'android' ? ANDROID_SERVER_URL : IOS_SERVER_URL;
 
-export const getUserProfileUri = userPicture => {
+export const getUserProfileUri = (userPicture) => {
   if (!userPicture) {
     return null;
   }
@@ -17,10 +18,41 @@ export const getUserProfileUri = userPicture => {
     return userPicture;
   }
 
-  return `${
-    Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL
-    // TODO: Fix this annoying prettier/prettier warning
-    }/${USER_AVATAR_UPLOAD_LOCATION}/${userPicture}`;
+  const baseUri = Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL;
+  const profileUri = `${baseUri}/${USER_AVATAR_UPLOAD_LOCATION}/${userPicture}`;
+
+  return profileUri;
 };
 
-export const avatarGenerator = username => `https://api.adorable.io/avatars/${username}.png`;
+export const avatarGenerator = (username) => `https://api.adorable.io/avatars/${username}.png`;
+
+export const getStoryPartsEndstime = (story) => {
+  const inprogressRound = story.parts?.find((part) => part.status === 'in_progress');
+  const roundSubmittingEndsAt = moment(inprogressRound?.startedAt).add(
+    story.settings?.roundTimeLimitSeconds,
+    'seconds',
+  );
+  const introSubmittingEndsAt = moment(story.introSubmittingStartedAt).add(
+    story.settings?.introTimeLimitSeconds,
+    'seconds',
+  );
+  const introVotingEndsAt = moment(story.introVotingStartedAt).add(
+    story.settings?.voteTimeLimitSeconds,
+    'seconds',
+  );
+  const outroSubmittingEndsAt = moment(story.outroSubmittingStartedAt).add(
+    story.settings?.outroTimeLimitSeconds,
+    'seconds',
+  );
+  const outroVotingEndsAt = moment(story.outroVotingStartedAt).add(
+    story.settings?.voteTimeLimitSeconds,
+    'seconds',
+  );
+  return {
+    roundSubmittingEndsAt,
+    introSubmittingEndsAt,
+    introVotingEndsAt,
+    outroSubmittingEndsAt,
+    outroVotingEndsAt,
+  };
+};

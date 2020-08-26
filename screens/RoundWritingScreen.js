@@ -19,21 +19,50 @@ import CNRichTextEditor, {
   getDefaultStyles,
   convertToObject,
 } from 'react-native-cn-richtext-editor';
-import { Surface } from 'react-native-paper';
+import { Surface, ActivityIndicator } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect } from '@react-navigation/native';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import Toast from 'react-native-root-toast';
+import moment from 'moment';
 
 import { createStoryAction, createRoundAction } from '../redux/actions/StoryActions';
+import ConfirmModal from '../components/modals/ConfirmModal';
+import Countdown from '../components/Countdown';
+import { getStoryPartsEndstime } from '../utils/functions';
 
 const IS_IOS = Platform.OS === 'ios';
 const defaultStyles = getDefaultStyles();
 
 const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => {
+  const { story: routeStory, entity, isNewStory } = route.params;
+  const isRound = entity === 'round';
+  const isIntro = entity === 'intro';
+  const isEnding = entity === 'ending';
+
+  const [canWriteStory, setCanWriteStory] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const showCancelConfirmationModal = () => setModalVisible(true);
+  const hideCancelConfirmationModal = () => setModalVisible(false);
+
   navigation.setOptions({
     headerShown: false,
   });
+
+  const {
+    introSubmittingEndsAt,
+    outroSubmittingEndsAt,
+    roundSubmittingEndsAt,
+  } = getStoryPartsEndstime(routeStory);
+
+  let submittingEndsAt;
+  if (isRound) {
+    submittingEndsAt = roundSubmittingEndsAt;
+  } else if (isIntro) {
+    submittingEndsAt = introSubmittingEndsAt;
+  } else if (isEnding) {
+    submittingEndsAt = outroSubmittingEndsAt;
+  }
 
   useEffect(() => {
     const parent = navigation.dangerouslyGetParent();
@@ -55,6 +84,8 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
       }
     }, []),
   );
+
+  const createStoryLoading = useSelector((state) => state.story.createStoryLoading);
 
   const [customStyles] = useState({
     ...defaultStyles,
@@ -91,24 +122,30 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
   };
 
   const onValueChanged = (newVal) => {
-    setValue(newVal);
+    const trimmedValue = newVal.trim();
+
+    if (trimmedValue.split(' ').length > route.params.story.settings.roundMaxWords) {
+      setCanWriteStory(false);
+
+      Toast.show('You reached your maximum character limit.', {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+      });
+    } else {
+      setCanWriteStory(true);
+      setValue(trimmedValue);
+    }
   };
 
   const submitRound = async () => {
     try {
-      if (route.params.isNewStory) {
+      if (isNewStory) {
         const story = await createStory({
           ...route.params.story,
           intro: value,
         });
 
-        navigation.reset({
-          index: 1,
-          routes: [
-            { name: 'HomeScreen' },
-            { name: 'StoryScreen', params: { story, reducerName: 'writing' } },
-          ],
-        });
+        navigation.navigate('StoryScreen', { story, reducerName: 'writing', isNewStory: true });
       } else {
         const finalObj = {
           content: value,
@@ -137,7 +174,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
 
       Toast.show(e.message, {
         duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
+        position: Toast.positions.TOP,
       });
     }
   };
@@ -165,7 +202,11 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity
+              onPress={() =>
+                value.length > 0 ? showCancelConfirmationModal() : navigation.goBack()
+              }
+              disabled={createStoryLoading}>
               <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
                 Cancel
               </Text>
@@ -175,11 +216,18 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
               {`${route.params.entity.charAt(0).toUpperCase()}${route.params.entity.slice(1)}`}{' '}
               Writing
             </Text>
-            <TouchableOpacity onPress={() => submitRound()}>
-              <Text type="bold" style={{ color: 'white', fontSize: 14 }}>
-                Done
-              </Text>
-            </TouchableOpacity>
+            {createStoryLoading && (
+              <ActivityIndicator color="#fff" size={Platform.OS === 'android' ? 30 : 'small'} />
+            )}
+            {!createStoryLoading && (
+              <TouchableOpacity
+                onPress={() => submitRound()}
+                disabled={createStoryLoading || !canWriteStory}>
+                <Text type="bold" style={{ color: canWriteStory ? 'white' : 'gray', fontSize: 14 }}>
+                  Done
+                </Text>
+              </TouchableOpacity>
+            )}
           </SafeAreaView>
         </LinearGradient>
       </Surface>
@@ -201,7 +249,16 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
             />
           </View>
         </TouchableWithoutFeedback>
-
+        {!isNewStory && moment().isBefore(submittingEndsAt) && (
+          <View style={{ backgroundColor: 'white', paddingBottom: 10 }}>
+            <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
+              Submitting ends in{' '}
+              <Countdown
+                countdownTimeInSeconds={moment(submittingEndsAt).diff(moment(), 'seconds')}
+              />
+            </Text>
+          </View>
+        )}
         <View style={styles.toolbarContainer}>
           <CNToolbar
             style={{
@@ -268,6 +325,17 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
           />
         </View>
       </MenuProvider>
+
+      <ConfirmModal
+        title="Discard Changes"
+        subtitle="Changes will not be saved. Do you whant to proceed?"
+        okLabel="Discard"
+        okBtnStyle={{ backgroundColor: '#F44336' }}
+        cancelLabel="Cancel"
+        visible={modalVisible}
+        dismiss={hideCancelConfirmationModal}
+        onOkPressed={() => navigation.goBack()}
+      />
     </KeyboardAvoidingView>
   );
 };

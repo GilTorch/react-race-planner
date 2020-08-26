@@ -9,11 +9,15 @@ import { connect, useSelector } from 'react-redux';
 import HTMLView from 'react-native-htmlview';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import moment from 'moment';
 import Text from '../CustomText';
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 import { skipRoundAction } from '../../redux/actions/StoryActions';
 import LeaveStoryModal from '../modals/LeaveStoryModal';
+import { CommentModal } from '../modals';
+import ConfirmModal from '../modals/ConfirmModal';
+import Countdown from '../Countdown';
 
 const Round = ({
   navigation,
@@ -30,14 +34,28 @@ const Round = ({
   const roundStatus = round.status;
   const currentUser = useSelector((state) => state.auth.currentUser);
   const loading = useSelector((state) => state.story.skipRoundLoading);
+  const [confirmSkipVisible, setConfirmVisible] = React.useState(false);
 
   const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
+  const [showComment, setShowComment] = React.useState(false);
+  const showCommentModal = () => {
+    setShowComment(true);
+  };
+  const dismissComment = () => setShowComment(false);
 
   const inprogressRound = roundStatus === 'in_progress';
   const userTurn = round?.author?._id === currentUser?._id;
   const height = inprogressRound && userTurn ? SCREEN_HEIGHT * 0.5 : 0;
   let authorName = isMasterAuthorRound ? 'the Master Author' : 'an Anonymous Author';
   const wordsCount = round.content?.split(' ').length || 0;
+
+  let roundSubmittingEndsAt;
+  if (inprogressRound) {
+    roundSubmittingEndsAt = moment(round?.startedAt).add(
+      story.settings?.roundTimeLimitSeconds,
+      'seconds',
+    );
+  }
 
   const handleSkipRound = async () => {
     try {
@@ -64,21 +82,31 @@ const Round = ({
   }
 
   const roundBody = (
-    // <Text type="regular" style={{ color: '#5A7582', lineHeight: 20 }}>
-    //   {round.content || ''}
-    // </Text>
+    <>
+      {roundStatus === 'completed' && <HTMLView value={round.content || 'No content'} />}
 
-    <HTMLView value={round.content || 'no content yet. <u>Press to add text</u>'} />
+      {inprogressRound && !userTurn && <HTMLView value={round.content || 'No content yet'} />}
+
+      {inprogressRound && userTurn && (
+        <HTMLView
+          value={round.content || 'No content yet. <u>Press here to write your round</u>'}
+        />
+      )}
+    </>
   );
 
   const inprogress = (
     <View style={{ flexDirection: 'row', width: SCREEN_WIDTH * 0.7 }}>
       <Text style={styles.pendding}>{roundStatus || ''}</Text>
-      <Text
-        type="bold-italic"
-        style={{ color: '#ED8A18', fontSize: 13, marginTop: 10, marginLeft: 10 }}>
-        {round.timeLeft || ''}
-      </Text>
+      {moment().isBefore(roundSubmittingEndsAt) && (
+        <Text style={{ color: '#ed8a18', marginLeft: 10, marginTop: 10 }}>
+          (ends in{' '}
+          <Countdown
+            countdownTimeInSeconds={moment(roundSubmittingEndsAt).diff(moment(), 'seconds')}
+          />
+          )
+        </Text>
+      )}
     </View>
   );
 
@@ -97,32 +125,33 @@ const Round = ({
             flexDirection: 'row',
             marginTop: 10,
           }}>
-          {round.skipCount !== 1 && (
+          {round.skipCount !== 1 && roundIdx !== totalRound && (
             <Surface style={{ ...styles.surface, marginRight: 20 }}>
               <Button
                 mode="contained"
                 loading={loading}
                 disabled={loading}
                 uppercase={false}
-                onPress={handleSkipRound}
+                onPress={() => setConfirmVisible(true)}
                 style={{ backgroundColor: '#ED8A18', width: SCREEN_WIDTH * 0.25 }}
                 labelStyle={styles.boxBtnLabel}>
                 Skip Turn
               </Button>
             </Surface>
           )}
-
-          <Surface style={styles.surface}>
-            <Button
-              mode="contained"
-              disabled={loading}
-              uppercase={false}
-              onPress={() => setIsLeaveStoryModalVisible(true)}
-              style={{ backgroundColor: '#f44336' }}
-              labelStyle={styles.boxBtnLabel}>
-              {isMasterAuthorRound ? 'Delete Story' : 'Leave Story'}
-            </Button>
-          </Surface>
+          {roundIdx !== totalRound && (
+            <Surface style={styles.surface}>
+              <Button
+                mode="contained"
+                disabled={loading || true}
+                uppercase={false}
+                onPress={() => setIsLeaveStoryModalVisible(true)}
+                style={{ backgroundColor: '#A39F9F' }}
+                labelStyle={styles.boxBtnLabel}>
+                {isMasterAuthorRound ? 'Delete Story' : 'Leave Story'}
+              </Button>
+            </Surface>
+          )}
         </View>
       </View>
     </>
@@ -149,7 +178,21 @@ const Round = ({
       <Text type="medium" style={styles.title}>
         Round {roundIdx}/{totalRound} {userTurn && '(Your Turn)'}
       </Text>
-
+      {inprogressRound && userTurn && moment().isBefore(roundSubmittingEndsAt) && (
+        <Text
+          style={{
+            color: '#ed8a18',
+            marginRight: 10,
+            marginHorizontal: 20,
+            marginTop: 3,
+            marginBottom: 15,
+          }}>
+          Submitting ends{' '}
+          <Countdown
+            countdownTimeInSeconds={moment(roundSubmittingEndsAt).diff(moment(), 'seconds')}
+          />
+        </Text>
+      )}
       <Surface style={{ ...styles.round, minHeight: height }}>
         <View style={styles.boxHeader}>
           <Text type="bold" style={styles.subTitle}>
@@ -165,13 +208,23 @@ const Round = ({
           <>
             {roundBody}
             <View style={{ marginTop: 'auto' }}>
+              <CommentModal
+                dismiss={dismissComment}
+                visible={showComment}
+                parent={round}
+                storyStatus={story.status}
+              />
               <Text style={styles.separator}>---</Text>
-              <View style={styles.displayRow}>
+              <TouchableOpacity
+                style={styles.displayRow}
+                onPress={() => {
+                  showCommentModal();
+                }}>
                 <FontAwesome name="commenting" size={20} color="#0277BD" />
                 <Text type="bold" style={styles.boxFooter}>
                   Comments: {round.comments.length}
                 </Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </>
         )}
@@ -179,7 +232,22 @@ const Round = ({
     </View>
   );
 
-  return listMode ? listRound : cardRound;
+  return (
+    <>
+      <ConfirmModal
+        title="Skip Your Turn"
+        subtitle="Are you sure your want to skip your round?"
+        okLabel="Skip"
+        okBtnStyle={{ backgroundColor: '#EC8918' }}
+        cancelLabel="Cancel"
+        visible={confirmSkipVisible}
+        dismiss={() => setConfirmVisible(false)}
+        onOkPressed={handleSkipRound}
+      />
+
+      {listMode ? listRound : cardRound}
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -235,18 +303,33 @@ const styles = StyleSheet.create({
   displayRow: {
     flexDirection: 'row',
   },
+  button: {
+    backgroundColor: '#03A2A2',
+    height: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    padding: 5,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
 });
 
 Round.propTypes = {
   navigation: PropTypes.object.isRequired,
   round: PropTypes.object.isRequired,
   totalRound: PropTypes.number,
+  roundIdx: PropTypes.number.isRequired,
   listMode: PropTypes.bool.isRequired,
   style: PropTypes.object,
   isMasterAuthorRound: PropTypes.bool,
   isCompletedStory: PropTypes.bool,
   story: PropTypes.object.isRequired,
-  skipRound: PropTypes.func,
+  skipRound: PropTypes.func.isRequired,
 };
 
 Round.defaultProps = {

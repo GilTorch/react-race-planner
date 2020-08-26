@@ -697,7 +697,7 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
               {!linkingFbLoading && !user?.facebookAccountId && (
                 <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
               )}
-              {!linkingFbLoading && user?.facebookAccountId && (
+              {!linkingFbLoading && !!user?.facebookAccountId && (
                 <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>
               )}
             </TouchableOpacity>
@@ -738,7 +738,7 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
               {!linkingGoogleLoading && !user?.googleAccountId && (
                 <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
               )}
-              {!linkingGoogleLoading && user?.googleAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
+              {!linkingGoogleLoading && !!user?.googleAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
             </TouchableOpacity>
             <Divider style={{ marginLeft: 20 }} />
             <TouchableOpacity
@@ -781,7 +781,7 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
               {!linkingTwitterLoading && !user?.twitterAccountId && (
                 <Text style={{ fontSize: 18, color: '#03A2A2' }}>Link</Text>
               )}
-              {!linkingTwitterLoading && user?.twitterAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
+              {!linkingTwitterLoading && !!user?.twitterAccountId && <Text style={{ fontSize: 18, color: 'red' }}>Unlink</Text>}
             </TouchableOpacity>
           </View>
         </View>
