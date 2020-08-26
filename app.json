@@ -3,12 +3,14 @@
     "name": "ScriptoRerum",
     "slug": "scriptorerum",
     "privacy": "public",
-    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
+    "experiments": {
+      "redesignedLogBox": true
+    },
     "version": "1.0.6-rc",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
