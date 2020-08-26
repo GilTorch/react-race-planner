@@ -5,19 +5,20 @@ The iOS and Android source code of ScriptoRerum - React Native
 # Table of Contents
 
 - [ScriptoRerum](#scriptorerum)
-  * [Screenshots](#screenshots)
-  * [Requirements](#requirements)
-  * [Usage](#usage)
-  * [UI: Working on a specific screen](#ui--working-on-a-specific-screen)
-  * [API/Database Interaction](#api-database-interaction)
-  * [Contribution Guidelines](#contribution-guidelines)
-    + [Our Git Branching Model](#our-git-branching-model)
-    + [Code linting and formatting](#code-linting-and-formatting)
-    + [Getting Started on a Task](#getting-started-on-a-task)
-  * [Publishing for Staging/Demoing](#publishing-for-staging-demoing)
-  * [Building for Production](#building-for-production)
-  * [e2e Testing with detox](#e2e-testing-with-detox)
-  * [Run Github Action](#run-github-action)
+- [Table of Contents](#table-of-contents)
+  - [Screenshots](#screenshots)
+  - [Requirements](#requirements)
+  - [Usage](#usage)
+  - [UI: Working on a specific screen](#ui-working-on-a-specific-screen)
+  - [API/Database Interaction](#apidatabase-interaction)
+  - [Contribution Guidelines](#contribution-guidelines)
+    - [Our Git Branching Model](#our-git-branching-model)
+    - [Code linting and formatting](#code-linting-and-formatting)
+    - [Getting Started on a Task](#getting-started-on-a-task)
+  - [Publishing for Staging/Demoing](#publishing-for-stagingdemoing)
+  - [Building for Production](#building-for-production)
+  - [e2e Testing with detox](#e2e-testing-with-detox)
+  - [Run Github Action](#run-github-action)
 
 ## Screenshots
 
@@ -40,12 +41,31 @@ cd ScriptoRerum
 ```
 - Install dependencies: ```npm i```
 - Make sure you have an Android emulator (i.e.: AVD in Android Studio. Any phone with at least Android 5) or an iOS simulator with at least iOS 10 running.
-- Run the client:
-  - iOS:
+
+To run the client, you have two options:
+1. Run it with Expo
+2. Run it with React Native directly
+
+The only reason you would want to run it with React Native directly is if you need to test a dependency that won't work on the Expo client (Native dependencies - Java, Kotlin, Swift, etc...).
+
+Even when we introduce a native dependency, we make sure to add checks to only use them when the app is being used outside of Expo (A standalone build or running with React Native). So the app will always be runnable within the Expo ecosystem.
+
+1. Running with Expo:
+   - iOS:
+    ```
+      expo start -i
+    ```
+   - Android:
+    ```
+      expo start -a
+    ```
+
+2. Running with React Native:
+   - iOS:
     ```
       npm run ios
     ```
-  - Android:
+   - Android:
     ```
       npm run android
     ```
