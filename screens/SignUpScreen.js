@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
+
 import Toast from 'react-native-root-toast';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
@@ -18,6 +19,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
+import CheckBox from 'react-native-checkbox';
 import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from 'react-native-dotenv';
 
 import SRLogo from '../assets/images/scriptorerum-logo.png';
@@ -40,19 +42,22 @@ const defaultValues = {
   googleAccountId: '',
   twitterAccountId: '',
   facebookAccountId: '',
+  acceptTerms: false,
   socialPlatformName: '',
 };
 
 const SignupScreen = ({ navigation, signup }) => {
   const authState = useSelector((state) => state.auth);
   const [socialSignUp, setSocialSignup] = React.useState(false);
+
   const { register, handleSubmit, errors, setValue, watch, reset } = useForm({
-    // const { register, handleSubmit, errors, setValue, watch } = useForm({
     validationSchema: signupSchema,
     validateCriteriaMode: 'all',
   });
+
   const socialAccount = watch('socialAccount', false);
   const socialPlatformName = watch('socialPlatformName', false);
+  const acceptTerms = watch('acceptTerms', false);
   const inputs = {};
   const focusNextField = (name) => inputs[name].focus();
 
@@ -86,6 +91,7 @@ const SignupScreen = ({ navigation, signup }) => {
     register('password');
     register('password2');
     register('socialAccount');
+    register('acceptTerms');
     register('googleAccountId');
     register('twitterAccountId');
     register('facebookAccountId');
@@ -355,6 +361,38 @@ const SignupScreen = ({ navigation, signup }) => {
                 </View>
               </>
             )}
+
+            <View style={styles.containerl}>
+              <View style={styles.checkboxContainer}>
+                <View style={{ marginTop: -1 }}>
+                  <CheckBox
+                    label=""
+                    style={[errors.acceptTerms && styles.acceptTerms]}
+                    checked={acceptTerms}
+                    onChange={(checked) => {
+                      setValue('acceptTerms', !checked);
+                    }}
+                    checkboxStyle={{ width: 15, height: 15 }}
+                  />
+                </View>
+                <Text style={styles.labelCheckbox}> I have read and accepted the </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('WebViewScreen', {
+                      title: 'Terms and Conditions',
+                    })
+                  }>
+                  <Text style={styles.termsAndConditions}>Terms and Conditions</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.errorsTermsWrapper}>
+                {errors.acceptTerms && (
+                  <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                    {errors.acceptTerms.message}
+                  </Text>
+                )}
+              </View>
+            </View>
             <TouchableOpacity
               testID="sign-up-button"
               onPress={handleSubmit(submit)}
@@ -450,7 +488,6 @@ const SignupScreen = ({ navigation, signup }) => {
         </View>
       </ScrollView>
       <PageSpinner visible={authState.loading || socialSignUp} />
-      {/* <PageSpinner visible={authState.loading} /> */}
     </KeyboardAvoidingView>
   );
 };
@@ -469,6 +506,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 70,
     marginBottom: 70,
+  },
+  containerl: {
+    backgroundColor: 'white',
+    width: '100%',
+    justifyContent: 'center',
+    top: '16%',
+    marginTop: 39,
+    marginBottom: -6,
   },
   logoContainer: {
     width: '70%',
@@ -508,6 +553,11 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderBottomWidth: 1,
   },
+  acceptTerms: {
+    borderColor: 'yellow',
+    top: '50%',
+    marginTop: -10,
+  },
   form: {
     width: '75%',
   },
@@ -543,6 +593,30 @@ const styles = StyleSheet.create({
   goToLoginPageButton: {},
   goToLoginPageButtonText: {
     color: '#23C2C2',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    marginTop: -240,
+    paddingTop: 8,
+    height: 20,
+    alignSelf: 'flex-start',
+    width: '100%',
+  },
+  errorsTermsWrapper: {
+    marginTop: 4,
+    height: 30,
+    bottom: 5.5,
+  },
+
+  labelCheckbox: {
+    margin: 0,
+    color: '#7F8FA4',
+    fontSize: 11.5,
+  },
+  termsAndConditions: {
+    color: '#23C2C2',
+    fontSize: 11.5,
+    marginBottom: -7,
   },
 });
 

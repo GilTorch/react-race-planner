@@ -29,6 +29,7 @@ import { HugeAdvertisement, SmallAdvertisement } from '../components/advertiseme
 import { SCREEN_HEIGHT } from '../utils/dimensions';
 import { joinStoryAction, getSelectedStoryAction } from '../redux/actions/StoryActions';
 import LeaveStoryModal from '../components/modals/LeaveStoryModal';
+import PageSpinner from '../components/PageSpinner';
 
 const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const { story, reducerName, isNewStory } = route.params;
@@ -48,15 +49,15 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   ];
   // Note: When it's too late to join, it's also too late to delete the story
   const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(selectedStory?.status);
-  const authorsCount = selectedStory?.coAuthors?.length + 1;
-  const anonymousAuthorsCount = selectedStory?.coAuthors?.filter(
-    (ca) => ca.privacyStatus === 'anonymous',
-  ).length;
+  const activeCoAuthors = selectedStory?.coAuthors?.filter((ca) => ca.isActive);
+  const authorsCount = activeCoAuthors.length + 1;
+  const anonymousAuthorsCount = activeCoAuthors?.filter((ca) => ca.privacyStatus === 'anonymous')
+    .length;
   const missingAuthorsCount = selectedStory?.settings?.minimumParticipants - authorsCount;
   const currentUser = useSelector((state) => state.auth.currentUser);
   const isMasterAuthor = currentUser?._id === masterAuthor?._id;
   const userIsAParticipant =
-    selectedStory?.coAuthors?.find((ca) => ca.profile._id === currentUser?._id) || isMasterAuthor;
+    activeCoAuthors?.some((ca) => ca.profile._id === currentUser?._id) || isMasterAuthor;
   const tooLateForOutro =
     selectedStory?.status === 'outro_voting' || selectedStory?.status === 'completed';
   const waitingStory = authorsCount < selectedStory?.settings?.minimumParticipants;
@@ -71,6 +72,8 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   }
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
   const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
+  const [spinnerVisible, setSpinnerVisible] = React.useState(false);
+
   const reachedEnding = !inProgressStatuses.slice(0, 4).includes(selectedStory?.status);
   const scrollView = React.useRef(null);
   const refRBSheet = React.useRef();
@@ -97,9 +100,11 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   let firstBtnColor;
   if (userIsAParticipant && isMasterAuthor && tooLateToJoin) {
     firstBtnColor = '#A39F9F';
-  } else if (userIsAParticipant && inProgress) {
+  } else if (userIsAParticipant && selectedStory.status === 'waiting_for_players') {
     firstBtnColor = '#F44336';
   } else if (!userIsAParticipant && waitingStory) {
+    firstBtnColor = '#ED8A18';
+  } else if (!userIsAParticipant && !tooLateToJoin) {
     firstBtnColor = '#ED8A18';
   } else {
     firstBtnColor = '#A39F9F';
@@ -132,8 +137,14 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     React.useCallback(() => {
       const fetchSelectedStory = async () => {
         try {
+          setSpinnerVisible(true);
+
           await getSelectedStory(story._id);
+
+          setSpinnerVisible(false);
         } catch (e) {
+          setSpinnerVisible(false);
+
           Toast.show(e.message, {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
@@ -208,10 +219,10 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const joinOrLeave = async () => {
     if (userIsAParticipant) {
       try {
-        if (completedStory) {
-          showToast("It's too late to leave this story now");
-        } else if (isMasterAuthor && tooLateToJoin) {
+        if (isMasterAuthor && selectedStory.status !== 'waiting_for_players') {
           showToast('You cannot delete a story that has started already');
+        } else if (selectedStory.status !== 'waiting_for_players') {
+          showToast("It's too late to leave this story now");
         } else {
           setIsLeaveStoryModalVisible(true);
         }
@@ -480,6 +491,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           <ProposedSection
             onPropose={handleRoundWriting('intro')}
             userCanPropose={userIsAParticipant && !tooLateToJoin && !isMasterAuthor}
+            userIsAParticipant={userIsAParticipant}
             type="Intro"
             proposedBlocks={selectedStory?.parts?.filter((p) => p.isIntro)}
             listMode={listMode}
@@ -517,6 +529,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
               // because we're gonna be using that on the UI
               onPropose={handleRoundWriting('ending')}
               userCanPropose={userIsAParticipant && !tooLateForOutro}
+              userIsAParticipant={userIsAParticipant}
               type="Ending"
               proposedBlocks={selectedStory?.parts?.filter((p) => p.isOutro)}
               listMode={listMode}
@@ -525,7 +538,6 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           )}
         </ScrollView>
       )}
-
       <RBSheet
         ref={refRBSheet}
         height={SCREEN_HEIGHT * 0.6}
@@ -608,6 +620,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           </Surface>
         </ScrollView>
       </RBSheet>
+      <PageSpinner visible={spinnerVisible} />
     </View>
   );
 };

@@ -13,6 +13,7 @@ import OTPVerificationScreen from '../screens/OTPVerificationScreen';
 import NewStoryScreen from '../screens/NewStoryScreen';
 import { AppContext } from '../utils/providers/app-context';
 import { savePushTokenAction } from '../redux/actions/UserActions';
+import WebViewScreen from '../screens/WebViewScreen';
 
 const Stack = createStackNavigator();
 
@@ -37,6 +38,7 @@ export default function RootStack() {
           <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
           <Stack.Screen name="ResetPasswordTwo" component={ResetPasswordTwoScreen} />
           <Stack.Screen name="OTPVerification" component={OTPVerificationScreen} />
+          <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
         </>
       ) : (
         <>
