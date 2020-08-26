@@ -378,8 +378,9 @@ const SignupScreen = ({ navigation, signup }) => {
                 <Text style={styles.labelCheckbox}> I have read and accepted the </Text>
                 <TouchableOpacity
                   onPress={() =>
-                    // eslint-disable-next-line prettier/prettier
-                    navigation.navigate('WebViewScreen', { title: '             Terms and Conditions              ' })
+                    navigation.navigate('WebViewScreen', {
+                      title: 'Terms and Conditions',
+                    })
                   }>
                   <Text style={styles.termsAndConditions}>Terms and Conditions</Text>
                 </TouchableOpacity>
