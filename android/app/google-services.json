@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "259126035894",
+    "firebase_url": "https://script-to-rerum.firebaseio.com",
+    "project_id": "script-to-rerum",
+    "storage_bucket": "script-to-rerum.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259126035894:android:a2b767b4808e416c622d17",
+        "android_client_info": {
+          "package_name": "com.scriptorerum.ScriptoRerum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259126035894-goni6n8bohfdlg8gdsmjc1j6u5a2sgeh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAgWJcZl4CeRIx_AGrwwPM1PGcgkC_f7E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "259126035894-goni6n8bohfdlg8gdsmjc1j6u5a2sgeh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
