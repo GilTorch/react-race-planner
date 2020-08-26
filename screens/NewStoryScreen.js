@@ -80,6 +80,8 @@ const NewStoryScreen = ({ navigation, route }) => {
         voteTimeLimitSeconds: 300,
         minimumParticipants: 2,
         roundMaxWords: 100,
+        introMaxWords: 50,
+        outroMaxWords: 50,
       },
       privacyStatus: 'username',
     },

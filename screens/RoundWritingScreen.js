@@ -56,12 +56,17 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
   } = getStoryPartsEndstime(routeStory);
 
   let submittingEndsAt;
+  let partMaxWords;
+
   if (isRound) {
     submittingEndsAt = roundSubmittingEndsAt;
+    partMaxWords = 'roundMaxWords';
   } else if (isIntro) {
     submittingEndsAt = introSubmittingEndsAt;
+    partMaxWords = 'introMaxWords';
   } else if (isEnding) {
     submittingEndsAt = outroSubmittingEndsAt;
+    partMaxWords = 'outroMaxWords';
   }
 
   useEffect(() => {
@@ -124,7 +129,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
   const onValueChanged = (newVal) => {
     const trimmedValue = newVal.trim();
 
-    if (trimmedValue.split(' ').length > route.params.story.settings.roundMaxWords) {
+    if (trimmedValue.split(' ').length > route.params.story.settings[partMaxWords]) {
       setCanWriteStory(false);
 
       Toast.show('You reached your maximum character limit.', {
@@ -136,6 +141,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
       setValue(trimmedValue);
     }
   };
+  const wordsCount = value instanceof Array ? 0 : value.split(' ').length;
 
   const submitRound = async () => {
     try {
@@ -211,7 +217,6 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
                 Cancel
               </Text>
             </TouchableOpacity>
-
             <Text type="bold" style={{ color: 'white', fontSize: 18, marginVertical: 15 }}>
               {`${route.params.entity.charAt(0).toUpperCase()}${route.params.entity.slice(1)}`}{' '}
               Writing
@@ -249,6 +254,13 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
             />
           </View>
         </TouchableWithoutFeedback>
+
+        <View style={styles.wordCountContainer}>
+          <Text style={{ color: '#5A7582', alignSelf: 'flex-end', marginRight: 10 }}>
+            {wordsCount}/{route.params.story.settings[partMaxWords]} words
+          </Text>
+        </View>
+
         {!isNewStory && moment().isBefore(submittingEndsAt) && (
           <View style={{ backgroundColor: 'white', paddingBottom: 10 }}>
             <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
@@ -362,6 +374,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     borderBottomWidth: 1,
     borderColor: '#eee',
+  },
+  wordCountContainer: {
+    backgroundColor: 'white',
+    paddingBottom: 10,
+  },
+  subTitleLeft: {
+    fontWeight: 'bold',
+    color: '#5A7582',
+    marginLeft: '3%',
+  },
+  subTitleRight: {
+    fontWeight: 'bold',
+    color: '#5A7582',
+    marginLeft: '50%',
   },
 });
 
