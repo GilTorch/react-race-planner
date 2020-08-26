@@ -49,8 +49,9 @@ const Story = ({ story, index, length, navigation, updating, reducerName }) => {
   const inProgress = inProgressStatuses.includes(story.status);
   const status = inProgress ? 'In Progress' : 'Completed';
   const currentGenre = story.genre;
-  const authorsCount = story.coAuthors?.length + 1;
-  let anonymousAuthorsCount = story.coAuthors?.filter((ca) => ca.privacyStatus === 'anonymous')
+  const activeCoAuthors = story.coAuthors?.filter((ca) => ca.isActive);
+  const authorsCount = activeCoAuthors?.length + 1;
+  let anonymousAuthorsCount = activeCoAuthors?.filter((ca) => ca.privacyStatus === 'anonymous')
     .length;
   // eslint-disable-next-line no-plusplus
   if (story.privacyStatus === 'anonymous') anonymousAuthorsCount++;
@@ -200,7 +201,7 @@ const Story = ({ story, index, length, navigation, updating, reducerName }) => {
                   </View>
                 )}
 
-                {story.coAuthors
+                {activeCoAuthors
                   ?.filter((ca) => ca.privacyStatus !== 'anonymous')
                   .map((author, idx) => (
                     <View

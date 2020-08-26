@@ -49,15 +49,15 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   ];
   // Note: When it's too late to join, it's also too late to delete the story
   const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(selectedStory?.status);
-  const authorsCount = selectedStory?.coAuthors?.length + 1;
-  const anonymousAuthorsCount = selectedStory?.coAuthors?.filter(
-    (ca) => ca.privacyStatus === 'anonymous',
-  ).length;
+  const activeCoAuthors = selectedStory?.coAuthors?.filter((ca) => ca.isActive);
+  const authorsCount = activeCoAuthors.length + 1;
+  const anonymousAuthorsCount = activeCoAuthors?.filter((ca) => ca.privacyStatus === 'anonymous')
+    .length;
   const missingAuthorsCount = selectedStory?.settings?.minimumParticipants - authorsCount;
   const currentUser = useSelector((state) => state.auth.currentUser);
   const isMasterAuthor = currentUser?._id === masterAuthor?._id;
   const userIsAParticipant =
-    selectedStory?.coAuthors?.find((ca) => ca.profile._id === currentUser?._id) || isMasterAuthor;
+    activeCoAuthors?.some((ca) => ca.profile._id === currentUser?._id) || isMasterAuthor;
   const tooLateForOutro =
     selectedStory?.status === 'outro_voting' || selectedStory?.status === 'completed';
   const waitingStory = authorsCount < selectedStory?.settings?.minimumParticipants;
@@ -100,9 +100,11 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   let firstBtnColor;
   if (userIsAParticipant && isMasterAuthor && tooLateToJoin) {
     firstBtnColor = '#A39F9F';
-  } else if (userIsAParticipant && inProgress) {
+  } else if (userIsAParticipant && selectedStory.status === 'waiting_for_players') {
     firstBtnColor = '#F44336';
   } else if (!userIsAParticipant && waitingStory) {
+    firstBtnColor = '#ED8A18';
+  } else if (!userIsAParticipant && !tooLateToJoin) {
     firstBtnColor = '#ED8A18';
   } else {
     firstBtnColor = '#A39F9F';
@@ -217,10 +219,10 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const joinOrLeave = async () => {
     if (userIsAParticipant) {
       try {
-        if (completedStory) {
-          showToast("It's too late to leave this story now");
-        } else if (isMasterAuthor && tooLateToJoin) {
+        if (isMasterAuthor && selectedStory.status !== 'waiting_for_players') {
           showToast('You cannot delete a story that has started already');
+        } else if (selectedStory.status !== 'waiting_for_players') {
+          showToast("It's too late to leave this story now");
         } else {
           setIsLeaveStoryModalVisible(true);
         }
@@ -489,6 +491,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           <ProposedSection
             onPropose={handleRoundWriting('intro')}
             userCanPropose={userIsAParticipant && !tooLateToJoin && !isMasterAuthor}
+            userIsAParticipant={userIsAParticipant}
             type="Intro"
             proposedBlocks={selectedStory?.parts?.filter((p) => p.isIntro)}
             listMode={listMode}
@@ -526,6 +529,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
               // because we're gonna be using that on the UI
               onPropose={handleRoundWriting('ending')}
               userCanPropose={userIsAParticipant && !tooLateForOutro}
+              userIsAParticipant={userIsAParticipant}
               type="Ending"
               proposedBlocks={selectedStory?.parts?.filter((p) => p.isOutro)}
               listMode={listMode}
