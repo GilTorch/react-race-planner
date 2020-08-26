@@ -7,7 +7,6 @@ import {
   StatusBar,
   Animated,
   SafeAreaView,
-  PixelRatio,
   TouchableOpacity,
   Platform,
 } from 'react-native';
@@ -19,7 +18,7 @@ import { Button, Surface, TouchableRipple } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-root-toast';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { Dropdown } from 'react-native-material-dropdown';
+import { Dropdown } from 'react-native-material-dropdown-v2';
 import { connect, useSelector } from 'react-redux';
 
 import moment from 'moment';
@@ -50,7 +49,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   // Note: When it's too late to join, it's also too late to delete the story
   const tooLateToJoin = !inProgressStatuses.slice(0, 2).includes(selectedStory?.status);
   const activeCoAuthors = selectedStory?.coAuthors?.filter((ca) => ca.isActive);
-  const authorsCount = activeCoAuthors.length + 1;
+  const authorsCount = activeCoAuthors?.length + 1;
   const anonymousAuthorsCount = activeCoAuthors?.filter((ca) => ca.privacyStatus === 'anonymous')
     .length;
   const missingAuthorsCount = selectedStory?.settings?.minimumParticipants - authorsCount;
@@ -113,7 +112,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const [listMode, setListMode] = React.useState(false);
   const [privacyStatus, setPrivacyStatus] = React.useState(); // TODO: get the default user privacystatus from state.setting
   const icon = listMode ? 'eye-slash' : 'eye';
-  const color = listMode ? '#FFF' : '#EEE';
+  const color = listMode ? '#fff' : '#EEE';
 
   const privacyData = [
     { value: 'username', label: 'Username' },
@@ -159,43 +158,6 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   );
 
   const scrollY = React.useRef(new Animated.Value(0)).current;
-
-  const HEADER_MINIMUM_HEIGHT = 0;
-  const HEADER_MAXIMUM_HEIGHT = SCREEN_HEIGHT * 0.25;
-
-  const titleHeight = scrollY.interpolate({
-    inputRange: [0, 25],
-    outputRange: [25, 0],
-    extrapolate: 'clamp',
-  });
-
-  const subtitlemgBottom = scrollY.interpolate({
-    inputRange: [0, 10],
-    outputRange: [10, 0],
-    extrapolate: 'clamp',
-  });
-
-  const metaHeaderHeight = scrollY.interpolate({
-    inputRange: [0, HEADER_MAXIMUM_HEIGHT + 65],
-    outputRange: [HEADER_MAXIMUM_HEIGHT, HEADER_MINIMUM_HEIGHT],
-    extrapolate: 'clamp',
-  });
-
-  const opacity = scrollY.interpolate({
-    inputRange: [0, HEADER_MAXIMUM_HEIGHT],
-    outputRange: [1, 0],
-  });
-
-  const paginationOpacity = scrollY.interpolate({
-    inputRange: [0, HEADER_MAXIMUM_HEIGHT],
-    outputRange: [0, 1],
-  });
-
-  const paginationHeight = scrollY.interpolate({
-    inputRange: [0, HEADER_MAXIMUM_HEIGHT],
-    outputRange: [0, 50],
-    extrapolate: 'clamp',
-  });
 
   const onHeaderLayout = (event) => {
     if (headerDimensions) return; // layout was already called
@@ -273,19 +235,12 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           borderBottomRightRadius: 13,
           backgroundColor: '#03a2a2',
           elevation: 2,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
           zIndex: 1,
         }}>
         <LinearGradient
           colors={['#03a2a2', '#23c2c2']}
           locations={[0.4, 1]}
-          onLayout={onHeaderLayout}
-          style={{
-            borderRadius: 13,
-          }}>
+          onLayout={onHeaderLayout}>
           <SafeAreaView
             style={{
               alignItems: 'center',
@@ -293,7 +248,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
             }}>
             <Animated.View
               style={{
-                height: titleHeight,
+                // height: titleHeight,
                 overflow: 'hidden',
               }}>
               <Text type="bold" style={{ color: 'white', fontSize: 18, marginBottom: 5 }}>
@@ -304,7 +259,8 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
               type="bold"
               style={{
                 color: 'white',
-                marginBottom: subtitlemgBottom,
+                // marginBottom: subtitlemgBottom,
+                // translateY: subtitlemgBottom,
                 textAlign: 'center',
                 fontSize: 18,
               }}>
@@ -313,9 +269,6 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
 
             <Animated.View
               style={{
-                height: metaHeaderHeight,
-                marginBottom: 10,
-                opacity,
                 marginLeft: 20,
                 alignSelf: 'flex-start',
                 justifyContent: 'space-between',
@@ -391,10 +344,8 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
             <Animated.View
               style={{
                 width: '100%',
-                opacity: paginationOpacity,
                 borderTopWidth: 1,
                 borderTopColor: 'rgba(255,255,255,0.5)',
-                height: paginationHeight,
                 marginTop: 10,
                 flexDirection: 'row',
               }}>
@@ -475,19 +426,18 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           </SafeAreaView>
         </LinearGradient>
       </Surface>
+
       {headerDimensions && headerDimensions.height && (
-        <ScrollView
-          scrollEventThrottle={16}
+        <Animated.ScrollView
+          scrollEventThrottle={1}
           ref={scrollView}
           decelerationRate="fast"
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
             listener: (event) => {
               handleScroll(event);
             },
-          })}
-          contentContainerStyle={{
-            paddingTop: headerDimensions.height + (PixelRatio.get() <= 2 ? -15 : 40),
-          }}>
+            useNativeDriver: true,
+          })}>
           <ProposedSection
             onPropose={handleRoundWriting('intro')}
             userCanPropose={userIsAParticipant && !tooLateToJoin && !isMasterAuthor}
@@ -536,7 +486,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
               story={selectedStory}
             />
           )}
-        </ScrollView>
+        </Animated.ScrollView>
       )}
       <RBSheet
         ref={refRBSheet}
