@@ -99,7 +99,7 @@ const HomeScreen = ({ navigation, getStories }) => {
     <View style={styles.container}>
       <ViewAllGenresModal dismiss={() => setModalVisible(false)} visible={modalVisible} />
 
-      <Surface style={{ paddingBottom: 20, elevation: 2, zIndex: 10 }}>
+      <Surface style={{ paddingBottom: 20, elevation: 2, zIndex: 10, backgroundColor: '#fff' }}>
         <SafeAreaView
           style={{
             marginBottom: 10,
@@ -123,20 +123,21 @@ const HomeScreen = ({ navigation, getStories }) => {
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginRight: 20,
+                  marginRight: 24,
                 }}>
                 <View
                   style={{
                     ...styles.genreIconContainer,
                     backgroundColor: genre.color,
                   }}>
-                  {genre.icon(32)}
+                  {genre.icon(62)}
                 </View>
                 <Text
                   type="medium"
                   style={{
                     color: '#5A7582',
                     fontSize: 14,
+                    marginTop: 10,
                   }}>
                   {genre.name}
                 </Text>
