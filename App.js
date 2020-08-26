@@ -3,7 +3,6 @@ import { StyleSheet, View, Image, Platform } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import Toast from 'react-native-root-toast';
-
 import * as Font from 'expo-font';
 import {
   Ionicons,
@@ -43,6 +42,10 @@ import AppNavigation from './navigation';
 import store from './redux/store';
 import persistor from './redux/store/persistor';
 import { AppContext } from './utils/providers/app-context';
+
+// Enables the experimental LogBox when the app is ran through React Native directly
+require('react-native').unstable_enableLogBox();
+
 // For development only. We use those when we want to
 // reset the store and pause redux-persist respectively
 // persistor.purge();
