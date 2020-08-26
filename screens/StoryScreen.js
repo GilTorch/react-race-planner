@@ -29,6 +29,7 @@ import { HugeAdvertisement, SmallAdvertisement } from '../components/advertiseme
 import { SCREEN_HEIGHT } from '../utils/dimensions';
 import { joinStoryAction, getSelectedStoryAction } from '../redux/actions/StoryActions';
 import LeaveStoryModal from '../components/modals/LeaveStoryModal';
+import PageSpinner from '../components/PageSpinner';
 
 const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const { story, reducerName, isNewStory } = route.params;
@@ -71,6 +72,8 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   }
   const [headerDimensions, setHeaderDimensions] = React.useState({ height: SCREEN_HEIGHT * 0.52 });
   const [isLeaveStoryModalVisible, setIsLeaveStoryModalVisible] = React.useState(false);
+  const [spinnerVisible, setSpinnerVisible] = React.useState(false);
+
   const reachedEnding = !inProgressStatuses.slice(0, 4).includes(selectedStory?.status);
   const scrollView = React.useRef(null);
   const refRBSheet = React.useRef();
@@ -134,8 +137,14 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
     React.useCallback(() => {
       const fetchSelectedStory = async () => {
         try {
+          setSpinnerVisible(true);
+
           await getSelectedStory(story._id);
+
+          setSpinnerVisible(false);
         } catch (e) {
+          setSpinnerVisible(false);
+
           Toast.show(e.message, {
             duration: Toast.durations.SHORT,
             position: Toast.positions.BOTTOM,
@@ -529,7 +538,6 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           )}
         </ScrollView>
       )}
-
       <RBSheet
         ref={refRBSheet}
         height={SCREEN_HEIGHT * 0.6}
@@ -612,6 +620,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
           </Surface>
         </ScrollView>
       </RBSheet>
+      <PageSpinner visible={spinnerVisible} />
     </View>
   );
 };
