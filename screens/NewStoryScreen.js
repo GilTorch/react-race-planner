@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
-import { Dropdown } from 'react-native-material-dropdown';
+import { Dropdown } from 'react-native-material-dropdown-v2';
 import TimePicker from 'react-native-24h-timepicker';
 import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
