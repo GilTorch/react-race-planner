@@ -1,17 +1,21 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
-import { Surface } from 'react-native-paper';
+import { Surface, IconButton } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
-import { MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { AllHtmlEntities } from 'html-entities';
 import HTMLView from 'react-native-htmlview';
 
-import MysteryIcon from '../svg/icons/MysteryIcon';
+import MysteryIcon from '../../assets/images/genre-icons/mystery-icon.png';
+import ActionIcon from '../../assets/images/genre-icons/action-icon.png';
+import BedtimeStoriesIcon from '../../assets/images/genre-icons/bedtime-stories-icon.png';
+import RomanceIcon from '../../assets/images/genre-icons/romance-icon.png';
+import ScifiIcon from '../../assets/images/genre-icons/scifi-icon.png';
+import ThrillerIcon from '../../assets/images/genre-icons/thriller-icon.png';
 import { getUserProfileUri } from '../../utils/functions';
 import Text from '../CustomText';
 import { HugeAdvertisement, SmallAdvertisement } from '../advertisements';
@@ -49,32 +53,39 @@ const Story = ({ story, index, length, navigation, updating, reducerName }) => {
   const inProgress = inProgressStatuses.includes(story.status);
   const status = inProgress ? 'In Progress' : 'Completed';
   const currentGenre = story.genre;
-  const authorsCount = story.coAuthors?.length + 1;
-  let anonymousAuthorsCount = story.coAuthors?.filter((ca) => ca.privacyStatus === 'anonymous')
+  const activeCoAuthors = story.coAuthors?.filter((ca) => ca.isActive);
+  const authorsCount = activeCoAuthors?.length + 1;
+  let anonymousAuthorsCount = activeCoAuthors?.filter((ca) => ca.privacyStatus === 'anonymous')
     .length;
   // eslint-disable-next-line no-plusplus
   if (story.privacyStatus === 'anonymous') anonymousAuthorsCount++;
-  let GenreIconLibrary;
+  let GenreIcon;
   const initialIntro = story.parts?.find(
     (sp) => sp.isIntro && sp.author?._id === masterAuthor?._id,
   );
   const electedIntro = story.parts?.find((sp) => sp.isIntro && sp.isElected);
 
-  switch (currentGenre?.iconLibraryName) {
-    case 'MaterialCommunityIcons':
-      GenreIconLibrary = MaterialCommunityIcons;
+  switch (currentGenre?.slug) {
+    case 'mystery':
+      GenreIcon = MysteryIcon;
       break;
-    case 'MysteryIcon':
-      GenreIconLibrary = MysteryIcon;
+    case 'action':
+      GenreIcon = ActionIcon;
       break;
-    case 'AntDesign':
-      GenreIconLibrary = AntDesign;
+    case 'thriller':
+      GenreIcon = ThrillerIcon;
       break;
-    case 'Ionicons':
-      GenreIconLibrary = Ionicons;
+    case 'scifi':
+      GenreIcon = ScifiIcon;
+      break;
+    case 'romance':
+      GenreIcon = RomanceIcon;
+      break;
+    case 'bedtime_stories':
+      GenreIcon = BedtimeStoriesIcon;
       break;
     default:
-      GenreIconLibrary = MaterialCommunityIcons;
+      GenreIcon = MysteryIcon;
   }
 
   const displayAuthorsMeta = () => {
@@ -200,7 +211,7 @@ const Story = ({ story, index, length, navigation, updating, reducerName }) => {
                   </View>
                 )}
 
-                {story.coAuthors
+                {activeCoAuthors
                   ?.filter((ca) => ca.privacyStatus !== 'anonymous')
                   .map((author, idx) => (
                     <View
@@ -275,15 +286,18 @@ const Story = ({ story, index, length, navigation, updating, reducerName }) => {
                 <View
                   style={{
                     ...styles.storyGenreIconContainer,
-                    backgroundColor: currentGenre?.color,
+                    backgroundColor: '#fff',
                   }}>
-                  {currentGenre?.iconLibraryName === 'MysteryIcon' && (
-                    <GenreIconLibrary width={12} />
-                  )}
-
-                  {currentGenre?.iconLibraryName !== 'MysteryIcon' && (
-                    <GenreIconLibrary size={12} color="#fff" name={currentGenre?.icon} />
-                  )}
+                  <IconButton
+                    size={24}
+                    icon={() => (
+                      <Image
+                        source={GenreIcon}
+                        resizeMethod="auto"
+                        style={{ width: 24, height: 24 }}
+                      />
+                    )}
+                  />
                 </View>
                 <Text style={{ color: textColor, fontSize: 12 }}>
                   {currentGenre?.name || 'Story Genre'}

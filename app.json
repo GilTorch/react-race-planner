@@ -3,13 +3,15 @@
     "name": "ScriptoRerum",
     "slug": "scriptorerum",
     "privacy": "public",
-    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
-    "version": "1.0.6-rc",
+    "experiments": {
+      "redesignedLogBox": true
+    },
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "sr",
@@ -32,9 +34,12 @@
       "googleServicesFile": "./google-services.json"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.scriptorerum.ScriptoRerum"
     },
     "description": "The demo of the ScriptoRerum mobile app for iOS and Android.",
-    "githubUrl": "https://github.com/NouKod-Haiti/sr-mobile"
+    "githubUrl": "https://github.com/NouKod-Haiti/sr-mobile",
+    "sdkVersion": "38.0.0",
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }

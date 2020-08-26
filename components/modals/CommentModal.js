@@ -20,7 +20,7 @@ import { commentSchema } from '../../utils/validators';
 import CommentMenu from '../CommentMenu';
 import { Story } from '../../redux/actions/types';
 
-const CommentModal = ({ visible, dismiss, parent, createComment }) => {
+const CommentModal = ({ visible, dismiss, parent, storyStatus, createComment }) => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.currentUser);
 
@@ -125,7 +125,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
             <View style={{ paddingLeft: 20, flexDirection: 'row' }}>
               <Text style={styles.label}>Author: </Text>
               <Text type="bold" style={styles.label}>
-                {parent?.author?.username || ''}
+                {storyStatus !== 'completed' ? 'Anonymous' : parent?.author?.username || ''}
               </Text>
             </View>
             <View style={{ marginLeft: 20, marginTop: 10 }}>
@@ -312,7 +312,12 @@ CommentModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   dismiss: PropTypes.func.isRequired,
   parent: PropTypes.object.isRequired,
+  storyStatus: PropTypes.string,
   createComment: PropTypes.func.isRequired,
+};
+
+CommentModal.defaultProps = {
+  storyStatus: 'in_progress',
 };
 
 const mapDispatchToProps = {

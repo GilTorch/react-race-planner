@@ -5,12 +5,13 @@ import { Feather, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-
 import Toast from 'react-native-root-toast';
 import moment from 'moment';
+
 import Text from '../CustomText';
 import { CommentModal, VotingModal } from '../modals';
 import ReportModal from '../modals/ReportModal';
+import { getStoryPartsEndstime } from '../../utils/functions';
 
 const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
   const currentUser = useSelector((state) => state.auth.currentUser);
@@ -60,13 +61,10 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
   };
 
   const showVotingModal = () => {
-    const introVotingEndsAt = moment(storedStory.introVotingStartedAt).add(
-      storedStory.settings?.voteTimeLimitSeconds,
-      'seconds',
-    );
-
+    const { introVotingEndsAt } = getStoryPartsEndstime(storedStory);
+    const activeCoAuthors = storedStory?.coAuthors?.filter((ca) => ca.isActive);
     const userPartOfStory =
-      storedStory?.coAuthors?.some((ca) => ca.profile._id === currentUser?._id) ||
+      activeCoAuthors.some((ca) => ca.profile._id === currentUser?._id) ||
       storedStory?.masterAuthor?._id === currentUser?._id;
 
     if (!userPartOfStory) {
@@ -107,7 +105,7 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
       return;
     }
 
-    if (parentType === 'Outro' && storyStatus !== 'outro_voting') {
+    if (parentType === 'Ending' && storyStatus !== 'outro_voting') {
       setshowMenu(false);
 
       let message = "It's not time to vote yet";
@@ -147,7 +145,12 @@ const BoxMenu = ({ parentType, block, storyStatus, storyId, userIsAuthor }) => {
         storyId={storyId}
         roundId={block._id}
       />
-      <CommentModal dismiss={dismissComment} visible={showComment} parent={block} />
+      <CommentModal
+        dismiss={dismissComment}
+        visible={showComment}
+        parent={block}
+        storyStatus={storedStory.status}
+      />
       <TouchableOpacity testID="three-dot-menu-button" onPress={() => setshowMenu(true)}>
         <Menu
           contentStyle={{

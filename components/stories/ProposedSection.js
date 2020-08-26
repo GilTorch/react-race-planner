@@ -15,12 +15,15 @@ import { SCREEN_WIDTH } from '../../utils/dimensions';
 import BoxMenu from './BoxMenu';
 import { voteForRoundAction } from '../../redux/actions/StoryActions';
 import { CommentModal } from '../modals';
+import Countdown from '../Countdown';
+import { getStoryPartsEndstime } from '../../utils/functions';
 
 const ProposedSection = ({
   type,
   proposedBlocks,
   listMode,
   userCanPropose,
+  userIsAParticipant,
   onPropose,
   story,
   voteForRound,
@@ -29,6 +32,14 @@ const ProposedSection = ({
   const loadingRoundVote = useSelector((state) => state.story.roundVoteLoading);
   const [showComment, setShowComment] = React.useState(false);
 
+  const {
+    introSubmittingEndsAt,
+    introVotingEndsAt,
+    outroSubmittingEndsAt,
+    outroVotingEndsAt,
+  } = getStoryPartsEndstime(story);
+
+  const alreadyProposed = proposedBlocks?.some((block) => block.author._id === currentUser?._id);
   const electedBlock = proposedBlocks?.find((block) => block.isElected);
   const listElected = electedBlock && (
     <View style={{ marginHorizontal: 35, marginBottom: 20, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -39,22 +50,6 @@ const ProposedSection = ({
         </Text>
       )}
     </View>
-  );
-  const introSubmittingEndsAt = moment(story.introSubmittingStartedAt).add(
-    story.settings?.introTimeLimitSeconds,
-    'seconds',
-  );
-  const introVotingEndsAt = moment(story.introVotingStartedAt).add(
-    story.settings?.voteTimeLimitSeconds,
-    'seconds',
-  );
-  const outroSubmittingEndsAt = moment(story.outroSubmittingStartedAt).add(
-    story.settings?.outroTimeLimitSeconds,
-    'seconds',
-  );
-  const outroVotingEndsAt = moment(story.outroVotingStartedAt).add(
-    story.settings?.voteTimeLimitSeconds,
-    'seconds',
   );
 
   const handleVoting = async (proposedBlockId) => {
@@ -67,40 +62,6 @@ const ProposedSection = ({
       });
     }
   };
-
-  // const [introSubmittingEndDate, setIntroSubmittingEndDate] = React.useState(introSubmittingEndsAt);
-  // const [introVotingEndDate, setIntroVotingEndDate] = React.useState(introVotingEndsAt);
-  // const [outroSubmittingEndDate, setOutroSubmittingEndDate] = React.useState(outroSubmittingEndsAt);
-  // const [outroVotingEndDate, setOutroVotingEndDate] = React.useState(outroVotingEndsAt);
-
-  // const tick = () => {
-  //   setIntroSubmittingEndDate(
-  //     moment(story.createdAt).add(story.settings?.introTimeLimitSeconds, 'seconds')
-  //   );
-
-  //   setIntroVotingEndDate(
-  //     moment(story.introVotingStartedAt).add(story.settings?.voteTimeLimitSeconds, 'seconds')
-  //   );
-
-  //   setOutroSubmittingEndDate(
-  //     moment(story.outroSubmittingStartedAt).add(story.settings?.outroTimeLimitSeconds, 'seconds')
-  //   );
-
-  //   setOutroVotingEndDate(
-  //     moment(story.outroVotingStartedAt).add(story.settings?.voteTimeLimitSeconds, 'seconds')
-  //   );
-  // };
-
-  // React.useEffect(() => {
-  //   let timer = setInterval(tick, 1000);
-
-  //   return () => {
-  //     if (timer) {
-  //       clearInterval(timer);
-  //       timer = null;
-  //     }
-  //   };
-  // }, []);
 
   const renderVotingButton = (proposedBlock) => {
     const alreadyVoted = proposedBlock.votes.some((vote) => vote.voter._id === currentUser?._id);
@@ -150,69 +111,85 @@ const ProposedSection = ({
         All Proposed {type}s ({proposedBlocks?.length})
       </Text>
 
-      {userCanPropose && type === 'Intro' && moment().isBefore(introSubmittingEndsAt) && (
-        <View
-          style={{
-            flex: 1,
-            marginLeft: 20,
-            marginTop: 10,
-          }}>
-          <Button
-            icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
-            uppercase={false}
-            onPress={() => onPropose()}
-            style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
-            <Text type="bold" style={{ color: '#FFF' }}>
-              Propose an Intro
-            </Text>
-          </Button>
-        </View>
-      )}
+      {userCanPropose &&
+        story.status === 'waiting_for_intros' &&
+        type === 'Intro' &&
+        !alreadyProposed &&
+        moment().isBefore(introSubmittingEndsAt) && (
+          <View
+            style={{
+              flex: 1,
+              marginLeft: 20,
+              marginTop: 10,
+            }}>
+            <Button
+              icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+              uppercase={false}
+              onPress={() => onPropose()}
+              style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
+              <Text type="bold" style={{ color: '#FFF' }}>
+                Propose an Intro
+              </Text>
+            </Button>
+          </View>
+        )}
 
       {story?.status === 'waiting_for_intros' &&
         type === 'Intro' &&
         story.createdAt &&
         moment().isBefore(introSubmittingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
-            Submitting intros ends {moment().to(introSubmittingEndsAt)}
+            Submitting intros ends in{' '}
+            <Countdown
+              countdownTimeInSeconds={moment(introSubmittingEndsAt).diff(moment(), 'seconds')}
+            />
           </Text>
         )}
 
       {story?.status === 'intro_voting' &&
         type === 'Intro' &&
         story.introVotingStartedAt &&
-        moment().isBefore(introSubmittingEndsAt) && (
+        moment().isBefore(introVotingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
-            Votes for the story intro are currently in progress. Ending{' '}
-            {moment().to(introVotingEndsAt)}
+            Votes for the story intro are currently in progress. Ending in{' '}
+            <Countdown
+              countdownTimeInSeconds={moment(introVotingEndsAt).diff(moment(), 'seconds')}
+            />
           </Text>
         )}
 
-      {userCanPropose && type === 'Ending' && moment().isBefore(outroSubmittingEndsAt) && (
-        <View
-          style={{
-            flex: 1,
-            marginLeft: 20,
-            marginTop: 10,
-          }}>
-          <Button
-            icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
-            uppercase={false}
-            onPress={() => onPropose()}
-            style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
-            <Text type="bold" style={{ color: '#FFF' }}>
-              Propose an Ending
-            </Text>
-          </Button>
-        </View>
-      )}
+      {userCanPropose &&
+        type === 'Ending' &&
+        !alreadyProposed &&
+        moment().isBefore(outroSubmittingEndsAt) && (
+          <View
+            style={{
+              flex: 1,
+              marginLeft: 20,
+              marginTop: 10,
+            }}>
+            <Button
+              icon={({ size }) => <FontAwesome5 size={size} color="#fff" name="pen-fancy" />}
+              uppercase={false}
+              onPress={() => onPropose()}
+              style={{ backgroundColor: '#ed8a18', width: SCREEN_WIDTH * 0.5, elevation: 2 }}>
+              <Text type="bold" style={{ color: '#FFF' }}>
+                Propose an Ending
+              </Text>
+            </Button>
+          </View>
+        )}
 
       {story?.status === 'waiting_for_outros' &&
+        story?.outroSubmittingStartedAt &&
         type === 'Ending' &&
         story.createdAt &&
         moment().isBefore(outroSubmittingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
-            Submitting endings ends {moment().to(outroSubmittingEndsAt)}
+            Submitting endings ends in{' '}
+            <Countdown
+              countdownTimeInSeconds={moment(outroSubmittingEndsAt).diff(moment(), 'seconds')}
+            />{' '}
           </Text>
         )}
 
@@ -221,8 +198,10 @@ const ProposedSection = ({
         story.outroVotingStartedAt &&
         moment().isBefore(outroVotingEndsAt) && (
           <Text style={{ color: '#ed8a18', marginHorizontal: 20, marginTop: 7 }}>
-            Votes for the story ending are currently in progress. Ending{' '}
-            {moment().to(outroVotingEndsAt)}
+            Votes for the story ending are currently in progress. Ending in{' '}
+            <Countdown
+              countdownTimeInSeconds={moment(outroVotingEndsAt).diff(moment(), 'seconds')}
+            />
           </Text>
         )}
 
@@ -241,7 +220,10 @@ const ProposedSection = ({
       <ScrollView horizontal style={{ flex: 1 }} showsHorizontalScrollIndicator={false}>
         {proposedBlocks?.map((proposedBlock, index) => {
           const margin = index === 0 ? 20 : 0;
-          let authorName = index === 0 ? 'the Master Author' : 'an Anonymous Author';
+          let authorName =
+            story.masterAuthor._id === proposedBlock.author._id
+              ? 'the Master Author'
+              : 'an Anonymous Author';
           const userIsAuthor = currentUser?._id === proposedBlock.author?._id;
 
           if (story.status === 'completed') {
@@ -258,7 +240,12 @@ const ProposedSection = ({
 
           return (
             <View key={Math.random()}>
-              <CommentModal dismiss={dismissComment} visible={showComment} parent={proposedBlock} />
+              <CommentModal
+                dismiss={dismissComment}
+                visible={showComment}
+                parent={proposedBlock}
+                storyStatus={story.status}
+              />
               <Surface style={{ ...styles.intros, marginLeft: margin }}>
                 <View
                   style={{
@@ -282,34 +269,41 @@ const ProposedSection = ({
 
                 <View style={{ marginTop: 'auto' }}>
                   <Text style={styles.separator}>---</Text>
-                  {proposedBlock.isElected && (
-                    <View style={styles.displayRow}>
-                      <FontAwesome name="star" size={20} color="#ed8a18" />
-                      <Text type="bold" style={styles.boxFooter}>
-                        Elected {type}
-                      </Text>
-                    </View>
-                  )}
-                  <View style={styles.displayRow}>
-                    <FontAwesome5 name="vote-yea" size={16} color="#911414" />
-                    <Text type="bold" style={styles.boxFooter}>
-                      Votes: {proposedBlock.votes.length}
-                    </Text>
-                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                    <View style={{ flexDirection: 'column' }}>
+                      {proposedBlock.isElected && (
+                        <View style={styles.displayRow}>
+                          <FontAwesome name="star" size={20} color="#ed8a18" />
+                          <Text type="bold" style={styles.boxFooter}>
+                            Elected {type}
+                          </Text>
+                        </View>
+                      )}
+                      <View style={styles.displayRow}>
+                        <FontAwesome5 name="vote-yea" size={16} color="#911414" />
+                        <Text type="bold" style={styles.boxFooter}>
+                          Votes: {proposedBlock.votes.length}
+                        </Text>
+                      </View>
 
-                  <View>
-                    <TouchableOpacity
-                      style={styles.displayRow}
-                      onPress={() => {
-                        showCommentModal();
-                      }}>
-                      <FontAwesome name="commenting" size={20} color="#0277BD" />
-                      <Text type="bold" style={styles.boxFooter}>
-                        Comments: {proposedBlock.comments.length}
-                      </Text>
-                    </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.displayRow}
+                        onPress={() => {
+                          showCommentModal();
+                        }}>
+                        <FontAwesome name="commenting" size={20} color="#0277BD" />
+                        <Text type="bold" style={styles.boxFooter}>
+                          Comments: {proposedBlock.comments.length}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    {!userIsAuthor && userIsAParticipant && renderVotingButton(proposedBlock)}
                   </View>
-                  {!userIsAuthor && renderVotingButton(proposedBlock)}
                 </View>
               </Surface>
             </View>
@@ -326,6 +320,7 @@ ProposedSection.propTypes = {
   proposedBlocks: PropTypes.array.isRequired,
   listMode: PropTypes.bool,
   userCanPropose: PropTypes.bool,
+  userIsAParticipant: PropTypes.bool,
   onPropose: PropTypes.func.isRequired,
   voteForRound: PropTypes.func.isRequired,
 };

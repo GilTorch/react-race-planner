@@ -1,9 +1,17 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
+import { Image } from 'react-native';
+import { IconButton } from 'react-native-paper';
 import { MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
-import MysteryIcon from '../components/svg/icons/MysteryIcon';
 
-const avatarGenerator = email => `https://api.adorable.io/avatars/${email}.png`;
+import MysteryIcon from '../assets/images/genre-icons/mystery-icon.png';
+import ActionIcon from '../assets/images/genre-icons/action-icon.png';
+import BedtimeStoriesIcon from '../assets/images/genre-icons/bedtime-stories-icon.png';
+import RomanceIcon from '../assets/images/genre-icons/romance-icon.png';
+import ScifiIcon from '../assets/images/genre-icons/scifi-icon.png';
+import ThrillerIcon from '../assets/images/genre-icons/thriller-icon.png';
+
+const avatarGenerator = (email) => `https://api.adorable.io/avatars/${email}.png`;
 
 const loremText =
   'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea.';
@@ -13,34 +21,34 @@ const storyTex =
 const intros = [
   [
     { author: 'Anonymouns 1', elected: true, votes: '5/8', comments: '3', body: loremText },
-    { author: 'Anonymouns 2', elected: false, votes: '2/8', comments: '8', body: loremText }
+    { author: 'Anonymouns 2', elected: false, votes: '2/8', comments: '8', body: loremText },
   ],
   [
     { author: 'Marie Clarck', elected: true, votes: '9/11', comments: '24', body: loremText },
     { author: 'Anonymouns 4', elected: false, votes: '6/11', comments: '8', body: loremText },
     { author: 'Anonymouns 6', elected: false, votes: '2/11', comments: '22', body: loremText },
     { author: 'Anonymouns 2', elected: false, votes: '1/11', comments: '2', body: loremText },
-    { author: 'Anonymouns 1', elected: false, votes: '4/11', comments: '4', body: loremText }
+    { author: 'Anonymouns 1', elected: false, votes: '4/11', comments: '4', body: loremText },
   ],
   [
     { author: 'Anonymouns 8', elected: true, votes: '6/8', comments: '8', body: loremText },
     { author: 'Anonymouns 3', elected: false, votes: '1/8', comments: '18', body: loremText },
     { author: 'Anonymouns 5', elected: false, votes: '2/8', comments: '4', body: loremText },
     { author: 'Anonymouns 2', elected: false, votes: '1/8', comments: '2', body: loremText },
-    { author: 'Anonymouns 1', elected: false, votes: '4/8', comments: '14', body: loremText }
+    { author: 'Anonymouns 1', elected: false, votes: '4/8', comments: '14', body: loremText },
   ],
   [
     { author: 'Anonymouns 8', elected: false, votes: '6/8', comments: '8', body: loremText },
     { author: 'Anonymouns 3', elected: false, votes: '1/8', comments: '18', body: loremText },
     { author: 'Anonymouns 5', elected: false, votes: '2/8', comments: '4', body: loremText },
     { author: 'Anonymouns 2', elected: false, votes: '1/8', comments: '2', body: loremText },
-    { author: 'Anonymouns 1', elected: false, votes: '4/8', comments: '14', body: loremText }
-  ]
+    { author: 'Anonymouns 1', elected: false, votes: '4/8', comments: '14', body: loremText },
+  ],
 ];
 
 const endings = [
   { author: 'Marie Clack', elected: true, votes: '11/11', comments: '33', body: loremText },
-  { author: 'Anonymouns 6', elected: false, votes: '5/11', comments: '15', body: loremText }
+  { author: 'Anonymouns 6', elected: false, votes: '5/11', comments: '15', body: loremText },
 ];
 
 const rounds = [
@@ -51,13 +59,13 @@ const rounds = [
       author: 'Anonymouns 2',
       status: 'In Progress',
       timeLeft: '38 minutes and 3 seconds left.',
-      order: 3
+      order: 3,
     },
     { author: 'Anonymous 7', status: 'Pendding', order: 4 },
     { author: 'Anonymous 3', status: 'Pendding', order: 5 },
     { author: 'Anonymous 6', status: 'Pendding', order: 6 },
     { author: 'Anonymous 4', status: 'Pendding', order: 7 },
-    { author: 'Anonymous 5', status: 'Pendding', order: 8 }
+    { author: 'Anonymous 5', status: 'Pendding', order: 8 },
   ],
   [
     { author: 'stephanyE289', body: loremText, comments: 0, status: 'completed', order: 1 },
@@ -70,7 +78,7 @@ const rounds = [
     { author: 'Anonymous 11', body: loremText, comments: 0, status: 'completed', order: 8 },
     { author: 'Anonymous 3', body: loremText, comments: 33, status: 'completed', order: 9 },
     { author: 'Anonymous 4', body: loremText, comments: 2, status: 'completed', order: 10 },
-    { author: 'Anonymous 9', body: loremText, comments: 0, status: 'completed', order: 11 }
+    { author: 'Anonymous 9', body: loremText, comments: 0, status: 'completed', order: 11 },
   ],
   [
     { author: 'Anonymouns 1', body: loremText, comments: 3, status: 'completed', order: 1 },
@@ -80,14 +88,14 @@ const rounds = [
       body: loremText.slice(0, 200),
       status: 'In Progress',
       order: 3,
-      timeLeft: '45 minutes and 33 seconds left'
+      timeLeft: '45 minutes and 33 seconds left',
     },
     { author: 'Anonymous 7', status: 'Pendding', order: 4 },
     { author: 'Anonymous 3', status: 'Pendding', order: 5 },
     { author: 'Anonymous 6', status: 'Pendding', order: 6 },
     { author: 'Anonymous 4', status: 'Pendding', order: 7 },
-    { author: 'Anonymous 5', status: 'Pendding', order: 8 }
-  ]
+    { author: 'Anonymous 5', status: 'Pendding', order: 8 },
+  ],
 ];
 
 const stories = [
@@ -101,22 +109,22 @@ const stories = [
         lastName: 'Doe',
         email: 'john@doe.com',
         anonymous: true,
-        storyLead: true
+        storyLead: true,
       },
       {
         firstName: 'Bruce',
         lastName: 'Banner',
         email: 'iamthehulk@gmail.com',
         anonymous: true,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Bruce',
         lastName: 'Wayne',
         email: 'iambatman@gmail.com',
         anonymous: true,
-        storyLead: false
-      }
+        storyLead: false,
+      },
     ],
     status: 'Waiting for players',
     genre: 'Mystery',
@@ -125,7 +133,7 @@ const stories = [
     electedIntro: null,
     rounds: [],
     intros: [],
-    endings: []
+    endings: [],
   },
   {
     id: 2,
@@ -138,7 +146,7 @@ const stories = [
         email: 'iamironman@gmail.com',
         profilePicture: avatarGenerator('iamironman@gmail.com'),
         anonymous: true,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Mohammed',
@@ -146,7 +154,7 @@ const stories = [
         email: 'bestboxer@gmail.com',
         profilePicture: avatarGenerator('bestboxer@gmail.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Joe',
@@ -154,7 +162,7 @@ const stories = [
         email: 'joe@gmail.com',
         profilePicture: avatarGenerator('joe@gmail.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Mike',
@@ -162,7 +170,7 @@ const stories = [
         email: 'ironmike@gmail.com',
         profilePicture: avatarGenerator('ironmike@gmail.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Sylvester',
@@ -170,7 +178,7 @@ const stories = [
         email: 'stalone@gmail.com',
         profilePicture: avatarGenerator('stalone@gmail.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'John',
@@ -178,7 +186,7 @@ const stories = [
         email: 'john@smith.com',
         profilePicture: avatarGenerator('john@smith.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Toussaint',
@@ -186,7 +194,7 @@ const stories = [
         email: 'toussaint@louverture.com',
         profilePicture: avatarGenerator('toussaint@louverture.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Jean Jacques',
@@ -194,8 +202,8 @@ const stories = [
         email: 'empereur@gmail.com',
         profilePicture: avatarGenerator('empereur@gmail.com'),
         anonymous: false,
-        storyLead: true
-      }
+        storyLead: true,
+      },
     ],
     status: 'In Progress',
     genre: 'Thriller',
@@ -204,7 +212,7 @@ const stories = [
     electedIntro: storyTex,
     rounds: rounds[0],
     intros: intros[0],
-    endings: []
+    endings: [],
   },
   {
     id: 3,
@@ -217,7 +225,7 @@ const stories = [
         email: 'freddy@mercury.com',
         profilePicture: avatarGenerator('freddy@mercury.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'John',
@@ -225,7 +233,7 @@ const stories = [
         email: 'therealenon@gmail.com',
         profilePicture: avatarGenerator('therealenon@gmail.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Jackie',
@@ -233,7 +241,7 @@ const stories = [
         email: 'jackie@chan.com',
         profilePicture: avatarGenerator('jackie@chan.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Bruce',
@@ -241,7 +249,7 @@ const stories = [
         email: 'wahtah@gmail.com',
         profilePicture: avatarGenerator('wahtah@gmail.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'James',
@@ -249,7 +257,7 @@ const stories = [
         email: 'james007@mi6.com',
         profilePicture: avatarGenerator('james007@mi6.com'),
         anonymous: true,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Elephant',
@@ -257,7 +265,7 @@ const stories = [
         email: 'elephant@man.com',
         profilePicture: avatarGenerator('elephant@man.com'),
         anonymous: true,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Joe',
@@ -265,7 +273,7 @@ const stories = [
         email: 'joe@budden.com',
         profilePicture: avatarGenerator('joe@budden.com'),
         anonymous: true,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Marshall',
@@ -273,7 +281,7 @@ const stories = [
         email: 'eminem@gmail.com',
         profilePicture: avatarGenerator('eminem@gmail.com'),
         anonymous: true,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Marie',
@@ -282,7 +290,7 @@ const stories = [
         email: 'busta@gmail.com',
         profilePicture: avatarGenerator('busta@gmail.com'),
         anonymous: false,
-        storyLead: true
+        storyLead: true,
       },
       {
         firstName: 'Curtis',
@@ -290,8 +298,8 @@ const stories = [
         email: 'iam50cent@gmail.com',
         profilePicture: avatarGenerator('iam50cent@gmail.com'),
         anonymous: false,
-        storyLead: false
-      }
+        storyLead: false,
+      },
     ],
     status: 'Completed',
     genre: 'Action',
@@ -300,7 +308,7 @@ const stories = [
     electedIntro: storyTex,
     rounds: rounds[1],
     intros: intros[1],
-    endings
+    endings,
   },
   {
     id: 4,
@@ -315,7 +323,7 @@ const stories = [
         email: 'johndoe@email.com',
         profilePicture: avatarGenerator('liu@gmail.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Shao',
@@ -323,7 +331,7 @@ const stories = [
         email: 'shao@gmail.com',
         profilePicture: avatarGenerator('shao@gmail.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Johny',
@@ -331,7 +339,7 @@ const stories = [
         email: 'johny@cage.com',
         profilePicture: avatarGenerator('johny@cage.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Shan',
@@ -339,7 +347,7 @@ const stories = [
         email: 'shan@tsung.com',
         profilePicture: avatarGenerator('shan@tsung.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Kung',
@@ -347,7 +355,7 @@ const stories = [
         email: 'kung@lao.com',
         profilePicture: avatarGenerator('kung@lao.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Scarlett',
@@ -355,7 +363,7 @@ const stories = [
         email: 'scarlett@gmail.com',
         profilePicture: '',
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Lady',
@@ -363,7 +371,7 @@ const stories = [
         email: 'lady@gmail.com',
         profilePicture: avatarGenerator('lady@gaga.com'),
         anonymous: false,
-        storyLead: false
+        storyLead: false,
       },
       {
         firstName: 'Van Damme',
@@ -371,8 +379,8 @@ const stories = [
         email: 'spinningkicks@gmail.com',
         profilePicture: avatarGenerator('spinningkicks@gmail.com'),
         anonymous: false,
-        storyLead: true
-      }
+        storyLead: true,
+      },
     ],
     status: 'In Progress',
     genre: 'Romance',
@@ -381,17 +389,16 @@ const stories = [
     electedIntro: storyTex,
     rounds: rounds[2],
     intros: intros[2],
-    endings: []
-  }
+    endings: [],
+  },
 ];
 
 const genresIcon = {
-  mystery: <MysteryIcon width={30} />,
   run: <MaterialCommunityIcons size={32} color="white" name="run" />,
   skull: <MaterialCommunityIcons size={32} color="white" name="skull" />,
   alien: <MaterialCommunityIcons size={32} color="white" name="alien" />,
   heart: <AntDesign size={32} color="white" name="heart" />,
-  'ios-bed': <Ionicons size={32} color="white" name="ios-bed" />
+  'ios-bed': <Ionicons size={32} color="white" name="ios-bed" />,
 };
 
 // const genres = [
@@ -400,44 +407,90 @@ const genresData = [
     id: 1,
     name: 'Mystery',
     description: 'For those stories that keep you questioning everything',
-    icon: size => <MysteryIcon width={size} />,
-    color: '#43A047'
+    icon: (size) => (
+      <IconButton
+        size={size}
+        icon={() => (
+          <Image source={MysteryIcon} resizeMethod="auto" style={{ width: size, height: size }} />
+        )}
+      />
+    ),
+    color: '#fff',
   },
   {
     id: 2,
     name: 'Action',
     description: 'Stories that keep your adrenaline high!',
-    icon: size => <MaterialCommunityIcons size={size} color="white" name="run" />,
-    color: '#13BCBC'
+    icon: (size) => (
+      <IconButton
+        size={size}
+        icon={() => (
+          <Image source={ActionIcon} resizeMethod="auto" style={{ width: size, height: size }} />
+        )}
+      />
+    ),
+    color: '#fff',
   },
   {
     id: 3,
     name: 'Thriller',
     description: "Stories that won't let you sleep at night",
-    icon: size => <MaterialCommunityIcons size={size} color="white" name="skull" />,
-    color: '#29B6F6'
+    icon: (size) => (
+      <IconButton
+        size={size}
+        icon={() => (
+          <Image source={ThrillerIcon} resizeMethod="auto" style={{ width: size, height: size }} />
+        )}
+      />
+    ),
+    color: '#fff',
   },
   {
     id: 4,
     name: 'Sci-Fi',
     description: 'Stories that keep your imagination pumping',
-    icon: size => <MaterialCommunityIcons size={size} color="white" name="alien" />,
-    color: '#5E35B1'
+    icon: (size) => (
+      <IconButton
+        size={size}
+        icon={() => (
+          <Image source={ScifiIcon} resizeMethod="auto" style={{ width: size, height: size }} />
+        )}
+      />
+    ),
+    color: '#fff',
   },
   {
     id: 5,
     name: 'Romance',
     description: 'For those stories that bring more love into the air',
-    icon: size => <AntDesign size={size} color="white" name="heart" />,
-    color: '#FCF42A'
+    icon: (size) => (
+      <IconButton
+        size={size}
+        icon={() => (
+          <Image source={RomanceIcon} resizeMethod="auto" style={{ width: size, height: size }} />
+        )}
+      />
+    ),
+    color: '#fff',
   },
   {
     id: 7,
     name: 'Bedtime Stories',
     description: "Kid's stories to help the little ones sleep peacefully",
-    icon: size => <Ionicons size={size} color="white" name="ios-bed" />,
-    color: '#faf'
-  }
+    icon: (size) => (
+      <IconButton
+        size={size}
+        icon={() => (
+          <Image
+            source={BedtimeStoriesIcon}
+            resizeMethod="auto"
+            style={{ width: size, height: size }}
+          />
+        )}
+      />
+    ),
+    color: '#fff',
+  },
 ];
 
 const comments = [
@@ -446,57 +499,57 @@ const comments = [
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '2 hours ago',
-    author: stories[0].authors[0]
+    author: stories[0].authors[0],
   },
   {
     _id: 1,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '25 minutes ago',
-    author: stories[0].authors[1]
+    author: stories[0].authors[1],
   },
   {
     _id: 2,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '3 hours ago',
-    author: stories[0].authors[2]
+    author: stories[0].authors[2],
   },
   {
     _id: 3,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '45 minutes ago',
-    author: stories[0].authors[0]
+    author: stories[0].authors[0],
   },
   {
     _id: 4,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '2 minutes ago',
-    author: stories[0].authors[0]
+    author: stories[0].authors[0],
   },
   {
     _id: 5,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '5 minutes ago',
-    author: stories[0].authors[1]
+    author: stories[0].authors[1],
   },
   {
     _id: 6,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '5 hours ago',
-    author: stories[0].authors[2]
+    author: stories[0].authors[2],
   },
   {
     _id: 7,
     content:
       'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore.',
     startTime: '35 minutes ago',
-    author: stories[0].authors[0]
-  }
+    author: stories[0].authors[0],
+  },
 ];
 
 // export { loremText, intros, endings, stories, comments, genres, genresIcon };

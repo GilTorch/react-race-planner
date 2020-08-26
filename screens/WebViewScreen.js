@@ -17,7 +17,7 @@ const WebViewScreen = ({ navigation, route }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // StatusBar.setHidden(false);
+      StatusBar.setHidden(false);
       StatusBar.setBarStyle('light-content');
     }, []),
   );
@@ -25,7 +25,12 @@ const WebViewScreen = ({ navigation, route }) => {
   const { title } = route.params;
   let uri;
   const baseUri = Platform.OS === 'android' ? ANDROID_SERVER_URL : IOS_SERVER_URL;
-  if (title === 'Privacy Policy' || title === 'Terms of Service') {
+
+  if (
+    title === 'Privacy Policy' ||
+    title === 'Terms of Service' ||
+    title === 'Terms and Conditions'
+  ) {
     uri = title === 'Privacy Policy' ? `${baseUri}/pp` : `${baseUri}/tos`;
   } else if (title === 'Bug Report') {
     uri = 'https://forms.clickup.com/f/27rp7-245/BRCZB43N75QMY8IM1H';
