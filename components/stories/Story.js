@@ -1,17 +1,21 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
-import { Surface } from 'react-native-paper';
+import { Surface, IconButton } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PropTypes from 'prop-types';
-import { MaterialCommunityIcons, AntDesign, Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { AllHtmlEntities } from 'html-entities';
 import HTMLView from 'react-native-htmlview';
 
-import MysteryIcon from '../svg/icons/MysteryIcon';
+import MysteryIcon from '../../assets/images/genre-icons/mystery-icon.png';
+import ActionIcon from '../../assets/images/genre-icons/action-icon.png';
+import BedtimeStoriesIcon from '../../assets/images/genre-icons/bedtime-stories-icon.png';
+import RomanceIcon from '../../assets/images/genre-icons/romance-icon.png';
+import ScifiIcon from '../../assets/images/genre-icons/scifi-icon.png';
+import ThrillerIcon from '../../assets/images/genre-icons/thriller-icon.png';
 import { getUserProfileUri } from '../../utils/functions';
 import Text from '../CustomText';
 import { HugeAdvertisement, SmallAdvertisement } from '../advertisements';
@@ -49,32 +53,39 @@ const Story = ({ story, index, length, navigation, updating, reducerName }) => {
   const inProgress = inProgressStatuses.includes(story.status);
   const status = inProgress ? 'In Progress' : 'Completed';
   const currentGenre = story.genre;
-  const authorsCount = story.coAuthors?.length + 1;
-  let anonymousAuthorsCount = story.coAuthors?.filter((ca) => ca.privacyStatus === 'anonymous')
+  const activeCoAuthors = story.coAuthors?.filter((ca) => ca.isActive);
+  const authorsCount = activeCoAuthors?.length + 1;
+  let anonymousAuthorsCount = activeCoAuthors?.filter((ca) => ca.privacyStatus === 'anonymous')
     .length;
   // eslint-disable-next-line no-plusplus
   if (story.privacyStatus === 'anonymous') anonymousAuthorsCount++;
-  let GenreIconLibrary;
+  let GenreIcon;
   const initialIntro = story.parts?.find(
     (sp) => sp.isIntro && sp.author?._id === masterAuthor?._id,
   );
   const electedIntro = story.parts?.find((sp) => sp.isIntro && sp.isElected);
 
-  switch (currentGenre?.iconLibraryName) {
-    case 'MaterialCommunityIcons':
-      GenreIconLibrary = MaterialCommunityIcons;
+  switch (currentGenre?.slug) {
+    case 'mystery':
+      GenreIcon = MysteryIcon;
       break;
-    case 'MysteryIcon':
-      GenreIconLibrary = MysteryIcon;
+    case 'action':
+      GenreIcon = ActionIcon;
       break;
-    case 'AntDesign':
-      GenreIconLibrary = AntDesign;
+    case 'thriller':
+      GenreIcon = ThrillerIcon;
       break;
-    case 'Ionicons':
-      GenreIconLibrary = Ionicons;
+    case 'scifi':
+      GenreIcon = ScifiIcon;
+      break;
+    case 'romance':
+      GenreIcon = RomanceIcon;
+      break;
+    case 'bedtime_stories':
+      GenreIcon = BedtimeStoriesIcon;
       break;
     default:
-      GenreIconLibrary = MaterialCommunityIcons;
+      GenreIcon = MysteryIcon;
   }
 
   const displayAuthorsMeta = () => {
@@ -107,238 +118,247 @@ const Story = ({ story, index, length, navigation, updating, reducerName }) => {
   return (
     <View key={Math.random()}>
       {ShowAdvertisement}
-      <Surface
-        style={{
-          marginBottom: 25,
-          marginHorizontal: 20,
-          borderRadius: 4,
-          elevation: 2,
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('StoryScreen', { story, reducerName });
         }}>
-        {updating && (
-          <>
-            <View
-              style={{
-                backgroundColor: '#eee',
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                opacity: '1',
-                zIndex: 10000,
-              }}
-            />
-            <View
-              style={{
-                width: SCREEN_WIDTH * 0.8,
-                height: 100,
-                position: 'absolute',
-                zIndex: 10000,
-                justifyContent: 'center',
-                alignSelf: 'center',
-                top: 55,
-              }}>
-              <LottieView
-                colorFilters={[
-                  {
-                    keypath: 'button',
-                    color: '#F00000',
-                  },
-                  {
-                    keypath: 'Sending Loader',
-                    color: '#F00000',
-                  },
-                ]}
-                style={{ color: 'red' }}
-                source={LoaderAnimation}
-                autoPlay
-                loop
-              />
-            </View>
-          </>
-        )}
-        <View style={{ padding: 15 }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <View>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('StoryScreen', { story, reducerName });
-                }}>
-                <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
-                  {story.title || 'Story Title'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <BoxMenu
-              parentType="story"
-              block={story}
-              storyId={story._id}
-              storyStatus={story.status}
-            />
-          </View>
-
-          {status === 'Completed' && (
-            <View style={styles.storyAuthorsContainer}>
-              {story.privacyStatus !== 'anonymous' && (
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image
-                    style={styles.storyAuthorsImage}
-                    source={{
-                      uri:
-                        getUserProfileUri(masterAuthor?.picture) ||
-                        avatarGenerator(masterAuthor?.username),
-                    }}
-                  />
-
-                  <View style={styles.storyAuthorsSeparator} />
-                </View>
-              )}
-
-              {story.coAuthors
-                ?.filter((ca) => ca.privacyStatus !== 'anonymous')
-                .map((author, idx) => (
-                  <View key={Math.random()} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Image
-                      style={{ ...styles.storyAuthorsImage, marginLeft: idx === 0 ? 0 : -8 }}
-                      source={{
-                        uri:
-                          getUserProfileUri(author.profile.picture) ||
-                          avatarGenerator(author.profile.username),
-                      }}
-                    />
-                  </View>
-                ))}
-
-              {anonymousAuthorsCount > 0 && (
-                <View style={{ marginLeft: 5 }}>
-                  <Text type="bold" style={{ fontSize: 12, color: textColor }}>
-                    +{anonymousAuthorsCount} anonymous{' '}
-                    {anonymousAuthorsCount === 1 ? 'author' : 'authors'}
-                  </Text>
-                </View>
-              )}
-            </View>
-          )}
-
-          {status === 'In Progress' && authorsCount > story.settings?.minimumParticipants && (
-            <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
-              {authorsCount} authors | {displayAuthorsMeta()}
-            </Text>
-          )}
-
-          {authorsCount < story.settings?.minimumParticipants && (
-            <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
-              {story.settings?.minimumParticipants - authorsCount} more{' '}
-              {story.settings?.minimumParticipants - authorsCount === 1 ? 'author' : 'authors'} to
-              go
-            </Text>
-          )}
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-            }}>
-            <Text style={{ color: textColor, fontSize: 12 }}>
-              {/* If the story has a start date, we display it, if not, we display the date it was created */}
-              {/* Remember: The date it was created will mostly likely not be the same as when it started (enough authors have joined) */}
-              {moment(story.introSubmittingStartedAt || story.createdAt).fromNow()}
-            </Text>
-            <View
-              style={{
-                height: 15,
-                borderLeftColor: textColor,
-                borderLeftWidth: 1,
-                marginHorizontal: 8,
-              }}
-            />
-            <Text style={{ color: textColor, fontSize: 12 }}>{status}</Text>
-            <View
-              style={{
-                height: 15,
-                borderLeftColor: textColor,
-                borderLeftWidth: 1,
-                marginHorizontal: 8,
-              }}
-            />
-
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Surface
+          style={{
+            marginBottom: 25,
+            marginHorizontal: 20,
+            borderRadius: 4,
+            elevation: 2,
+          }}>
+          {updating && (
+            <>
               <View
                 style={{
-                  ...styles.storyGenreIconContainer,
-                  backgroundColor: currentGenre?.color,
+                  backgroundColor: '#eee',
+                  width: '100%',
+                  height: '100%',
+                  position: 'absolute',
+                  opacity: '1',
+                  zIndex: 10000,
+                }}
+              />
+              <View
+                style={{
+                  width: SCREEN_WIDTH * 0.8,
+                  height: 100,
+                  position: 'absolute',
+                  zIndex: 10000,
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  top: 55,
                 }}>
-                {currentGenre?.iconLibraryName === 'MysteryIcon' && <GenreIconLibrary width={12} />}
+                <LottieView
+                  colorFilters={[
+                    {
+                      keypath: 'button',
+                      color: '#F00000',
+                    },
+                    {
+                      keypath: 'Sending Loader',
+                      color: '#F00000',
+                    },
+                  ]}
+                  style={{ color: 'red' }}
+                  source={LoaderAnimation}
+                  autoPlay
+                  loop
+                />
+              </View>
+            </>
+          )}
+          <View style={{ padding: 15 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('StoryScreen', { story, reducerName });
+                  }}>
+                  <Text type="medium" style={{ color: '#03A2A2', fontSize: 20 }}>
+                    {story.title || 'Story Title'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <BoxMenu
+                parentType="story"
+                block={story}
+                storyId={story._id}
+                storyStatus={story.status}
+              />
+            </View>
+            {status === 'Completed' && (
+              <View style={styles.storyAuthorsContainer}>
+                {story.privacyStatus !== 'anonymous' && (
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image
+                      style={styles.storyAuthorsImage}
+                      source={{
+                        uri:
+                          getUserProfileUri(masterAuthor?.picture) ||
+                          avatarGenerator(masterAuthor?.username),
+                      }}
+                    />
 
-                {currentGenre?.iconLibraryName !== 'MysteryIcon' && (
-                  <GenreIconLibrary size={12} color="#fff" name={currentGenre?.icon} />
+                    <View style={styles.storyAuthorsSeparator} />
+                  </View>
+                )}
+
+                {activeCoAuthors
+                  ?.filter((ca) => ca.privacyStatus !== 'anonymous')
+                  .map((author, idx) => (
+                    <View
+                      key={Math.random()}
+                      style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Image
+                        style={{ ...styles.storyAuthorsImage, marginLeft: idx === 0 ? 0 : -8 }}
+                        source={{
+                          uri:
+                            getUserProfileUri(author.profile.picture) ||
+                            avatarGenerator(author.profile.username),
+                        }}
+                      />
+                    </View>
+                  ))}
+
+                {anonymousAuthorsCount > 0 && (
+                  <View style={{ marginLeft: 5 }}>
+                    <Text type="bold" style={{ fontSize: 12, color: textColor }}>
+                      +{anonymousAuthorsCount} anonymous{' '}
+                      {anonymousAuthorsCount === 1 ? 'author' : 'authors'}
+                    </Text>
+                  </View>
                 )}
               </View>
-              <Text style={{ color: textColor, fontSize: 12 }}>
-                {currentGenre?.name || 'Story Genre'}
+            )}
+
+            {status === 'In Progress' && authorsCount > story.settings?.minimumParticipants && (
+              <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
+                {authorsCount} authors | {displayAuthorsMeta()}
               </Text>
+            )}
+
+            {authorsCount < story.settings?.minimumParticipants && (
+              <Text type="bold" style={{ fontSize: 12, marginVertical: 3, color: textColor }}>
+                {story.settings?.minimumParticipants - authorsCount} more{' '}
+                {story.settings?.minimumParticipants - authorsCount === 1 ? 'author' : 'authors'} to
+                go
+              </Text>
+            )}
+
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}>
+              <Text style={{ color: textColor, fontSize: 12 }}>
+                {/* If the story has a start date, we display it, if not, we display the date it was created */}
+                {/* Remember: The date it was created will mostly likely not be the same as when it started (enough authors have joined) */}
+                {moment(story.introSubmittingStartedAt || story.createdAt).fromNow()}
+              </Text>
+              <View
+                style={{
+                  height: 15,
+                  borderLeftColor: textColor,
+                  borderLeftWidth: 1,
+                  marginHorizontal: 8,
+                }}
+              />
+              <Text style={{ color: textColor, fontSize: 12 }}>{status}</Text>
+              <View
+                style={{
+                  height: 15,
+                  borderLeftColor: textColor,
+                  borderLeftWidth: 1,
+                  marginHorizontal: 8,
+                }}
+              />
+
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View
+                  style={{
+                    ...styles.storyGenreIconContainer,
+                    backgroundColor: '#fff',
+                  }}>
+                  <IconButton
+                    size={24}
+                    icon={() => (
+                      <Image
+                        source={GenreIcon}
+                        resizeMethod="auto"
+                        style={{ width: 24, height: 24 }}
+                      />
+                    )}
+                  />
+                </View>
+                <Text style={{ color: textColor, fontSize: 12 }}>
+                  {currentGenre?.name || 'Story Genre'}
+                </Text>
+              </View>
+            </View>
+            <View>
+              <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
+                Initially Proposed Intro{' '}
+                {initialIntro?.author?._id === currentUser?._id && '(Yours)'}
+              </Text>
+
+              {initialIntro && <HTMLView value={initialIntro.content} />}
+
+              {!initialIntro && (
+                <Text
+                  style={{
+                    color: '#ED8A18',
+                    fontFamily: 'RobotoItalic',
+                    fontSize: 12,
+                  }}>
+                  Waiting for{' '}
+                  {masterAuthor?._id === currentUser?._id ? 'your' : "the Master Author's"} intro
+                </Text>
+              )}
+            </View>
+            <View style={{ marginTop: 10 }}>
+              <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
+                Elected Intro
+              </Text>
+
+              {electedIntro && (
+                // <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
+                <HTMLView value={electedIntro.content} />
+              )}
+
+              {!electedIntro && story.status === 'intro_voting' && (
+                <Text
+                  style={{
+                    color: '#ED8A18',
+                    fontFamily: 'RobotoItalic',
+                    fontSize: 12,
+                  }}>
+                  Votes are in progress
+                </Text>
+              )}
+
+              {!electedIntro && story.status !== 'intro_voting' && (
+                <Text
+                  style={{
+                    color: '#ED8A18',
+                    fontFamily: 'RobotoItalic',
+                    fontSize: 12,
+                  }}>
+                  Votes haven't started yet
+                </Text>
+              )}
             </View>
           </View>
-          <View>
-            <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
-              Initially Proposed Intro {initialIntro?.author?._id === currentUser?._id && '(Yours)'}
-            </Text>
-
-            {initialIntro && (
-              // <Text style={{ color: textColor, lineHeight: 20 }}>{initialIntro.content}</Text>
-              <HTMLView value={initialIntro.content} />
-            )}
-
-            {!initialIntro && (
-              <Text
-                style={{
-                  color: '#ED8A18',
-                  fontFamily: 'RobotoItalic',
-                  fontSize: 12,
-                }}>
-                Waiting for{' '}
-                {masterAuthor?._id === currentUser?._id ? 'your' : "the Master Author's"} intro
-              </Text>
-            )}
-          </View>
-          <View style={{ marginTop: 10 }}>
-            <Text type="bold" style={{ color: textColor, marginVertical: 7 }}>
-              Elected Intro
-            </Text>
-
-            {electedIntro && (
-              // <Text style={{ color: textColor, lineHeight: 20 }}>{electedIntro.content}</Text>
-              <HTMLView value={electedIntro.content} />
-            )}
-
-            {!electedIntro && story.status === 'intro_voting' && (
-              <Text
-                style={{
-                  color: '#ED8A18',
-                  fontFamily: 'RobotoItalic',
-                  fontSize: 12,
-                }}>
-                Votes are in progress
-              </Text>
-            )}
-
-            {!electedIntro && story.status !== 'intro_voting' && (
-              <Text
-                style={{
-                  color: '#ED8A18',
-                  fontFamily: 'RobotoItalic',
-                  fontSize: 12,
-                }}>
-                Votes haven't started yet
-              </Text>
-            )}
-          </View>
-        </View>
-      </Surface>
+        </Surface>
+      </TouchableOpacity>
       {ShowEndAdvertisement}
     </View>
   );

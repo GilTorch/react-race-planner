@@ -3,7 +3,7 @@ import React from 'react';
 import { View, TouchableOpacity, FlatList, Image, Keyboard, Platform } from 'react-native';
 import { Modal, Portal, TextInput } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import Dash from 'react-native-dash';
 import { AllHtmlEntities } from 'html-entities';
 import { useSelector, connect, useDispatch } from 'react-redux';
@@ -20,10 +20,10 @@ import { commentSchema } from '../../utils/validators';
 import CommentMenu from '../CommentMenu';
 import { Story } from '../../redux/actions/types';
 
-const CommentModal = ({ visible, dismiss, parent, createComment }) => {
+const CommentModal = ({ visible, dismiss, parent, storyStatus, createComment }) => {
   const dispatch = useDispatch();
-
   const currentUser = useSelector((state) => state.auth.currentUser);
+
   const [margin, setMargin] = React.useState(0);
   const [comments, setComments] = React.useState(parent?.comments);
   const [updateStory, setUpdateStory] = React.useState(null);
@@ -87,7 +87,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
 
   return (
     <Portal>
-      <Modal visible={visible}>
+      <Modal visible={visible} dismissable={false}>
         <View
           style={{
             backgroundColor: 'white',
@@ -125,7 +125,7 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
             <View style={{ paddingLeft: 20, flexDirection: 'row' }}>
               <Text style={styles.label}>Author: </Text>
               <Text type="bold" style={styles.label}>
-                {parent?.author?.username || ''}
+                {storyStatus !== 'completed' ? 'Anonymous' : parent?.author?.username || ''}
               </Text>
             </View>
             <View style={{ marginLeft: 20, marginTop: 10 }}>
@@ -229,43 +229,56 @@ const CommentModal = ({ visible, dismiss, parent, createComment }) => {
               )}
               keyExtractor={(item) => `${item._id}`}
             />
-            <View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
               <TextInput
                 underlineColor={errors.content ? 'red' : 'white'}
                 value={watch('content')}
                 onChangeText={(text) => setValue('content', text)}
                 returnKeyType="send"
-                onEndEditing={handleSubmit(submit)}
+                multiline
                 style={{
-                  height: 40,
                   borderTopWidth: 1,
                   borderColor: '#D3CBCB',
+                  width: '85%',
                   backgroundColor: 'white',
-                  justifyContent: 'center',
                   padding: 5,
                 }}
                 placeholder="Type your comment here..."
               />
-              {errors.content && (
-                <Text style={{ fontSize: 12, marginVertical: 3, marginLeft: 5, color: 'red' }}>
-                  {errors.content.message}
-                </Text>
-              )}
-              <TouchableOpacity
-                onPress={() => {
-                  dismiss();
-                  reset(defaultValues);
-                  if (updateStory) {
-                    dispatch({ type: Story.COMMENT_ROUND_SUCCESS, story: updateStory });
-                  }
-                }}
+              <View
                 style={{
-                  ...styles.button,
-                  backgroundColor: '#F44336',
+                  flexDirection: 'column',
+                  justifyContent: 'space-evenly',
                 }}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    dismiss();
+                    reset(defaultValues);
+                    if (updateStory) {
+                      dispatch({ type: Story.COMMENT_ROUND_SUCCESS, story: updateStory });
+                    }
+                  }}
+                  style={{
+                    ...styles.button,
+                    backgroundColor: '#F44336',
+                  }}>
+                  <Text style={styles.buttonText}>X</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleSubmit(submit)}
+                  style={{
+                    ...styles.button,
+                    backgroundColor: '#03a2a2',
+                  }}>
+                  <FontAwesome5 name="paper-plane" size={20} color="white" />
+                </TouchableOpacity>
+              </View>
             </View>
+            {errors.content && (
+              <Text style={{ fontSize: 12, marginVertical: 3, marginLeft: 5, color: 'red' }}>
+                {errors.content.message}
+              </Text>
+            )}
           </View>
         </View>
       </Modal>
@@ -283,15 +296,11 @@ const styles = {
     textAlign: 'justify',
   },
   button: {
-    width: 95,
+    width: 35,
+    height: 35,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 4,
-    position: 'absolute',
-    alignSelf: 'flex-end',
-    right: 10,
-    height: 24,
-    top: 13,
+    borderRadius: 50,
   },
   buttonText: {
     color: 'white',
@@ -303,7 +312,12 @@ CommentModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   dismiss: PropTypes.func.isRequired,
   parent: PropTypes.object.isRequired,
+  storyStatus: PropTypes.string,
   createComment: PropTypes.func.isRequired,
+};
+
+CommentModal.defaultProps = {
+  storyStatus: 'in_progress',
 };
 
 const mapDispatchToProps = {

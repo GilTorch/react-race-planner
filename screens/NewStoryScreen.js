@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
-import { Dropdown } from 'react-native-material-dropdown';
+import { Dropdown } from 'react-native-material-dropdown-v2';
 import TimePicker from 'react-native-24h-timepicker';
 import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
@@ -77,8 +77,11 @@ const NewStoryScreen = ({ navigation, route }) => {
         introTimeLimitSeconds: 90,
         endingTimeLimitSeconds: 90,
         roundTimeLimitSeconds: 120,
-        voteTimeLimitSeconds: 90,
+        voteTimeLimitSeconds: 300,
         minimumParticipants: 2,
+        roundMaxWords: 100,
+        introMaxWords: 50,
+        outroMaxWords: 50,
       },
       privacyStatus: 'username',
     },
@@ -203,13 +206,13 @@ const NewStoryScreen = ({ navigation, route }) => {
             backgroundColor: 'white',
             marginTop: 20,
             padding: 15,
-            paddingBottom: 40,
+            paddingBottom: 25,
             flexDirection: 'column',
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>
             Minimum Amount of Authors
           </Text>
-          <Text>How many authors are required for this story to begin</Text>
+          <Text>How many authors are required for this story to begin. Including yourself</Text>
           <Dropdown
             value={2}
             fontSize={16}
