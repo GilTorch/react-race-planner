@@ -17,7 +17,9 @@ The iOS and Android source code of ScriptoRerum - React Native
     - [Getting Started on a Task](#getting-started-on-a-task)
   - [Publishing for Staging/Demoing](#publishing-for-stagingdemoing)
   - [Building for Production](#building-for-production)
-  - [e2e Testing with detox](#e2e-testing-with-detox)
+  - [Testing](#testing)
+    - [Unit Testing with Jest](#unit-testing-with-jest)
+    - [e2e Testing with Detox](#e2e-testing-with-detox)
   - [Run Github Action](#run-github-action)
 
 ## Screenshots
@@ -209,7 +211,19 @@ expo start -c
 
 TBD
 
-## e2e Testing with detox
+## Testing
+
+### Unit Testing with Jest
+
+We use Jest to test functions and plain JavaScript objects that are independent of the React Native framework. This means that we aren't testing any components that rely on React Native.
+
+Those tests reside in the `__tests__/unit/` directory.
+
+Use the following command to run those tests: `npm run test:unit`
+
+Unit test documentation TBD.
+
+### e2e Testing with Detox
 
 At the moment, we only have tests for iOS.
 
