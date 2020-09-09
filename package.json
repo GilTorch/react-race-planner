@@ -4,6 +4,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test:unit": "jest __tests__/unit/*.spec.js",
+    "test:comp": "jest __tests__/components/*.spec.js",
     "test": "jest --watchAll",
     "test:e2e": "detox test --configuration ios.sim",
     "dl_expo_bins": "./scripts/dl_expo_bins",
@@ -99,7 +100,7 @@
     "jest-expo": "^38.0.0",
     "prettier": "^1.19.1",
     "react-native-test-renderer": "0.0.1",
-    "react-native-testing-library": "^1.13.0",
+    "react-native-testing-library": "^6.0.0",
     "react-test-renderer": "^16.13.1",
     "shortid": "^2.2.15"
   },
