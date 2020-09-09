@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import PropTypes from 'prop-types';
 
 const CustomText = ({ children, type, style }) => {
-  const fontType = passedType => {
+  const fontType = (passedType) => {
     switch (passedType) {
       case 'black':
         return 'RobotoBlack';
@@ -23,6 +23,8 @@ const CustomText = ({ children, type, style }) => {
         return 'RobotoRegular';
       case 'thin':
         return 'RobotoThin';
+      case 'earth-orbiter':
+        return 'EarthOrbiter';
       default:
         return 'RobotoRegular';
     }
@@ -35,13 +37,13 @@ const CustomText = ({ children, type, style }) => {
 
 CustomText.defaultProps = {
   type: 'normal',
-  style: {}
+  style: {},
 };
 
 CustomText.propTypes = {
   children: PropTypes.node.isRequired,
   type: PropTypes.string,
-  style: PropTypes.object
+  style: PropTypes.object,
 };
 
 export default CustomText;

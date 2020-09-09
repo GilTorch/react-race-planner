@@ -37,6 +37,7 @@ import RobotoMediumItalic from './assets/fonts/Roboto-MediumItalic.ttf';
 import RobotoRegular from './assets/fonts/Roboto-Regular.ttf';
 import RobotoThin from './assets/fonts/Roboto-Thin.ttf';
 import RobotoThinItalic from './assets/fonts/Roboto-ThinItalic.ttf';
+import EarthOrbiter from './assets/fonts/EarthOrbiter.ttf';
 import ScriptoRerumLogo from './assets/images/scriptorerum-logo.png';
 import AppNavigation from './navigation';
 import store from './redux/store';
@@ -90,6 +91,7 @@ async function loadAssetsAsync() {
       RobotoRegular,
       RobotoThin,
       RobotoThinItalic,
+      EarthOrbiter,
     },
   ];
 
