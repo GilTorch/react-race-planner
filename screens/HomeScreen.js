@@ -133,7 +133,7 @@ const HomeScreen = ({ navigation, getStories }) => {
                   {genre.icon(62)}
                 </View>
                 <Text
-                  type="medium"
+                  type="earth-orbiter"
                   style={{
                     color: '#5A7582',
                     fontSize: 14,
