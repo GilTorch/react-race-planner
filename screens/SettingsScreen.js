@@ -54,8 +54,7 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
   const [socialAccountFieldName, setSocialAccountFieldName] = useState();
   const [socialName, setSocialName] = useState();
   const menuRef = React.useRef();
-  imageUrl = `${Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL}/${
-    USER_AVATAR_UPLOAD_LOCATION
+  imageUrl = `${Constants.isDevice ? ANDROID_SERVER_URL : platformServerURL}/${USER_AVATAR_UPLOAD_LOCATION
     }/${user?.picture}`;
 
   // If it starts with http, it's probably from a social account login
@@ -154,8 +153,7 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
 
     // User avatars are saved in this format:
     // [USER-FIRST-NAME]-[USER-LAST-NAME]-[USER-ID-IN-THE-DB]-[UNIX-TIMESTAMP-AT-TIME-OF-UPLOAD].[FILE-TYPE]
-    const fileName = `${user?.firstName.toLowerCase()}-${user?.lastName.toLowerCase()}-${
-      user?._id
+    const fileName = `${user?.firstName.toLowerCase()}-${user?.lastName.toLowerCase()}-${user?._id
       // eslint-disable-next-line prettier/prettier
       }-${moment().unix()}.${fileType}`;
 
@@ -924,8 +922,8 @@ const SettingsScreen = ({ navigation, logout, updateUser, deleteAccount }) => {
           </TouchableOpacity>
         </View>
 
-        <View testID="_logo" style={{ marginTop: 40 }}>
-          <Image style={styles.logo} source={Logo} />
+        <View testID="_logo" style={{ marginTop: 40, backgroundColor: '#fff' }}>
+          <Image style={styles.logo} resizeMode="contain" source={Logo} />
         </View>
 
         <View style={{ height: 60, justifyContent: 'center', alignItems: 'center' }}>

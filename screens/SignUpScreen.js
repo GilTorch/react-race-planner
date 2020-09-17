@@ -189,7 +189,9 @@ const SignupScreen = ({ navigation, signup }) => {
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' && 'padding'}>
       <ScrollView style={{ backgroundColor: 'white' }}>
         <View style={styles.container}>
-          <Image testID="logo" source={SRLogo} resizeMode="contain" style={styles.logo} />
+          <View style={styles.logoContainer}>
+            <Image testID="logo" source={SRLogo} style={styles.logo} />
+          </View>
           <View testID="create-account-text" style={styles.headlineContainer}>
             <Text type="medium" style={styles.headline}>
               Create an Account
@@ -362,19 +364,25 @@ const SignupScreen = ({ navigation, signup }) => {
               </>
             )}
 
-            <View style={styles.containerl}>
-              <View style={styles.checkboxContainer}>
-                <View style={{ marginTop: -1 }}>
-                  <CheckBox
-                    label=""
-                    style={[errors.acceptTerms && styles.acceptTerms]}
-                    checked={acceptTerms}
-                    onChange={(checked) => {
-                      setValue('acceptTerms', !checked);
-                    }}
-                    checkboxStyle={{ width: 15, height: 15 }}
-                  />
-                </View>
+            <View style={styles.checkboxContainer}>
+              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <CheckBox
+                  label=""
+                  style={[errors.acceptTerms && styles.acceptTerms]}
+                  checked={acceptTerms}
+                  onChange={(checked) => {
+                    setValue('acceptTerms', !checked);
+                  }}
+                  checkboxStyle={{ width: 20, height: 20 }}
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: 'column',
+                  marginLeft: 10,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
                 <Text style={styles.labelCheckbox}> I have read and accepted the </Text>
                 <TouchableOpacity
                   onPress={() =>
@@ -385,14 +393,14 @@ const SignupScreen = ({ navigation, signup }) => {
                   <Text style={styles.termsAndConditions}>Terms and Conditions</Text>
                 </TouchableOpacity>
               </View>
-              <View style={styles.errorsTermsWrapper}>
-                {errors.acceptTerms && (
-                  <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
-                    {errors.acceptTerms.message}
-                  </Text>
-                )}
-              </View>
             </View>
+            {errors.acceptTerms && (
+              <View style={styles.errorsTermsWrapper}>
+                <Text style={{ fontSize: 11, marginTop: 3, color: 'red' }}>
+                  {errors.acceptTerms.message}
+                </Text>
+              </View>
+            )}
             <TouchableOpacity
               testID="sign-up-button"
               onPress={handleSubmit(submit)}
@@ -501,30 +509,21 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'white',
-    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 70,
     marginBottom: 70,
   },
-  containerl: {
-    backgroundColor: 'white',
-    width: '100%',
-    justifyContent: 'center',
-    top: '16%',
-    marginTop: 39,
-    marginBottom: -6,
-  },
   logoContainer: {
     width: '70%',
     height: 149,
-    marginTop: 50,
     overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   logo: {
     width: '70%',
-    height: 149,
-    resizeMode: 'stretch',
+    height: '70%',
   },
   headlineContainer: {},
   headline: {
@@ -555,8 +554,6 @@ const styles = StyleSheet.create({
   },
   acceptTerms: {
     borderColor: 'yellow',
-    top: '50%',
-    marginTop: -10,
   },
   form: {
     width: '75%',
@@ -565,12 +562,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   submitButton: {
-    marginTop: 30,
     borderRadius: 4.87,
     backgroundColor: '#23C2C2',
     justifyContent: 'center',
     alignItems: 'center',
     height: 35.43,
+    marginTop: 15,
   },
   submitButtonText: {
     color: 'white',
@@ -596,16 +593,11 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     flexDirection: 'row',
-    marginTop: -240,
-    paddingTop: 8,
-    height: 20,
-    alignSelf: 'flex-start',
-    width: '100%',
+    marginTop: 15,
   },
   errorsTermsWrapper: {
     marginTop: 4,
     height: 30,
-    bottom: 5.5,
   },
 
   labelCheckbox: {
@@ -616,7 +608,6 @@ const styles = StyleSheet.create({
   termsAndConditions: {
     color: '#23C2C2',
     fontSize: 11.5,
-    marginBottom: -7,
   },
 });
 
