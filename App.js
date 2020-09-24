@@ -18,7 +18,8 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import PropTypes from 'prop-types';
-import { AppLoading, Notifications } from 'expo';
+import * as SplashScreen from 'expo-splash-screen';
+import * as Notifications from 'expo-notifications';
 import { Asset } from 'expo-asset';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -108,7 +109,7 @@ const theme = {
 };
 
 export default function App(props) {
-  const [isLoadingComplete, setLoadingComplete] = useState(false);
+  const [isLoadingComplete, setIsLoadingComplete] = useState(false);
   const containerRef = useRef();
   const [initialNavigationState, setInitialNavigationState] = useState();
   const { getInitialState } = useLinking(containerRef);
@@ -147,29 +148,41 @@ export default function App(props) {
       });
     }
   };
-  useEffect(() => {
-    async function setupInitialState() {
-      setInitialNavigationState(await getInitialState());
-    }
-
-    setupInitialState();
-
-    // Push Notifications
-    registerForPushNotificationsAsync();
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    const notificationListener = Notifications.addListener(handleNotification);
-
-    return () => {
-      notificationListener.remove();
-    };
-  }, []);
 
   const handleNotification = (notif) => {
     setNotification(notif);
   };
 
+  useEffect(() => {
+    async function setupInitialState() {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+
+        await loadAssetsAsync();
+
+        await SplashScreen.hideAsync();
+        setInitialNavigationState(await getInitialState());
+
+        // Push Notifications
+        registerForPushNotificationsAsync();
+        // This listener is fired whenever a notification is received while the app is foregrounded
+        const notificationListener = Notifications.addListener(handleNotification);
+
+        setIsLoadingComplete(true);
+
+        setupInitialState();
+
+        return () => {
+          notificationListener.remove();
+        };
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+  }, []);
+
   if (!isLoadingComplete && !props.skipLoadingScreen) {
-    return <AppLoading startAsync={loadAssetsAsync} onFinish={() => setLoadingComplete(true)} />;
+    return null;
   }
 
   return (

@@ -32,7 +32,8 @@
     "android": {
       "package": "com.scriptorerum.ScriptoRerum",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 1
+      "versionCode": 1,
+      "useNextNotificationsApi": true
     },
     "ios": {
       "supportsTablet": true,
