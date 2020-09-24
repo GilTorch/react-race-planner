@@ -44,9 +44,6 @@ import store from './redux/store';
 import persistor from './redux/store/persistor';
 import { AppContext } from './utils/providers/app-context';
 
-// Enables the experimental LogBox when the app is ran through React Native directly
-require('react-native').unstable_enableLogBox();
-
 // For development only. We use those when we want to
 // reset the store and pause redux-persist respectively
 // persistor.purge();
