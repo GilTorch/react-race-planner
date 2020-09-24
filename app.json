@@ -11,7 +11,7 @@
     "experiments": {
       "redesignedLogBox": true
     },
-    "version": "1.0.8",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "sr",
@@ -31,10 +31,12 @@
     ],
     "android": {
       "package": "com.scriptorerum.ScriptoRerum",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "versionCode": 1
     },
     "ios": {
       "supportsTablet": true,
+      "buildNumber": "1.0.9",
       "bundleIdentifier": "com.scriptorerum.ScriptoRerum"
     },
     "description": "The demo of the ScriptoRerum mobile app for iOS and Android.",
