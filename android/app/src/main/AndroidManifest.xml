@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.scriptorerum.ScriptoRerum">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.noukod.scriptorerum">
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
@@ -53,7 +53,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="sr"/>
-        <data android:scheme="com.scriptorerum.ScriptoRerum"/>
+        <data android:scheme="com.noukod.scriptorerum"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>

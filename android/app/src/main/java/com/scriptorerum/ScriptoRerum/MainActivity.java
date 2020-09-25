@@ -1,4 +1,4 @@
-package com.scriptorerum.ScriptoRerum;
+package com.noukod.scriptorerum;
 
 import android.os.Bundle;
 

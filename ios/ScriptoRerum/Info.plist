@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.7</string>
+	<string>1.0.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -26,7 +26,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>sr</string>
-				<string>com.scriptorerum.ScriptoRerum</string>
+				<string>com.noukod.scriptorerum</string>
 			</array>
 		</dict>
 	</array>

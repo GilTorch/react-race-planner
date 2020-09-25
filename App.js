@@ -47,7 +47,7 @@ import { AppContext } from './utils/providers/app-context';
 
 // For development only. We use those when we want to
 // reset the store and pause redux-persist respectively
-// persistor.purge();
+persistor.purge();
 
 function cacheImages(images) {
   return images.map((image) => {
@@ -140,11 +140,11 @@ export default function App(props) {
     }
 
     if (Platform.OS === 'android') {
-      Notifications.createChannelAndroidAsync('default', {
+      Notifications.setNotificationChannelAsync('default', {
         name: 'default',
         sound: true,
-        priority: 'max',
-        vibrate: [0, 250, 250, 250],
+        enableVibrate: true,
+        vibrationPattern: [0, 250, 250, 250],
       });
     }
   };
@@ -155,30 +155,27 @@ export default function App(props) {
 
   useEffect(() => {
     async function setupInitialState() {
-      try {
-        await SplashScreen.preventAutoHideAsync();
+      await SplashScreen.preventAutoHideAsync();
 
-        await loadAssetsAsync();
+      await loadAssetsAsync();
 
-        await SplashScreen.hideAsync();
-        setInitialNavigationState(await getInitialState());
+      // Push Notifications
+      registerForPushNotificationsAsync();
 
-        // Push Notifications
-        registerForPushNotificationsAsync();
-        // This listener is fired whenever a notification is received while the app is foregrounded
-        const notificationListener = Notifications.addListener(handleNotification);
+      await SplashScreen.hideAsync();
+      setInitialNavigationState(await getInitialState());
 
-        setIsLoadingComplete(true);
-
-        setupInitialState();
-
-        return () => {
-          notificationListener.remove();
-        };
-      } catch (e) {
-        console.warn(e);
-      }
+      setIsLoadingComplete(true);
     }
+
+    setupInitialState();
+
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    const notificationListener = Notifications.addNotificationReceivedListener(handleNotification);
+
+    return () => {
+      notificationListener.remove();
+    };
   }, []);
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {

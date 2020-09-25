@@ -30,7 +30,7 @@
       "**/*"
     ],
     "android": {
-      "package": "com.scriptorerum.ScriptoRerum",
+      "package": "com.noukod.scriptorerum",
       "googleServicesFile": "./google-services.json",
       "versionCode": 1,
       "useNextNotificationsApi": true
@@ -38,7 +38,7 @@
     "ios": {
       "supportsTablet": true,
       "buildNumber": "1.0.9",
-      "bundleIdentifier": "com.scriptorerum.ScriptoRerum"
+      "bundleIdentifier": "com.noukod.scriptorerum"
     },
     "description": "The demo of the ScriptoRerum mobile app for iOS and Android.",
     "githubUrl": "https://github.com/NouKod-Haiti/sr-mobile",

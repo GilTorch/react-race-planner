@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-apply from '../../node_modules/react-native-unimodules/gradle.groovy'
+apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
 
 import com.android.build.OutputFile
 
@@ -118,7 +118,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * Whether to enable the Hermes VM.
  *
  * This should be set on project.ext.react and mirrored here.  If it is not set
- * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
+ * on project.ext.react, JavaScript will not @herebe compiled to Hermes Bytecode
  * and the benefits of using Hermes will therefore be sharply reduced.
  */
 def enableHermes = project.ext.react.get("enableHermes", false);
@@ -132,11 +132,15 @@ android {
     }
 
     defaultConfig {
-        applicationId 'com.scriptorerum.ScriptoRerum'
+        applicationId 'com.noukod.scriptorerum'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0.7"
+        versionName "1.0.9"
+
+        manifestPlaceholders = [
+            appAuthRedirectScheme: 'io.identityserver.demo'
+        ]
     }
     splits {
         abi {

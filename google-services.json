@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "259126035894",
-    "firebase_url": "https://script-to-rerum.firebaseio.com",
-    "project_id": "script-to-rerum",
-    "storage_bucket": "script-to-rerum.appspot.com"
+    "project_number": "206801584482",
+    "firebase_url": "https://scriptorerum-1ec30.firebaseio.com",
+    "project_id": "scriptorerum-1ec30",
+    "storage_bucket": "scriptorerum-1ec30.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:259126035894:android:a2b767b4808e416c622d17",
+        "mobilesdk_app_id": "1:206801584482:android:117510a4fcf5a8fb0dac3b",
         "android_client_info": {
-          "package_name": "com.scriptorerum.ScriptoRerum"
+          "package_name": "com.noukod.scriptorerum"
         }
       },
       "oauth_client": [
         {
-          "client_id": "259126035894-goni6n8bohfdlg8gdsmjc1j6u5a2sgeh.apps.googleusercontent.com",
+          "client_id": "206801584482-vrv714irj5i1poilmqf1a80i395u7l1i.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAAgWJcZl4CeRIx_AGrwwPM1PGcgkC_f7E"
+          "current_key": "AIzaSyDbpb1VxtlLLqAPnhnOLcPTVtvg32ntl0U"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "259126035894-goni6n8bohfdlg8gdsmjc1j6u5a2sgeh.apps.googleusercontent.com",
+              "client_id": "206801584482-vrv714irj5i1poilmqf1a80i395u7l1i.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
