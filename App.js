@@ -23,6 +23,7 @@ import * as Notifications from 'expo-notifications';
 import { Asset } from 'expo-asset';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 import useLinking from './navigation/useLinking';
 import SpaceMono from './assets/fonts/SpaceMono-Regular.ttf';
@@ -183,22 +184,24 @@ export default function App(props) {
   }
 
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <AppContext.Provider value={{ expoPushToken, notification }}>
-          <PaperProvider theme={theme}>
-            <View style={styles.container}>
-              <NavigationContainer
-                ref={containerRef}
-                initialState={initialNavigationState}
-                initialRouteName="SignupScreen">
-                <AppNavigation />
-              </NavigationContainer>
-            </View>
-          </PaperProvider>
-        </AppContext.Provider>
-      </PersistGate>
-    </Provider>
+    <RootSiblingParent>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <AppContext.Provider value={{ expoPushToken, notification }}>
+            <PaperProvider theme={theme}>
+              <View style={styles.container}>
+                <NavigationContainer
+                  ref={containerRef}
+                  initialState={initialNavigationState}
+                  initialRouteName="SignupScreen">
+                  <AppNavigation />
+                </NavigationContainer>
+              </View>
+            </PaperProvider>
+          </AppContext.Provider>
+        </PersistGate>
+      </Provider>
+    </RootSiblingParent>
   );
 }
 
