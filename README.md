@@ -72,6 +72,8 @@ Even when we introduce a native dependency, we make sure to add checks to only u
       npm run android
     ```
 
+When running with React Native directly, you might need to start the Metro packager first: `npm start` and only run the OS specific command from a different terminal window/tab.
+
 That should be enough for UI related tasks.
 
 ## UI: Working on a specific screen
