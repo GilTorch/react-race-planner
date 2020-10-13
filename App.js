@@ -133,7 +133,12 @@ export default function App(props) {
         });
         return;
       }
-      const token = await Notifications.getExpoPushTokenAsync();
+
+      const experienceId = '@noukod/scriptorerum';
+
+      const token = await Notifications.getExpoPushTokenAsync({
+        experienceId,
+      });
 
       setExpoPushToken(token);
     } else {
