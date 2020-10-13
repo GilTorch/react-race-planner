@@ -126,7 +126,7 @@ const LoginScreen = ({ navigation, login }) => {
       contentContainerStyle={{ backgroundColor: 'white' }}>
       <View style={styles.container}>
         <View style={styles.logoContainer}>
-          <Image testID="logo" source={SRLogo} style={styles.logo} />
+          <Image testID="logo" source={SRLogo} resizeMode="contain" style={styles.logo} />
         </View>
         <View style={styles.headlineContainer}>
           <Text testID="login-text" type="medium" style={styles.headline}>
@@ -276,15 +276,15 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     width: '70%',
-    height: 149,
+    height: 200,
     overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   logo: {
-    width: '70%',
-    height: '70%',
+    width: '100%',
+    height: '100%',
   },
   headlineContainer: {},
   headline: {
