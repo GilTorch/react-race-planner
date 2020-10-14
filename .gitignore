@@ -185,3 +185,5 @@ buck-out/
 web-build/
 
 *.hprof
+
+appcenter-config.json

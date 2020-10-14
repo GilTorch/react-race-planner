@@ -11,7 +11,8 @@
     "lint:fix": "eslint --fix .",
     "web": "expo start --web",
     "lint": "eslint .",
-    "lint:dryfix": "eslint --fix-dry-run ."
+    "appcenter:encrypt": "rm -f ./android/app/src/main/assets/appcenter-config.json.$SR_ENV.enc2 && crypt-me -o encrypt -s ./android/app/src/main/assets/appcenter-config.json -d ./android/app/src/main/assets/appcenter-config.json.$SR_ENV.enc2 -p SR_ENV_KEY",
+    "appcenter:decrypt": "rm -f ./android/app/src/main/assets/appcenter-config.json && crypt-me -o encrypt -d ./android/app/src/main/assets/appcenter-config.json -s ./android/app/src/main/assets/appcenter-config.json.$SR_ENV.enc2 -p SR_ENV_KEY",
   },
   "jest": {
     "preset": "jest-expo"
@@ -26,6 +27,9 @@
     "@react-navigation/native": "^5.0.0",
     "@react-navigation/stack": "^5.0.0",
     "@react-navigation/web": "~1.0.0-alpha.9",
+    "appcenter": "3.1.2",
+    "appcenter-analytics": "3.1.2",
+    "appcenter-crashes": "3.1.2",
     "axios": "^0.19.2",
     "debounce-async": "0.0.2",
     "expo": "^38.0.0",

@@ -1,4 +1,4 @@
-# ScriptoRerum
+# ScriptoRerum [![Build status](https://build.appcenter.ms/v0.1/apps/dff8d28f-e8d4-48f8-abc2-316871f62b74/branches/master/badge)](https://appcenter.ms)
 
 The iOS and Android source code of ScriptoRerum - React Native
 
