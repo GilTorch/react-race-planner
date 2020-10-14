@@ -12,10 +12,10 @@
     "web": "expo start --web",
     "lint": "eslint .",
     "lint:dryfix": "eslint --fix-dry-run .",
-    "dotenv:encrypt": "rm -f .env.$SR_ENV.enc2 && crypt-me -o encrypt -s .env -d .env.$SR_ENV.enc2 -p SR_ENV_KEY",
-    "dotenv:decrypt": "rm -f .env && crypt-me -o decrypt -s .env.$SR_ENV.enc2 -d .env -p SR_ENV_KEY -f",
-    "appcenter:encrypt": "rm -f ./android/app/src/main/assets/appcenter-config.json.$SR_ENV.enc2 && crypt-me -o encrypt -s ./android/app/src/main/assets/appcenter-config.json -d ./android/app/src/main/assets/appcenter-config.json.$SR_ENV.enc2 -p SR_ENV_KEY",
-    "appcenter:decrypt": "rm -f ./android/app/src/main/assets/appcenter-config.json && crypt-me -o encrypt -d ./android/app/src/main/assets/appcenter-config.json -s ./android/app/src/main/assets/appcenter-config.json.$SR_ENV.enc2 -p SR_ENV_KEY",
+    "dotenv:encrypt": "rm -f .env.$SR_ENV.enc2 && crypt-me -o encrypt -s .env -d .env.$SR_ENV.enc2 -p $SR_ENV_KEY",
+    "dotenv:decrypt": "rm -f .env && crypt-me -o decrypt -s .env.$SR_ENV.enc2 -d .env -p $SR_ENV_KEY -f",
+    "appcenter:encrypt": "rm -f ./android/app/src/main/assets/appcenter-config.json.$SR_ENV.enc2 && crypt-me -o encrypt -s ./android/app/src/main/assets/appcenter-config.json -d ./android/app/src/main/assets/appcenter-config.json.$SR_ENV.enc2 -p $SR_ENV_KEY",
+    "appcenter:decrypt": "rm -f ./android/app/src/main/assets/appcenter-config.json && crypt-me -o encrypt -d ./android/app/src/main/assets/appcenter-config.json -s ./android/app/src/main/assets/appcenter-config.json.$SR_ENV.enc2 -p $SR_ENV_KEY -f",
     "postinstall": "npm run appcenter:decrypt && npm run dotenv:decrypt"
   },
   "jest": {
