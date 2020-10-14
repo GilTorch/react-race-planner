@@ -38,8 +38,13 @@ If you're dealing with the UI, no need to start the API at all.
 
 - Clone the repo and enter the project folder
 ```
-git clone https://github.com/r4meau/sr-mobile ScriptoRerum
-cd ScriptoRerum
+git clone https://github.com/NouKod-Haiti/sr-mobile
+cd sr-mobile
+```
+- Set the temporary and global [initial environment variables for your dev environment](https://app.clickup.com/2351815/v/dc/16z6a-777/27rp7-1218)
+```
+export SR_ENV='dev';
+export SR_ENV_KEY='NouKod2020';
 ```
 - Install dependencies: ```npm i```
 - Make sure you have an Android emulator (i.e.: AVD in Android Studio. Any phone with at least Android 5) or an iOS simulator with at least iOS 10 running.
@@ -183,6 +188,8 @@ So, again, it goes like:
 10. Update your local `master` branch
 
 ## Publishing for Staging/Demoing
+
+NOTE: This section will be updated with better info soon.
 
 As mentioned above, we use the `staging` branch to setup the demo for ScriptoRerum stakeholders to test features/fixes themselves.
 
