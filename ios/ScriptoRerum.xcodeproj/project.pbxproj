@@ -202,7 +202,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n../node_modules/expo-updates/scripts/create-manifest-ios.sh\n";
+			shellScript = "export NODE_BINARY=~/.nvm/versions/node/v10.15.3/bin/node\n../node_modules/react-native/scripts/react-native-xcode.sh\n../node_modules/expo-updates/scripts/create-manifest-ios.sh\n";
 		};
 		0718465584B774E712B83FF5 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -212,10 +212,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ScriptoRerum/Pods-ScriptoRerum-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
