@@ -3,9 +3,12 @@ import axios from 'axios';
 import { Alert } from 'react-native';
 import { expo } from '../app.json';
 
+Facebook.initializeAsync({
+  appId: expo.facebookAppId,
+});
+
 const logIn = async () => {
   try {
-    await Facebook.initializeAsync(expo.facebookAppId);
     const { type, token } = await Facebook.logInWithReadPermissionsAsync({
       permissions: ['public_profile'],
     });
