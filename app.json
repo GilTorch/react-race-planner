@@ -14,7 +14,7 @@
     "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "sr",
+    "scheme": "com.noukod.scriptorerum",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",

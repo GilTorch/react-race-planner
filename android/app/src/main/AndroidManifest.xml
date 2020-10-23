@@ -75,7 +75,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="sr" />
                 <data android:scheme="com.noukod.scriptorerum" />
             </intent-filter>
         </activity>

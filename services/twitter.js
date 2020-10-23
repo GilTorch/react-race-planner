@@ -19,7 +19,9 @@ const authSession = async (isLogin) => {
 
   try {
     // Step #1 - first we need to fetch a request token to start the browser-based authentication flow
-    const requestParams = toQueryString({ callback_url: AuthSession.getRedirectUrl() });
+    const requestParams = toQueryString({
+      callback_url: AuthSession.makeRedirectUri({ native: 'com.noukod.scriptorerum://' }),
+    });
     const { twitterRequestToken } = await axios
       .get(requestTokenURL + requestParams)
       .then((res) => res.data);
@@ -27,6 +29,7 @@ const authSession = async (isLogin) => {
     // Step #2 - after we received the request tokens, we can start the auth session flow using these tokens
     const authResponse = await AuthSession.startAsync({
       authUrl: `https://api.twitter.com/oauth/authenticate${toQueryString(twitterRequestToken)}`,
+      returnUrl: 'com.noukod.scriptorerum://',
     });
 
     if (authResponse.type === 'cancel') {
@@ -81,6 +84,7 @@ const authSession = async (isLogin) => {
       email: twitterProfile.email,
     };
   } catch (error) {
+    console.error(error);
     Toast.show('Something went wrong...', {
       duration: Toast.durations.SHORT,
       position: Toast.positions.BOTTOM,
