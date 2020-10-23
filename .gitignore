@@ -188,3 +188,4 @@ web-build/
 *.hprof
 
 appcenter-config.json
+android/app/release/*

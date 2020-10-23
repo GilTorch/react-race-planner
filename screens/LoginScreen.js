@@ -100,8 +100,9 @@ const LoginScreen = ({ navigation, login }) => {
   async function googleLogin() {
     try {
       const result = await Google.logInAsync({
-        androidClientId: GOOGLE_ANDROID_CLIENT_ID,
-        iosClientId: GOOGLE_IOS_CLIENT_ID,
+        androidStandaloneId: GOOGLE_ANDROID_CLIENT_ID,
+        iosStandaloneId: GOOGLE_IOS_CLIENT_ID,
+        redirectUrl: 'com.noukod.scriptorerum://oauth2redirect/google',
         scopes: ['profile'],
       });
 

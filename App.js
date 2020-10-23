@@ -64,7 +64,7 @@ function cacheFonts(fonts) {
 }
 
 async function loadAssetsAsync() {
-  const images = [ScriptoRerumLogo];
+  const images = [];
 
   const fonts = [
     {
@@ -184,7 +184,7 @@ export default function App(props) {
     };
   }, []);
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+  if (!isLoadingComplete) {
     return null;
   }
 
@@ -209,14 +209,6 @@ export default function App(props) {
     </RootSiblingParent>
   );
 }
-
-App.propTypes = {
-  skipLoadingScreen: PropTypes.bool,
-};
-
-App.defaultProps = {
-  skipLoadingScreen: false,
-};
 
 const styles = StyleSheet.create({
   container: {
