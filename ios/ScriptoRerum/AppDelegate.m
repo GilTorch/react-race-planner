@@ -4,6 +4,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <React/RCTLinkingManager.h>
+#import <React/RCTLog.h>
 
 #import <UMCore/UMModuleRegistry.h>
 #import <UMReactNativeAdapter/UMNativeModulesProxy.h>
@@ -31,11 +32,9 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 
 @interface AppDelegate () <RCTBridgeDelegate>
-
-@property (nonatomic, strong) UMModuleRegistryAdapter *moduleRegistryAdapter;
-@property (nonatomic, strong) NSDictionary *launchOptions;
-
+  @property (nonatomic, strong) UMModuleRegistryAdapter *moduleRegistryAdapter;
 @end
+
 
 @implementation AppDelegate
 
@@ -46,25 +45,8 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
   
   self.moduleRegistryAdapter = [[UMModuleRegistryAdapter alloc] initWithModuleRegistryProvider:[[UMModuleRegistryProvider alloc] init]];
-  self.launchOptions = launchOptions;
-  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  #ifdef DEBUG
-    [self initializeReactNativeApp];
-  #else
-    EXUpdatesAppController *controller = [EXUpdatesAppController sharedInstance];
-    controller.delegate = self;
-    [controller startAndShowLaunchScreen:self.window];
-  #endif
-
-  [super application:application didFinishLaunchingWithOptions:launchOptions];
-
-  return YES;
-}
-
-- (RCTBridge *)initializeReactNativeApp
-{
-  RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:self.launchOptions];
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge moduleName:@"main" initialProperties:nil];
+  RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge moduleName:@"ScriptoRerum" initialProperties:nil];
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -72,9 +54,11 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
-
-  return bridge;
- }
+  [super application:application didFinishLaunchingWithOptions:launchOptions];
+  RCTSetLogThreshold(RCTLogLevelInfo - 1);
+  return YES;
+  
+}
 
 - (NSArray<id<RCTBridgeModule>> *)extraModulesForBridge:(RCTBridge *)bridge
 {
@@ -83,18 +67,13 @@ static void InitializeFlipper(UIApplication *application) {
   return extraModules;
 }
 
-- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {
- #ifdef DEBUG
+- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+#if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
- #else
-  return [[EXUpdatesAppController sharedInstance] launchAssetUrl];
- #endif
-}
-
-- (void)appController:(EXUpdatesAppController *)appController didStartWithSuccess:(BOOL)success {
-  appController.bridge = [self initializeReactNativeApp];
-  EXSplashScreenService *splashScreenService = (EXSplashScreenService *)[UMModuleRegistryProvider getSingletonModuleForClass:[EXSplashScreenService class]];
-  [splashScreenService showSplashScreenFor:self.window.rootViewController];
+#else
+  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+#endif
 }
 
 - (BOOL)application:(UIApplication *)application

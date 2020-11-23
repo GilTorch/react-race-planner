@@ -111,9 +111,7 @@ const theme = {
 
 export default function App(props) {
   const [isLoadingComplete, setIsLoadingComplete] = useState(false);
-  const containerRef = useRef();
-  const [initialNavigationState, setInitialNavigationState] = useState();
-  const { getInitialState } = useLinking(containerRef);
+  const { getInitialState, isReady, ref, initialState } = useLinking(containerRef);
   // Push Notifications
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
@@ -163,15 +161,13 @@ export default function App(props) {
     async function setupInitialState() {
       await SplashScreen.preventAutoHideAsync();
 
-      await loadAssetsAsync();
+      // await loadAssetsAsync();
 
       // Push Notifications
       registerForPushNotificationsAsync();
 
       await SplashScreen.hideAsync();
-      setInitialNavigationState(await getInitialState());
-
-      setIsLoadingComplete(true);
+      await getInitialState();
     }
 
     setupInitialState();
@@ -184,21 +180,18 @@ export default function App(props) {
     };
   }, []);
 
-  if (!isLoadingComplete) {
+  if (!isReady) {
     return null;
   }
 
   return (
-    <RootSiblingParent>
+    <View style={styles.container}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <AppContext.Provider value={{ expoPushToken, notification }}>
             <PaperProvider theme={theme}>
               <View style={styles.container}>
-                <NavigationContainer
-                  ref={containerRef}
-                  initialState={initialNavigationState}
-                  initialRouteName="SignupScreen">
+                <NavigationContainer ref={ref} initialState={initialState}>
                   <AppNavigation />
                 </NavigationContainer>
               </View>
@@ -206,7 +199,7 @@ export default function App(props) {
           </AppContext.Provider>
         </PersistGate>
       </Provider>
-    </RootSiblingParent>
+    </View>
   );
 }
 
