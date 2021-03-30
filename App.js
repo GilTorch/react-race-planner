@@ -110,6 +110,7 @@ const theme = {
 };
 
 export default function App(props) {
+  const containerRef = React.useRef();
   const [isLoadingComplete, setIsLoadingComplete] = useState(false);
   const { getInitialState, isReady, ref, initialState } = useLinking(containerRef);
   // Push Notifications

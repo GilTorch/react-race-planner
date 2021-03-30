@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeReducer from './HomeReducer';
 import LibraryReducer from './LibraryReducer';
 import WritingReducer from './WritingReducer';

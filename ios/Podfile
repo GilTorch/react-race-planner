@@ -4,7 +4,11 @@ require_relative '../node_modules/react-native-unimodules/cocoapods.rb'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 target 'ScriptoRerum' do
-  config = use_native_modules!
   use_unimodules!
+  config = use_native_modules!
   use_react_native!(:path => config["reactNativePath"])
+  # use_flipper!({'Flipper' => '0.58.0'}) # should match the version of your Flipper client app
+  # post_install do |installer|
+  #   flipper_post_install(installer)
+  # end
 end
