@@ -5,6 +5,21 @@ import Constants from 'expo-constants';
 import Toast from 'react-native-root-toast';
 import * as Font from 'expo-font';
 import {
+  Roboto_100Thin,
+  Roboto_100Thin_Italic,
+  Roboto_300Light,
+  Roboto_300Light_Italic,
+  Roboto_400Regular,
+  Roboto_400Regular_Italic,
+  Roboto_500Medium,
+  Roboto_500Medium_Italic,
+  Roboto_700Bold,
+  Roboto_700Bold_Italic,
+  Roboto_900Black,
+  Roboto_900Black_Italic
+} from "@expo-google-fonts/roboto";
+
+import {
   Ionicons,
   FontAwesome,
   FontAwesome5,
@@ -78,18 +93,18 @@ async function loadAssetsAsync() {
       ...Feather.font,
       ...MaterialIcons.font,
       SpaceMono,
-      RobotoBlack,
-      RobotoBlackItalic,
-      RobotoBold,
-      RobotoBoldItalic,
-      RobotoItalic,
-      RobotoLight,
-      RobotoLightItalic,
-      RobotoMedium,
-      RobotoMediumItalic,
-      RobotoRegular,
-      RobotoThin,
-      RobotoThinItalic,
+      RobotoBlack: Roboto_900Black,
+      RobotoBlackItalic: Roboto_900Black_Italic,
+      RobotoBold: Roboto_700Bold,
+      RobotoBoldItalic: Roboto_700Bold_Italic,
+      RobotoItalic: Roboto_100Thin_Italic,
+      RobotoLight: Roboto_300Light,
+      RobotoLightItalic: Roboto_300Light_Italic,
+      RobotoMedium: Roboto_500Medium,
+      RobotoMediumItalic: Roboto_500Medium_Italic,
+      RobotoRegular: Roboto_400Regular,
+      RobotoThin: Roboto_100Thin,
+      RobotoThinItalic: Roboto_100Thin_Italic,
       EarthOrbiter,
     },
   ];
@@ -110,7 +125,7 @@ const theme = {
 };
 
 export default function App(props) {
-  const containerRef = React.useRef();
+  const containerRef = useRef();
   const [isLoadingComplete, setIsLoadingComplete] = useState(false);
   const { getInitialState, isReady, ref, initialState } = useLinking(containerRef);
   // Push Notifications
@@ -162,7 +177,7 @@ export default function App(props) {
     async function setupInitialState() {
       await SplashScreen.preventAutoHideAsync();
 
-      // await loadAssetsAsync();
+      await loadAssetsAsync();
 
       // Push Notifications
       registerForPushNotificationsAsync();

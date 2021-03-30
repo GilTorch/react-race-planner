@@ -2,8 +2,7 @@ import React from 'react';
 import { useLinking } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
 
-export default () => {
-  const ref = React.useRef();
+export default (ref) => {
   const [isReady, setIsReady] = React.useState(true);
   const [initialState, setInitialState] = React.useState();
   const { getInitialState } = useLinking(ref, {
@@ -31,7 +30,7 @@ export default () => {
           setIsReady(true);
         }),
     ref,
-    ready: isReady,
+    isReady,
     initialState,
   };
 };

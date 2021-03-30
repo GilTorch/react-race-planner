@@ -23,6 +23,7 @@ export default function RootStack() {
   const user = useSelector((state) => state.auth.currentUser);
   const isAuthenticated = user?.isActive && !user?.isPasswordReset;
 
+  console.error("Navigation Loaded")
   useEffect(() => {
     if (isAuthenticated && expoPushToken) {
       dispatch(savePushTokenAction(expoPushToken));
@@ -31,15 +32,15 @@ export default function RootStack() {
 
   return (
     <Stack.Navigator mode={isAuthenticated ? 'modal' : 'card'} initialRouteName={isAuthenticated ? 'BottomTab' : 'SignupScreen'}>
-          <Stack.Screen name="SignupScreen" component={SignupScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-          <Stack.Screen name="ResetPasswordTwo" component={ResetPasswordTwoScreen} />
-          <Stack.Screen name="OTPVerification" component={OTPVerificationScreen} />
-          <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
-          <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }} />
-          <Stack.Screen name="FilterScreen" component={FilterScreen} />
-          <Stack.Screen name="NewStoryScreen" component={NewStoryScreen} />
+      <Stack.Screen name="SignupScreen" component={SignupScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+      <Stack.Screen name="ResetPasswordTwo" component={ResetPasswordTwoScreen} />
+      <Stack.Screen name="OTPVerification" component={OTPVerificationScreen} />
+      <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
+      <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }} />
+      <Stack.Screen name="FilterScreen" component={FilterScreen} />
+      <Stack.Screen name="NewStoryScreen" component={NewStoryScreen} />
     </Stack.Navigator>
   );
 }
