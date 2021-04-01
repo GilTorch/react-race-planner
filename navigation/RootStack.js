@@ -14,6 +14,8 @@ import NewStoryScreen from '../screens/NewStoryScreen';
 import { AppContext } from '../utils/providers/app-context';
 import { savePushTokenAction } from '../redux/actions/UserActions';
 import WebViewScreen from '../screens/WebViewScreen';
+import { useNavigation } from "@react-navigation/native";
+import AuthStack from "./AuthStack";
 
 const Stack = createStackNavigator();
 
@@ -30,17 +32,25 @@ export default function RootStack() {
     }
   }, [expoPushToken, isAuthenticated]);
 
+
   return (
     <Stack.Navigator mode={isAuthenticated ? 'modal' : 'card'} initialRouteName={isAuthenticated ? 'BottomTab' : 'SignupScreen'}>
-      <Stack.Screen name="SignupScreen" component={SignupScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-      <Stack.Screen name="ResetPasswordTwo" component={ResetPasswordTwoScreen} />
-      <Stack.Screen name="OTPVerification" component={OTPVerificationScreen} />
-      <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
-      <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }} />
-      <Stack.Screen name="FilterScreen" component={FilterScreen} />
-      <Stack.Screen name="NewStoryScreen" component={NewStoryScreen} />
+      {!isAuthenticated ? (
+        <>
+          <Stack.Screen name="SignupScreen" component={SignupScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+          <Stack.Screen name="ResetPasswordTwo" component={ResetPasswordTwoScreen} />
+          <Stack.Screen name="OTPVerification" component={OTPVerificationScreen} />
+          <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }} />
+          <Stack.Screen name="FilterScreen" component={FilterScreen} />
+          <Stack.Screen name="NewStoryScreen" component={NewStoryScreen} />
+        </>
+      )}
     </Stack.Navigator>
   );
 }
