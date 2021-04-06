@@ -113,7 +113,7 @@ const theme = {
 
 export default function App(props) {
   const containerRef = useRef();
-  const [isLoadingComplete, setIsLoadingComplete] = useState(false);
+  const [isLoadingFontsComplete, setIsLoadingFontsComplete] = useState(false);
   const { getInitialState, isReady, ref, initialState } = useLinking(containerRef);
   // Push Notifications
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -164,9 +164,9 @@ export default function App(props) {
     async function setupInitialState() {
       await SplashScreen.preventAutoHideAsync();
 
-      setIsLoadingFontComplete(false);
+      setIsLoadingFontsComplete(false);
       await loadAssetsAsync();
-      setIsLoadingFontComplete(true);
+      setIsLoadingFontsComplete(true);
       // Push Notifications
       registerForPushNotificationsAsync();
 
@@ -184,7 +184,7 @@ export default function App(props) {
     };
   }, []);
 
-  if (!isReady || !isLoadingComplete) {
+  if (!isReady || !isLoadingFontsComplete) {
     return null;
   }
 

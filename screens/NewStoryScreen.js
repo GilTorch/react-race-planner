@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React from 'react';
+import React, { useState } from 'react';
 import { Surface, TextInput, ActivityIndicator } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView, View, StyleSheet, StatusBar, SafeAreaView, Platform } from 'react-native';
@@ -12,11 +12,12 @@ import { Dropdown } from 'react-native-material-dropdown-v2';
 import TimePicker from 'react-native-24h-timepicker';
 import { useForm } from 'react-hook-form';
 import { useSelector, connect } from 'react-redux';
-
+import { AntDesign } from '@expo/vector-icons';
 import Text from '../components/CustomText';
 import { genresData } from '../utils/data';
 import { newStorySchema } from '../utils/validators';
 import { createStoryAction } from '../redux/actions/StoryActions';
+import CharacterModal from "../components/modals/CharacterModal";
 
 const NewStoryScreen = ({ navigation, route }) => {
   useFocusEffect(
@@ -33,6 +34,11 @@ const NewStoryScreen = ({ navigation, route }) => {
   const user = useSelector((state) => state.auth.currentUser);
   // const types = useSelector(state => state.storyType);
   const loading = useSelector((state) => state.story.createStoryLoading);
+
+
+  const [characters, setCharacters] = useState([{ name: "", description: "" }])
+
+  const [storyLocation, setStoryLocation] = useState()
 
   const listAuthordata = [
     { value: 2 },
@@ -66,7 +72,7 @@ const NewStoryScreen = ({ navigation, route }) => {
   let TimePickerRef = null;
   const preselectedGenre = route.params.genre;
 
-  const { errors, handleSubmit, register, watch, setValue } = useForm({
+  const { errors, handleSubmit, register, watch, getValues, setValue } = useForm({
     validationSchema: newStorySchema,
     defaultValues: {
       masterAuthor: user?._id,
@@ -98,7 +104,29 @@ const NewStoryScreen = ({ navigation, route }) => {
     TimePickerRef.close();
   };
 
+
+  const handleCharacter = ({ idx, name, description }) => {
+    const charactersModified = characters;
+    charactersModified[idx] = { name, description };
+    setCharacters(charactersModified)
+  }
+
+  const addCharacter = () => {
+    setCharacters([...characters, { name: "", description: "" }])
+  }
+
+
+  const removeCharacter = (idx) => {
+    if ((idx) === 0) {
+      window.alert("You need at least one character for your story")
+      return;
+    }
+    setCharacters(characters.filter((c, id) => id !== idx))
+  }
+
+
   const submit = async (story) => {
+    window.alert("Characters And Location: " + JSON.stringify(characters), location)
     try {
       navigation.navigate('RoundWriting', { story, entity: 'intro', isNewStory: true });
     } catch (e) {
@@ -120,6 +148,8 @@ const NewStoryScreen = ({ navigation, route }) => {
     register('settings');
     register('privacyStatus');
   }, [register]);
+
+
 
   return (
     <View style={styles.container}>
@@ -212,7 +242,7 @@ const NewStoryScreen = ({ navigation, route }) => {
           <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>
             Minimum Amount of Authors
           </Text>
-          <Text>How many authors are required for this story to begin. Including yourself</Text>
+          <Text style={styles.fieldDescription}>How many authors are required for this story to begin. Including yourself</Text>
           <Dropdown
             value={2}
             fontSize={16}
@@ -221,6 +251,69 @@ const NewStoryScreen = ({ navigation, route }) => {
             onChangeText={(text) =>
               setValue('settings', { ...storySettings, minimumParticipants: text })
             }
+          />
+        </Surface>
+        <Surface
+          style={{
+            elevation: 2,
+            backgroundColor: 'white',
+            marginTop: 20,
+            padding: 15,
+            paddingBottom: 25,
+            flexDirection: 'column',
+          }}>
+          <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>
+            Story outline
+          </Text>
+          <Text style={styles.fieldDescription}>Add the location (city or country) where your story is taking place. Give the name and a brief description of the characters</Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={{ fontSize: 16, color: '#03a2a2', marginTop: 15, marginBottom: 5 }}>
+              Characters
+            </Text>
+            <TouchableOpacity onPress={() => addCharacter()}>
+              <AntDesign name="pluscircle" style={{ marginLeft: 7, marginTop: 10 }} size={15} color="#03a2a2" />
+            </TouchableOpacity>
+          </View>
+          {characters.map((character, idx) => (
+            <View key={idx.toString()} style={{ paddingTop: 15, paddingLeft: 28, paddingRight: 28, paddingBottom: 10, marginTop: 7, marginBottom: 7, justifyContent: "center" }}>
+              <Text style={{ fontSize: 16, color: '#03a2a2', marginTop: 10, marginBottom: 5 }}>
+                Name
+              </Text>
+              <TextInput
+                autoCapitalize="words"
+                placeholder="Name of the character goes here"
+                style={[styles.input, { marginBottom: 14 }, errors.title && styles.errorInput]}
+                onChangeText={(name) => handleCharacter({ idx, name, description: character.description })}
+                // value={character.name}
+                placeholderStyle={{ fontSize: 14, fontFamily: "RobotoThin" }}
+              />
+              <Text style={{ fontSize: 16, color: '#03a2a2', marginTop: 10, marginBottom: 5 }}>
+                Description
+              </Text>
+              <TextInput
+                autoCapitalize="words"
+                placeholder="Description of the character's role in the story"
+                style={[styles.input, { marginBottom: 10 }, errors.title && styles.errorInput]}
+                onChangeText={(description) => handleCharacter({ idx, name: character.name, description })}
+              // value={character.description}
+              />
+              <TouchableOpacity onPress={() => removeCharacter(idx)} style={{ marginTop: 20, backgroundColor: "#eee", borderRadius: 3, width: 80, height: 40, justifyContent: "center", alignItems: "center" }}>
+                <Text style={{ fontSize: 14, fontFamily: "RobotoRegular" }}>Remove</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={{ fontSize: 16, color: '#03a2a2', marginTop: 5, marginBottom: 10 }}>
+              Location
+            </Text>
+          </View>
+          <TextInput
+            autoCapitalize="words"
+            placeholder="Name of the character goes here"
+            style={[styles.input, { marginBottom: 14 }, errors.title && styles.errorInput]}
+            onChangeText={(location) => setStoryLocation(location)}
+            value={storyLocation}
+            placeholderStyle={{ fontSize: 14, fontFamily: "RobotoThin" }}
           />
         </Surface>
         {/* <Surface
@@ -324,7 +417,7 @@ const NewStoryScreen = ({ navigation, route }) => {
             flexDirection: 'column',
           }}>
           <Text style={{ fontSize: 18, color: '#03a2a2', marginBottom: 10 }}>Privacy Status</Text>
-          <Text>
+          <Text style={styles.fieldDescription}>
             Determines what everyone else will see as your display name once the story is over
           </Text>
           <Dropdown
@@ -346,6 +439,12 @@ const NewStoryScreen = ({ navigation, route }) => {
         onCancel={onCancelTimePicker}
         onConfirm={(hour, minute) => onConfirmTimePicker(hour, minute)}
       />
+      {/* <CharacterModal
+        visible={showCharacterModal}
+        parentType="story"
+        parent={getValues()}
+        onDismiss={() => setShowCharacterModal(false)}
+      /> */}
     </View>
   );
 };
@@ -362,6 +461,7 @@ const styles = StyleSheet.create({
     minWidth: 70,
     backgroundColor: 'white',
   },
+  fieldDescription: { fontSize: 16, fontFamily: "RobotoLight", color: "#000" },
   errorInput: {
     borderColor: 'red',
     borderBottomWidth: 1,
