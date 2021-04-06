@@ -42,18 +42,6 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 
 import useLinking from './navigation/useLinking';
 import SpaceMono from './assets/fonts/SpaceMono-Regular.ttf';
-import RobotoBlack from './assets/fonts/Roboto-Black.ttf';
-import RobotoBlackItalic from './assets/fonts/Roboto-BlackItalic.ttf';
-import RobotoBold from './assets/fonts/Roboto-Bold.ttf';
-import RobotoBoldItalic from './assets/fonts/Roboto-BoldItalic.ttf';
-import RobotoItalic from './assets/fonts/Roboto-Italic.ttf';
-import RobotoLight from './assets/fonts/Roboto-Light.ttf';
-import RobotoLightItalic from './assets/fonts/Roboto-LightItalic.ttf';
-import RobotoMedium from './assets/fonts/Roboto-Medium.ttf';
-import RobotoMediumItalic from './assets/fonts/Roboto-MediumItalic.ttf';
-import RobotoRegular from './assets/fonts/Roboto-Regular.ttf';
-import RobotoThin from './assets/fonts/Roboto-Thin.ttf';
-import RobotoThinItalic from './assets/fonts/Roboto-ThinItalic.ttf';
 import EarthOrbiter from './assets/fonts/EarthOrbiter.ttf';
 import ScriptoRerumLogo from './assets/images/scriptorerum-logo.png';
 import AppNavigation from './navigation';
@@ -63,7 +51,6 @@ import { AppContext } from './utils/providers/app-context';
 
 // For development only. We use those when we want to
 // reset the store and pause redux-persist respectively
-persistor.purge();
 
 function cacheImages(images) {
   return images.map((image) => {
@@ -177,8 +164,9 @@ export default function App(props) {
     async function setupInitialState() {
       await SplashScreen.preventAutoHideAsync();
 
+      setIsLoadingFontComplete(false);
       await loadAssetsAsync();
-
+      setIsLoadingFontComplete(true);
       // Push Notifications
       registerForPushNotificationsAsync();
 
@@ -196,7 +184,7 @@ export default function App(props) {
     };
   }, []);
 
-  if (!isReady) {
+  if (!isReady || !isLoadingComplete) {
     return null;
   }
 
