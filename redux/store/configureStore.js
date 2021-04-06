@@ -1,5 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
+import { composeWithDevTools } from 'redux-devtools-extension';
+
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,7 +18,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 // const middleware = [thunk, logger];
 const middleware = [thunk];
 
-const composedEnhancers = compose(applyMiddleware(...middleware));
+const composedEnhancers = composeWithDevTools(applyMiddleware(...middleware));
 
 export default () => {
   const store = createStore(persistedReducer, undefined, composedEnhancers);
