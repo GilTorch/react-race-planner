@@ -35,6 +35,7 @@ const StoryScreen = ({ navigation, route, joinStory, getSelectedStory }) => {
   const { masterAuthor } = story;
   const stories = useSelector((state) => state[reducerName]?.stories) || [];
 
+  // { story, reducerName: 'writing', isNewStory: true }
   const selectedStory = stories.find((s) => s._id === story?._id) || {};
   // We make sure they are in the order of the story lifecycle - https://app.clickup.com/2351815/v/dc/16z6a-777/27rp7-735
   // so that we can properly use this variable later

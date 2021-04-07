@@ -70,14 +70,14 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
   }
 
   useEffect(() => {
-    const parent = navigation.dangerouslyGetParent();
-    parent.setOptions({
-      tabBarVisible: false,
-    });
-    return () =>
-      parent.setOptions({
-        tabBarVisible: true,
-      });
+    // const parent = navigation.dangerouslyGetParent();
+    // parent.setOptions({
+    //   tabBarVisible: false,
+    // });
+    // return () =>
+    //   parent.setOptions({
+    //     tabBarVisible: true,
+    //   });
   }, []);
 
   useFocusEffect(
@@ -144,6 +144,7 @@ const RoundWritingScreen = ({ navigation, route, createStory, createRound }) => 
   const wordsCount = value instanceof Array ? 0 : value.split(' ').length;
 
   const submitRound = async () => {
+
     try {
       if (isNewStory) {
         const story = await createStory({

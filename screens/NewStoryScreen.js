@@ -17,7 +17,6 @@ import Text from '../components/CustomText';
 import { genresData } from '../utils/data';
 import { newStorySchema } from '../utils/validators';
 import { createStoryAction } from '../redux/actions/StoryActions';
-import CharacterModal from "../components/modals/CharacterModal";
 
 const NewStoryScreen = ({ navigation, route }) => {
   useFocusEffect(
@@ -34,11 +33,6 @@ const NewStoryScreen = ({ navigation, route }) => {
   const user = useSelector((state) => state.auth.currentUser);
   // const types = useSelector(state => state.storyType);
   const loading = useSelector((state) => state.story.createStoryLoading);
-
-
-  const [characters, setCharacters] = useState([{ name: "", description: "" }])
-
-  const [storyLocation, setStoryLocation] = useState()
 
   const listAuthordata = [
     { value: 2 },
@@ -79,6 +73,10 @@ const NewStoryScreen = ({ navigation, route }) => {
       type: 'story', // TODO: get and send the typeId
       status: 'waiting_for_players',
       genre: preselectedGenre, // TODO: send the genreId instead
+      storyOutline: {
+        characters: [{ name: "", description: "" }],
+        location: ""
+      },
       settings: {
         introTimeLimitSeconds: 90,
         endingTimeLimitSeconds: 90,
@@ -93,6 +91,8 @@ const NewStoryScreen = ({ navigation, route }) => {
     },
   });
   const storySettings = watch('settings');
+  const storyOutline = watch('storyOutline');
+
 
   const onCancelTimePicker = () => {
     TimePickerRef.close();
@@ -106,27 +106,31 @@ const NewStoryScreen = ({ navigation, route }) => {
 
 
   const handleCharacter = ({ idx, name, description }) => {
-    const charactersModified = characters;
-    charactersModified[idx] = { name, description };
-    setCharacters(charactersModified)
+    const characters = storyOutline?.characters || [];
+    characters[idx] = { name, description };
+    setValue("storyOutline", { ...storyOutline, characters });
   }
 
   const addCharacter = () => {
-    setCharacters([...characters, { name: "", description: "" }])
+    const characters = storyOutline?.characters || [];;
+    setValue("storyOutline", { ...storyOutline, characters: [...characters, { name: "", description: "" }] });
   }
 
 
   const removeCharacter = (idx) => {
     if ((idx) === 0) {
-      window.alert("You need at least one character for your story")
+      Toast.show("You need at least one character for your story.", {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.TOP,
+      })
       return;
     }
-    setCharacters(characters.filter((c, id) => id !== idx))
+    const characters = storyOutline?.characters || [];
+    setValue("storyOutline", { ...storyOutline, characters: characters.filter((c, id) => id !== idx) })
   }
 
 
   const submit = async (story) => {
-    window.alert("Characters And Location: " + JSON.stringify(characters), location)
     try {
       navigation.navigate('RoundWriting', { story, entity: 'intro', isNewStory: true });
     } catch (e) {
@@ -144,6 +148,7 @@ const NewStoryScreen = ({ navigation, route }) => {
     register('isPinned');
     register('isActive');
     register('title');
+    register('storyOutline');
     register('genre');
     register('settings');
     register('privacyStatus');
@@ -274,7 +279,7 @@ const NewStoryScreen = ({ navigation, route }) => {
               <AntDesign name="pluscircle" style={{ marginLeft: 7, marginTop: 10 }} size={15} color="#03a2a2" />
             </TouchableOpacity>
           </View>
-          {characters.map((character, idx) => (
+          {storyOutline?.characters && storyOutline?.characters.map((character, idx) => (
             <View key={idx.toString()} style={{ paddingTop: 15, paddingLeft: 28, paddingRight: 28, paddingBottom: 10, marginTop: 7, marginBottom: 7, justifyContent: "center" }}>
               <Text style={{ fontSize: 16, color: '#03a2a2', marginTop: 10, marginBottom: 5 }}>
                 Name
@@ -304,15 +309,15 @@ const NewStoryScreen = ({ navigation, route }) => {
           ))}
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={{ fontSize: 16, color: '#03a2a2', marginTop: 5, marginBottom: 10 }}>
-              Location
+              Location:
             </Text>
           </View>
           <TextInput
             autoCapitalize="words"
             placeholder="Name of the character goes here"
             style={[styles.input, { marginBottom: 14 }, errors.title && styles.errorInput]}
-            onChangeText={(location) => setStoryLocation(location)}
-            value={storyLocation}
+            onChangeText={(location) => setValue("storyOutline", { ...storyOutline, location })}
+            value={storyOutline?.location}
             placeholderStyle={{ fontSize: 14, fontFamily: "RobotoThin" }}
           />
         </Surface>

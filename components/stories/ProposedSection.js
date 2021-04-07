@@ -105,6 +105,13 @@ const ProposedSection = ({
     setShowComment(true);
   };
   const dismissComment = () => setShowComment(false);
+
+  const introVotingNotStarted = [
+    'waiting_for_players',
+    'waiting_for_intros'
+  ].includes(story?.status)
+
+
   const cardsSection = (
     <>
       <Text type="medium" style={{ ...styles.title, marginTop: type === 'Ending' ? 0 : 20 }}>
@@ -238,6 +245,7 @@ const ProposedSection = ({
             authorName = 'You';
           }
 
+
           return (
             <View key={Math.random()}>
               <CommentModal
@@ -265,7 +273,13 @@ const ProposedSection = ({
                   />
                 </View>
 
-                <HTMLView value={proposedBlock.content} />
+
+                {proposedBlock.author?._id !== currentUser._id && introVotingNotStarted ? (
+                  <HTMLView value={"<i>Intro will be readable when voting round starts</i>"} />
+                ) : (
+                  <HTMLView value={proposedBlock.content} />
+                )}
+
 
                 <View style={{ marginTop: 'auto' }}>
                   <Text style={styles.separator}>---</Text>
