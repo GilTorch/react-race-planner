@@ -34,11 +34,11 @@ export default function RootStack() {
 
 
   return (
-    <Stack.Navigator mode={isAuthenticated ? 'modal' : 'card'} initialRouteName={isAuthenticated ? 'BottomTab' : 'SignupScreen'}>
+    <Stack.Navigator mode={isAuthenticated ? 'modal' : 'card'} initialRouteName={isAuthenticated ? 'BottomTab' : 'Login'}>
       {!isAuthenticated ? (
         <>
-          <Stack.Screen name="SignupScreen" component={SignupScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="SignupScreen" component={SignupScreen} />
           <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
           <Stack.Screen name="ResetPasswordTwo" component={ResetPasswordTwoScreen} />
           <Stack.Screen name="OTPVerification" component={OTPVerificationScreen} />
