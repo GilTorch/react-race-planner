@@ -15,7 +15,6 @@ import { AppContext } from '../utils/providers/app-context';
 import { savePushTokenAction } from '../redux/actions/UserActions';
 import WebViewScreen from '../screens/WebViewScreen';
 import { useNavigation } from "@react-navigation/native";
-import AuthStack from "./AuthStack";
 
 const Stack = createStackNavigator();
 
