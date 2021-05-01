@@ -9,6 +9,7 @@ import store from '../redux/store';
 
 const platformBaseURL = Platform.OS === 'android' ? ANDROID_BASE_URL : IOS_BASE_URL;
 
+
 // When it's a device, iOS and Android use the same base url
 const axiosOptions = {
   baseURL: Constants.isDevice ? ANDROID_BASE_URL : platformBaseURL,
